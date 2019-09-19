@@ -1,0 +1,6 @@
+*.img
+*.pcap
+__pycache__
+_backups
+_emulation
+_utils

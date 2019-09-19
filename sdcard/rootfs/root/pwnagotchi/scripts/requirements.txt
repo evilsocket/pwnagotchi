@@ -1,0 +1,9 @@
+Crypto
+requests
+pyyaml
+scapy
+gym
+stable-baselines
+tweepy
+file_read_backwards
+numpy
