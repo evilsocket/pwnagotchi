@@ -14,6 +14,8 @@ If instead you are a boring person, you can disable the AI and have the algorith
 
 **NOTE:** The software **requires bettercap compiled from master**.
 
+![units](https://imgur.com/MStjXZF)
+
 ## Why
 
 For hackers to learn reinforcement learning, WiFi networking and have an excuse to take a walk more often. And **it's cute as f---**.
