@@ -14,6 +14,10 @@ If instead you are a boring person, you can disable the AI and have the algorith
 
 **NOTE:** The software **requires bettercap compiled from master**.
 
+## Why
+
+For hackers to learn reinforcement learning, WiFi networking and have an excuse to take a walk more often.
+
 ## Documentation
 
 **THIS IS STILL ALPHA STAGE SOFTWARE, IF YOU DECIDE TO TRY TO USE IT, YOU ARE ON YOUR OWN, NO SUPPORT WILL BE PROVIDED, NEITHER FOR INSTALLATION OR FOR BUGS**
