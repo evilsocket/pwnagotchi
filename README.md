@@ -14,6 +14,16 @@ The software **requires bettercap compiled from master**.
 
 **THIS IS STILL ALPHA STAGE SOFTWARE, IF YOU DECIDE TO TRY TO USE IT, YOU ARE ON YOUR OWN, NO SUPPORT WILL BE PROVIDED, NEITHER FOR INSTALLATION OR FOR BUGS**
 
+### Hardware
+
+- Raspberry Pi Zero W
+- [Waveshare eInk Display](https://www.waveshare.com/2.13inch-e-paper-hat.htm) (optional if you connect to usb0 and point your browser to the web ui, see config.yml)
+- A decent power bank (with 1500 mAh you get ~2 hours with AI on)
+
+### Software
+
+- Raspbian + nexmon patches for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
+
 ## License
 
 `pwnagotchi` is made with ♥  by [@evilsocket](https://twitter.com/evilsocket) and it's released under the GPL3 license.
