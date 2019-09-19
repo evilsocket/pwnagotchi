@@ -6,11 +6,13 @@ Specifically, it's using an [LSTM with MLP feature extractor](https://stable-bas
 
 Instead of playing [Super Mario or Atari games](https://becominghuman.ai/getting-mario-back-into-the-gym-setting-up-super-mario-bros-in-openais-gym-8e39a96c1e41?gi=c4b66c3d5ced), pwnagotchi will tune over time [its own parameters](https://github.com/evilsocket/pwnagotchi/blob/master/sdcard/rootfs/root/pwnagotchi/config.yml#L54), effectively learning to get better at pwning WiFi things. **Keep in mind:** unlike the usual RL simulations, pwnagotchi learns over time, do not expect it to perform amazingly well at the beginning, as it'll be exploring several combinations of parameters ... but listen to it when it's bored, bring it with you and have it observe new networks and capture new handshakes and you'll see :)
 
-If you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters.
+Also, multiple units can talk to each other, advertising their own presence using a parasite protocol I've built on top of the existing dot11 standard, by broadcasting custom information elements. Over time, two or more units learn to cooperate if they detect each other's presence, by dividing the available channels among them.
 
 Several states and states transitions are configurable and represented on the display as different expressions and sentences.
 
-The software **requires bettercap compiled from master**.
+If instead you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters.
+
+**NOTE:** The software **requires bettercap compiled from master**.
 
 ## Documentation
 
@@ -21,6 +23,10 @@ The software **requires bettercap compiled from master**.
 - Raspberry Pi Zero W
 - [Waveshare eInk Display](https://www.waveshare.com/2.13inch-e-paper-hat.htm) (optional if you connect to usb0 and point your browser to the web ui, see config.yml)
 - A decent power bank (with 1500 mAh you get ~2 hours with AI on)
+
+### Random
+
+- `hostname` sets the unit name.
 
 ### Software
 
