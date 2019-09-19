@@ -8,6 +8,8 @@ If you are a boring person, you can disable the AI and have the algorithm run ju
 
 Several states and states transitions are configurable and represented on the display as different expressions and sentences.
 
+The software **requires bettercap compiled from master**.
+
 ## Documentation
 
 **THIS IS STILL ALPHA STAGE SOFTWARE, IF YOU DECIDE TO TRY TO USE IT, YOU ARE ON YOUR OWN, NO SUPPORT WILL BE PROVIDED, NEITHER FOR INSTALLATION OR FOR BUGS**
