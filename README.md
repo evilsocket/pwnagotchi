@@ -10,7 +10,7 @@ Also, multiple units can talk to each other, advertising their own presence usin
 
 Several states and states transitions are configurable and represented on the display as different expressions and sentences.
 
-If instead you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters.
+If instead you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters and enjoy a very portable bettercap + webui dedicated hardware.
 
 **NOTE:** The software **requires bettercap compiled from master**.
 
@@ -23,6 +23,10 @@ If instead you are a boring person, you can disable the AI and have the algorith
 - Raspberry Pi Zero W
 - [Waveshare eInk Display](https://www.waveshare.com/2.13inch-e-paper-hat.htm) (optional if you connect to usb0 and point your browser to the web ui, see config.yml)
 - A decent power bank (with 1500 mAh you get ~2 hours with AI on)
+
+### Software
+
+- Raspbian + nexmon patches for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
 
 ### Random Info
 
@@ -54,10 +58,6 @@ iptables -t nat -A POSTROUTING -o $UPSTREAM_IFACE -j MASQUERADE
 
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ```
-
-### Software
-
-- Raspbian + nexmon patches for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
 
 ## License
 
