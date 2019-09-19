@@ -24,9 +24,36 @@ If instead you are a boring person, you can disable the AI and have the algorith
 - [Waveshare eInk Display](https://www.waveshare.com/2.13inch-e-paper-hat.htm) (optional if you connect to usb0 and point your browser to the web ui, see config.yml)
 - A decent power bank (with 1500 mAh you get ~2 hours with AI on)
 
-### Random
+### Random Info
 
 - `hostname` sets the unit name.
+- At first boot, each unit generates a unique RSA keypair that can be used to authenticate advertising packets.
+- **On a rpi0w, it'll take approximately 30 minutes to load the AI**.
+- `/var/log/pwnagotchi.log` is your friend.
+- if connected to a laptop via usb data port, with internet connectivity shared, magic things will happen.
+
+Magic scripts that makes it talk to the internet:
+
+```sh
+#!/bin/bash
+
+# name of the ethernet gadget interface on the host
+USB_IFACE=${1:-enp0s20f0u1}
+USB_IFACE_IP=10.0.0.1
+USB_IFACE_NET=10.0.0.0/24
+# host interface to use for upstream connection
+UPSTREAM_IFACE=enxe4b97aa99867
+
+ip addr add $USB_IFACE_IP/24 dev $USB_IFACE
+ifconfig $USB_IFACE up
+
+iptables -A FORWARD -o $UPSTREAM_IFACE -i $USB_IFACE -s $USB_IFACE_NET -m conntrack --ctstate NEW -j ACCEPT
+iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -t nat -F POSTROUTING
+iptables -t nat -A POSTROUTING -o $UPSTREAM_IFACE -j MASQUERADE
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+```
 
 ### Software
 
