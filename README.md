@@ -8,7 +8,7 @@ Instead of playing [Super Mario or Atari games](https://becominghuman.ai/getting
 
 Multiple units can talk to each other, advertising their own presence using a parasite protocol I've built on top of the existing dot11 standard, by broadcasting custom information elements. Over time, two or more units learn to cooperate if they detect each other's presence, by dividing the available channels among them.
 
-Several states and states transitions are configurable and represented on the display as different expressions and sentences.
+Depending on the status of the unit, several states and states transitions are configurable and represented on the display as different moods, expressions and sentences.
 
 If instead you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters and enjoy a very portable bettercap + webui dedicated hardware.
 
@@ -41,6 +41,7 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 - **On a rpi0w, it'll take approximately 30 minutes to load the AI**.
 - `/var/log/pwnagotchi.log` is your friend.
 - if connected to a laptop via usb data port, with internet connectivity shared, magic things will happen.
+- checkout the `ui.video` section of the `config.yml` - if you don't want to use a display, you can connect to it with the browser and a cable.
 
 Magic scripts that makes it talk to the internet:
 
