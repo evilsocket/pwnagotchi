@@ -32,7 +32,9 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 
 ### Software
 
-- Raspbian + nexmon patches for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
+- Raspbian + [nexmon patches](https://re4son-kernel.com/re4son-pi-kernel/) for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
+
+**Do not try with Kali, it is compiled without hardware floating point support and TensorFlow is simply not available for it, use Raspbian.**
 
 ### Random Info
 
