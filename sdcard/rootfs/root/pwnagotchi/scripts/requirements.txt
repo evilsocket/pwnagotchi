@@ -4,6 +4,7 @@ pyyaml
 scapy
 gym
 stable-baselines
+tensorflow
 tweepy
 file_read_backwards
 numpy
