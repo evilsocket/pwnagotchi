@@ -2,11 +2,15 @@
 
 [Pwnagotchi](https://twitter.com/pwnagotchi) is an "AI" that learns from the WiFi environment and instruments bettercap in order to maximize the WPA key material (any form of handshake that is crackable, including [PMKIDs](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/), full and half WPA handshakes) captured. 
 
+![handshake](https://i.imgur.com/pdA4vCZ.png)
+
 Specifically, it's using an [LSTM with MLP feature extractor](https://stable-baselines.readthedocs.io/en/master/modules/policies.html#stable_baselines.common.policies.MlpLstmPolicy) as its policy network for the [A2C agent](https://stable-baselines.readthedocs.io/en/master/modules/a2c.html), here is [a very good intro](https://hackernoon.com/intuitive-rl-intro-to-advantage-actor-critic-a2c-4ff545978752) on the subject.
 
 Instead of playing [Super Mario or Atari games](https://becominghuman.ai/getting-mario-back-into-the-gym-setting-up-super-mario-bros-in-openais-gym-8e39a96c1e41?gi=c4b66c3d5ced), pwnagotchi will tune over time [its own parameters](https://github.com/evilsocket/pwnagotchi/blob/master/sdcard/rootfs/root/pwnagotchi/config.yml#L54), effectively learning to get better at pwning WiFi things. **Keep in mind:** unlike the usual RL simulations, pwnagotchi learns over time (where a single epoch can last from a few seconds to minutes, depending on how many access points and client stations are visible), do not expect it to perform amazingly well at the beginning, as it'll be exploring several combinations of parameters ... but listen to it when it's bored, bring it with you and have it observe new networks and capture new handshakes and you'll see :)
 
 Multiple units can talk to each other, advertising their own presence using a parasite protocol I've built on top of the existing dot11 standard, by broadcasting custom information elements. Over time, two or more units learn to cooperate if they detect each other's presence, by dividing the available channels among them.
+
+![peers](https://i.imgur.com/Ywr5aqx.png)
 
 Depending on the status of the unit, several states and states transitions are configurable and represented on the display as different moods, expressions and sentences.
 
@@ -34,7 +38,19 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 
 - Raspbian + [nexmon patches](https://re4son-kernel.com/re4son-pi-kernel/) for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
 
-**Do not try with Kali, it is compiled without hardware floating point support and TensorFlow is simply not available for it, use Raspbian.**
+**Do not try with Kali on the Raspberry Pi 0 W, it is compiled without hardware floating point support and TensorFlow is simply not available for it, use Raspbian.**
+
+### UI
+
+The UI is available either via display if installed, or via http://10.0.0.2:8080/ if you connect to the unit via `usb0` and set a static address on the network interface.
+
+![ui](https://i.imgur.com/XgIrcur.png)
+
+* **CH**: Current channel the unit is operating on or `*` when hopping on all channels.
+* **APS**: Number of access points on the current channel and total visible access points.
+* **UP**: Time since the unit has been activated.
+* **PWND**: Number of handshakes captured in this session and number of unique networks we own at least one handshake of, from the beginning.
+* **AUTO**: This indicates that the algorithm is running with AI disabled (or still loading), it disappears once the AI dependencies have been bootrapped and the neural network loaded.
 
 ### Random Info
 
