@@ -1,7 +1,7 @@
 SignatureAddress = 'de:ad:be:ef:de:ad'
 BroadcastAddress = 'ff:ff:ff:ff:ff:ff'
 Dot11ElemID_Identity = 222
-NumChannels = 14
+NumChannels = 140
 
 def freq_to_channel(freq):
     if freq <= 2472:

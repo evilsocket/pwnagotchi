@@ -28,6 +28,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._started_at = time.time()
         self._filter = None if config['main']['filter'] is None else re.compile(config['main']['filter'])
         self._current_channel = 0
+        self._supported_channels = core.iface_channels(config['main']['iface'])
         self._view = view
         self._access_points = []
         self._last_pwnd = None
@@ -42,6 +43,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         except OSError:
             pass
         return False
+
+    def supported_channels(self):
+        return self._supported_channels
 
     def on_ai_ready(self):
         self._view.on_ai_ready()
@@ -107,6 +111,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                     core.log("waiting for monitor interface %s ..." % mon_iface)
                     time.sleep(1)
 
+        core.log("supported channels: %s" % self._supported_channels)
         core.log("handshakes will be collected inside %s" % self._config['bettercap']['handshakes'])
 
         self._reset_wifi_settings()

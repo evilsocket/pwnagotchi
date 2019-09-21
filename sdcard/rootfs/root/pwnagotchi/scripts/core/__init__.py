@@ -40,6 +40,17 @@ def iface_address(ifname):
             return line.split(' ')[1].strip()
     return None
 
+
+def iface_channels(ifname):
+    channels = []
+    output = subprocess.getoutput("/sbin/iwlist %s freq" % ifname)
+    for line in output.split("\n"):
+        line = line.strip()
+        if line.startswith("Channel "):
+            channels.append(int(line.split()[1]))
+    return channels
+
+
 def led(on=True):
     with open('/sys/class/leds/led0/brightness', 'w+t') as fp:
         fp.write("%d" % (0 if on is True else 1))
