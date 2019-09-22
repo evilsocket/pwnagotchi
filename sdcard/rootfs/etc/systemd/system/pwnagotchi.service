@@ -1,0 +1,11 @@
+[Unit]
+Description=Pwnagotchi service file
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/root/pwnagotchi/scripts/startup.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
