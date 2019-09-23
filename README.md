@@ -1,6 +1,6 @@
 # Pwnagotchi
 
-[Pwnagotchi](https://twitter.com/pwnagotchi) is an "AI" that learns from the WiFi environment and instruments bettercap in order to maximize the WPA key material (any form of handshake that is crackable, including [PMKIDs](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/), full and half WPA handshakes) captured. 
+[Pwnagotchi](https://twitter.com/pwnagotchi) is an "AI" that learns from the WiFi environment and instruments bettercap in order to maximize the WPA key material (any form of handshake that is crackable, including [PMKIDs](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/), full and half WPA handshakes) captured.
 
 ![handshake](https://i.imgur.com/pdA4vCZ.png)
 
@@ -74,7 +74,7 @@ USB_IFACE_NET=10.0.0.0/24
 UPSTREAM_IFACE=enxe4b97aa99867
 
 ip addr add $USB_IFACE_IP/24 dev $USB_IFACE
-ifconfig $USB_IFACE up
+ip link set $USB_IFACE up
 
 iptables -A FORWARD -o $UPSTREAM_IFACE -i $USB_IFACE -s $USB_IFACE_NET -m conntrack --ctstate NEW -j ACCEPT
 iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
