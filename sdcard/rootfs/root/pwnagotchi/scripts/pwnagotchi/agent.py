@@ -202,7 +202,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         channels = self._config['personality']['channels']
         grouped = {}
 
-        # group by channel 
+        # group by channel
         for ap in aps:
             ch = ap['channel']
             # if we're sticking to a channel, skip anything
@@ -253,7 +253,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         txt = '%d (%d)' % (len(self._handshakes), tot)
 
         if self._last_pwnd is not None:
-            txt += ' [%s]' % self._last_pwnd
+            txt += ' [%s]' % self._last_pwnd[:20]
 
         self._view.set('shakes', txt)
 
@@ -449,7 +449,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             return
 
         # if in the previous loop no client stations has been deauthenticated
-        # and only association frames have been sent, we don't need to wait 
+        # and only association frames have been sent, we don't need to wait
         # very long before switching channel as we don't have to wait for
         # such client stations to reconnect in order to sniff the handshake.
         wait = 0
@@ -496,7 +496,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         if was_stale:
             core.log("agent missed %d interactions -> lonely" % did_miss)
             self.set_lonely()
-        # after X times being bored, the status is set to sad 
+        # after X times being bored, the status is set to sad
         elif self._epoch.inactive_for >= self._config['personality']['sad_num_epochs']:
             core.log("%d epochs with no activity -> sad" % self._epoch.inactive_for)
             self.set_sad()
