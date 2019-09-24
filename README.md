@@ -42,7 +42,7 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 
 #### Automatically create an image
 
-You can use the `create_sibling.sh` script to create an - ready to flash - rasbian image with pwnagotchi.
+You can use the `scripts/create_sibling.sh` script to create an - ready to flash - rasbian image with pwnagotchi.
 
 ```shell
 usage: ./create_sibling.sh [OPTIONS]
@@ -55,6 +55,10 @@ usage: ./create_sibling.sh [OPTIONS]
     -d        # Only run dependencies checks
     -h        # Show this help
 ```
+
+#### Host Connection Share
+
+If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
 
 ### UI
 
