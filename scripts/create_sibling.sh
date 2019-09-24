@@ -5,7 +5,7 @@
 REQUIREMENTS=( wget gunzip git dd e2fsck resize2fs parted losetup qemu-system-x86_64 )
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
-PWNI_NAME="alpha"
+PWNI_NAME="pwnagotchi"
 PWNI_OUTPUT="pwnagotchi.img"
 PWNI_SIZE="4"
 
@@ -96,7 +96,7 @@ function provision_raspbian() {
   # configure pwnagotchi
   echo -e "$PWNI_NAME" > /etc/hostname
   sed -i "s@^127\.0\.0\.1 .*@127.0.0.1 localhost "$PWNI_NAME" "$PWNI_NAME".local@g" /etc/hosts
-  sed -i "s@alpha@$PWNI_NAME@g" /etc/motd
+  sed -i "s@pwnagotchi@$PWNI_NAME@g" /etc/motd
 
   chmod +x /etc/rc.local
 
@@ -157,7 +157,7 @@ function usage() {
 usage: $0 [OPTIONS]
 
   Options:
-    -n <name> # Name of the pwnagotchi (default: alpha)
+    -n <name> # Name of the pwnagotchi (default: pwnagotchi)
     -o <file> # Name of the img-file (default: pwnagotchi.img)
     -s <size> # Size which should be added to second partition (in Gigabyte) (default: 4)
     -p        # Only run provisioning (assumes the image is already mounted)

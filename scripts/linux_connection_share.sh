@@ -8,7 +8,7 @@ USB_IFACE_NET=10.0.0.0/24
 UPSTREAM_IFACE=${2:-enxe4b97aa99867}
 
 ip addr add $USB_IFACE_IP/24 dev $USB_IFACE
-ifconfig $USB_IFACE up
+ip link set $USB_IFACE up
 
 iptables -A FORWARD -o $UPSTREAM_IFACE -i $USB_IFACE -s $USB_IFACE_NET -m conntrack --ctstate NEW -j ACCEPT
 iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
