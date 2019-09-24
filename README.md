@@ -40,6 +40,22 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 
 **Do not try with Kali on the Raspberry Pi 0 W, it is compiled without hardware floating point support and TensorFlow is simply not available for it, use Raspbian.**
 
+#### Automatically create an image
+
+You can use the `create_sibling.sh` script to create an - ready to flash - rasbian image with pwnagotchi.
+
+```shell
+usage: ./create_sibling.sh [OPTIONS]
+
+  Options:
+    -n <name> # Name of the pwnagotchi (default: alpha)
+    -o <file> # Name of the img-file (default: pwnagotchi.img)
+    -s <size> # Size which should be added to second partition (in Gigabyte) (default: 4)
+    -p        # Only run provisioning (assumes the image is already mounted)
+    -d        # Only run dependencies checks
+    -h        # Show this help
+```
+
 ### UI
 
 The UI is available either via display if installed, or via http://10.0.0.2:8080/ if you connect to the unit via `usb0` and set a static address on the network interface.

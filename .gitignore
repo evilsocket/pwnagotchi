@@ -6,3 +6,5 @@ _emulation
 _utils
 config.laptop.yml
 .idea
+tmp
+mnt
