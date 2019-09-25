@@ -17,7 +17,7 @@ main:
     # if not null, filter access points by this regular expression
     filter: null
     # cryptographic key for identity
-    pubkey: /etc/ssh/ssh_host_rsa_key.pub  
+    pubkey: /etc/ssh/ssh_host_rsa_key.pub
 
 ai:
     # if false, only the default 'personality' will be used
@@ -36,7 +36,7 @@ ai:
         vf_coef: 0.25
         # entropy coefficient for the loss calculation
         ent_coef: 0.01
-        # maximum value for the gradient clipping 
+        # maximum value for the gradient clipping
         max_grad_norm: 0.5
         # the learning rate
         learning_rate: 0.0010
@@ -83,7 +83,7 @@ personality:
     # number of active epochs that triggers the excited state
     excited_num_epochs: 10
     # number of inactive epochs that triggers the bored state
-    bored_num_epochs: 15 
+    bored_num_epochs: 15
     # number of inactive epochs that triggers the sad state
     sad_num_epochs: 25
 
@@ -92,6 +92,10 @@ ui:
     # ePaper display can update every 3 secs anyway
     fps: 0.3
     display:
+        # Possible options inkyphat/waveshare
+        type: 'inkyphat'
+        # Possible options red/yellow/black (black used for monocromatic displays)
+        display_color: 'red'
         enabled: true
         rotation: 180
         video:
@@ -115,7 +119,7 @@ bettercap:
     port: 8081
     username: user
     password: pass
-    # folder where bettercap stores the WPA handshakes, given that 
+    # folder where bettercap stores the WPA handshakes, given that
     # wifi.handshakes.aggregate will be set to false and individual
     # pcap files will be created in order to minimize the chances
     # of a single pcap file to get corrupted
