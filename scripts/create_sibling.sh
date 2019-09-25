@@ -171,7 +171,7 @@ usage: $0 [OPTIONS]
     -o <file> # Name of the img-file (default: pwnagotchi.img)
     -s <size> # Size which should be added to second partition (in Gigabyte) (default: 4)
     -p        # Only run provisioning (assumes the image is already mounted)
-    -p        # Only run dependencies checks
+    -d        # Only run dependencies checks
     -h        # Show this help
 
 EOF
