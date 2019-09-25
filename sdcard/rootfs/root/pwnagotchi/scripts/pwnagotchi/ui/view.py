@@ -50,9 +50,9 @@ class View(object):
             'friend_face': Text(value=None, position=(0, 90), font=fonts.Bold, color=BLACK),
             'friend_name': Text(value=None, position=(40, 93), font=fonts.BoldSmall, color=BLACK),
 
-            'name': Text(value='%s>' % 'pwnagotchi', position=(int(self._width / 2), int(self._height * .15)), color=BLACK, font=fonts.Bold),
+            'name': Text(value='%s>' % 'pwnagotchi', position=(int(self._width / 2) - 5, int(self._height * .15)), color=BLACK, font=fonts.Bold),
             # 'face2':   Bitmap( '/root/pwnagotchi/data/images/face_happy.bmp', (0, 20)),
-            'status': Text(value=voice.default(), position=(int(self._width /2), int(self._height * .30)), color=BLACK, font=fonts.Medium),
+            'status': Text(value=voice.default(), position=(int(self._width /2) - 5, int(self._height * .30)), color=BLACK, font=fonts.Medium),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK, position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
                                    text_font=fonts.Medium),
