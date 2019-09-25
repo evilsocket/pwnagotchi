@@ -2,8 +2,12 @@
 # based on: https://wiki.debian.org/RaspberryPi/qemu-user-static
 ## and https://z4ziggy.wordpress.com/2015/05/04/from-bochs-to-chroot/
 
+set -eu
+
 REQUIREMENTS=( wget gunzip git dd e2fsck resize2fs parted losetup qemu-system-x86_64 )
-SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+REPO_DIR="$(dirname "$(dirname "$(realpath "$0")")")"
+TMP_DIR="${REPO_DIR}/tmp"
+MNT_DIR="${TMP_DIR}/mnt"
 
 PWNI_NAME="pwnagotchi"
 PWNI_OUTPUT="pwnagotchi.img"
@@ -11,6 +15,11 @@ PWNI_SIZE="4"
 
 OPT_PROVISION_ONLY=0
 OPT_CHECK_DEPS_ONLY=0
+
+if [[ "$EUID" -ne 0 ]]; then
+   echo "Run this script as root!"
+   exit 1
+fi
 
 function check_dependencies() {
   echo "[+] Checking dependencies"
@@ -27,55 +36,56 @@ function check_dependencies() {
   fi
 
   if ! systemctl is-active systemd-binfmt.service >/dev/null 2>&1; then
-    sudo mkdir -p "/lib/binfmt.d"
-    sudo sh -c "echo ':qemu-arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:F' >> /lib/binfmt.d/qemu-arm-static.conf"
-    sudo systemctl restart systemd-binfmt.service
+     mkdir -p "/lib/binfmt.d"
+     echo ':qemu-arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:F' > /lib/binfmt.d/qemu-arm-static.conf
+     systemctl restart systemd-binfmt.service
   fi
 }
 
 function get_raspbian() {
   echo "[+] Downloading raspbian.zip"
-  mkdir -p "${SCRIPT_DIR}/tmp/"
-  wget -qcN -O "${SCRIPT_DIR}/tmp/rasbian.zip" "https://downloads.raspberrypi.org/raspbian_lite_latest"
+  mkdir -p "${TMP_DIR}"
+  wget --show-progress -qcO "${TMP_DIR}/raspbian.zip" "https://downloads.raspberrypi.org/raspbian_lite_latest"
   echo "[+] Unpacking raspbian.zip to raspbian.img"
-  gunzip -c "${SCRIPT_DIR}/tmp/rasbian.zip" > "${SCRIPT_DIR}/tmp/raspbian.img"
+  gunzip -c "${TMP_DIR}/raspbian.zip" > "${TMP_DIR}/raspbian.img"
 }
 
 function setup_raspbian(){
   echo "[+] Resize image"
-  dd if=/dev/zero bs=1G count="$PWNI_SIZE" >> "${SCRIPT_DIR}/tmp/raspbian.img"
+  dd if=/dev/zero bs=1G count="$PWNI_SIZE" >> "${TMP_DIR}/raspbian.img"
   echo "[+] Setup loop device"
-  mkdir -p "${SCRIPT_DIR}/mnt"
-  LOOP_PATH="$(sudo losetup --find --partscan --show "${SCRIPT_DIR}/tmp/raspbian.img")"
-  PART2_START="$(sudo parted -s "$LOOP_PATH" -- print | awk '$1==2{ print $2 }')"
-  sudo parted -s "$LOOP_PATH" rm 2
-  sudo parted -s "$LOOP_PATH" mkpart primary "$PART2_START" 100%
+  mkdir -p "${MNT_DIR}"
+  LOOP_PATH="$(losetup --find --partscan --show "${TMP_DIR}/raspbian.img")"
+  PART2_START="$(parted -s "$LOOP_PATH" -- print | awk '$1==2{ print $2 }')"
+  parted -s "$LOOP_PATH" rm 2
+  parted -s "$LOOP_PATH" mkpart primary "$PART2_START" 100%
   echo "[+] Check FS"
-  sudo e2fsck -f "${LOOP_PATH}p2"
+  e2fsck -f "${LOOP_PATH}p2"
   echo "[+] Resize FS"
-  sudo resize2fs "${LOOP_PATH}p2"
+  resize2fs "${LOOP_PATH}p2"
   echo "[+] Device is ${LOOP_PATH}"
   echo "[+] Unmount if already mounted with other img"
-  sudo umount -r "${SCRIPT_DIR}/mnt" || true
+  mountpoint -q "${MNT_DIR}" && umount -R "${MNT_DIR}"
   echo "[+] Mount /"
-  sudo mount -o rw "${LOOP_PATH}p2" "${SCRIPT_DIR}/mnt"
+  mount -o rw "${LOOP_PATH}p2" "${MNT_DIR}"
   echo "[+] Mount /boot"
-  sudo mount -o rw "${LOOP_PATH}p1" "${SCRIPT_DIR}/mnt/boot"
-  sudo mount --bind /dev "${SCRIPT_DIR}/mnt/dev/"
-  sudo mount --bind /sys "${SCRIPT_DIR}/mnt/sys/"
-  sudo mount --bind /proc "${SCRIPT_DIR}/mnt/proc/"
-  sudo mount --bind /dev/pts "${SCRIPT_DIR}/mnt/dev/pts"
-  sudo mount --bind /etc/ssl/certs "${SCRIPT_DIR}/mnt/etc/ssl/certs"
-  sudo mount --bind /etc/ca-certificates "${SCRIPT_DIR}/mnt/etc/ca-certificates"
-  sudo cp /usr/bin/qemu-arm-static "${SCRIPT_DIR}/mnt/usr/bin"
+  mount -o rw "${LOOP_PATH}p1" "${MNT_DIR}/boot"
+  mount --bind /dev "${MNT_DIR}/dev/"
+  mount --bind /sys "${MNT_DIR}/sys/"
+  mount --bind /proc "${MNT_DIR}/proc/"
+  mount --bind /dev/pts "${MNT_DIR}/dev/pts"
+  mount --bind /etc/ssl/certs "${MNT_DIR}/etc/ssl/certs"
+  mount --bind /etc/ca-certificates "${MNT_DIR}/etc/ca-certificates"
+  cp /usr/bin/qemu-arm-static "${MNT_DIR}/usr/bin"
 }
 
 function provision_raspbian() {
-  cd "${SCRIPT_DIR}/mnt/" || exit 1
-  sudo sed -i'' 's/^\([^#]\)/#\1/g' etc/ld.so.preload # add comments
+  cd "${MNT_DIR}"
+  sed -i'' 's/^\([^#]\)/#\1/g' etc/ld.so.preload # add comments
   echo "[+] Run chroot commands"
-  sudo LANG=C chroot . bin/bash -x <<EOF
-  export PATH=\$PATH:/bin
+  LANG=C chroot . bin/bash -x <<EOF
+  set -eu
+  export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   apt-get -y update
   apt-get -y upgrade
   apt-get -y install git vim screen build-essential golang python3-pip
@@ -144,11 +154,11 @@ STOP
   apt update
   apt install -y kalipi-kernel kalipi-bootloader kalipi-re4son-firmware kalipi-kernel-headers libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin
 EOF
-  sudo sed -i'' 's/^#//g' etc/ld.so.preload
-  cd "${SCRIPT_DIR}" || exit 1
-  sudo umount -R "${SCRIPT_DIR}/mnt/"
-  sudo losetup -D "$(losetup -l | awk '/raspbian\.img/{print $1}')"
-  mv "${SCRIPT_DIR}/tmp/raspbian.img" "$PWNI_OUTPUT"
+  sed -i'' 's/^#//g' etc/ld.so.preload
+  cd "${REPO_DIR}"
+  umount -R "${MNT_DIR}"
+  losetup -D "$(losetup -l | awk '/raspbian\.img/{print $1}')"
+  mv "${TMP_DIR}/raspbian.img" "$PWNI_OUTPUT"
 }
 
 function usage() {
