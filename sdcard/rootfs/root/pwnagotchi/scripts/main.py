@@ -62,7 +62,7 @@ if args.do_manual:
 
             core.log("detected a new session and internet connectivity!")
 
-            picture = '/tmp/pwnagotchi.png'
+            picture = '/dev/shm/pwnagotchi.png'
 
             display.update()
             display.image().save(picture, 'png')
@@ -121,9 +121,9 @@ while True:
         # An interesting effect of this:
         #
         # From Pwnagotchi's perspective, the more new access points
-        # and / or client stations nearby, the longer one epoch of 
+        # and / or client stations nearby, the longer one epoch of
         # its relative time will take ... basically, in Pwnagotchi's universe,
-        # WiFi electromagnetic fields affect time like gravitational fields 
+        # WiFi electromagnetic fields affect time like gravitational fields
         # affect ours ... neat ^_^
         agent.next_epoch()
     except Exception as e:
