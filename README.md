@@ -16,7 +16,7 @@ Depending on the status of the unit, several states and states transitions are c
 
 If instead you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters and enjoy a very portable bettercap + webui dedicated hardware.
 
-**NOTE:** The software **requires bettercap compiled from master**.
+**NOTE:** The software **requires bettercap v2.25**.
 
 ![units](https://i.imgur.com/MStjXZF.png)
 
