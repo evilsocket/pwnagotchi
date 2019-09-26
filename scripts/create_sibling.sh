@@ -15,6 +15,7 @@ PWNI_SIZE="4"
 
 OPT_PROVISION_ONLY=0
 OPT_CHECK_DEPS_ONLY=0
+OPT_IMAGE_PROVIDED=0
 
 if [[ "$EUID" -ne 0 ]]; then
    echo "Run this script as root!"
@@ -48,6 +49,13 @@ function get_raspbian() {
   wget --show-progress -qcO "${TMP_DIR}/raspbian.zip" "https://downloads.raspberrypi.org/raspbian_lite_latest"
   echo "[+] Unpacking raspbian.zip to raspbian.img"
   gunzip -c "${TMP_DIR}/raspbian.zip" > "${TMP_DIR}/raspbian.img"
+}
+
+function provide_raspbian() {
+  echo "[+] Providing path of raspbian file"
+  mkdir -p "${TMP_DIR}"
+  echo "[+] Unpacking raspbian.zip to raspbian.img"
+  gunzip -c "${PWNI_INPUT}" > "${TMP_DIR}/raspbian.img"
 }
 
 function setup_raspbian(){
@@ -168,6 +176,7 @@ usage: $0 [OPTIONS]
 
   Options:
     -n <name> # Name of the pwnagotchi (default: pwnagotchi)
+    -i <file> # Provide the path of an already downloaded raspbian image
     -o <file> # Name of the img-file (default: pwnagotchi.img)
     -s <size> # Size which should be added to second partition (in Gigabyte) (default: 4)
     -p        # Only run provisioning (assumes the image is already mounted)
@@ -179,10 +188,14 @@ EOF
   exit 0
 }
 
-while getopts ":n:o:s:dph" o; do
+while getopts ":n:i:o:s:dph" o; do
   case "${o}" in
     n)
       PWNI_NAME="${OPTARG}"
+      ;;
+    i)
+      PWNI_INPUT="${OPTARG}"
+      OPT_IMAGE_PROVIDED=1
       ;;
     o)
       PWNI_OUTPUT="${OPTARG}"
@@ -215,7 +228,13 @@ elif [[ "$OPT_CHECK_DEPS_ONLY" -eq 1 ]]; then
 fi
 
 check_dependencies
-get_raspbian
+
+if [[ "$OPT_IMAGE_PROVIDED" -eq 1 ]]; then
+  provide_raspbian
+else
+  get_raspbian
+fi
+
 setup_raspbian
 provision_raspbian
 
