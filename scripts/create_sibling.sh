@@ -168,6 +168,7 @@ function provision_raspbian() {
   cd caplets
   make install
   rm -rf /tmp/caplets
+  cd /root # fixes getcwd error that was bugging me
 
   # Re4son-Kernel
   echo "deb http://http.re4son-kernel.com/re4son/ kali-pi main" > /etc/apt/sources.list.d/re4son.list
