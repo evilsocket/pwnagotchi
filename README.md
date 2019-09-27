@@ -48,13 +48,14 @@ You can use the `scripts/create_sibling.sh` script to create an - ready to flash
 usage: ./scripts/create_sibling.sh [OPTIONS]
 
   Options:
-    -n <name> # Name of the pwnagotchi (default: pwnagotchi)
-    -i <file> # Provide the path of an already downloaded raspbian image
-    -o <file> # Name of the img-file (default: pwnagotchi.img)
-    -s <size> # Size which should be added to second partition (in Gigabyte) (default: 4)
-    -p        # Only run provisioning (assumes the image is already mounted)
-    -d        # Only run dependencies checks
-    -h        # Show this help
+    -n <name>    # Name of the pwnagotchi (default: pwnagotchi)
+    -i <file>    # Provide the path of an already downloaded raspbian image
+    -o <file>    # Name of the img-file (default: pwnagotchi.img)
+    -s <size>    # Size which should be added to second partition (in Gigabyte) (default: 4)
+    -v <version> # Version of raspbian (Supported: latest; default: latest)
+    -p           # Only run provisioning (assumes the image is already mounted)
+    -d           # Only run dependencies checks
+    -h           # Show this help
 ```
 
 #### Host Connection Share
@@ -81,7 +82,7 @@ The UI is available either via display if installed, or via http://pwnagotchi.lo
 - `/var/log/pwnagotchi.log` is your friend.
 - if connected to a laptop via usb data port, with internet connectivity shared, magic things will happen.
 - checkout the `ui.video` section of the `config.yml` - if you don't want to use a display, you can connect to it with the browser and a cable.
-- If you get `[FAILED] Failed to start Remount Root and Kernel File Systems.` while booting pwnagotchi, make sure 
+- If you get `[FAILED] Failed to start Remount Root and Kernel File Systems.` while booting pwnagotchi, make sure
 the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`. Use `sudo blkid` to find those values when you are using `create_sibling.sh`.
 
 ## License
