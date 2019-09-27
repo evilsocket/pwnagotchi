@@ -14,9 +14,9 @@ Multiple units can talk to each other, advertising their own presence using a pa
 
 Depending on the status of the unit, several states and states transitions are configurable and represented on the display as different moods, expressions and sentences.
 
-If instead you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters and enjoy a very portable bettercap + webui dedicated hardware.
+If instead you just want to use your own parameters and save battery and CPU cycles, you can disable the AI in `config.yml` and enjoy an automated deauther, WPA handshake sniffer and portable bettercap + webui dedicated hardware.
 
-**NOTE:** The software **requires bettercap v2.25**.
+**NOTE:** The software **requires at least bettercap v2.25**.
 
 ![units](https://i.imgur.com/MStjXZF.png)
 
