@@ -63,7 +63,7 @@ If you connect to the unit via `usb0` (thus using the data port), you might want
 
 ### UI
 
-The UI is available either via display if installed, or via http://10.0.0.2:8080/ if you connect to the unit via `usb0` and set a static address on the network interface.
+The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
 
 ![ui](https://i.imgur.com/XgIrcur.png)
 
