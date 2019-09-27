@@ -100,6 +100,7 @@ function setup_raspbian(){
   mount --bind /proc "${MNT_DIR}/proc/"
   mount --bind /dev/pts "${MNT_DIR}/dev/pts"
   cp /usr/bin/qemu-arm-static "${MNT_DIR}/usr/bin"
+  cp /etc/resolv.conf "${MNT_DIR}/etc/resolv.conf"
 }
 
 function provision_raspbian() {
