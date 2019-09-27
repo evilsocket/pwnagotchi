@@ -73,7 +73,7 @@ def on_lost_peer(peer):
 
 def on_miss(who):
     return random.choice([ \
-        'Whops ...\n%s\nis gone.' % who,
+        'Whoops ...\n%s\nis gone.' % who,
         '%s\nmissed!' % who,
         'Missed!'])
 
