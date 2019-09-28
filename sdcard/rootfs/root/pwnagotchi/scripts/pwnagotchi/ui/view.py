@@ -15,6 +15,34 @@ from pwnagotchi.ui.state import State
 WHITE = 0xff
 BLACK = 0x00
 
+
+def setup_display_specifics(config):
+    width = 0
+    height = 0
+    face_pos = (0, 0)
+    name_pos = (0, 0)
+    status_pos = (0, 0)
+
+    if config['ui']['display']['type'] in ('inky', 'inkyphat'):
+        fonts.setup(10, 8, 10, 25)
+
+        width = 212
+        height = 104
+        face_pos = (0, int(height / 4))
+        name_pos = (int(width / 2) - 15, int(height * .15))
+        status_pos = (int(width / 2) - 15, int(height * .30))
+    elif config['ui']['display']['type'] in ('ws', 'waveshare'):
+        fonts.setup(10, 9, 10, 35)
+
+        width = 250
+        height = 122
+        face_pos = (0, 40)
+        name_pos = (125, 20)
+        status_pos = (125, 35)
+
+    return width, height, face_pos, name_pos, status_pos
+
+
 class View(object):
     def __init__(self, config, state={}):
         self._render_cbs = []
@@ -22,24 +50,8 @@ class View(object):
         self._canvas = None
         self._lock = Lock()
 
-        if config['ui']['display']['type'] in ('inky', 'inkyphat'):
-            self._width = 212
-            self._height = 104
-
-            fonts.setup(10, 8, 10, 25)
-
-            face_pos = (0, int(self._height / 4))
-            name_pos = (int(self._width / 2) - 15, int(self._height * .15))
-            status_pos = (int(self._width /2) - 15, int(self._height * .30))
-        elif config['ui']['display']['type'] in ('ws', 'waveshare'):
-            self._width = 250
-            self._height = 122
-
-            fonts.setup(10, 9, 10, 35)
-
-            face_pos = (0, 40)
-            name_pos = (125, 20)
-            status_pos = (125, 35)
+        self._width, self._height, \
+        face_pos, name_pos, status_pos = setup_display_specifics(config)
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
@@ -47,15 +59,18 @@ class View(object):
             'aps': LabeledValue(color=BLACK, label='APS', value='0 (00)', position=(30, 0), label_font=fonts.Bold,
                                 text_font=fonts.Medium),
 
-            #'epoch': LabeledValue(color=BLACK, label='E', value='0000', position=(145, 0), label_font=fonts.Bold,
+            # 'epoch': LabeledValue(color=BLACK, label='E', value='0000', position=(145, 0), label_font=fonts.Bold,
             #                      text_font=fonts.Medium),
 
-            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=(self._width - 65, 0), label_font=fonts.Bold,
+            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=(self._width - 65, 0),
+                                   label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
             # 'square':  Rect([1, 11, 124, 111]),
             'line1': Line([0, int(self._height * .12), self._width, int(self._height * .12)], color=BLACK),
-            'line2': Line([0, self._height - int(self._height * .12), self._width, self._height - int(self._height * .12)], color=BLACK),
+            'line2': Line(
+                [0, self._height - int(self._height * .12), self._width, self._height - int(self._height * .12)],
+                color=BLACK),
 
             # 'histogram': Histogram([4, 94], color = BLACK),
 
@@ -68,9 +83,11 @@ class View(object):
             # 'face2':   Bitmap( '/root/pwnagotchi/data/images/face_happy.bmp', (0, 20)),
             'status': Text(value=voice.default(), position=status_pos, color=BLACK, font=fonts.Medium),
 
-            'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK, position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
+            'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK,
+                                   position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
                                    text_font=fonts.Medium),
-            'mode': Text(value='AUTO', position=(self._width - 25, self._height - int(self._height * .12) + 1), font=fonts.Bold, color=BLACK),
+            'mode': Text(value='AUTO', position=(self._width - 25, self._height - int(self._height * .12) + 1),
+                         font=fonts.Bold, color=BLACK),
         })
 
         for key, value in state.items():
