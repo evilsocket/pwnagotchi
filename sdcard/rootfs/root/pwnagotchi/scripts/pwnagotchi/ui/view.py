@@ -22,12 +22,14 @@ class View(object):
         self._canvas = None
         self._lock = Lock()
 
-        if config['ui']['display']['type'] == 'inkyphat':
+        if config['ui']['display']['type'] in ('inky', 'inkyphat'):
             self._width = 212
             self._height = 104
-        else:
+            fonts.setup(10, 9, 10, 35)
+        elif config['ui']['display']['type'] in ('ws', 'waveshare'):
             self._width = 250
             self._height = 122
+            fonts.setup(10, 8, 10, 25)
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
