@@ -19,7 +19,7 @@ class VideoHandler(BaseHTTPRequestHandler):
   </head>
   <body>
     <img src="/ui" id="ui"/>
-    
+
     <script type="text/javascript">
     window.onload = function() {
         var image = document.getElementById("ui");
@@ -77,6 +77,8 @@ class Display(View):
         self._video_enabled = config['ui']['display']['video']['enabled']
         self._video_port = config['ui']['display']['video']['port']
         self._video_address = config['ui']['display']['video']['address']
+        self._display_type = config['ui']['display']['type']
+        self._display_color = config['ui']['display']['display_color']
         self._display = None
         self._httpd = None
         self.canvas = None
@@ -99,12 +101,18 @@ class Display(View):
             core.log("could not get ip of usb0, video server not starting")
 
     def _init_display(self):
-        from pwnagotchi.ui.waveshare import EPD
-        # core.log("display module started")
-        self._display = EPD()
-        self._display.init(self._display.FULL_UPDATE)
-        self._display.Clear(WHITE)
-        self._display.init(self._display.PART_UPDATE)
+        if self._display_type == 'inkyphat':
+            from inky import InkyPHAT
+            self._display = InkyPHAT(self._display_color)
+            self._display.set_border(InkyPHAT.BLACK)
+        else:
+            from pwnagotchi.ui.waveshare import EPD
+            # core.log("display module started")
+            self._display = EPD()
+            self._display.init(self._display.FULL_UPDATE)
+            self._display.Clear(WHITE)
+            self._display.init(self._display.PART_UPDATE)
+
         self.on_render(self._on_view_rendered)
 
     def image(self):
@@ -119,5 +127,34 @@ class Display(View):
 
         if self._enabled:
             self.canvas = img if self._rotation == 0 else img.rotate(self._rotation)
-            buf = self._display.getbuffer(self.canvas)
-            self._display.displayPartial(buf)
+            if self._display_type == 'inkyphat':
+                if self._display_color != 'mono':
+                    display_colors = 3
+                else:
+                    display_colors = 2
+
+                imgbuf = self.canvas.convert('RGB').convert('P', palette=1, colors=display_colors)
+
+                if self._display_color == 'red':
+                    imgbuf.putpalette([
+                        255, 255, 255, # index 0 is white
+                        0, 0, 0, # index 1 is black
+                        255, 0, 0 # index 2 is red
+                    ])
+                elif self._display_color == 'yellow':
+                    imgbuf.putpalette([
+                        255, 255, 255, # index 0 is white
+                        0, 0, 0, # index 1 is black
+                        255, 255, 0 #index 2 is yellow
+                    ])
+                else:
+                    imgbuf.putpalette([
+                        255, 255, 255, # index 0 is white
+                        0, 0, 0 # index 1 is black
+                    ])
+
+                self._display.set_image(imgbuf)
+                self._display.show()
+            else:
+                buf = self._display.getbuffer(self.canvas)
+                self._display.displayPartial(buf)

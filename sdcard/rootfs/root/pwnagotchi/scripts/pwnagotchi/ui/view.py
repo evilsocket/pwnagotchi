@@ -14,9 +14,6 @@ from pwnagotchi.ui.state import State
 
 WHITE = 0xff
 BLACK = 0x00
-WIDTH = 122
-HEIGHT = 250
-
 
 class View(object):
     def __init__(self, config, state={}):
@@ -24,6 +21,14 @@ class View(object):
         self._config = config
         self._canvas = None
         self._lock = Lock()
+
+        if config['ui']['display']['type'] == 'inkyphat':
+            self._width = 212
+            self._height = 104
+        else:
+            self._width = 250
+            self.heigth = 122
+
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
                                     text_font=fonts.Medium),
@@ -31,27 +36,27 @@ class View(object):
                                 text_font=fonts.Medium),
             #'epoch': LabeledValue(color=BLACK, label='E', value='0000', position=(145, 0), label_font=fonts.Bold,
             #                      text_font=fonts.Medium),
-            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=(185, 0), label_font=fonts.Bold,
+            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=(self._width - 65, 0), label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
             # 'square':  Rect([1, 11, 124, 111]),
-            'line1': Line([0, 13, 250, 13], color=BLACK),
-            'line2': Line([0, 109, 250, 109], color=BLACK),
+            'line1': Line([0, int(self._height * .12), self._width, int(self._height * .12)], color=BLACK),
+            'line2': Line([0, self._height - int(self._height * .12), self._width, self._height - int(self._height * .12)], color=BLACK),
 
             # 'histogram': Histogram([4, 94], color = BLACK),
 
-            'face': Text(value=faces.SLEEP, position=(0, 40), color=BLACK, font=fonts.Huge),
+            'face': Text(value=faces.SLEEP, position=(0, int(self._height / 4)), color=BLACK, font=fonts.Huge),
 
             'friend_face': Text(value=None, position=(0, 90), font=fonts.Bold, color=BLACK),
             'friend_name': Text(value=None, position=(40, 93), font=fonts.BoldSmall, color=BLACK),
 
-            'name': Text(value='%s>' % 'pwnagotchi', position=(125, 20), color=BLACK, font=fonts.Bold),
+            'name': Text(value='%s>' % 'pwnagotchi', position=(int(self._width / 2) - 15, int(self._height * .15)), color=BLACK, font=fonts.Bold),
             # 'face2':   Bitmap( '/root/pwnagotchi/data/images/face_happy.bmp', (0, 20)),
-            'status': Text(value=voice.default(), position=(125, 35), color=BLACK, font=fonts.Medium),
+            'status': Text(value=voice.default(), position=(int(self._width /2) - 15, int(self._height * .30)), color=BLACK, font=fonts.Medium),
 
-            'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK, position=(0, 110), label_font=fonts.Bold,
+            'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK, position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
                                    text_font=fonts.Medium),
-            'mode': Text(value='AUTO', position=(225, 110), font=fonts.Bold, color=BLACK),
+            'mode': Text(value='AUTO', position=(self._width - 25, self._height - int(self._height * .12) + 1), font=fonts.Bold, color=BLACK),
         })
 
         for key, value in state.items():
@@ -163,8 +168,8 @@ class View(object):
 
         for step in range(0, 10):
             # if we weren't in a normal state before goin
-            # to sleep, keep that face and status on for 
-            # a while, otherwise the sleep animation will 
+            # to sleep, keep that face and status on for
+            # a while, otherwise the sleep animation will
             # always override any minor state change before it
             if was_normal or step > 5:
                 if sleeping:
@@ -293,7 +298,7 @@ class View(object):
               1    0.000    0.000    0.000    0.000 ImageMode.py:20(ModeDescriptor)
         """
         with self._lock:
-            self._canvas = Image.new('1', (HEIGHT, WIDTH), WHITE)
+            self._canvas = Image.new('1', (self._width, self._height), WHITE)
             drawer = ImageDraw.Draw(self._canvas)
 
             for key, lv in self._state.items():
