@@ -85,7 +85,7 @@ function setup_raspbian(){
   parted -s "$LOOP_PATH" rm 2
   parted -s "$LOOP_PATH" mkpart primary "$PART2_START" 100%
   echo "[+] Check FS"
-  e2fsck -f "${LOOP_PATH}p2"
+  e2fsck -y -f "${LOOP_PATH}p2"
   echo "[+] Resize FS"
   resize2fs "${LOOP_PATH}p2"
   echo "[+] Device is ${LOOP_PATH}"
@@ -153,7 +153,7 @@ function provision_raspbian() {
   pip3 install gast==0.2.2
 
   </root/pwnagotchi/scripts/requirements.txt xargs -I{} --max-args=1 --max-procs="$(nproc)"\
-    pip3 install {} >/dev/null 2>&1
+    pip3 install --progress-bar off {}
 
   # waveshare
   pip3 install spidev RPi.GPIO
