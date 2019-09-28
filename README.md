@@ -31,8 +31,16 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 ### Hardware
 
 - Raspberry Pi Zero W
-- [Waveshare eInk Display (V2)](https://www.waveshare.com/2.13inch-e-paper-hat.htm) (optional if you connect to usb0 and point your browser to the web ui, see config.yml)
 - A decent power bank (with 1500 mAh you get ~2 hours with AI on)
+
+#### Display (optional)
+
+The display is optional if you connect to `usb0` (by using the data port on the unit) and point your browser to the web ui (see config.yml).
+
+The supported models are:
+
+- [Waveshare eInk Display (V2)](https://www.waveshare.com/2.13inch-e-paper-hat.htm)
+- [Pimoroni Inky pHAT](https://shop.pimoroni.com/products/inky-phat)
 
 ### Software
 
