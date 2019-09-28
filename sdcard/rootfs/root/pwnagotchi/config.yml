@@ -90,12 +90,12 @@ ui:
     # ePaper display can update every 3 secs anyway
     fps: 0.3
     display:
-        # Possible options inkyphat/waveshare
-        type: 'inkyphat'
-        # Possible options red/yellow/black (black used for monocromatic displays)
-        display_color: 'red'
         enabled: true
         rotation: 180
+        # Possible options inkyphat/inky or waveshare/ws
+        type: 'ws'
+        # Possible options red/yellow/black (black used for monocromatic displays)
+        color: 'black'
         video:
             enabled: true
             address: '10.0.0.2'

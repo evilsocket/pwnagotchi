@@ -78,7 +78,7 @@ class Display(View):
         self._video_port = config['ui']['display']['video']['port']
         self._video_address = config['ui']['display']['video']['address']
         self._display_type = config['ui']['display']['type']
-        self._display_color = config['ui']['display']['display_color']
+        self._display_color = config['ui']['display']['color']
         self._display = None
         self._httpd = None
         self.canvas = None
@@ -101,19 +101,23 @@ class Display(View):
             core.log("could not get ip of usb0, video server not starting")
 
     def _init_display(self):
-        if self._display_type == 'inkyphat':
+        if self._display_type in ('inkyphat', 'inky'):
             from inky import InkyPHAT
             self._display = InkyPHAT(self._display_color)
             self._display.set_border(InkyPHAT.BLACK)
-        else:
+        elif self._display_type in ('waveshare', 'ws'):
             from pwnagotchi.ui.waveshare import EPD
             # core.log("display module started")
             self._display = EPD()
             self._display.init(self._display.FULL_UPDATE)
             self._display.Clear(WHITE)
             self._display.init(self._display.PART_UPDATE)
+        else:
+            core.log("unknown display type %s" % self._display_type)
 
         self.on_render(self._on_view_rendered)
+
+        core.log("display type '%s' initialized (color:%s)" % (self._display_type, self._display_color))
 
     def image(self):
         img = None
