@@ -26,18 +26,24 @@ class View(object):
             self._width = 212
             self._height = 104
             fonts.setup(10, 8, 10, 25)
+            name_pos = (int(self._width / 2) - 15, int(self._height * .15))
+            status_pos = (int(self._width /2) - 15, int(self._height * .30))
         elif config['ui']['display']['type'] in ('ws', 'waveshare'):
             self._width = 250
             self._height = 122
             fonts.setup(10, 9, 10, 35)
+            name_pos = (125, 20)
+            status_pos = (125, 35)
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
                                     text_font=fonts.Medium),
             'aps': LabeledValue(color=BLACK, label='APS', value='0 (00)', position=(30, 0), label_font=fonts.Bold,
                                 text_font=fonts.Medium),
+
             #'epoch': LabeledValue(color=BLACK, label='E', value='0000', position=(145, 0), label_font=fonts.Bold,
             #                      text_font=fonts.Medium),
+
             'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=(self._width - 65, 0), label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
@@ -52,9 +58,9 @@ class View(object):
             'friend_face': Text(value=None, position=(0, 90), font=fonts.Bold, color=BLACK),
             'friend_name': Text(value=None, position=(40, 93), font=fonts.BoldSmall, color=BLACK),
 
-            'name': Text(value='%s>' % 'pwnagotchi', position=(int(self._width / 2) - 15, int(self._height * .15)), color=BLACK, font=fonts.Bold),
+            'name': Text(value='%s>' % 'pwnagotchi', position=name_pos, color=BLACK, font=fonts.Bold),
             # 'face2':   Bitmap( '/root/pwnagotchi/data/images/face_happy.bmp', (0, 20)),
-            'status': Text(value=voice.default(), position=(int(self._width /2) - 15, int(self._height * .30)), color=BLACK, font=fonts.Medium),
+            'status': Text(value=voice.default(), position=status_pos, color=BLACK, font=fonts.Medium),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK, position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
                                    text_font=fonts.Medium),
