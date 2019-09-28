@@ -25,11 +25,11 @@ class View(object):
         if config['ui']['display']['type'] in ('inky', 'inkyphat'):
             self._width = 212
             self._height = 104
-            fonts.setup(10, 9, 10, 35)
+            fonts.setup(10, 8, 10, 25)
         elif config['ui']['display']['type'] in ('ws', 'waveshare'):
             self._width = 250
             self._height = 122
-            fonts.setup(10, 8, 10, 25)
+            fonts.setup(10, 9, 10, 35)
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
