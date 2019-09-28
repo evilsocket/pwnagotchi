@@ -27,7 +27,7 @@ class View(object):
             self._height = 104
         else:
             self._width = 250
-            self.heigth = 122
+            self._height = 122
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
