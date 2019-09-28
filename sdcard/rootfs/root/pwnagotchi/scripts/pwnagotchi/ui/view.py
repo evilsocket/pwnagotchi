@@ -25,13 +25,19 @@ class View(object):
         if config['ui']['display']['type'] in ('inky', 'inkyphat'):
             self._width = 212
             self._height = 104
+
             fonts.setup(10, 8, 10, 25)
+
+            face_pos = (0, int(self._height / 4))
             name_pos = (int(self._width / 2) - 15, int(self._height * .15))
             status_pos = (int(self._width /2) - 15, int(self._height * .30))
         elif config['ui']['display']['type'] in ('ws', 'waveshare'):
             self._width = 250
             self._height = 122
+
             fonts.setup(10, 9, 10, 35)
+
+            face_pos = (0, 40)
             name_pos = (125, 20)
             status_pos = (125, 35)
 
@@ -53,7 +59,7 @@ class View(object):
 
             # 'histogram': Histogram([4, 94], color = BLACK),
 
-            'face': Text(value=faces.SLEEP, position=(0, int(self._height / 4)), color=BLACK, font=fonts.Huge),
+            'face': Text(value=faces.SLEEP, position=face_pos, color=BLACK, font=fonts.Huge),
 
             'friend_face': Text(value=None, position=(0, 90), font=fonts.Bold, color=BLACK),
             'friend_name': Text(value=None, position=(40, 93), font=fonts.BoldSmall, color=BLACK),
