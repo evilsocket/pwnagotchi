@@ -5,6 +5,9 @@ iface lo inet loopback
 allow-hotplug wlan0
 iface wlan0 inet static
 
+allow-hotplug eth0
+iface eth0 inet dhcp
+
 allow-hotplug usb0
 iface usb0 inet static
         address 10.0.0.2
