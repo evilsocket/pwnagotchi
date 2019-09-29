@@ -3,6 +3,7 @@ from threading import Lock
 
 import io
 import core
+import os
 import pwnagotchi
 
 from pwnagotchi.ui.view import WHITE, View
@@ -118,7 +119,7 @@ class Display(View):
             self._render_cb = self._inky_render
         elif self._is_papirus():
             from papirus import Papirus
-            exec(open('/etc/default/epd-fuse').read())
+            os.environ['EPD_SIZE'] = '2.0'
             self._display = Papirus()
             self._display.clear()
             self._render_cb = self._papirus_render
