@@ -311,12 +311,12 @@ msgstr "{num} stations gekicked\n"
 #: voice.py:144
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "{num} nieuwe vrienden gemaakt\n"
+msgstr "{num} nieuwe vrienden\n"
 
 #: voice.py:145
 #, python-brace-format
-msgid "{num} nieuwe handshakes\n"
-msgstr ""
+msgid "Got {num} handshakes\n"
+msgstr "{num} nieuwe handshakes\n"
 
 #: voice.py:147
 msgid "Met 1 peer"
@@ -335,5 +335,5 @@ msgid ""
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
 "Ik heb gepwned voor {duration} and heb {deauthed} clients gekicked! Ik heb ook "
-"{associated} nieuwe frienden gevonden en heb {handshakes} handshakes gegeten! "
+"{associated} nieuwe vrienden gevonden en heb {handshakes} handshakes gegeten! "
 "#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
