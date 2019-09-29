@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # based on: https://wiki.debian.org/RaspberryPi/qemu-user-static
 ## and https://z4ziggy.wordpress.com/2015/05/04/from-bochs-to-chroot/
 
