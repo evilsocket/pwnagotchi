@@ -10,5 +10,7 @@
 # bits.
 #
 # By default this script does nothing.
+# Powersave (Disable HDMI) ~30ma
+/opt/vc/bin/tvservice -o
 /root/pwnagotchi/scripts/startup.sh &
 exit 0
