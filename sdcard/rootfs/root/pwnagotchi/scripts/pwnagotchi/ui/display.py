@@ -3,6 +3,7 @@ from threading import Lock
 
 import io
 import core
+import os
 import pwnagotchi
 
 from pwnagotchi.ui.view import WHITE, View
@@ -107,6 +108,9 @@ class Display(View):
     def _is_inky(self):
         return self._display_type in ('inkyphat', 'inky')
 
+    def _is_papirus(self):
+        return self._display_type in ('papirus', 'papi')
+
     def _is_waveshare1(self):
         return self._display_type in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1')
 
@@ -119,6 +123,14 @@ class Display(View):
             self._display = InkyPHAT(self._display_color)
             self._display.set_border(InkyPHAT.BLACK)
             self._render_cb = self._inky_render
+            
+        elif self._is_papirus():
+            from papirus import Papirus
+            os.environ['EPD_SIZE'] = '2.0'
+            self._display = Papirus()
+            self._display.clear()
+            self._render_cb = self._papirus_render
+
         elif self._is_waveshare1():
             from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
             # core.log("display module started")
@@ -127,6 +139,7 @@ class Display(View):
             self._display.Clear(0xFF)
             self._display.init(self._display.lut_partial_update)
             self._render_cb = self._waveshare_render
+            
         elif self._is_waveshare2():
             from pwnagotchi.ui.waveshare.v2.waveshare import EPD
             # core.log("display module started")
@@ -135,6 +148,7 @@ class Display(View):
             self._display.Clear(WHITE)
             self._display.init(self._display.PART_UPDATE)
             self._render_cb = self._waveshare_render
+            
         else:
             core.log("unknown display type %s" % self._display_type)
 
@@ -176,6 +190,10 @@ class Display(View):
 
         self._display.set_image(imgbuf)
         self._display.show()
+
+    def _papirus_render(self):
+        self._display.display(self.canvas)
+        self._display.partial_update()
 
     def _waveshare_render(self):
         buf = self._display.getbuffer(self.canvas)
