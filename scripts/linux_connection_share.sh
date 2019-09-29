@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # name of the ethernet gadget interface on the host
 USB_IFACE=${1:-enp0s20f0u1}

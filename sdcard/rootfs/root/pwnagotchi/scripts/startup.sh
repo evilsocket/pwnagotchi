@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # blink 10 times to signal ready state
 /root/pwnagotchi/scripts/blink.sh 10 &
