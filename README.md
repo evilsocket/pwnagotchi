@@ -92,6 +92,34 @@ The UI is available either via display if installed, or via http://pwnagotchi.lo
 * **PWND**: Number of handshakes captured in this session and number of unique networks we own at least one handshake of, from the beginning.
 * **AUTO**: This indicates that the algorithm is running with AI disabled (or still loading), it disappears once the AI dependencies have been bootrapped and the neural network loaded.
 
+#### Languages
+
+Pwnagotchi is able to speak multiple languages!! Currently supported is:
+
+* **english** (default)
+* german
+
+If you want to add a language use the `language.sh` script.
+If you want to add for example the language **italian** you would type:
+
+```shell
+./scripts/language.sh add it
+# Now make your changes to the file
+# sdcard/scripts/rootfs/pwnagotchi/scripts/pwnagotchi/locale/it/LC_MESSAGES/voice.po
+./scripts/language.sh compile it
+# DONE
+```
+
+If you changed the `voice.py`- File, the translations need an update. Do it like this:
+
+```shell
+./scripts/language.sh update it
+# Now make your changes to the file (changed lines are marked with "fuzzy")
+# sdcard/scripts/rootfs/pwnagotchi/scripts/pwnagotchi/locale/it/LC_MESSAGES/voice.po
+./scripts/language.sh compile it
+# DONE
+```
+
 ### Random Info
 
 - `hostname` sets the unit name.

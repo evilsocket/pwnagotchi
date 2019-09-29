@@ -5,6 +5,7 @@ defscrollback 1024
 startup_message off
 altscreen on
 autodetach on
+zombie kr
 
 activity        "activity in %n (%t)"
 bell_msg        "bell in %n (%t)"

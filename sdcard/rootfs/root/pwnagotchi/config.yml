@@ -1,5 +1,7 @@
 # main algorithm configuration
 main:
+    # currently implemented: en (default), de
+    lang: en
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -93,9 +95,11 @@ ui:
         enabled: true
         rotation: 180
         # Possible options inkyphat/inky, papirus/papi or waveshare/ws
-        type: 'waveshare'
+        type: 'waveshare_2'
         # Possible options red/yellow/black (black used for monocromatic displays)
         color: 'black'
+        # How often to do a full refresh 0 all the time, -1 never
+        refresh: 50
         video:
             enabled: true
             address: '10.0.0.2'

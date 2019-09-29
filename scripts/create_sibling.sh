@@ -195,6 +195,9 @@ function provision_raspbian() {
   # slows down boot
   systemctl disable apt-daily.timer apt-daily.service apt-daily-upgrade.timer apt-daily-upgrade.service
 
+  # unecessary services
+  systemctl disable triggerhappy bluetooth wpa_supplicant
+
 EOF
   sed -i'' 's/^#//g' etc/ld.so.preload
   cd "${REPO_DIR}"
@@ -213,7 +216,7 @@ usage: $0 [OPTIONS]
     -i <file>    # Provide the path of an already downloaded raspbian image
     -o <file>    # Name of the img-file (default: pwnagotchi.img)
     -s <size>    # Size which should be added to second partition (in Gigabyte) (default: 4)
-    -v <version> # Version of raspbian (Supported: $SUPPORTED_RASPBIAN_VERSIONS; default: latest)
+    -v <version> # Version of raspbian (Supported: ${SUPPORTED_RASPBIAN_VERSIONS[*]}; default: latest)
     -p           # Only run provisioning (assumes the image is already mounted)
     -d           # Only run dependencies checks
     -h           # Show this help

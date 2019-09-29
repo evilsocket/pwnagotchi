@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw
 
 import core
 import pwnagotchi
-from pwnagotchi import voice
+from pwnagotchi.voice import Voice
 
 import pwnagotchi.ui.fonts as fonts
 import pwnagotchi.ui.faces as faces
@@ -31,6 +31,7 @@ def setup_display_specifics(config):
         face_pos = (0, int(height / 4))
         name_pos = (int(width / 2) - 15, int(height * .15))
         status_pos = (int(width / 2) - 15, int(height * .30))
+
     elif config['ui']['display']['type'] in ('papirus', 'papi'):
         fonts.setup(10, 8, 10, 23)
 
@@ -39,7 +40,9 @@ def setup_display_specifics(config):
         face_pos = (0, int(height / 4))
         name_pos = (int(width / 2) - 15, int(height * .15))
         status_pos = (int(width / 2) - 15, int(height * .30))
-    elif config['ui']['display']['type'] in ('ws', 'waveshare'):
+
+    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1', 
+                                             'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
         fonts.setup(10, 9, 10, 35)
 
         width = 250
@@ -57,6 +60,7 @@ class View(object):
         self._config = config
         self._canvas = None
         self._lock = Lock()
+        self._voice = Voice(lang=config['main']['lang'])
 
         self._width, self._height, \
         face_pos, name_pos, status_pos = setup_display_specifics(config)
@@ -89,7 +93,7 @@ class View(object):
 
             'name': Text(value='%s>' % 'pwnagotchi', position=name_pos, color=BLACK, font=fonts.Bold),
             # 'face2':   Bitmap( '/root/pwnagotchi/data/images/face_happy.bmp', (0, 20)),
-            'status': Text(value=voice.default(), position=status_pos, color=BLACK, font=fonts.Medium),
+            'status': Text(value=self._voice.default(), position=status_pos, color=BLACK, font=fonts.Medium),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK,
                                    position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
@@ -124,19 +128,19 @@ class View(object):
         self._state.set(key, value)
 
     def on_starting(self):
-        self.set('status', voice.on_starting())
+        self.set('status', self._voice.on_starting())
         self.set('face', faces.AWAKE)
 
     def on_ai_ready(self):
         self.set('mode', '')
         self.set('face', faces.HAPPY)
-        self.set('status', voice.on_ai_ready())
+        self.set('status', self._voice.on_ai_ready())
         self.update()
 
     def on_manual_mode(self, log):
         self.set('mode', 'MANU')
         self.set('face', faces.SAD if log.handshakes == 0 else faces.HAPPY)
-        self.set('status', voice.on_log(log))
+        self.set('status', self._voice.on_log(log))
         self.set('epoch', "%04d" % log.epochs)
         self.set('uptime', log.duration)
         self.set('channel', '-')
@@ -160,7 +164,7 @@ class View(object):
 
     def on_normal(self):
         self.set('face', faces.AWAKE)
-        self.set('status', voice.on_normal())
+        self.set('status', self._voice.on_normal())
         self.update()
 
     def set_closest_peer(self, peer):
@@ -188,17 +192,17 @@ class View(object):
 
     def on_new_peer(self, peer):
         self.set('face', faces.FRIEND)
-        self.set('status', voice.on_new_peer(peer))
+        self.set('status', self._voice.on_new_peer(peer))
         self.update()
 
     def on_lost_peer(self, peer):
         self.set('face', faces.LONELY)
-        self.set('status', voice.on_lost_peer(peer))
+        self.set('status', self._voice.on_lost_peer(peer))
         self.update()
 
     def on_free_channel(self, channel):
         self.set('face', faces.SMART)
-        self.set('status', voice.on_free_channel(channel))
+        self.set('status', self._voice.on_free_channel(channel))
         self.update()
 
     def wait(self, secs, sleeping=True):
@@ -214,12 +218,12 @@ class View(object):
                 if sleeping:
                     if secs > 1:
                         self.set('face', faces.SLEEP)
-                        self.set('status', voice.on_napping(secs))
+                        self.set('status', self._voice.on_napping(secs))
                     else:
                         self.set('face', faces.SLEEP2)
-                        self.set('status', voice.on_awakening())
+                        self.set('status', self._voice.on_awakening())
                 else:
-                    self.set('status', voice.on_waiting(secs))
+                    self.set('status', self._voice.on_waiting(secs))
                     if step % 2 == 0:
                         self.set('face', faces.LOOK_R)
                     else:
@@ -232,57 +236,57 @@ class View(object):
 
     def on_bored(self):
         self.set('face', faces.BORED)
-        self.set('status', voice.on_bored())
+        self.set('status', self._voice.on_bored())
         self.update()
 
     def on_sad(self):
         self.set('face', faces.SAD)
-        self.set('status', voice.on_sad())
+        self.set('status', self._voice.on_sad())
         self.update()
 
     def on_motivated(self, reward):
         self.set('face', faces.MOTIVATED)
-        self.set('status', voice.on_motivated(reward))
+        self.set('status', self._voice.on_motivated(reward))
         self.update()
 
     def on_demotivated(self, reward):
         self.set('face', faces.DEMOTIVATED)
-        self.set('status', voice.on_demotivated(reward))
+        self.set('status', self._voice.on_demotivated(reward))
         self.update()
 
     def on_excited(self):
         self.set('face', faces.EXCITED)
-        self.set('status', voice.on_excited())
+        self.set('status', self._voice.on_excited())
         self.update()
 
     def on_assoc(self, ap):
         self.set('face', faces.INTENSE)
-        self.set('status', voice.on_assoc(ap))
+        self.set('status', self._voice.on_assoc(ap))
         self.update()
 
     def on_deauth(self, sta):
         self.set('face', faces.COOL)
-        self.set('status', voice.on_deauth(sta))
+        self.set('status', self._voice.on_deauth(sta))
         self.update()
 
     def on_miss(self, who):
         self.set('face', faces.SAD)
-        self.set('status', voice.on_miss(who))
+        self.set('status', self._voice.on_miss(who))
         self.update()
 
     def on_lonely(self):
         self.set('face', faces.LONELY)
-        self.set('status', voice.on_lonely())
+        self.set('status', self._voice.on_lonely())
         self.update()
 
     def on_handshakes(self, new_shakes):
         self.set('face', faces.HAPPY)
-        self.set('status', voice.on_handshakes(new_shakes))
+        self.set('status', self._voice.on_handshakes(new_shakes))
         self.update()
 
     def on_rebooting(self):
         self.set('face', faces.BROKEN)
-        self.set('status', voice.on_rebooting())
+        self.set('status', self._voice.on_rebooting())
         self.update()
 
     def update(self):

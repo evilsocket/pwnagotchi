@@ -1195,3 +1195,8 @@ dtoverlay=dwc2
 dtparam=spi=on
 dtoverlay=spi1-3cs
 
+# Disable bluetooth
+dtoverlay=pi3-disable-bt
+# Disable audio
+dtparam=audio=off
+
