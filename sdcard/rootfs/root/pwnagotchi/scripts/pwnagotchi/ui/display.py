@@ -104,6 +104,9 @@ class Display(View):
     def _is_inky(self):
         return self._display_type in ('inkyphat', 'inky')
 
+    def _is_papirus(self):
+        return self._display_type in ('papirus', 'papi')
+
     def _is_waveshare(self):
         return self._display_type in ('waveshare', 'ws')
 
@@ -113,6 +116,12 @@ class Display(View):
             self._display = InkyPHAT(self._display_color)
             self._display.set_border(InkyPHAT.BLACK)
             self._render_cb = self._inky_render
+        elif self._is_papirus():
+            from papirus import Papirus
+            exec(open('/etc/default/epd-fuse').read())
+            self._display = Papirus()
+            self._display.clear()
+            self._render_cb = self._papirus_render
         elif self._is_waveshare():
             from pwnagotchi.ui.waveshare import EPD
             # core.log("display module started")
@@ -162,6 +171,10 @@ class Display(View):
 
         self._display.set_image(imgbuf)
         self._display.show()
+
+    def _papirus_render(self):
+        self._display.display(self.canvas)
+        self._display.partial_update()
 
     def _waveshare_render(self):
         buf = self._display.getbuffer(self.canvas)

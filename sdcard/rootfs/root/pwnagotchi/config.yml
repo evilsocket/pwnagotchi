@@ -92,7 +92,7 @@ ui:
     display:
         enabled: true
         rotation: 180
-        # Possible options inkyphat/inky or waveshare/ws
+        # Possible options inkyphat/inky, papirus/papi or waveshare/ws
         type: 'waveshare'
         # Possible options red/yellow/black (black used for monocromatic displays)
         color: 'black'
