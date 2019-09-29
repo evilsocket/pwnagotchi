@@ -128,7 +128,7 @@ class Display(View):
             self._display.init(self._display.lut_partial_update)
             self._render_cb = self._waveshare_render
         elif self._is_waveshare2():
-            from pwnagotchi.ui.v2.waveshare import EPD
+            from pwnagotchi.ui.waveshare.v2.waveshare import EPD
             # core.log("display module started")
             self._display = EPD()
             self._display.init(self._display.FULL_UPDATE)
@@ -180,17 +180,17 @@ class Display(View):
     def _waveshare_render(self):
         buf = self._display.getbuffer(self.canvas)
         if self._is_waveshare1:
-            if self.full_refresh_count == self.full_refresh_trigger:
+            if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
                 self._display.Clear(0x00)
             self._display.display(buf)
         elif self._is_waveshare2:
-            if self.full_refresh_count == self.full_refresh_trigger:
+            if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
                 self._display.Clear(BLACK)
             self._display.displayPartial(buf)
         self._display.sleep()
-        if self.full_refresh_count == self.full_refresh_trigger:
+        if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
            self.full_refresh_count = 0
-        else:
+        elif self.full_refresh_trigger >= 0:
            self.full_refresh_count += 1
 
     def _on_view_rendered(self, img):
