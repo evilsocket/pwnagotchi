@@ -94,7 +94,7 @@ The UI is available either via display if installed, or via http://pwnagotchi.lo
 
 #### Languages
 
-Pwnagotchi is able to speak multiple languages!! Currently supported is:
+Pwnagotchi is able to speak multiple languages!! Currently supported are:
 
 * **english** (default)
 * german
@@ -105,7 +105,7 @@ If you want to add for example the language **italian** you would type:
 ```shell
 ./scripts/language.sh add it
 # Now make your changes to the file
-# sdcard/scripts/rootfs/pwnagotchi/scripts/pwnagotchi/locale/it/LC_MESSAGES/voice.po
+# sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/locale/it/LC_MESSAGES/voice.po
 ./scripts/language.sh compile it
 # DONE
 ```
@@ -115,7 +115,7 @@ If you changed the `voice.py`- File, the translations need an update. Do it like
 ```shell
 ./scripts/language.sh update it
 # Now make your changes to the file (changed lines are marked with "fuzzy")
-# sdcard/scripts/rootfs/pwnagotchi/scripts/pwnagotchi/locale/it/LC_MESSAGES/voice.po
+# sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/locale/it/LC_MESSAGES/voice.po
 ./scripts/language.sh compile it
 # DONE
 ```
