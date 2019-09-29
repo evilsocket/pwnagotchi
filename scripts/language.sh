@@ -15,10 +15,10 @@ cat <<EOF
 usage: $0 <command> [options]
 
   Commands:
-    add <language>     # Adds a new language
-    delete <language>  # Deletes a language
-    compile <language> # Compiles a language
-    update             # Update
+    add <language>
+    delete <language>
+    compile <language>
+    update <language>
 
 EOF
 }
