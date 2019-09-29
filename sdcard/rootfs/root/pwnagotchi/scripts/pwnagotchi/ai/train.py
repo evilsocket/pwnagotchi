@@ -54,7 +54,7 @@ class Stats(object):
 
     def load(self):
         with self._lock:
-            if os.path.exists(self.path):
+            if os.path.exists(self.path) and os.path.getsize(self.path) > 0:
                 core.log("[ai] loading %s" % self.path)
                 with open(self.path, 'rt') as fp:
                     obj = json.load(fp)
