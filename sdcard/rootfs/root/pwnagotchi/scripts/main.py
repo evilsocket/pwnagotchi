@@ -8,7 +8,7 @@ import core
 import pwnagotchi
 
 from pwnagotchi.log import SessionParser
-import pwnagotchi.voice as voice
+from pwnagotchi.voice import Voice
 from pwnagotchi.agent import Agent
 from pwnagotchi.ui.display import Display
 
@@ -74,7 +74,7 @@ if args.do_manual:
                 auth.set_access_token(config['twitter']['access_token_key'], config['twitter']['access_token_secret'])
                 api = tweepy.API(auth)
 
-                tweet = voice.on_log_tweet(log)
+                tweet = Voice(lang=config['main']['lang']).on_log_tweet(log)
                 api.update_with_media(filename=picture, status=tweet)
                 log.save_session_id()
 
