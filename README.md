@@ -48,7 +48,7 @@ The display is optional if you connect to `usb0` (by using the data port on the 
 
 The supported models are:
 
-- [Waveshare eInk Display (V2)](https://www.waveshare.com/2.13inch-e-paper-hat.htm)
+- [Waveshare eInk Display (both V1 and V2)](https://www.waveshare.com/2.13inch-e-paper-hat.htm)
 - [Pimoroni Inky pHAT](https://shop.pimoroni.com/products/inky-phat)
 - [PaPiRus eInk Screen](https://uk.pi-supply.com/products/papirus-zero-epaper-screen-phat-pi-zero)
 
