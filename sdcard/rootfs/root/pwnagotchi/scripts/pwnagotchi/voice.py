@@ -37,11 +37,11 @@ class Voice:
             '...'])
 
 
-    def on_free_channel(channel):
+    def on_free_channel(self, channel):
         return self._('Hey, channel {channel} is\nfree! Your AP will\nsay thanks.').format(channel=channel)
 
 
-    def on_bored():
+    def on_bored(self):
         return random.choice([ \
             self._('I\'m bored ...'),
             self._('Let\'s go for a walk!')])
@@ -98,7 +98,7 @@ class Voice:
             self._('Where\'s everybody?!')])
 
 
-    def on_napping(self,secs):
+    def on_napping(self, secs):
         return random.choice([ \
             self._('Napping for {secs}s ...').format(secs=secs),
             self._('Zzzzz'),
@@ -109,14 +109,14 @@ class Voice:
         return random.choice(['...', '!'])
 
 
-    def on_waiting(self,secs):
+    def on_waiting(self, secs):
         return random.choice([ \
             self._('Waiting for {secs}s ...').format(secs=secs),
             '...',
             self._('Looking around ({secs}s)').format(secs=secs)])
 
 
-    def on_assoc(self,ap):
+    def on_assoc(self, ap):
         ssid, bssid = ap['hostname'], ap['mac']
         what = ssid if ssid != '' and ssid != '<hidden>' else bssid
         return random.choice([ \
@@ -132,7 +132,7 @@ class Voice:
             self._('Kickbanning\n{mac}!').format(mac=sta['mac'])])
 
 
-    def on_handshakes(self,new_shakes):
+    def on_handshakes(self, new_shakes):
         s = 's' if new_shakes > 1 else ''
         return self._('Cool, we got {num}\nnew handshake{plural}!').format(num=new_shakes, plural=s)
 
@@ -141,7 +141,7 @@ class Voice:
         return self._("Ops, something\nwent wrong ...\nRebooting ...")
 
 
-    def on_log(self,log):
+    def on_log(self, log):
         status = self._('Kicked {num} stations\n').format(num=log.deauthed)
         status += self._('Made {num} new friends\n').format(num=log.associated)
         status += self._('Got {num} handshakes\n').format(num=log.handshakes)
@@ -152,7 +152,7 @@ class Voice:
         return status
 
 
-    def on_log_tweet(self,log):
+    def on_log_tweet(self, log):
         return self._('I\'ve been pwning for {duration} and kicked {deauthed} clients! I\'ve also met {associated} new friends and ate {handshakes} handshakes! #pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet').format(
                 duration=log.duration_human,
                 deauthed=log.deauthed,
