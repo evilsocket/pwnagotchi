@@ -3,6 +3,7 @@ from threading import Lock
 
 import io
 import core
+import os
 import pwnagotchi
 
 from pwnagotchi.ui.view import WHITE, View
@@ -19,7 +20,7 @@ class VideoHandler(BaseHTTPRequestHandler):
   </head>
   <body>
     <img src="/ui" id="ui"/>
-    
+
     <script type="text/javascript">
     window.onload = function() {
         var image = document.getElementById("ui");
@@ -77,6 +78,12 @@ class Display(View):
         self._video_enabled = config['ui']['display']['video']['enabled']
         self._video_port = config['ui']['display']['video']['port']
         self._video_address = config['ui']['display']['video']['address']
+        self._display_type = config['ui']['display']['type']
+        self._display_color = config['ui']['display']['color']
+        self.full_refresh_count = 0
+        self.full_refresh_trigger = config['ui']['display']['refresh'] 
+
+        self._render_cb = None
         self._display = None
         self._httpd = None
         self.canvas = None
@@ -98,14 +105,56 @@ class Display(View):
         else:
             core.log("could not get ip of usb0, video server not starting")
 
+    def _is_inky(self):
+        return self._display_type in ('inkyphat', 'inky')
+
+    def _is_papirus(self):
+        return self._display_type in ('papirus', 'papi')
+
+    def _is_waveshare1(self):
+        return self._display_type in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1')
+
+    def _is_waveshare2(self):
+        return self._display_type in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2')
+
     def _init_display(self):
-        from pwnagotchi.ui.waveshare import EPD
-        # core.log("display module started")
-        self._display = EPD()
-        self._display.init(self._display.FULL_UPDATE)
-        self._display.Clear(WHITE)
-        self._display.init(self._display.PART_UPDATE)
+        if self._is_inky():
+            from inky import InkyPHAT
+            self._display = InkyPHAT(self._display_color)
+            self._display.set_border(InkyPHAT.BLACK)
+            self._render_cb = self._inky_render
+            
+        elif self._is_papirus():
+            from papirus import Papirus
+            os.environ['EPD_SIZE'] = '2.0'
+            self._display = Papirus()
+            self._display.clear()
+            self._render_cb = self._papirus_render
+
+        elif self._is_waveshare1():
+            from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
+            # core.log("display module started")
+            self._display = EPD()
+            self._display.init(self._display.lut_full_update)
+            self._display.Clear(0xFF)
+            self._display.init(self._display.lut_partial_update)
+            self._render_cb = self._waveshare_render
+            
+        elif self._is_waveshare2():
+            from pwnagotchi.ui.waveshare.v2.waveshare import EPD
+            # core.log("display module started")
+            self._display = EPD()
+            self._display.init(self._display.FULL_UPDATE)
+            self._display.Clear(WHITE)
+            self._display.init(self._display.PART_UPDATE)
+            self._render_cb = self._waveshare_render
+            
+        else:
+            core.log("unknown display type %s" % self._display_type)
+
         self.on_render(self._on_view_rendered)
+
+        core.log("display type '%s' initialized (color:%s)" % (self._display_type, self._display_color))
 
     def image(self):
         img = None
@@ -113,11 +162,60 @@ class Display(View):
             img = self.canvas if self._rotation == 0 else self.canvas.rotate(-self._rotation)
         return img
 
+    def _inky_render(self):
+        if self._display_color != 'mono':
+            display_colors = 3
+        else:
+            display_colors = 2
+
+        imgbuf = self.canvas.convert('RGB').convert('P', palette=1, colors=display_colors)
+
+        if self._display_color == 'red':
+            imgbuf.putpalette([
+                255, 255, 255,  # index 0 is white
+                0, 0, 0,  # index 1 is black
+                255, 0, 0  # index 2 is red
+            ])
+        elif self._display_color == 'yellow':
+            imgbuf.putpalette([
+                255, 255, 255,  # index 0 is white
+                0, 0, 0,  # index 1 is black
+                255, 255, 0  # index 2 is yellow
+            ])
+        else:
+            imgbuf.putpalette([
+                255, 255, 255,  # index 0 is white
+                0, 0, 0  # index 1 is black
+            ])
+
+        self._display.set_image(imgbuf)
+        self._display.show()
+
+    def _papirus_render(self):
+        self._display.display(self.canvas)
+        self._display.partial_update()
+
+    def _waveshare_render(self):
+        buf = self._display.getbuffer(self.canvas)
+        if self._is_waveshare1:
+            if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
+                self._display.Clear(0x00)
+            self._display.display(buf)
+        elif self._is_waveshare2:
+            if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
+                self._display.Clear(BLACK)
+            self._display.displayPartial(buf)
+        self._display.sleep()
+        if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
+           self.full_refresh_count = 0
+        elif self.full_refresh_trigger >= 0:
+           self.full_refresh_count += 1
+
     def _on_view_rendered(self, img):
         # core.log("display::_on_view_rendered")
         VideoHandler.render(img)
 
         if self._enabled:
             self.canvas = img if self._rotation == 0 else img.rotate(self._rotation)
-            buf = self._display.getbuffer(self.canvas)
-            self._display.displayPartial(buf)
+            if self._render_cb is not None:
+                self._render_cb()

@@ -2,6 +2,7 @@ import os
 import hashlib
 import time
 import re
+import os
 from datetime import datetime
 
 from pwnagotchi.mesh.peer import Peer
@@ -129,7 +130,7 @@ class SessionParser(object):
             self.duration_human.append('%d seconds' % secs)
 
         self.duration_human = ', '.join(self.duration_human)
-        self.avg_reward /= self.epochs
+        self.avg_reward /= (self.epochs if self.epochs else 1)
 
     def __init__(self, path='/var/log/pwnagotchi.log'):
         self.path = path
@@ -147,15 +148,17 @@ class SessionParser(object):
             'detected unit (.+)@(.+) \(v.+\) on channel \d+ \(([\d\-]+) dBm\) \[sid:(.+) pwnd_tot:(\d+) uptime:(\d+)\]')
 
         lines = []
-        with FileReadBackwards(self.path, encoding="utf-8") as fp:
-            for line in fp:
-                line = line.strip()
-                if line != "" and line[0] != '[':
-                    continue
-                lines.append(line)
-                if SessionParser.START_TOKEN in line:
-                    break
-        lines.reverse()
+
+        if os.path.exists(self.path):
+            with FileReadBackwards(self.path, encoding="utf-8") as fp:
+                for line in fp:
+                    line = line.strip()
+                    if line != "" and line[0] != '[':
+                        continue
+                    lines.append(line)
+                    if SessionParser.START_TOKEN in line:
+                        break
+            lines.reverse()
 
         self.last_session = lines
         self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()

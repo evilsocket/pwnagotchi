@@ -8,7 +8,7 @@ import core
 import pwnagotchi
 
 from pwnagotchi.log import SessionParser
-import pwnagotchi.voice as voice
+from pwnagotchi.voice import Voice
 from pwnagotchi.agent import Agent
 from pwnagotchi.ui.display import Display
 
@@ -62,7 +62,7 @@ if args.do_manual:
 
             core.log("detected a new session and internet connectivity!")
 
-            picture = '/tmp/pwnagotchi.png'
+            picture = '/dev/shm/pwnagotchi.png'
 
             display.update()
             display.image().save(picture, 'png')
@@ -74,7 +74,7 @@ if args.do_manual:
                 auth.set_access_token(config['twitter']['access_token_key'], config['twitter']['access_token_secret'])
                 api = tweepy.API(auth)
 
-                tweet = voice.on_log_tweet(log)
+                tweet = Voice(lang=config['main']['lang']).on_log_tweet(log)
                 api.update_with_media(filename=picture, status=tweet)
                 log.save_session_id()
 
@@ -121,9 +121,9 @@ while True:
         # An interesting effect of this:
         #
         # From Pwnagotchi's perspective, the more new access points
-        # and / or client stations nearby, the longer one epoch of 
+        # and / or client stations nearby, the longer one epoch of
         # its relative time will take ... basically, in Pwnagotchi's universe,
-        # WiFi electromagnetic fields affect time like gravitational fields 
+        # WiFi electromagnetic fields affect time like gravitational fields
         # affect ours ... neat ^_^
         agent.next_epoch()
     except Exception as e:
