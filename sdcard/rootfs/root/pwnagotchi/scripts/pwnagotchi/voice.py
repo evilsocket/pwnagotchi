@@ -35,7 +35,7 @@ def on_bored():
 
 
 def on_motivated(reward):
-    return 'This is best day\nof my life!'
+    return 'This is the best\nday of my life!'
 
 
 def on_demotivated(reward):

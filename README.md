@@ -16,7 +16,7 @@ Depending on the status of the unit, several states and states transitions are c
 
 If instead you are a boring person, you can disable the AI and have the algorithm run just with the preconfigured default parameters and enjoy a very portable bettercap + webui dedicated hardware.
 
-**NOTE:** The software **requires bettercap compiled from master**.
+**NOTE:** The software **requires bettercap v2.25**.
 
 ![units](https://i.imgur.com/MStjXZF.png)
 
@@ -42,19 +42,24 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 
 #### Automatically create an image
 
-You can use the `create_sibling.sh` script to create an - ready to flash - rasbian image with pwnagotchi.
+You can use the `scripts/create_sibling.sh` script to create an - ready to flash - rasbian image with pwnagotchi.
 
 ```shell
-usage: ./create_sibling.sh [OPTIONS]
+usage: ./scripts/create_sibling.sh [OPTIONS]
 
   Options:
-    -n <name> # Name of the pwnagotchi (default: alpha)
+    -n <name> # Name of the pwnagotchi (default: pwnagotchi)
+    -i <file> # Provide the path of an already downloaded raspbian image
     -o <file> # Name of the img-file (default: pwnagotchi.img)
     -s <size> # Size which should be added to second partition (in Gigabyte) (default: 4)
     -p        # Only run provisioning (assumes the image is already mounted)
     -d        # Only run dependencies checks
     -h        # Show this help
 ```
+
+#### Host Connection Share
+
+If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
 
 ### UI
 
@@ -76,29 +81,8 @@ The UI is available either via display if installed, or via http://10.0.0.2:8080
 - `/var/log/pwnagotchi.log` is your friend.
 - if connected to a laptop via usb data port, with internet connectivity shared, magic things will happen.
 - checkout the `ui.video` section of the `config.yml` - if you don't want to use a display, you can connect to it with the browser and a cable.
-
-Magic scripts that makes it talk to the internet:
-
-```sh
-#!/bin/bash
-
-# name of the ethernet gadget interface on the host
-USB_IFACE=${1:-enp0s20f0u1}
-USB_IFACE_IP=10.0.0.1
-USB_IFACE_NET=10.0.0.0/24
-# host interface to use for upstream connection
-UPSTREAM_IFACE=enxe4b97aa99867
-
-ip addr add $USB_IFACE_IP/24 dev $USB_IFACE
-ip link set $USB_IFACE up
-
-iptables -A FORWARD -o $UPSTREAM_IFACE -i $USB_IFACE -s $USB_IFACE_NET -m conntrack --ctstate NEW -j ACCEPT
-iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-iptables -t nat -F POSTROUTING
-iptables -t nat -A POSTROUTING -o $UPSTREAM_IFACE -j MASQUERADE
-
-echo 1 > /proc/sys/net/ipv4/ip_forward
-```
+- If you get `[FAILED] Failed to start Remount Root and Kernel File Systems.` while booting pwnagotchi, make sure 
+the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`. Use `sudo blkid` to find those values when you are using `create_sibling.sh`.
 
 ## License
 
