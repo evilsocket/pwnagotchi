@@ -111,12 +111,14 @@ class Display(View):
 
     def _init_display(self):
         if self._is_inky():
+            core.log("initializing inky display")
             from inky import InkyPHAT
             self._display = InkyPHAT(self._display_color)
             self._display.set_border(InkyPHAT.BLACK)
             self._render_cb = self._inky_render
 
         elif self._is_papirus():
+            core.log("initializing papirus display")
             from pwnagotchi.ui.papirus.epd import EPD
             os.environ['EPD_SIZE'] = '2.0'
             self._display = EPD()
@@ -124,8 +126,8 @@ class Display(View):
             self._render_cb = self._papirus_render
 
         elif self._is_waveshare1():
+            core.log("initializing waveshare v1 display")
             from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
-            # core.log("display module started")
             self._display = EPD()
             self._display.init(self._display.lut_full_update)
             self._display.Clear(0xFF)
@@ -133,8 +135,8 @@ class Display(View):
             self._render_cb = self._waveshare_render
 
         elif self._is_waveshare2():
+            core.log("initializing waveshare v2 display")
             from pwnagotchi.ui.waveshare.v2.waveshare import EPD
-            # core.log("display module started")
             self._display = EPD()
             self._display.init(self._display.FULL_UPDATE)
             self._display.Clear(WHITE)
@@ -145,8 +147,6 @@ class Display(View):
             core.log("unknown display type %s" % self._display_type)
 
         self.on_render(self._on_view_rendered)
-
-        core.log("display type '%s' initialized (color:%s)" % (self._display_type, self._display_color))
 
     def image(self):
         img = None
@@ -189,9 +189,9 @@ class Display(View):
 
     def _waveshare_render(self):
         buf = self._display.getbuffer(self.canvas)
-        if self._is_waveshare1:
+        if self._is_waveshare1():
             self._display.display(buf)
-        elif self._is_waveshare2:
+        elif self._is_waveshare2():
             self._display.displayPartial(buf)
 
     def _on_view_rendered(self, img):

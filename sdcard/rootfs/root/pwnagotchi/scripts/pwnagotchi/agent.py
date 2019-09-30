@@ -9,7 +9,7 @@ import _thread
 import core
 
 from bettercap.client import Client
-from pwnagotchi.mesh.advertise import AsyncAdvertiser
+from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
 
 RECOVERY_DATA_FILE = '/root/.pwnagotchi-recovery'
