@@ -24,7 +24,7 @@ args = parser.parse_args()
 
 if args.do_clear:
     print("clearing the display ...")
-    from pwnagotchi.ui.waveshare import EPD
+    from pwnagotchi.ui.waveshare.v2.waveshare import EPD
 
     epd = EPD()
     epd.init(epd.FULL_UPDATE)

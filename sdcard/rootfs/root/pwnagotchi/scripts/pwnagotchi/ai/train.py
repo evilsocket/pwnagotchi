@@ -142,28 +142,29 @@ class AsyncTrainer(object):
     def _ai_worker(self):
         self._model = ai.load(self._config, self, self._epoch)
 
-        self.on_ai_ready()
+        if self._model:
+            self.on_ai_ready()
 
-        epochs_per_episode = self._config['ai']['epochs_per_episode']
+            epochs_per_episode = self._config['ai']['epochs_per_episode']
 
-        obs = None
-        while True:
-            self._model.env.render()
-            # enter in training mode?
-            if random.random() > self._config['ai']['laziness']:
-                core.log("[ai] learning for %d epochs ..." % epochs_per_episode)
-                try:
-                    self.set_training(True, epochs_per_episode)
-                    self._model.learn(total_timesteps=epochs_per_episode, callback=self.on_ai_training_step)
-                except Exception as e:
-                    core.log("[ai] error while training: %s" % e)
-                finally:
-                    self.set_training(False)
+            obs = None
+            while True:
+                self._model.env.render()
+                # enter in training mode?
+                if random.random() > self._config['ai']['laziness']:
+                    core.log("[ai] learning for %d epochs ..." % epochs_per_episode)
+                    try:
+                        self.set_training(True, epochs_per_episode)
+                        self._model.learn(total_timesteps=epochs_per_episode, callback=self.on_ai_training_step)
+                    except Exception as e:
+                        core.log("[ai] error while training: %s" % e)
+                    finally:
+                        self.set_training(False)
+                        obs = self._model.env.reset()
+                # init the first time
+                elif obs is None:
                     obs = self._model.env.reset()
-            # init the first time
-            elif obs is None:
-                obs = self._model.env.reset()
 
-            # run the inference
-            action, _ = self._model.predict(obs)
-            obs, _, _, _ = self._model.env.step(action)
+                # run the inference
+                action, _ = self._model.predict(obs)
+                obs, _, _, _ = self._model.env.step(action)
