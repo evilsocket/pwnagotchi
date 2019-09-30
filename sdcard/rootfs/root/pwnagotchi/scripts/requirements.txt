@@ -9,3 +9,4 @@ tweepy
 file_read_backwards
 numpy
 inky
+smbus

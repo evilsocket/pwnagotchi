@@ -123,11 +123,11 @@ class Display(View):
             self._display = InkyPHAT(self._display_color)
             self._display.set_border(InkyPHAT.BLACK)
             self._render_cb = self._inky_render
-            
+
         elif self._is_papirus():
-            from papirus import Papirus
+            from pwnagotchi.ui.papirus.epd import EPD
             os.environ['EPD_SIZE'] = '2.0'
-            self._display = Papirus()
+            self._display = EPD()
             self._display.clear()
             self._render_cb = self._papirus_render
 
