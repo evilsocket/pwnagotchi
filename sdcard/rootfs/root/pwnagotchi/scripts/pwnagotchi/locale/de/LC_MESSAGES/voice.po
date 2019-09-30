@@ -267,7 +267,7 @@ msgid ""
 "{mac}\n"
 "needs no WiFi!"
 msgstr ""
-"Habe gerade entschieden,\n"
+"Ich denke,\n"
 "dass {mac}\n"
 "kein WiFi brauch!"
 
