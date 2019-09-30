@@ -78,7 +78,7 @@ usage: ./scripts/create_sibling.sh [OPTIONS]
 
 #### Host Connection Share
 
-If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
+If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/(linux|macos)_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
 
 ### UI
 
