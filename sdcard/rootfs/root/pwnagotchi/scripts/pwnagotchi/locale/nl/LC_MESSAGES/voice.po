@@ -26,7 +26,8 @@ msgid ""
 "Hi, I'm Pwnagotchi!\n"
 "Starting ..."
 msgstr ""
-"Hoi, Ik ben Pwnagotchi!\n"
+"Hoi, Ik ben\n"
+"Pwnagotchi!\n"
 "Opstarten ..."
 
 #: voice.py:22
@@ -34,7 +35,8 @@ msgid ""
 "New day, new hunt,\n"
 "new pwns!"
 msgstr ""
-"Nieuwe dag, nieuwe jacht,\n"
+"Nieuwe dag,\n" 
+"nieuwe jacht,\n"
 "nieuwe pwns!"
 
 #: voice.py:23
@@ -50,7 +52,7 @@ msgid ""
 "The neural network\n"
 "is ready."
 msgstr ""
-"Het neuraal netwerk\n"
+"Neuraal netwerk\n"
 "is klaar voor gebruik."
 
 #: voice.py:39
@@ -86,11 +88,13 @@ msgstr "Kut dag :/"
 
 #: voice.py:58
 msgid "I'm extremely bored ..."
-msgstr "Ik verveel me de pleuris ..."
+msgstr "Ik verveel me \n"
+"de pleuris ..."
 
 #: voice.py:59
 msgid "I'm very sad ..."
-msgstr "Ik ben erg verdrietig ..."
+msgstr "Ik ben erg\n" 
+"verdrietig ..."
 
 #: voice.py:60
 msgid "I'm sad"
@@ -98,7 +102,8 @@ msgstr "Ik ben verdrietig"
 
 #: voice.py:66
 msgid "I'm living the life!"
-msgstr "Beter kan het leven niet worden!"
+msgstr "Beter kan het leven\n"
+"niet worden!"
 
 #: voice.py:67
 msgid "I pwn therefore I am."
@@ -121,7 +126,8 @@ msgid ""
 "curiosity ..."
 msgstr ""
 "Mijn enigiste misdrijf\n"
-"is mijn nieuwsgierigheid ..."
+"is mijn \n"
+"nieuwsgierigheid ..."
 
 #: voice.py:75
 #, python-brace-format
@@ -236,7 +242,8 @@ msgid ""
 msgstr ""
 "Hey\n"
 "{what}\n"
-"Laten we matties worden!"
+"Laten we matties\n"
+"worden!"
 
 #: voice.py:122
 #, python-brace-format
@@ -263,7 +270,8 @@ msgid ""
 "needs no WiFi!"
 msgstr "Ik vind dat\n"
 "{mac}\n"
-"genoeg WiFi heeft gehad!"
+"genoeg WiFi\n"
+"heeft gehad!"
 
 #: voice.py:129
 #, python-brace-format
@@ -299,7 +307,7 @@ msgid ""
 "went wrong ...\n"
 "Rebooting ..."
 msgstr ""
-"Ops, iets"
+"Oops, iets"
 "ging fout ...\n"
 "Rebooting ..."
 
