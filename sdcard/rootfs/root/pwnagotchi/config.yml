@@ -98,8 +98,6 @@ ui:
         type: 'waveshare_2'
         # Possible options red/yellow/black (black used for monocromatic displays)
         color: 'black'
-        # How often to do a full refresh 0 all the time, -1 never
-        refresh: 50
         video:
             enabled: true
             address: '10.0.0.2'
