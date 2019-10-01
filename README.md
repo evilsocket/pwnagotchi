@@ -78,7 +78,7 @@ usage: ./scripts/create_sibling.sh [OPTIONS]
 
 #### Host Connection Share
 
-If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/(linux|macos)_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
+If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
 
 ### UI
 
@@ -98,7 +98,6 @@ Pwnagotchi is able to speak multiple languages!! Currently supported are:
 
 * **english** (default)
 * german
-* dutch
 
 If you want to add a language use the `language.sh` script.
 If you want to add for example the language **italian** you would type:
@@ -119,6 +118,14 @@ If you changed the `voice.py`- File, the translations need an update. Do it like
 # sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/locale/it/LC_MESSAGES/voice.po
 ./scripts/language.sh compile it
 # DONE
+```
+
+Now you can use the `preview.py`-script to preview the changes:
+
+```shell
+./scripts/preview.py --lang it --display ws2 --port 8080 &
+./scripts/preview.py --lang it --display inky --port 8081 &
+# Now open http://localhost:8080 and http://localhost:8081
 ```
 
 ### Random Info
