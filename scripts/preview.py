@@ -43,7 +43,10 @@ class CustomVideoHandler(VideoHandler):
     @staticmethod
     def render(img):
         with CustomVideoHandler._lock:
-            img.save("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), format='PNG')
+            try:
+              img.save("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), format='PNG')
+            except BaseException:
+              core.log("could not write preview")
 
     def do_GET(self):
         if self.path == '/':
@@ -67,7 +70,7 @@ class CustomVideoHandler(VideoHandler):
                     with open("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), 'rb') as fp:
                         shutil.copyfileobj(fp, self.wfile)
                 except BaseException:
-                    pass
+                    core.log("could not open preview")
         else:
             self.send_response(404)
 
