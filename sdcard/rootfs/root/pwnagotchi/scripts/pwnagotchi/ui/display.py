@@ -1,5 +1,6 @@
 import _thread
 from threading import Lock
+from PIL import Image
 
 import shutil
 import core
@@ -127,12 +128,21 @@ class Display(View):
 
         elif self._is_waveshare1():
             core.log("initializing waveshare v1 display")
-            from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
-            self._display = EPD()
-            self._display.init(self._display.lut_full_update)
-            self._display.Clear(0xFF)
-            self._display.init(self._display.lut_partial_update)
-            self._render_cb = self._waveshare_render
+            if self._display_color == 'black':
+                from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
+                # core.log("display module started")
+                self._display = EPD()
+                self._display.init(self._display.lut_full_update)
+                self._display.Clear(0xFF)
+                self._display.init(self._display.lut_partial_update)
+                self._render_cb = self._waveshare_render
+            
+            else:
+                from pwnagotchi.ui.waveshare.v1.epd2in13bc import EPD
+                self._display = EPD()
+                self._display.init()
+                self._display.Clear()
+                self._render_cb = self._waveshare_bc_render
 
         elif self._is_waveshare2():
             core.log("initializing waveshare v2 display")
@@ -194,6 +204,20 @@ class Display(View):
         elif self._is_waveshare2():
             self._display.displayPartial(buf)
 
+    def _waveshare_bc_render(self):
+        buf_black = self._display.getbuffer(self.canvas)
+        emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
+        buf_red = self._display.getbuffer(emptyImage)
+        if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
+            self._display.Clear()
+        self._display.display(buf_black,buf_red)
+        self._display.sleep()
+        if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
+           self.full_refresh_count = 0
+        elif self.full_refresh_trigger >= 0:
+           self.full_refresh_count += 1
+
+        
     def _on_view_rendered(self, img):
         # core.log("display::_on_view_rendered")
         VideoHandler.render(img)

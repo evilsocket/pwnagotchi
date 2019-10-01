@@ -43,13 +43,22 @@ def setup_display_specifics(config):
 
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1', 
                                              'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
-        fonts.setup(10, 9, 10, 35)
+        if config['ui']['display']['color'] == 'black':
+            fonts.setup(10, 9, 10, 35)
 
-        width = 250
-        height = 122
-        face_pos = (0, 40)
-        name_pos = (125, 20)
-        status_pos = (125, 35)
+            width = 250
+            height = 122
+            face_pos = (0, 40)
+            name_pos = (125, 20)
+            status_pos = (125, 35)
+        else:
+            fonts.setup(10, 8, 10, 25)
+
+            width = 212
+            height = 104
+            face_pos = (0, int(height / 4))
+            name_pos = (int(width / 2) - 15, int(height * .15))
+            status_pos = (int(width / 2) - 15, int(height * .30))
 
     return width, height, face_pos, name_pos, status_pos
 
