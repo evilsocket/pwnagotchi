@@ -24,12 +24,36 @@ args = parser.parse_args()
 
 if args.do_clear:
     print("clearing the display ...")
-    from pwnagotchi.ui.waveshare.v2.waveshare import EPD
-
-    epd = EPD()
-    epd.init(epd.FULL_UPDATE)
-    epd.Clear(0xff)
-    quit()
+    with open(args.config, 'rt') as fp:
+      config = yaml.safe_load(fp)
+      cleardisplay=config['ui']['display']['type']
+      if cleardisplay in ('inkyphat', 'inky'):
+              print("inky display")
+              from inky import InkyPHAT
+              epd = InkyPHAT(config['ui']['display']['color'])
+              epd.set_border(InkyPHAT.BLACK)
+              self._render_cb = self._inky_render
+      elif cleardisplay in ('papirus', 'papi'):
+              print("papirus display")
+              from pwnagotchi.ui.papirus.epd import EPD
+              os.environ['EPD_SIZE'] = '2.0'
+              epd = EPD()
+              epd.clear()
+      elif cleardisplay in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1'):
+              print("waveshare v1 display")
+              from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
+              epd = EPD()
+              epd.init(epd.lut_full_update)
+              epd.Clear(0xFF)
+      elif cleardisplay in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2'):
+              print("waveshare v2 display")
+              from pwnagotchi.ui.waveshare.v2.waveshare import EPD
+              epd = EPD()
+              epd.init(epd.FULL_UPDATE)
+              epd.Clear(0xff)
+      else:
+              print("unknown display type %s" % cleardisplay)
+      quit()
 
 with open(args.config, 'rt') as fp:
     config = yaml.safe_load(fp)
