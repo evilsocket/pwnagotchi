@@ -55,6 +55,7 @@ function update_lang() {
   msgmerge --update "$LOCALE_DIR/$1/LC_MESSAGES/voice.po" "$LOCALE_DIR/voice.pot"
 }
 
+
 case "$1" in
   add)
     add_lang "$2"
