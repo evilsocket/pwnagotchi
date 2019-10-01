@@ -1,6 +1,6 @@
 # main algorithm configuration
 main:
-    # currently implemented: en (default), de, nl
+    # currently implemented: en (default), de, nl, it
     lang: en
     # monitor interface to use
     iface: mon0
