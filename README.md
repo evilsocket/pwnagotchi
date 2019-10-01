@@ -80,6 +80,20 @@ usage: ./scripts/create_sibling.sh [OPTIONS]
 
 If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
 
+#### Update your pwnagotchi
+
+You can use the `scripts/update_pwnagotchi.sh` script to update to the most recent version of pwnagotchi.
+
+```shell
+Usage: ./update_pwnagitchi.sh [-m | --master] [-c | --commit | --branch] [-bc | --backupconfig] [-rc | --restoreconfig] [-h | --help]
+
+   -m, --master               Update to the master branch. Used by default.
+   -c, --commit, --branch     Update to the specific commit/branch.
+   -bc, --backupconfig        Backup the current pwnagotchi config.
+   -rc, --restoreconfig       Restore the current pwnagotchi config. -bc will be enabled.
+   -h, --help                 Shows this help.
+```
+
 ### UI
 
 The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
