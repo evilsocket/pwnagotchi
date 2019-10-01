@@ -4,30 +4,29 @@ import sys
 import os
 import time
 import argparse
-import random
 from http.server import HTTPServer
 import shutil
 import yaml
+
 sys.path.insert(0,
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              '../sdcard/rootfs/root/pwnagotchi/scripts/'))
 
-from pwnagotchi.ui.view import View
 from pwnagotchi.ui.display import Display, VideoHandler
 import core
+
 
 class CustomDisplay(Display):
 
     def _http_serve(self):
         if self._video_address is not None:
             self._httpd = HTTPServer((self._video_address, self._video_port),
-                                    CustomVideoHandler)
+                                     CustomVideoHandler)
             core.log("ui available at http://%s:%d/" % (self._video_address,
                                                         self._video_port))
             self._httpd.serve_forever()
         else:
             core.log("could not get ip of usb0, video server not starting")
-
 
     def _on_view_rendered(self, img):
         CustomVideoHandler.render(img)
@@ -44,9 +43,9 @@ class CustomVideoHandler(VideoHandler):
     def render(img):
         with CustomVideoHandler._lock:
             try:
-              img.save("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), format='PNG')
+                img.save("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), format='PNG')
             except BaseException:
-              core.log("could not write preview")
+                core.log("could not write preview")
 
     def do_GET(self):
         if self.path == '/':
@@ -107,12 +106,11 @@ def main():
             type: {display}
             video:
                 enabled: true
-                address: "127.0.0.1"
+                address: "0.0.0.0"
                 port: {port}
     '''.format(display=args.display,
                port=args.port,
-               lang=args.lang),
-                       Loader=yaml.FullLoader)
+               lang=args.lang))
 
     DISPLAY = CustomDisplay(config=CONFIG, state={'name': '%s>' % 'preview'})
 
