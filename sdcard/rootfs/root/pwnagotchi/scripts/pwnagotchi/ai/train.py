@@ -109,7 +109,7 @@ class AsyncTrainer(object):
 
     def _save_ai(self):
         core.log("[ai] saving model to %s ..." % self._nn_path)
-        temp = "%.%s.tmp" % self._nn_path
+        temp = ".%s.tmp" % self._nn_path
         self._model.save(temp)
         os.replace(temp, self._nn_path)
 
