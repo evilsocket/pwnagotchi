@@ -283,4 +283,4 @@ fi
 setup_raspbian
 provision_raspbian
 
-echo -ne "[+] Congratz, it's a boy (⌐■_■)!\n[+] One more step: dd if=$PWNI_OUTPUT of=<PATH_TO_SDCARD> bs=4M status=progress"
+echo -ne "[+] Congratz, it's a boy (⌐■_■)!\n[+] One more step: dd if=../$PWNI_OUTPUT of=<PATH_TO_SDCARD> bs=4M status=progress"
