@@ -1,23 +1,26 @@
 dist: bionic
 language: generic
+
 env:
   global:
   - LANG=C
   - LC_ALL=C
+
 before_cache:
 - mountpoint -q $TRAVIS_BUILD_DIR/tmp/mnt && sudo umount -R $TRAVIS_BUILD_DIR/tmp/mnt
 - sudo find $TRAVIS_BUILD_DIR/tmp/ -name '*.img' -delete
+
 cache:
   apt: true
   directories:
   - tmp/
+
 before_script:
 - sudo apt-get -y update
-- sudo apt-get -y install qemu-user-static binfmt-support qemu bmap-tools
+- sudo apt-get -y install qemu-user-static binfmt-support qemu kpartx golang
 - sudo update-binfmts --display
-- unset GOROOT
+
 script:
-- sudo ./scripts/create_sibling.sh -n pwnagotchi -o pwnagotchi.img
-- zip -s 2g pwnagotchi.zip pwnagotchi.img
+- sudo make -e PWN_HOSTNAME="pwnagotchi" VERSION="$TRAVIS_TAG"
 
 # TODO: deploy!
