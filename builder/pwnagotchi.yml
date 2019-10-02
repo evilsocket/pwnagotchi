@@ -117,6 +117,7 @@
     command: go get -u github.com/bettercap/bettercap
     environment:
       GOPATH: /root/go
+      GOROOT: /usr/lib/go
 
   - name: install bettercap
     copy:
