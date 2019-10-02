@@ -5,7 +5,7 @@
 set -eu
 
 REQUIREMENTS=( wget gunzip git dd e2fsck resize2fs parted losetup qemu-system-x86_64 )
-DEBREQUIREMENTS=( wget gzip git parted qemu-system-x86 qemu-user-static parted bmap-tools )
+DEBREQUIREMENTS=( wget gzip git parted qemu-system-x86 qemu-user-static bmap-tools )
 REPO_DIR="$(dirname "$(dirname "$(realpath "$0")")")"
 TMP_DIR="${REPO_DIR}/tmp"
 MNT_DIR="${TMP_DIR}/mnt"

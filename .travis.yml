@@ -13,7 +13,7 @@ cache:
   - tmp/
 before_script:
 - sudo apt-get -y update
-- sudo apt-get -y install qemu-user-static binfmt-support qemu
+- sudo apt-get -y install qemu-user-static binfmt-support qemu bmap-tools
 - sudo update-binfmts --display
 - unset GOROOT
 script:
