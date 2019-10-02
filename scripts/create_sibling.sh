@@ -167,7 +167,7 @@ function provision_raspbian() {
 
   # install bettercap
   export GOPATH=/root/go
-  go get -u github.com/bettercap/bettercap
+  taskset -c 1 go get -u github.com/bettercap/bettercap
   mv "\$GOPATH/bin/bettercap" /usr/bin/bettercap
 
   # install bettercap caplets (cant run bettercap in chroot)
