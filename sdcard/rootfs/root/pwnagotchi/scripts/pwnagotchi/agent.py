@@ -8,6 +8,7 @@ import _thread
 
 import core
 
+import pwnagotchi.plugins as plugins
 from bettercap.client import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
@@ -47,29 +48,35 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def supported_channels(self):
         return self._supported_channels
 
-    def on_ai_ready(self):
-        self._view.on_ai_ready()
+    def set_starting(self):
+        self._view.on_starting()
 
     def set_ready(self):
-        self._view.on_starting()
+        plugins.on('ready', self)
 
     def set_free_channel(self, channel):
         self._view.on_free_channel(channel)
+        plugins.on('free_channel', self, channel)
 
     def set_bored(self):
         self._view.on_bored()
+        plugins.on('bored', self)
 
     def set_sad(self):
         self._view.on_sad()
+        plugins.on('sad', self)
 
     def set_excited(self):
         self._view.on_excited()
+        plugins.on('excited', self)
 
     def set_lonely(self):
         self._view.on_lonely()
+        plugins.on('lonely', self)
 
     def set_rebooting(self):
         self._view.on_rebooting()
+        plugins.on('rebooting', self)
 
     def setup_events(self):
         core.log("connecting to %s ..." % self.url)
@@ -128,6 +135,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self.start_advertising()
 
     def wait_for(self, t, sleeping=True):
+        plugins.on('sleep' if sleeping else 'wait', self, t)
         self._view.wait(t, sleeping)
         self._epoch.track(sleep=True, inc=t)
 
@@ -179,6 +187,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def set_access_points(self, aps):
         self._access_points = aps
+        plugins.on('wifi_update', self, aps)
         self._epoch.observe(aps, self._advertiser.peers() if self._advertiser is not None else ())
         return self._access_points
 
@@ -338,6 +347,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                         if apsta is None:
                             core.log("!!! captured new handshake: %s !!!" % key)
                             self._last_pwnd = ap_mac
+                            plugins.on('handshake', self, ap_mac, sta_mac)
                         else:
                             (ap, sta) = apsta
                             self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
@@ -346,6 +356,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                                 ap['channel'],
                                 sta['mac'], sta['vendor'],
                                 ap['hostname'], ap['mac'], ap['vendor']))
+                            plugins.on('handshake', self, ap, sta)
 
             except Exception as e:
                 core.log("error: %s" % e)
@@ -419,6 +430,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             except Exception as e:
                 self._on_error(ap['mac'], e)
 
+            plugins.on('association', self, ap)
             if throttle > 0:
                 time.sleep(throttle)
             self._view.on_normal()
@@ -439,6 +451,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             except Exception as e:
                 self._on_error(sta['mac'], e)
 
+            plugins.on('deauthentication', self, ap, sta)
             if throttle > 0:
                 time.sleep(throttle)
             self._view.on_normal()
@@ -470,6 +483,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                 self._current_channel = channel
                 self._epoch.track(hop=True)
                 self._view.set('channel', '%d' % channel)
+
+                plugins.on('channel_hop', self, channel)
+
             except Exception as e:
                 core.log("error: %s" % e)
 
@@ -508,6 +524,8 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         elif self._epoch.active_for >= self._config['personality']['excited_num_epochs']:
             core.log("%d epochs with activity -> excited" % self._epoch.active_for)
             self.set_excited()
+
+        plugins.on('epoch', self, self._epoch.epoch - 1, self._epoch.data())
 
         if self._epoch.blind_for >= self._config['main']['mon_max_blind_epochs']:
             core.log("%d epochs without visible access points -> rebooting ..." % self._epoch.blind_for)

@@ -148,6 +148,12 @@ Now you can use the `preview.py`-script to preview the changes:
 # Now open http://localhost:8080 and http://localhost:8081
 ```
 
+### Plugins
+
+Pwnagotchi has a simple plugins system that you can use to customize your unit and its behaviour. You can place your plugins anywhere
+as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins) for a list of default 
+plugins and all the callbacks that you can define for your own customizations.
+
 ### Random Info
 
 - `hostname` sets the unit name.

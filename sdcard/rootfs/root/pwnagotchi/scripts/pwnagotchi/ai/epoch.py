@@ -7,6 +7,7 @@ import pwnagotchi.mesh.wifi as wifi
 
 from pwnagotchi.ai.reward import RewardFunction
 
+
 class Epoch(object):
     def __init__(self, config):
         self.epoch = 0
@@ -92,7 +93,8 @@ class Epoch(object):
             try:
                 peers_per_chan[peer.last_channel - 1] += 1.0
             except IndexError as e:
-                core.log("got peer data on channel %d, we can store %d channels" % (peer.last_channel, wifi.NumChannels))
+                core.log(
+                    "got peer data on channel %d, we can store %d channels" % (peer.last_channel, wifi.NumChannels))
 
         # normalize
         aps_per_chan = [e / num_aps for e in aps_per_chan]

@@ -7,6 +7,9 @@ class State(object):
         self._lock = Lock()
         self._listeners = {}
 
+    def add_element(self, key, elem):
+        self._state[key] = elem
+
     def add_listener(self, key, cb):
         with self._lock:
             self._listeners[key] = cb

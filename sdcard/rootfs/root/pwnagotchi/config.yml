@@ -2,6 +2,8 @@
 main:
     # currently implemented: en (default), de, nl, it
     lang: en
+    # custom plugins path, if null only default plugins with be loaded
+    plugins: null
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -21,7 +23,7 @@ main:
 
 ai:
     # if false, only the default 'personality' will be used
-    enabled: true
+    enabled: false
     path: /root/brain.nn
     # 1.0 - laziness = probability of start training
     laziness: 0.1

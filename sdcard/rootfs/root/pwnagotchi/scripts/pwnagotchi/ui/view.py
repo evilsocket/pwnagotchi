@@ -4,7 +4,7 @@ import time
 from PIL import Image, ImageDraw
 
 import core
-import pwnagotchi
+import pwnagotchi.plugins as plugins
 from pwnagotchi.voice import Voice
 
 import pwnagotchi.ui.fonts as fonts
@@ -41,7 +41,7 @@ def setup_display_specifics(config):
         name_pos = (int(width / 2) - 15, int(height * .15))
         status_pos = (int(width / 2) - 15, int(height * .30))
 
-    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1', 
+    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1',
                                              'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
         fonts.setup(10, 9, 10, 35)
 
@@ -105,7 +105,18 @@ class View(object):
         for key, value in state.items():
             self._state.set(key, value)
 
+        plugins.on('ui_setup', self)
+
         _thread.start_new_thread(self._refresh_handler, ())
+
+    def add_element(self, key, elem):
+        self._state.add_element(key, elem)
+
+    def width(self):
+        return self._width
+
+    def height(self):
+        return self._height
 
     def on_state_change(self, key, cb):
         self._state.add_listener(key, cb)
@@ -293,6 +304,8 @@ class View(object):
         with self._lock:
             self._canvas = Image.new('1', (self._width, self._height), WHITE)
             drawer = ImageDraw.Draw(self._canvas)
+
+            plugins.on('ui_update', self)
 
             for key, lv in self._state.items():
                 lv.draw(self._canvas, drawer)
