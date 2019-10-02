@@ -22,7 +22,6 @@ before_script:
 - sudo apt-get -y update
 - sudo apt-get -y install qemu-user-static binfmt-support qemu bmap-tools kpartx
 - sudo update-binfmts --display
-- cat /etc/ld.so.preload
 
 script:
 - sudo -E env "PATH=$PATH" make -e PWN_HOSTNAME="pwnagotchi" VERSION="$TRAVIS_TAG"
