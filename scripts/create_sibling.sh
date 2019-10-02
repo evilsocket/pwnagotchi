@@ -13,7 +13,7 @@ THIS_DIR=$(pwd)
 
 PWNI_NAME="pwnagotchi"
 PWNI_OUTPUT="pwnagotchi.img"
-PWNI_SIZE="4"
+PWNI_SIZE="8"
 
 OPT_SPARSE=0
 OPT_PROVISION_ONLY=0
