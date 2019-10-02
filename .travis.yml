@@ -20,7 +20,7 @@ cache:
 
 before_script:
 - sudo apt-get -y update
-- sudo apt-get -y install qemu-user-static binfmt-support qemu gcc-arm-linux-gnueabihf libc6-dev-armhf-cross qemu-arm-static kpartx
+- sudo apt-get -y install qemu-user-static binfmt-support qemu bmap-tools kpartx
 - sudo update-binfmts --display
 - cat /etc/ld.so.preload
 
