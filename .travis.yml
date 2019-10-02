@@ -13,11 +13,11 @@ cache:
   - tmp/
 before_script:
 - sudo apt-get -y update
-- sudo apt-get -y install qemu-user-static binfmt-support qemu
+- sudo apt-get -y install qemu-user-static binfmt-support qemu bmap-tools
 - sudo update-binfmts --display
 - unset GOROOT
 script:
-- sudo ./scripts/create_sibling.sh -n pwnagotchi -o pwnagotchi.img -s 4
+- sudo ./scripts/create_sibling.sh -n pwnagotchi -o pwnagotchi.img -s 8
 - zip -s 2g pwnagotchi.zip pwnagotchi.img
 
 # TODO: deploy!
