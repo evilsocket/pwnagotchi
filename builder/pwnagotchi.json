@@ -14,6 +14,7 @@
     {
       "type": "shell",
       "inline": [
+        "sed -i 's/^\\([^#]\\)/#\\1/g' /etc/ld.so.preload",
         "apt-get -y update",
         "apt-get install -y ansible"
       ]
@@ -21,6 +22,12 @@
     {
       "type":"ansible-local",
       "playbook_file": "pwnagotchi.yml"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sed -i 's/^#\\(.+\\)/\\1/g' /etc/ld.so.preload"
+      ]
     }
   ]
 }
