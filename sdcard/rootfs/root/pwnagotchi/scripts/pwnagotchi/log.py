@@ -160,6 +160,9 @@ class SessionParser(object):
                         break
             lines.reverse()
 
+        if len(lines) == 0:
+            lines.append("Initial Session");
+
         self.last_session = lines
         self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()
         self.last_saved_session_id = self._get_last_saved_session_id()
