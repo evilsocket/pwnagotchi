@@ -91,6 +91,9 @@ echo "[+] Updating..."
 if [ $BACKUPCONFIG -eq 1 ]; then
     echo "[+] Creating backup of config.yml"
     mv /root/pwnagotchi/config.yml /root/config.yml.bak -f
+    mv /etc/hosts /root/hosts.bak -f
+    mv /etc/hostname /root/hostname.bak -f
+    mv /etc/network/interfaces /root/interfaces.bak -f
 fi
 rm /root/pwnagotchi -rf # ensures old files are removed
 rsync -aPq $GIT_FOLDER/sdcard/boot/*   /boot/
@@ -100,6 +103,9 @@ rm $GIT_FOLDER -rf
 if [ $RESTORECONFIG -eq 1 ]; then
     echo "[+] Restoring backup of config.yml"
     mv /root/config.yml.bak /root/pwnagotchi/config.yml -f
+    mv /root/hosts.bak /etc/hosts -f
+    mv /root/hostname.bak /etc/hostname -f
+    mv /root/interfaces.bak /etc/network/interfaces -f
 fi
 
 echo "[+] Restarting pwnagotchi in $MODE mode. $( screen -X -S pwnagotchi quit)"
