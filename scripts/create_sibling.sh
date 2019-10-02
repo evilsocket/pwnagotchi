@@ -17,6 +17,7 @@ OPT_PROVISION_ONLY=0
 OPT_CHECK_DEPS_ONLY=0
 OPT_IMAGE_PROVIDED=0
 OPT_RASPBIAN_VERSION='latest'
+OPT_APTPROXY=""
 
 SUPPORTED_RASPBIAN_VERSIONS=( 'latest' 'buster' 'stretch' )
 
@@ -110,6 +111,12 @@ function provision_raspbian() {
   LANG=C chroot . bin/bash -x <<EOF
   set -eu
   export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+  if [ ! -z "${OPT_APTPROXY}" ];
+  then
+	echo "[+] Using Proxy ${OPT_APTPROXY}"
+	echo "Acquire::http { Proxy \"${OPT_APTPROXY}\"; }" >/etc/apt/apt.conf.d/99pwnagotchi_proxy
+  fi
 
   uname -a
 
@@ -226,8 +233,11 @@ EOF
   exit 0
 }
 
-while getopts ":n:i:o:s:v:dph" o; do
+while getopts "A:n:i:o:s:v:dph" o; do
   case "${o}" in
+    A)
+      OPT_APTPROXY="${OPTARG}"
+      ;;
     n)
       PWNI_NAME="${OPTARG}"
       ;;
