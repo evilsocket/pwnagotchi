@@ -19,7 +19,7 @@ cache:
 
 before_script:
 - sudo apt-get -y update
-- sudo apt-get -y install qemu-user-static binfmt-support qemu kpartx golang
+- sudo apt-get -y install qemu-user-static binfmt-support qemu kpartx
 - sudo update-binfmts --display
 
 script:
