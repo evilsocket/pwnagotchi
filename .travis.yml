@@ -17,7 +17,7 @@ before_script:
 - sudo update-binfmts --display
 - unset GOROOT
 script:
-- sudo ./scripts/create_sibling.sh -n pwnagotchi -o pwnagotchi.img -s 8
+- sudo ./scripts/create_sibling.sh -n pwnagotchi -o pwnagotchi.img
 - zip -s 2g pwnagotchi.zip pwnagotchi.img
 
 # TODO: deploy!
