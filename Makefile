@@ -8,7 +8,7 @@ install:
 	@unzip /tmp/packer.zip -d /tmp
 	@mv /tmp/packer /usr/bin/packer
 	@git clone https://github.com/solo-io/packer-builder-arm-image /tmp/packer-builder-arm-image
-	@cd /tmp/packer-builder-arm-image && go build
+	@cd /tmp/packer-builder-arm-image && go get -d ./... && go build
 	@cp /tmp/packer-builder-arm-image/packer-builder-arm-image /usr/bin
 
 image:
