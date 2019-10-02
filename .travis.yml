@@ -1,7 +1,5 @@
 dist: bionic
-language: go
-go:
-  - 1.x
+language: generic
 
 env:
   global:
@@ -19,7 +17,7 @@ cache:
 
 before_script:
 - sudo apt-get -y update
-- sudo apt-get -y install qemu-user-static binfmt-support qemu kpartx
+- sudo apt-get -y install qemu-user-static binfmt-support qemu kpartx golang
 - sudo update-binfmts --display
 
 script:
