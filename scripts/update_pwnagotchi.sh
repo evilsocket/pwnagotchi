@@ -94,6 +94,7 @@ if [ $BACKUPCONFIG -eq 1 ]; then
     mv /etc/hosts /etc/hosts.bak -f
     mv /etc/hostname /etc/hostname.bak -f
     mv /etc/motd /etc/motd.bak -f
+    mv /etc/network/interfaces /etc/network/interfaces.bak -f
 fi
 
 echo "[+] Installing $(git log -1 --format="%h")"
@@ -110,6 +111,7 @@ if [ $RESTORECONFIG -eq 1 ]; then
     mv /etc/hosts.bak /etc/hosts -f
     mv /etc/hostname.bak /etc/hostname -f
     mv /etc/motd.bak /etc/motd -f
+    mv /etc/network/interfaces.bak /etc/network/interfaces -f 
 fi
 
 echo "[+] Restarting pwnagotchi in $MODE mode. $( screen -X -S pwnagotchi quit)"
