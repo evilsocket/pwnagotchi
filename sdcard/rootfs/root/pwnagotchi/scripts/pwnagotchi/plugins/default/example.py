@@ -143,7 +143,7 @@ def on_channel_hop(agent, channel):
 
 # called when a new handshake is captured, access_point and client_station are json objects
 # if the agent could match the BSSIDs to the current list, otherwise they are just the strings of the BSSIDs
-def on_handshake(agent, access_point, client_station):
+def on_handshake(agent, filename, access_point, client_station):
     pass
 
 

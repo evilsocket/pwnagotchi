@@ -45,6 +45,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             pass
         return False
 
+    def config(self):
+        return self._config
+
     def supported_channels(self):
         return self._supported_channels
 
@@ -336,6 +339,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
             try:
                 for h in [e for e in self.events() if e['tag'] == 'wifi.client.handshake']:
+                    filename = h['data']['file']
                     sta_mac = h['data']['station']
                     ap_mac = h['data']['ap']
                     key = "%s -> %s" % (sta_mac, ap_mac)
@@ -347,7 +351,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                         if apsta is None:
                             core.log("!!! captured new handshake: %s !!!" % key)
                             self._last_pwnd = ap_mac
-                            plugins.on('handshake', self, ap_mac, sta_mac)
+                            plugins.on('handshake', self, filename, ap_mac, sta_mac)
                         else:
                             (ap, sta) = apsta
                             self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
@@ -356,7 +360,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                                 ap['channel'],
                                 sta['mac'], sta['vendor'],
                                 ap['hostname'], ap['mac'], ap['vendor']))
-                            plugins.on('handshake', self, ap, sta)
+                            plugins.on('handshake', self, filename, ap, sta)
 
             except Exception as e:
                 core.log("error: %s" % e)
