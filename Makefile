@@ -1,5 +1,5 @@
-PWN_HOSTNAME="pwnagotchi"
-PWN_VERSION="master"
+PWN_HOSTNAME=pwnagotchi
+PWN_VERSION=master
 
 all: install image clean
 
