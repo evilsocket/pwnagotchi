@@ -85,13 +85,16 @@ If you connect to the unit via `usb0` (thus using the data port), you might want
 You can use the `scripts/update_pwnagotchi.sh` script to update to the most recent version of pwnagotchi.
 
 ```shell
-Usage: ./update_pwnagitchi.sh [-m | --master] [-c | --commit | --branch] [-bc | --backupconfig] [-rc | --restoreconfig] [-h | --help]
+usage: ./update_pwnagitchi.sh [OPTIONS]
 
-   -m, --master               Update to the master branch. Used by default.
-   -c, --commit, --branch     Update to the specific commit/branch.
-   -bc, --backupconfig        Backup the current pwnagotchi config.
-   -rc, --restoreconfig       Restore the current pwnagotchi config. -bc will be enabled.
-   -h, --help                 Shows this help.
+   Options:
+      -v                # Version to update to, can be a branch or commit. (default: master)
+      -u                # Url to clone from. (default: https://github.com/evilsocket/pwnagotchi)
+      -m                # Mode to restart to. (Supported: auto manual; default: auto)
+      -b                # Backup the current pwnagotchi config.
+      -r                # Restore the current pwnagotchi config. -b will be enabled.
+      -h                # Shows this help.             Shows this help.
+
 ```
 
 ### UI
