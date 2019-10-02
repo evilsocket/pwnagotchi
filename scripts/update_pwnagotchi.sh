@@ -79,7 +79,7 @@ test_github
 
 # clean up old files, clone master, set checkout to commit if needed.
 echo "[+] Cloning to $GIT_FOLDER..."
-#rm $GIT_FOLDER -rf
+rm $GIT_FOLDER -rf
 git clone $GIT_URL $GIT_FOLDER -q
 cd $GIT_FOLDER
 if [ $VERSION != "master" ]; then
