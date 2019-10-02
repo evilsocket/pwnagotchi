@@ -24,7 +24,7 @@ msgid ""
 "Hi, I'm Pwnagotchi!\n"
 "Starting ..."
 msgstr ""
-"Ciao!"
+"Ciao!\n"
 "Piacere Pwnagotchi!\n"
 "Caricamento ..."
 
@@ -155,9 +155,9 @@ msgid ""
 "goodbye\n"
 "{name}"
 msgstr ""
-"Uhm ..."
+"Uhm ...\n"
 "addio\n"
-"{name},"
+"{name},\n"
 "mi mancherai..."
 
 #: voice.py:84
@@ -236,8 +236,8 @@ msgstr "Aspetto {secs}s ..."
 #, python-brace-format
 msgid "Looking around ({secs}s)"
 msgstr ""
-"Do uno sguardo"
-"qui intorno..."
+"Do uno sguardo\n"
+"qui intorno...\n"
 "({secs}s)"
 
 #: voice.py:123
@@ -258,7 +258,7 @@ msgid ""
 "{what}"
 msgstr ""
 "Collegamento con\n"
-"{what}"
+"{what}\n"
 "in corso..."
 
 #: voice.py:125
