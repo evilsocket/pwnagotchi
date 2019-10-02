@@ -24,8 +24,8 @@ before_script:
 - sudo update-binfmts --display
 
 script:
-- sudo -E env "PATH=$PATH" make clean
+- sudo make clean
 - sudo -E env "PATH=$PATH" make install
-- sudo make -e PWN_HOSTNAME="pwnagotchi" VERSION="$TRAVIS_TAG"
+- sudo make image -e PWN_HOSTNAME="pwnagotchi" VERSION="$TRAVIS_TAG"
 
 # TODO: deploy!
