@@ -52,6 +52,24 @@ The supported models are:
 - [Pimoroni Inky pHAT](https://shop.pimoroni.com/products/inky-phat)
 - [PaPiRus eInk Screen](https://uk.pi-supply.com/products/papirus-zero-epaper-screen-phat-pi-zero)
 
+The only kind of displays supported are the ones listed above, but we are always happy to receive pull requests supporting new displays.
+
+You need to configure the display type in `config.yml` where you can find `ui.display.type`. 
+
+One thing to note, not all displays are created equaly, TFT displays for example work similar to an HDMI display, and they are not supported, currently all the displays supported are I2C displays.
+
+### Color and Black & White displays
+
+Some of the supported displays support Black & White and Coloured versions, one common question is regarding refresh speed of said displays.
+
+Color displays have a much slower refresh rate, in some cases it can take up to 15 seconds, if slow refresh rates is something that you want to avoid we advise you to use Black & White displays
+
+### FPS
+
+You can configure the refresh interval of the display on config.yml, we advise to use a slow refresh to not shorten the lifetime of your display.
+
+Another option is to change fps to 0, which will only refresh when changes are made to the screen.
+
 ### Software
 
 - Raspbian + [nexmon patches](https://re4son-kernel.com/re4son-pi-kernel/) for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
@@ -119,6 +137,7 @@ Pwnagotchi is able to speak multiple languages!! Currently supported are:
 * greek
 * macedonian
 * italian
+* french
 
 If you want to add a language use the `language.sh` script. If you want to add for example the language **italian** you would type:
 
@@ -151,8 +170,60 @@ Now you can use the `preview.py`-script to preview the changes:
 ### Plugins
 
 Pwnagotchi has a simple plugins system that you can use to customize your unit and its behaviour. You can place your plugins anywhere
-as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins/default/) for a list of default 
+as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins/default/) for a list of default
 plugins and all the callbacks that you can define for your own customizations.
+
+Here's as an example the GPS plugin:
+
+```python
+__author__ = 'evilsocket@gmail.com'
+__version__ = '1.0.0'
+__name__ = 'gps'
+__license__ = 'GPL3'
+__description__ = 'Save GPS coordinates whenever an handshake is captured.'
+__enabled__ = True  # set to false if you just don't use GPS
+
+import core
+import json
+import os
+
+device = '/dev/ttyUSB0'
+speed = 19200
+running = False
+
+
+def on_loaded():
+    core.log("GPS plugin loaded for %s" % device)
+
+
+def on_ready(agent):
+    global running
+
+    if os.path.exists(device):
+        core.log("enabling GPS bettercap's module for %s" % device)
+        try:
+            agent.run('gps off')
+        except:
+            pass
+
+        agent.run('set gps.device %s' % device)
+        agent.run('set gps.speed %d' % speed)
+        agent.run('gps on')
+        running = True
+    else:
+        core.log("no GPS detected")
+
+
+def on_handshake(agent, filename, access_point, client_station):
+    if running:
+        info = agent.session()
+        gps = info['gps']
+        gps_filename = filename.replace('.pcap', '.gps.json')
+
+        core.log("saving GPS to %s (%s)" % (gps_filename, gps))
+        with open(gps_filename, 'w+t') as fp:
+            json.dump(gps, fp)
+```
 
 ### Random Info
 
@@ -167,7 +238,7 @@ the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`.
 
 ## License
 
-`pwnagotchi` is made with ♥  by [@evilsocket](https://twitter.com/evilsocket) and it's released under the GPL3 license.
+`pwnagotchi` is made with ♥  by [@evilsocket](https://twitter.com/evilsocket) and the [amazing dev team](https://github.com/evilsocket/pwnagotchi/graphs/contributors). It's released under the GPL3 license.
 
 
 

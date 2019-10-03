@@ -347,13 +347,13 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                     if key not in self._handshakes:
                         self._handshakes[key] = h
                         new_shakes += 1
-                        apsta = self._find_ap_sta_in(sta_mac, ap_mac, s)
-                        if apsta is None:
+                        ap_and_station = self._find_ap_sta_in(sta_mac, ap_mac, s)
+                        if ap_and_station is None:
                             core.log("!!! captured new handshake: %s !!!" % key)
                             self._last_pwnd = ap_mac
                             plugins.on('handshake', self, filename, ap_mac, sta_mac)
                         else:
-                            (ap, sta) = apsta
+                            (ap, sta) = ap_and_station
                             self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
                                 'hostname'] != '<hidden>' else ap_mac
                             core.log("!!! captured new handshake on channel %d: %s (%s) -> %s [%s (%s)] !!!" % ( \
