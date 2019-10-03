@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import os
 import argparse
 import time
 import logging
@@ -33,9 +32,9 @@ args = parser.parse_args()
 config = utils.load_config(args)
 utils.setup_logging(args, config)
 
-plugins.load_from_path(plugins.default_path)
-if 'plugins' in config['main'] and config['main']['plugins'] is not None:
-    plugins.load_from_path(config['main']['plugins'])
+plugins.load_from_path(plugins.default_path, enabled=config['main']['plugins'])
+if 'custom_plugins' in config['main'] and config['main']['custom_plugins'] is not None:
+    plugins.load_from_path(config['main']['custom_plugins'], enabled=config['main']['plugins'])
 
 plugins.on('loaded')
 
