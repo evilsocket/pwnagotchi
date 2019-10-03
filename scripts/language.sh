@@ -51,7 +51,7 @@ function comp_lang() {
 }
 
 function update_lang() {
-  xgettext -d voice -o "$LOCALE_DIR/voice.pot" "$VOICE_FILE"
+  xgettext --no-location -d voice -o "$LOCALE_DIR/voice.pot" "$VOICE_FILE"
   msgmerge --update "$LOCALE_DIR/$1/LC_MESSAGES/voice.po" "$LOCALE_DIR/voice.pot"
 }
 

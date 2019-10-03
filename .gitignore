@@ -1,10 +1,12 @@
 *.img
 *.img.bmap
 *.pcap
+*.po~
 __pycache__
 _backups
 _emulation
 _utils
 config.laptop.yml
 .idea
-tmp
+packer_cache
+output-pwnagotchi
