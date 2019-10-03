@@ -27,14 +27,13 @@ def load_from_file(filename):
     return plugin_name, instance
 
 
-def load_from_path(path):
+def load_from_path(path, enabled=()):
     global loaded
-
     for filename in glob.glob(os.path.join(path, "*.py")):
         name, plugin = load_from_file(filename)
         if name in loaded:
             raise Exception("plugin %s already loaded from %s" % (name, plugin.__file__))
-        elif not plugin.__enabled__:
+        elif name not in enabled:
             # print("plugin %s is not enabled" % name)
             pass
         else:

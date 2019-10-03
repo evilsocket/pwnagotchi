@@ -3,7 +3,6 @@ __version__ = '1.0.0'
 __name__ = 'hello_world'
 __license__ = 'GPL3'
 __description__ = 'An example plugin for pwnagotchi that implements all the available callbacks.'
-__enabled__ = False  # IMPORTANT: set this to True to enable your plugin.
 
 import logging
 

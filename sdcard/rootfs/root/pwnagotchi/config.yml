@@ -3,7 +3,11 @@ main:
     # currently implemented: en (default), de, nl, it
     lang: en
     # custom plugins path, if null only default plugins with be loaded
-    plugins: null
+    custom_plugins:
+    # which plugins to load and enable
+    plugins:
+        - gps
+        - twitter
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -15,7 +19,9 @@ main:
     # if true, will not restart the wifi module
     no_restart: false
     # access points to ignore
-    whitelist: []
+    whitelist:
+        - EXAMPLE_NETWORK
+        - ANOTHER_EXAMPLE_NETWORK
     # if not null, filter access points by this regular expression
     filter: null
     # cryptographic key for identity
