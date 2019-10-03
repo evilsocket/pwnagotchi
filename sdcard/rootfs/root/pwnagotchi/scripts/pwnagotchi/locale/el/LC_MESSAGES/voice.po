@@ -23,18 +23,18 @@ msgstr ""
 
 #: voice.py:21
 msgid ""
-"Hi, I'm Pwnagotchi!\n"
+"Hi, I'm Pwnagotchi!"
 "Starting ..."
 msgstr ""
-"Γειά, είμαι το Pwnagotchi!\n"
+"Γειά, είμαι το Pwnagotchi!"
 "Εκκινούμαι ..."
 
 #: voice.py:22
 msgid ""
-"New day, new hunt,\n"
+"New day, new hunt,"
 "new pwns!"
 msgstr ""
-"Νέα μέρα, νέο κυνήγι,\n"
+"Νέα μέρα, νέο κυνήγι,"
 "νέα pwns!"
 
 #: voice.py:23
@@ -47,21 +47,21 @@ msgstr "ΤΝ έτοιμη."
 
 #: voice.py:29
 msgid ""
-"The neural network\n"
+"The neural network"
 "is ready."
 msgstr ""
-"Το νευρωνικό δίκτυο\n"
+"Το νευρωνικό δίκτυο"
 "είναι έτοιμο."
 
 #: voice.py:39
 #, python-brace-format
 msgid ""
-"Hey, channel {channel} is\n"
-"free! Your AP will\n"
+"Hey, channel {channel} is"
+"free! Your AP will"
 "say thanks."
 msgstr ""
-"Ε, το κανάλι {channel} είναι\n"
-"ελεύθερο! Το AP σου θα\n"
+"Ε, το κανάλι {channel} είναι"
+"ελεύθερο! Το AP σου θα"
 "είναι ευγνώμων."
 
 #: voice.py:44
@@ -74,10 +74,10 @@ msgstr "Ας πάμε μια βόλτα!"
 
 #: voice.py:49
 msgid ""
-"This is the best\n"
+"This is the best"
 "day of my life!"
 msgstr ""
-"Είναι η καλύτερη\n"
+"Είναι η καλύτερη"
 "μέρα της ζωής μου!"
 
 #: voice.py:53
@@ -110,77 +110,77 @@ msgstr "Τόσα πολλά δίκτυα!!!"
 
 #: voice.py:69
 msgid ""
-"I'm having so much\n"
+"I'm having so much"
 "fun!"
 msgstr "Περνάω τέλεια!"
 
 #: voice.py:70
 msgid ""
-"My crime is that of\n"
+"My crime is that of"
 "curiosity ..."
 msgstr ""
-"Η περιέργεια είναι\n"
+"Η περιέργεια είναι"
 "το μόνο έγκλημά μου ..."
 
 #: voice.py:75
 #, python-brace-format
 msgid ""
-"Hello\n"
-"{name}!\n"
+"Hello"
+"{name}!"
 "Nice to meet you. {name}"
 msgstr ""
-"Γειά {name}!\n"
+"Γειά {name}!"
 "Χάρηκα για τη γνωριμία. {name}"
 
 #: voice.py:76
 #, python-brace-format
 msgid ""
-"Unit\n"
-"{name}\n"
+"Unit"
+"{name}"
 "is nearby! {name}"
 msgstr ""
-"Η μονάδα\n"
-"{name}\n"
+"Η μονάδα"
+"{name}"
 "είναι κοντά! {name}"
 
 #: voice.py:81
 #, python-brace-format
 msgid ""
-"Uhm ...\n"
-"goodbye\n"
+"Uhm ..."
+"goodbye"
 "{name}"
 msgstr ""
-"Εμμ ...\n"
-"αντίο\n"
+"Εμμ ..."
+"αντίο"
 "{name}"
 
 #: voice.py:82
 #, python-brace-format
 msgid ""
-"{name}\n"
+"{name}"
 "is gone ..."
 msgstr ""
-"Το {name}\n"
+"Το {name}"
 "έφυγε ..."
 
 #: voice.py:87
 #, python-brace-format
 msgid ""
-"Whoops ...\n"
-"{name}\n"
+"Whoops ..."
+"{name}"
 "is gone."
 msgstr ""
-"Ουπς ... \n"
-"Εξαφανίστηκε το\n"
+"Ουπς ... "
+"Εξαφανίστηκε το"
 "{name}."
 
 #: voice.py:88
 #, python-brace-format
 msgid ""
-"{name}\n"
+"{name}"
 "missed!"
 msgstr ""
-"Έχασα το\n"
+"Έχασα το"
 "{name}!"
 
 #: voice.py:89
@@ -189,10 +189,10 @@ msgstr "Το έχασα!"
 
 #: voice.py:94
 msgid ""
-"Nobody wants to\n"
+"Nobody wants to"
 "play with me ..."
 msgstr ""
-"Κανείς δε θέλει να\n"
+"Κανείς δε θέλει να"
 "παίξει μαζί μου ..."
 
 #: voice.py:95
@@ -230,78 +230,78 @@ msgstr "Ψάχνω τριγύρω ({secs})"
 #: voice.py:121
 #, python-brace-format
 msgid ""
-"Hey\n"
-"{what}\n"
+"Hey"
+"{what}"
 "let's be friends!"
 msgstr ""
-"Εε!\n"
-"{what},\n"
+"Εε!"
+"{what},"
 "ας γίνουμε φίλοι!"
 
 #: voice.py:122
 #, python-brace-format
 msgid ""
-"Associating to\n"
+"Associating to"
 "{what}"
 msgstr ""
-"Συνδέομαι με το\n"
+"Συνδέομαι με το"
 "{what}"
 
 #: voice.py:123
 #, python-brace-format
 msgid ""
-"Yo\n"
+"Yo"
 "{what}!"
 msgstr ""
-"Που'σαι ρε τρελέ\n"
+"Που'σαι ρε τρελέ"
 "{what}!"
 
 #: voice.py:128
 #, python-brace-format
 msgid ""
-"Just decided that\n"
-"{mac}\n"
+"Just decided that"
+"{mac}"
 "needs no WiFi!"
 msgstr ""
-"Μόλις αποφάσισα ότι η\n"
-"{mac}\n"
+"Μόλις αποφάσισα ότι η"
+"{mac}"
 "δε χρείαζεται WiFi!"
 
 #: voice.py:129
 #, python-brace-format
 msgid ""
-"Deauthenticating\n"
+"Deauthenticating"
 "{mac}"
 msgstr ""
-"Πετάω έξω την\n"
+"Πετάω έξω την"
 "{mac}"
 
 #: voice.py:130
 #, python-brace-format
 msgid ""
-"Kickbanning\n"
+"Kickbanning"
 "{mac}!"
 msgstr ""
-"Μπανάρω την\n"
+"Μπανάρω την"
 "{mac}!"
 
 #: voice.py:135
 #, python-brace-format
 msgid ""
-"Cool, we got {num}\n"
+"Cool, we got {num}"
 "new handshake{plural}!"
 msgstr ""
-"Τέλεια δικέ μου, πήραμε {num}\n"
+"Τέλεια δικέ μου, πήραμε {num}"
 "νέες χειραψίες!"
 
 #: voice.py:139
 msgid ""
-"Ops, something\n"
-"went wrong ...\n"
+"Ops, something"
+"went wrong ..."
 "Rebooting ..."
 msgstr ""
-"Ουπς, κάτι\n"
-"πήγε λάθος ...\n"
+"Ουπς, κάτι"
+"πήγε λάθος ..."
 "Επανεκκινούμαι ..."
 
 #: voice.py:143
