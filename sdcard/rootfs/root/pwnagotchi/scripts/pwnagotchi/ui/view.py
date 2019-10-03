@@ -2,6 +2,7 @@ import _thread
 from threading import Lock
 import time
 from PIL import Image, ImageDraw
+from textwrap import wrap, TextWrapper
 
 import core
 import pwnagotchi.plugins as plugins
@@ -64,6 +65,10 @@ class View(object):
 
         self._width, self._height, \
         face_pos, name_pos, status_pos = setup_display_specifics(config)
+
+        # The current maximum number of characters per line,
+        # assuming each character is 6 pixels wide
+        self._max_status_chars = (self._width - status_pos[0]) // 6
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
@@ -300,8 +305,30 @@ class View(object):
         self.set('status', self._voice.on_rebooting())
         self.update()
 
+    def on_custom(self, text):
+        self.set('face', faces.DEBUG)
+        self.set('status', self._voice.custom(text))
+        self.update()
+
     def update(self):
         with self._lock:
+
+            ################################################
+            # Re-adjusting the status text before updating #
+            ################################################
+
+            # Getting the text
+            content = self._state.get('status')
+            # Creating a wrapper object that respects explicit whitespace
+            wrapper = TextWrapper(width=self._max_status_chars, replace_whitespace=False)
+            # Actually wrapping the text, using the wrapper object
+            parts = wrapper.wrap(content)
+            # parts is a list containing all wrapped lines,
+            # thus we join the final text with the new line character
+            self.set('status', '\n'.join(parts))
+
+            ################################################
+
             self._canvas = Image.new('1', (self._width, self._height), WHITE)
             drawer = ImageDraw.Draw(self._canvas)
 
