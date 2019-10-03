@@ -1,7 +1,5 @@
 import subprocess
 
-version = '1.0.0a'
-
 _name = None
 
 
