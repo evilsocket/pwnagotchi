@@ -1,24 +1,7 @@
-import sys
 import glob
 import os
 import time
 import subprocess
-from threading import Lock
-from datetime import datetime
-
-logfile = None
-loglock = Lock()
-
-
-def log(msg):
-    tstamp = str(datetime.now())
-    line = "[%s] %s" % (tstamp, msg.rstrip())
-    print(line)
-    sys.stdout.flush()
-    if logfile is not None:
-        with loglock:
-            with open(logfile, 'a+t') as fp:
-                fp.write("%s\n" % line)
 
 
 def secs_to_hhmmss(secs):

@@ -37,6 +37,8 @@ class SessionParser(object):
             self.last_saved_session_id = self.last_session_id
 
     def _parse_datetime(self, dt):
+        dt = dt.split('.')[0]
+        dt = dt.split(',')[0]
         dt = datetime.strptime(dt.split('.')[0], '%Y-%m-%d %H:%M:%S')
         return time.mktime(dt.timetuple())
 

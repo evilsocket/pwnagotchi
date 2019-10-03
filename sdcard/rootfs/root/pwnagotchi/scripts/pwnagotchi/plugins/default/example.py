@@ -5,15 +5,21 @@ __license__ = 'GPL3'
 __description__ = 'An example plugin for pwnagotchi that implements all the available callbacks.'
 __enabled__ = False  # IMPORTANT: set this to True to enable your plugin.
 
+import logging
+
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
 import pwnagotchi.ui.fonts as fonts
-import core
 
 
 # called when the plugin is loaded
 def on_loaded():
-    core.log("WARNING: plugin %s should be disabled!" % __name__)
+    logging.warning("WARNING: plugin %s should be disabled!" % __name__)
+
+
+# called in manual mode when there's internet connectivity
+def on_internet_available(ui, config, log):
+    pass
 
 
 # called to setup the ui elements
@@ -39,7 +45,7 @@ def on_display_setup(display):
 
 # called when everything is ready and the main loop is about to start
 def on_ready(agent):
-    core.log("unit is ready")
+    logging.info("unit is ready")
     # you can run custom bettercap commands if you want
     #   agent.run('ble.recon on')
     # or set a custom state

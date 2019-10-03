@@ -2,9 +2,9 @@ import time
 import json
 import _thread
 import threading
+import logging
 from scapy.all import Dot11, Dot11FCS, Dot11Elt, RadioTap, sendp, sniff
 
-import core
 import pwnagotchi.ui.faces as faces
 
 import pwnagotchi.mesh.wifi as wifi
@@ -54,7 +54,6 @@ class Advertiser(object):
         self._lost_peer_cb = lost_cb
 
     def on_face_change(self, old, new):
-        # core.log("face change: %s -> %s" % (old, new))
         self.update({'face': new})
 
     def start(self):
@@ -84,12 +83,12 @@ class Advertiser(object):
         self._stopped.set()
 
     def _sender(self):
-        core.log("started advertiser thread (period:%s sid:%s) ..." % (str(self._period), self._me.session_id))
+        logging.info("started advertiser thread (period:%s sid:%s) ..." % (str(self._period), self._me.session_id))
         while self._running:
             try:
                 sendp(self._frame, iface=self._iface, verbose=False, count=5, inter=self._period)
             except Exception as e:
-                core.log("error: %s" % e)
+                logging.exception("error")
             time.sleep(self._period)
 
     def _on_advertisement(self, src_session_id, channel, rssi, adv):
@@ -97,7 +96,7 @@ class Advertiser(object):
         with self._peers_lock:
             if ident not in self._peers:
                 peer = Peer(src_session_id, channel, rssi, adv)
-                core.log("detected unit %s (v%s) on channel %d (%s dBm) [sid:%s pwnd_tot:%d uptime:%d]" % ( \
+                logging.info("detected unit %s (v%s) on channel %d (%s dBm) [sid:%s pwnd_tot:%d uptime:%d]" % ( \
                     peer.full_name(),
                     peer.version(),
                     channel,
@@ -158,10 +157,10 @@ class Advertiser(object):
                     raise Exception("unknown frame id %d" % dot11elt.ID)
 
             except Exception as e:
-                core.log("error decoding packet from %s: %s" % (dot11.addr3, e))
+                logging.exception("error decoding packet from %s" % dot11.addr3)
 
     def _listener(self):
-        # core.log("started advertisements listener ...")
+        # logging.info("started advertisements listener ...")
         expr = "type mgt subtype beacon and ether src %s" % wifi.SignatureAddress
         sniff(iface=self._iface, filter=expr, prn=self._on_packet, store=0, stop_filter=lambda x: self._stopped.isSet())
 
@@ -173,7 +172,7 @@ class Advertiser(object):
                 for ident, peer in self._peers.items():
                     inactive_for = peer.inactive_for()
                     if inactive_for >= Advertiser.MAX_STALE_TIME:
-                        core.log("peer %s lost (inactive for %ds)" % (peer.full_name(), inactive_for))
+                        logging.info("peer %s lost (inactive for %ds)" % (peer.full_name(), inactive_for))
                         self._lost_peer_cb(peer)
                         stale.append(ident)
 

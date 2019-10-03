@@ -1,7 +1,9 @@
 import _thread
+import logging
 
-import core
-import pwnagotchi, pwnagotchi.plugins as plugins
+import pwnagotchi
+import pwnagotchi.version as version
+import pwnagotchi.plugins as plugins
 from pwnagotchi.mesh import get_identity
 
 
@@ -22,7 +24,7 @@ class AsyncAdvertiser(object):
         self._advertiser = Advertiser(
             self._config['main']['iface'],
             pwnagotchi.name(),
-            pwnagotchi.version,
+            version.version,
             self._identity,
             period=0.3,
             data=self._config['personality'])
@@ -33,7 +35,7 @@ class AsyncAdvertiser(object):
             self._advertiser.start()
             self._view.on_state_change('face', self._advertiser.on_face_change)
         else:
-            core.log("advertising is disabled")
+            logging.warning("advertising is disabled")
 
     def _on_new_unit(self, peer):
         self._view.on_new_peer(peer)

@@ -1,5 +1,6 @@
 import time
 import threading
+import logging
 
 import core
 import pwnagotchi
@@ -87,13 +88,13 @@ class Epoch(object):
                 aps_per_chan[ch_idx] += 1.0
                 sta_per_chan[ch_idx] += len(ap['clients'])
             except IndexError as e:
-                core.log("got data on channel %d, we can store %d channels" % (ap['channel'], wifi.NumChannels))
+                logging.error("got data on channel %d, we can store %d channels" % (ap['channel'], wifi.NumChannels))
 
         for peer in peers:
             try:
                 peers_per_chan[peer.last_channel - 1] += 1.0
             except IndexError as e:
-                core.log(
+                logging.error(
                     "got peer data on channel %d, we can store %d channels" % (peer.last_channel, wifi.NumChannels))
 
         # normalize
@@ -172,7 +173,7 @@ class Epoch(object):
         self._epoch_data['reward'] = self._reward(self.epoch + 1, self._epoch_data)
         self._epoch_data_ready.set()
 
-        core.log("[epoch %d] duration=%s slept_for=%s blind=%d inactive=%d active=%d hops=%d missed=%d "
+        logging.info("[epoch %d] duration=%s slept_for=%s blind=%d inactive=%d active=%d hops=%d missed=%d "
                  "deauths=%d assocs=%d handshakes=%d cpu=%d%% mem=%d%% temperature=%dC reward=%s" % (
                      self.epoch,
                      core.secs_to_hhmmss(self.epoch_duration),
