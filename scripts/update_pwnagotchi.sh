@@ -18,8 +18,8 @@ function usage() {
       -v        # Version to update to, can be a branch or commit. (default: master)
       -u        # Url to clone from. (default: https://github.com/evilsocket/pwnagotchi)
       -m        # Mode to restart to. (Supported: ${SUPPORTED_RESTART_MODES[*]}; default: auto)
-      -b        # Backup the current pwnagotchi config.
-      -r        # Restore the current pwnagotchi config. (-b will be enabled.)
+      -b        # Backup the current pwnagotchi config and hostname references.
+      -r        # Restore the current pwnagotchi config and hostname references. (-b will be enabled.)
       -h        # Shows this help.
 
 EOF
@@ -89,8 +89,11 @@ echo "[+] Installing $(git log -1 --format="%h")"
 
 echo "[+] Updating..."
 if [ $BACKUPCONFIG -eq 1 ]; then
-    echo "[+] Creating backup of config.yml"
-    mv /root/pwnagotchi/config.yml /root/config.yml.bak -f
+    echo "[+] Creating backup of config.yml and hostname references"
+    mv /root/pwnagotchi/config.yml /root/config.bak -f
+    mv /etc/hosts /root/hosts.bak -f
+    mv /etc/hostname /root/hostname.bak -f
+    mv /etc/network/interfaces /root/interfaces.bak -f
 fi
 rm /root/pwnagotchi -rf # ensures old files are removed
 rsync -aPq $GIT_FOLDER/sdcard/boot/*   /boot/
@@ -98,8 +101,11 @@ rsync -aPq $GIT_FOLDER/sdcard/rootfs/* /
 cd /tmp
 rm $GIT_FOLDER -rf
 if [ $RESTORECONFIG -eq 1 ]; then
-    echo "[+] Restoring backup of config.yml"
+    echo "[+] Restoring backup of config.yml and hostname references"
     mv /root/config.yml.bak /root/pwnagotchi/config.yml -f
+    mv /etc/hosts.bak /etc/hosts -f
+    mv /etc/hostname.bak /etc/hostname -f
+    mv /etc/network/interfaces.bak /etc/network/interfaces -f
 fi
 
 echo "[+] Restarting pwnagotchi in $MODE mode. $( screen -X -S pwnagotchi quit)"
