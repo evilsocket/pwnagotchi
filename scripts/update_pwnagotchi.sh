@@ -103,9 +103,9 @@ rm $GIT_FOLDER -rf
 if [ $RESTORECONFIG -eq 1 ]; then
     echo "[+] Restoring backup of config.yml and hostname references"
     mv /root/config.yml.bak /root/pwnagotchi/config.yml -f
-    mv /etc/hosts.bak /etc/hosts -f
-    mv /etc/hostname.bak /etc/hostname -f
-    mv /etc/network/interfaces.bak /etc/network/interfaces -f
+    mv /root/hosts.bak /etc/hosts -f
+    mv /root/hostname.bak /etc/hostname -f
+    mv /root/interfaces.bak /etc/network/interfaces -f
 fi
 
 echo "[+] Restarting pwnagotchi in $MODE mode. $( screen -X -S pwnagotchi quit)"
