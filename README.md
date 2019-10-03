@@ -52,6 +52,22 @@ The supported models are:
 - [Pimoroni Inky pHAT](https://shop.pimoroni.com/products/inky-phat)
 - [PaPiRus eInk Screen](https://uk.pi-supply.com/products/papirus-zero-epaper-screen-phat-pi-zero)
 
+The only kind of displays supported are the ones listed above, but we are always happy to receive pull requests supporting new displays.
+
+One thing to note, not all displays are created equaly, TFT displays for example work similar to an HDMI display, and they are not supported, currently all the displays supported are I2C displays.
+
+### Color and Black & White displays
+
+Some of the supported displays support Black & White and Coloured versions, one common question is regarding refresh speed of said displays.
+
+Color displays have a much slower refresh rate, in some cases it can take up to 15 seconds, if slow refresh rates is something that you want to avoid we advise you to use Black & White displays
+
+### FPS
+
+You can configure the refresh interval of the display on config.yml, we advise to use a slow refresh to not shorten the lifetime of your display.
+
+Another option is to change fps to 0, which will only refresh when changes are made to the screen.
+
 ### Software
 
 - Raspbian + [nexmon patches](https://re4son-kernel.com/re4son-pi-kernel/) for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
@@ -152,8 +168,8 @@ Now you can use the `preview.py`-script to preview the changes:
 ### Plugins
 
 Pwnagotchi has a simple plugins system that you can use to customize your unit and its behaviour. You can place your plugins anywhere
-as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins/default/) for a list of default 
-plugins and all the callbacks that you can define for your own customizations. 
+as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins/default/) for a list of default
+plugins and all the callbacks that you can define for your own customizations.
 
 Here's as an example the GPS plugin:
 
