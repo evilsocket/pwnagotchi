@@ -6,6 +6,7 @@ import time
 import argparse
 from http.server import HTTPServer
 import shutil
+import logging
 import yaml
 
 sys.path.insert(0,
@@ -13,7 +14,6 @@ sys.path.insert(0,
                              '../sdcard/rootfs/root/pwnagotchi/scripts/'))
 
 from pwnagotchi.ui.display import Display, VideoHandler
-import core
 
 
 class CustomDisplay(Display):
@@ -22,11 +22,11 @@ class CustomDisplay(Display):
         if self._video_address is not None:
             self._httpd = HTTPServer((self._video_address, self._video_port),
                                      CustomVideoHandler)
-            core.log("ui available at http://%s:%d/" % (self._video_address,
+            logging.info("ui available at http://%s:%d/" % (self._video_address,
                                                         self._video_port))
             self._httpd.serve_forever()
         else:
-            core.log("could not get ip of usb0, video server not starting")
+            logging.info("could not get ip of usb0, video server not starting")
 
     def _on_view_rendered(self, img):
         CustomVideoHandler.render(img)
@@ -45,7 +45,7 @@ class CustomVideoHandler(VideoHandler):
             try:
                 img.save("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), format='PNG')
             except BaseException:
-                core.log("could not write preview")
+                logging.exception("could not write preview")
 
     def do_GET(self):
         if self.path == '/':
@@ -69,7 +69,7 @@ class CustomVideoHandler(VideoHandler):
                     with open("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), 'rb') as fp:
                         shutil.copyfileobj(fp, self.wfile)
                 except BaseException:
-                    core.log("could not open preview")
+                    logging.exception("could not open preview")
         else:
             self.send_response(404)
 

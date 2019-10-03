@@ -1,8 +1,8 @@
 import time
+import logging
 
 import pwnagotchi.mesh.wifi as wifi
 import pwnagotchi.ui.faces as faces
-import core
 
 
 class Peer(object):
@@ -18,10 +18,10 @@ class Peer(object):
 
     def update(self, sid, channel, rssi, adv):
         if self.name() != adv['name']:
-            core.log("peer %s changed name: %s -> %s" % (self.full_name(), self.name(), adv['name']))
+            logging.info("peer %s changed name: %s -> %s" % (self.full_name(), self.name(), adv['name']))
 
         if self.session_id != sid:
-            core.log("peer %s changed session id: %s -> %s" % (self.full_name(), self.session_id, sid))
+            logging.info("peer %s changed session id: %s -> %s" % (self.full_name(), self.session_id, sid))
 
         self.presence[channel - 1] += 1
         self.adv = adv

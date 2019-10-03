@@ -1,6 +1,7 @@
 import _thread
 from threading import Lock
 import time
+import logging
 from PIL import Image, ImageDraw
 
 import core
@@ -114,7 +115,7 @@ class View(object):
             _thread.start_new_thread(self._refresh_handler, ())
             self._ignore_changes = ()
         else:
-            core.log("ui.fps is 0, the display will only update for major changes")
+            logging.warning("ui.fps is 0, the display will only update for major changes")
             self._ignore_changes = ('uptime', 'name')
 
     def add_element(self, key, elem):
@@ -135,7 +136,7 @@ class View(object):
 
     def _refresh_handler(self):
         delay = 1.0 / self._config['ui']['fps']
-        # core.log("view refresh handler started with period of %.2fs" % delay)
+        # logging.info("view refresh handler started with period of %.2fs" % delay)
 
         while True:
             name = self._state.get('name')
@@ -313,10 +314,10 @@ class View(object):
         self.set('status', self._voice.custom(text))
         self.update()
 
-    def update(self):
+    def update(self, force=False):
         with self._lock:
             changes = self._state.changes(ignore=self._ignore_changes)
-            if len(changes):
+            if force or len(changes):
                 self._canvas = Image.new('1', (self._width, self._height), WHITE)
                 drawer = ImageDraw.Draw(self._canvas)
 

@@ -1,8 +1,8 @@
+import logging
 import gym
 from gym import spaces
 import numpy as np
 
-import core
 import pwnagotchi.ai.featurizer as featurizer
 import pwnagotchi.ai.reward as reward
 from pwnagotchi.ai.parameter import Parameter
@@ -83,7 +83,7 @@ class Environment(gym.Env):
         return params
 
     def _next_epoch(self):
-        # core.log("[ai] waiting for epoch to finish ...")
+        logging.debug("[ai] waiting for epoch to finish ...")
         return self._epoch.wait_for_epoch_data()
 
     def _apply_policy(self, policy):
@@ -110,7 +110,7 @@ class Environment(gym.Env):
         return self.last['state_v'], self.last['reward'], not self._agent.is_training(), {}
 
     def reset(self):
-        # core.log("[ai] resetting environment ...")
+        # logging.info("[ai] resetting environment ...")
         self._epoch_num = 0
         state = self._next_epoch()
         self.last['state'] = state
@@ -120,7 +120,7 @@ class Environment(gym.Env):
     def _render_histogram(self, hist):
         for ch in range(featurizer.histogram_size):
             if hist[ch]:
-                core.log("      CH %d: %s" % (ch + 1, hist[ch]))
+                logging.info("      CH %d: %s" % (ch + 1, hist[ch]))
 
     def render(self, mode='human', close=False, force=False):
         # when using a vectorialized environment, render gets called twice
@@ -133,18 +133,13 @@ class Environment(gym.Env):
 
         self._last_render = self._epoch_num
 
-        core.log("[ai] --- training epoch %d/%d ---" % (self._epoch_num, self._agent.training_epochs()))
-        core.log("[ai] REWARD: %f" % self.last['reward'])
+        logging.info("[ai] --- training epoch %d/%d ---" % (self._epoch_num, self._agent.training_epochs()))
+        logging.info("[ai] REWARD: %f" % self.last['reward'])
 
-        # core.log("[ai] policy: %s" % ', '.join("%s:%s" % (name, value) for name, value in self.last['params'].items()))
+        logging.debug("[ai] policy: %s" % ', '.join("%s:%s" % (name, value) for name, value in self.last['params'].items()))
 
-        core.log("[ai] observation:")
+        logging.info("[ai] observation:")
         for name, value in self.last['state'].items():
             if 'histogram' in name:
-                core.log("    %s" % name.replace('_histogram', ''))
+                logging.info("    %s" % name.replace('_histogram', ''))
                 self._render_histogram(value)
-
-        # core.log("[ai] outcome:")
-        # for name, value in self.last['state'].items():
-        #   if 'histogram' not in name:
-        #       core.log("  %s: %s" % (name, value))

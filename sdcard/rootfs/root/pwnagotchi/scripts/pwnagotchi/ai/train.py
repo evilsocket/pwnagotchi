@@ -4,8 +4,7 @@ import time
 import random
 import os
 import json
-
-import core
+import logging
 
 import pwnagotchi.plugins as plugins
 import pwnagotchi.ai as ai
@@ -56,7 +55,7 @@ class Stats(object):
     def load(self):
         with self._lock:
             if os.path.exists(self.path) and os.path.getsize(self.path) > 0:
-                core.log("[ai] loading %s" % self.path)
+                logging.info("[ai] loading %s" % self.path)
                 with open(self.path, 'rt') as fp:
                     obj = json.load(fp)
 
@@ -66,7 +65,7 @@ class Stats(object):
 
     def save(self):
         with self._lock:
-            core.log("[ai] saving %s" % self.path)
+            logging.info("[ai] saving %s" % self.path)
 
             data = json.dumps({
                 'born_at': self.born_at,
@@ -114,7 +113,7 @@ class AsyncTrainer(object):
         _thread.start_new_thread(self._ai_worker, ())
 
     def _save_ai(self):
-        core.log("[ai] saving model to %s ..." % self._nn_path)
+        logging.info("[ai] saving model to %s ..." % self._nn_path)
         temp = "%s.tmp" % self._nn_path
         self._model.save(temp)
         os.replace(temp, self._nn_path)
@@ -133,15 +132,15 @@ class AsyncTrainer(object):
 
     def on_ai_policy(self, new_params):
         plugins.on('ai_policy', self, new_params)
-        core.log("[ai] setting new policy:")
+        logging.info("[ai] setting new policy:")
         for name, value in new_params.items():
             if name in self._config['personality']:
                 curr_value = self._config['personality'][name]
                 if curr_value != value:
-                    core.log("[ai] ! %s: %s -> %s" % (name, curr_value, value))
+                    logging.info("[ai] ! %s: %s -> %s" % (name, curr_value, value))
                     self._config['personality'][name] = value
             else:
-                core.log("[ai] param %s not in personality configuration!" % name)
+                logging.error("[ai] param %s not in personality configuration!" % name)
 
         self.run('set wifi.ap.ttl %d' % self._config['personality']['ap_ttl'])
         self.run('set wifi.sta.ttl %d' % self._config['personality']['sta_ttl'])
@@ -152,12 +151,12 @@ class AsyncTrainer(object):
         plugins.on('ai_ready', self)
 
     def on_ai_best_reward(self, r):
-        core.log("[ai] best reward so far: %s" % r)
+        logging.info("[ai] best reward so far: %s" % r)
         self._view.on_motivated(r)
         plugins.on('ai_best_reward', self, r)
 
     def on_ai_worst_reward(self, r):
-        core.log("[ai] worst reward so far: %s" % r)
+        logging.info("[ai] worst reward so far: %s" % r)
         self._view.on_demotivated(r)
         plugins.on('ai_worst_reward', self, r)
 
@@ -174,12 +173,12 @@ class AsyncTrainer(object):
                 self._model.env.render()
                 # enter in training mode?
                 if random.random() > self._config['ai']['laziness']:
-                    core.log("[ai] learning for %d epochs ..." % epochs_per_episode)
+                    logging.info("[ai] learning for %d epochs ..." % epochs_per_episode)
                     try:
                         self.set_training(True, epochs_per_episode)
                         self._model.learn(total_timesteps=epochs_per_episode, callback=self.on_ai_training_step)
                     except Exception as e:
-                        core.log("[ai] error while training: %s" % e)
+                        logging.exception("[ai] error while training")
                     finally:
                         self.set_training(False)
                         obs = self._model.env.reset()

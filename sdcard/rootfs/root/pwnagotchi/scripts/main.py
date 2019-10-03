@@ -2,11 +2,10 @@
 import os
 import argparse
 import time
-import traceback
+import logging
 
 import yaml
 
-import core
 import pwnagotchi
 import pwnagotchi.utils as utils
 import pwnagotchi.version as version
@@ -28,8 +27,12 @@ parser.add_argument('--manual', dest="do_manual", action="store_true", default=F
 parser.add_argument('--clear', dest="do_clear", action="store_true", default=False,
                     help="Clear the ePaper display and exit.")
 
+parser.add_argument('--debug', dest="debug", action="store_true", default=False,
+                    help="Enable debug logs.")
+
 args = parser.parse_args()
 config = utils.load_config(args)
+utils.setup_logging(args, config)
 
 if args.do_clear:
     print("clearing the display ...")
@@ -75,19 +78,18 @@ plugins.on('loaded')
 display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
 agent = Agent(view=display, config=config)
 
-core.log("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, version.version))
+logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, version.version))
 # for key, value in config['personality'].items():
-#    core.log("  %s: %s" % (key, value))
+#     logging.info("  %s: %s" % (key, value))
 
 for _, plugin in plugins.loaded.items():
-    core.log("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))
+    logging.info("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))
 
 if args.do_manual:
-    core.log("entering manual mode ...")
+    logging.info("entering manual mode ...")
 
     log = SessionParser(config['main']['log'])
-
-    core.log("the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (
+    logging.info("the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (
         log.duration_human,
         log.epochs,
         log.train_epochs,
@@ -98,17 +100,18 @@ if args.do_manual:
     while True:
         display.on_manual_mode(log)
         time.sleep(1)
+
         if config['twitter']['enabled'] and log.is_new() and Agent.is_connected() and log.handshakes > 0:
             import tweepy
 
-            core.log("detected a new session and internet connectivity!")
+            logging.info("detected a new session and internet connectivity!")
 
             picture = '/dev/shm/pwnagotchi.png'
 
-            display.update()
+            display.update(force=True)
             display.image().save(picture, 'png')
             display.set('status', 'Tweeting...')
-            display.update()
+            display.update(force=True)
 
             try:
                 auth = tweepy.OAuthHandler(config['twitter']['consumer_key'], config['twitter']['consumer_secret'])
@@ -119,13 +122,11 @@ if args.do_manual:
                 api.update_with_media(filename=picture, status=tweet)
                 log.save_session_id()
 
-                core.log("tweeted: %s" % tweet)
+                logging.info("tweeted: %s" % tweet)
             except Exception as e:
-                core.log("error: %s" % e)
+                logging.exception("error while tweeting")
 
     quit()
-
-core.logfile = config['main']['log']
 
 agent.start_ai()
 agent.setup_events()
@@ -151,7 +152,7 @@ while True:
             agent.set_channel(ch)
 
             if not agent.is_stale() and agent.any_activity():
-                core.log("%d access points on channel %d" % (len(aps), ch))
+                logging.info("%d access points on channel %d" % (len(aps), ch))
 
             # for each ap on this channel
             for ap in aps:
@@ -170,5 +171,4 @@ while True:
         # affect ours ... neat ^_^
         agent.next_epoch()
     except Exception as e:
-        core.log("main loop exception: %s" % e)
-        core.log("%s" % traceback.format_exc())
+        logging.exception("main loop exception")
