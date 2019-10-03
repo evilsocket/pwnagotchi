@@ -12,7 +12,6 @@ __version__ = '1.0.0'
 __name__ = 'ups_lite'
 __license__ = 'GPL3'
 __description__ = 'A plugin that will add a voltage indicator for the UPS Lite v1.1'
-__enabled__ = False
 
 import struct
 

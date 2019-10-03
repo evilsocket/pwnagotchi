@@ -1,8 +1,7 @@
 # Plugins
 
 Pwnagotchi has a simple plugins system that you can use to customize your unit and its behaviour. You can place your plugins anywhere
-as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins/default/) for a list of default
-plugins and all the callbacks that you can define for your own customizations.
+as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins/default/) for a list of default plugins and all the callbacks that you can define for your own customizations.
 
 Here's as an example the GPS plugin:
 

@@ -3,7 +3,6 @@ __version__ = '1.0.0'
 __name__ = 'wpa_sec'
 __license__ = 'GPL3'
 __description__ = 'This plugin automatically uploades handshakes to https://wpa-sec.stanev.org'
-__enabled__ = False
 
 import os
 import logging
@@ -12,6 +11,7 @@ import subprocess
 READY = False
 API_KEY = None
 ALREADY_UPLOADED = None
+
 
 # INSTALLATION:
 ## apt-get install libcurl4-openssl-dev
@@ -51,6 +51,7 @@ def _upload_to_wpasec(path):
         logging.error(f"WPA_SEC: Error while uploading {path}")
         raise os_e
 
+
 # called in manual mode when there's internet connectivity
 def on_internet_available(display, config, log):
     if READY:
@@ -60,12 +61,12 @@ def on_internet_available(display, config, log):
         handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames]
         handshake_new = set(handshake_paths) - set(ALREADY_UPLOADED)
 
-        if handhake_new:
+        if handshake_new:
             logging.info("Internet connectivity detected.\
                           Uploading new handshakes to wpa-sec.stanev.org")
 
             for idx, handshake in enumerate(handshake_new):
-                display.set('status', f"Uploading handshake to wpa-sec.stanev.org ({idx + 1}/{len(handshake_new})")
+                display.set('status', "Uploading handshake to wpa-sec.stanev.org ({idx + 1}/{len(handshake_new})")
                 display.update(force=True)
                 try:
                     _upload_to_wpasec(handshake)

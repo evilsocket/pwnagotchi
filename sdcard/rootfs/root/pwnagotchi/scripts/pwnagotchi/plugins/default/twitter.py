@@ -3,7 +3,6 @@ __version__ = '1.0.0'
 __name__ = 'twitter'
 __license__ = 'GPL3'
 __description__ = 'This plugin creates tweets about the recent activity of pwnagotchi'
-__enabled__ = True
 
 import logging
 from pwnagotchi.voice import Voice
