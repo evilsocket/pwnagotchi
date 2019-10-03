@@ -204,6 +204,7 @@
   - name: configure lo interface
     blockinfile:
       path: /etc/network/interfaces.d/lo-cfg
+      create: yes
       block: |
         auto lo
         iface lo inet loopback
@@ -211,6 +212,7 @@
   - name: configure wlan interface
     blockinfile:
       path: /etc/network/interfaces.d/wlan0-cfg
+      create: yes
       block: |
         allow-hotplug wlan0
         iface wlan0 inet static
