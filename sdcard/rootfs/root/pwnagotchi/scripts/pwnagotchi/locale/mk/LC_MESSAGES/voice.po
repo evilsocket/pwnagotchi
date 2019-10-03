@@ -1,56 +1,57 @@
 # pwnigotchi voice data
 # Copyright (C) 2019
 # This file is distributed under the same license as the pwnagotchi package.
-# FIRST AUTHOR Perilis Fregkos <fregkos@gmail.com>, 2019.
+# FIRST AUTHOR <33197631+dadav@users.noreply.github.com>, 2019.
+# kovach <2214005+kovachwt@users.noreply.github.com>, 2019.
 #
-msgid ""
+#, fuzzymsgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-29 13:42+0200\n"
-"PO-Revision-Date: 2019-10-01 16:22+0000\n"
-"Last-Translator: Panos Vasilopoulos <hello@alwayslivid.com>\n"
-"Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
-"Language: el\n"
+"PO-Revision-Date: 2019-09-30 23:53+0200\n"
+"Last-Translator: kovach <2214005+kovachwt@users.noreply.github.com>\n"
+"Language-Team: \n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: voice.py:16
 msgid "ZzzzZZzzzzZzzz"
-msgstr ""
+msgstr "ДреееММмммМммм"
 
 #: voice.py:21
 msgid ""
 "Hi, I'm Pwnagotchi!\n"
 "Starting ..."
 msgstr ""
-"Γεία, είμαι το Pwnagotchi!\n"
-"Εκκινούμαι ..."
+"Здраво, јас сум Pwnagotchi!\n"
+"Почнувам ..."
 
 #: voice.py:22
 msgid ""
 "New day, new hunt,\n"
 "new pwns!"
 msgstr ""
-"Νέα μέρα, νέο κυνήγι,\n"
-"νέα pwns!"
+"Нов ден, нов лов,\n"
+"ќе си газиме!"
 
 #: voice.py:23
 msgid "Hack the Planet!"
-msgstr "Hackαρε τον πλανήτη!"
+msgstr "Хак д Планет!"
 
 #: voice.py:28
 msgid "AI ready."
-msgstr "ΤΝ έτοιμη."
+msgstr "AI спремно."
 
 #: voice.py:29
 msgid ""
 "The neural network\n"
 "is ready."
 msgstr ""
-"Το νευρωνικό δίκτυο\n"
-"είναι έτοιμο."
+"Невронската мрежа\n"
+"е спремна."
 
 #: voice.py:39
 #, python-brace-format
@@ -59,67 +60,67 @@ msgid ""
 "free! Your AP will\n"
 "say thanks."
 msgstr ""
-"Ε, το κανάλι {channel} είναι\n"
-"ελεύθερο! Το AP σου θα\n"
-"είναι ευγνώμων."
+"Еј, каналот {channel} е\n"
+"слободен! APто ќе ти\n"
+"каже фала."
 
 #: voice.py:44
 msgid "I'm bored ..."
-msgstr "Βαριέμαι ..."
+msgstr "Досаднооо ..."
 
 #: voice.py:45
 msgid "Let's go for a walk!"
-msgstr "Ας πάμε μια βόλτα!"
+msgstr "Ајде да шетнеме!"
 
 #: voice.py:49
 msgid ""
 "This is the best\n"
 "day of my life!"
 msgstr ""
-"Είναι η καλύτερη\n"
-"μέρα της ζωής μου!"
+"Ова ми е најдобриот \n"
+"ден во животот!"
 
 #: voice.py:53
 msgid "Shitty day :/"
-msgstr "Σκατένια μέρα :/"
+msgstr "Срање ден :/"
 
 #: voice.py:58
 msgid "I'm extremely bored ..."
-msgstr "Βαριέμαι πάρα πολύ ..."
+msgstr "Ултра досадно ..."
 
 #: voice.py:59
 msgid "I'm very sad ..."
-msgstr "Είμαι πολύ λυπημένο ..."
+msgstr "Многу тажно ..."
 
 #: voice.py:60
 msgid "I'm sad"
-msgstr "Είμαι λυπημένο"
+msgstr "Тажно"
 
 #: voice.py:66
 msgid "I'm living the life!"
-msgstr "Ζω την ζωή μου!"
+msgstr "Ммхх животче!"
 
 #: voice.py:67
 msgid "I pwn therefore I am."
-msgstr "Pwnάρω, άρα υπάρχω."
+msgstr "Си газам значи постојам."
 
 #: voice.py:68
 msgid "So many networks!!!"
-msgstr "Τόσα πολλά δίκτυα!!!"
+msgstr "Мммм колку мрежи!!!"
 
 #: voice.py:69
 msgid ""
 "I'm having so much\n"
 "fun!"
-msgstr "Περνάω τέλεια!"
+msgstr "Јухуу забавноо ее!"
 
 #: voice.py:70
 msgid ""
 "My crime is that of\n"
 "curiosity ..."
 msgstr ""
-"Η περιέργεια είναι\n"
-"το μόνο έγκλημά μου ..."
+"Виновен сум само за\n"
+"љубопитност ..."
 
 #: voice.py:75
 #, python-brace-format
@@ -128,8 +129,9 @@ msgid ""
 "{name}!\n"
 "Nice to meet you. {name}"
 msgstr ""
-"Γειά {name}!\n"
-"Χάρηκα για τη γνωριμία. {name}"
+"Здраво\n"
+"{name}!\n"
+"Мило ми е. {name}"
 
 #: voice.py:76
 #, python-brace-format
@@ -138,9 +140,9 @@ msgid ""
 "{name}\n"
 "is nearby! {name}"
 msgstr ""
-"Η μονάδα\n"
+"Опаа\n"
 "{name}\n"
-"είναι κοντά! {name}"
+"е во близина! {name}"
 
 #: voice.py:81
 #, python-brace-format
@@ -149,8 +151,8 @@ msgid ""
 "goodbye\n"
 "{name}"
 msgstr ""
-"Εμμ ...\n"
-"αντίο\n"
+"Хмм ...\n"
+"чао\n"
 "{name}"
 
 #: voice.py:82
@@ -159,8 +161,8 @@ msgid ""
 "{name}\n"
 "is gone ..."
 msgstr ""
-"Το {name}\n"
-"έφυγε ..."
+"{name}\n"
+"го снема ..."
 
 #: voice.py:87
 #, python-brace-format
@@ -169,9 +171,9 @@ msgid ""
 "{name}\n"
 "is gone."
 msgstr ""
-"Ουπς ... \n"
-"Εξαφανίστηκε το\n"
-"{name}."
+"Уупс ...\n"
+"{name}\n"
+"го снема."
 
 #: voice.py:88
 #, python-brace-format
@@ -179,52 +181,52 @@ msgid ""
 "{name}\n"
 "missed!"
 msgstr ""
-"Έχασα το\n"
-"{name}!"
+"{name}\n"
+"промаши!"
 
 #: voice.py:89
 msgid "Missed!"
-msgstr "Το έχασα!"
+msgstr "Промаши!"
 
 #: voice.py:94
 msgid ""
 "Nobody wants to\n"
 "play with me ..."
 msgstr ""
-"Κανείς δε θέλει να\n"
-"παίξει μαζί μου ..."
+"Никој не сака да\n"
+"си игра со мене ..."
 
 #: voice.py:95
 msgid "I feel so alone ..."
-msgstr "Νιώθω μοναχός μου ..."
+msgstr "Толку сам ..."
 
 #: voice.py:96
 msgid "Where's everybody?!"
-msgstr "Μα, πού πήγαν όλοi;!"
+msgstr "Каде се сите?!"
 
 #: voice.py:101
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "Ξεκουράζομαι για {secs}s ..."
+msgstr "Ќе дремнам {secs}с ..."
 
 #: voice.py:102
 msgid "Zzzzz"
-msgstr ""
+msgstr "Дреммм"
 
 #: voice.py:103
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
-msgstr ""
+msgstr "Дремммм ({secs}с)"
 
 #: voice.py:112
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr "Περιμένω για {secs}s ..."
+msgstr "Чекам {secs}с ..."
 
 #: voice.py:114
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "Ψάχνω τριγύρω ({secs})"
+msgstr "Шарам наоколу ({secs}с)"
 
 #: voice.py:121
 #, python-brace-format
@@ -233,9 +235,9 @@ msgid ""
 "{what}\n"
 "let's be friends!"
 msgstr ""
-"Εε!\n"
-"{what},\n"
-"ας γίνουμε φίλοι!"
+"Еј\n"
+"{what}\n"
+"ајде да се дружиме!"
 
 #: voice.py:122
 #, python-brace-format
@@ -243,7 +245,7 @@ msgid ""
 "Associating to\n"
 "{what}"
 msgstr ""
-"Συνδέομαι με το\n"
+"Се закачувам на\n"
 "{what}"
 
 #: voice.py:123
@@ -252,7 +254,7 @@ msgid ""
 "Yo\n"
 "{what}!"
 msgstr ""
-"Που'σ ρε τρελέ\n"
+"Јо\n"
 "{what}!"
 
 #: voice.py:128
@@ -262,9 +264,9 @@ msgid ""
 "{mac}\n"
 "needs no WiFi!"
 msgstr ""
-"Μόλις αποφάσισα ότι η\n"
+"Знаеш што, на\n"
 "{mac}\n"
-"δε χρείαζεται WiFi!"
+"не му треба WiFi!"
 
 #: voice.py:129
 #, python-brace-format
@@ -272,7 +274,7 @@ msgid ""
 "Deauthenticating\n"
 "{mac}"
 msgstr ""
-"Πετάω έξω την\n"
+"Го деавтентицирам\n"
 "{mac}"
 
 #: voice.py:130
@@ -281,7 +283,7 @@ msgid ""
 "Kickbanning\n"
 "{mac}!"
 msgstr ""
-"Μπανάρω την\n"
+"Кикбан\n"
 "{mac}!"
 
 #: voice.py:135
@@ -290,8 +292,8 @@ msgid ""
 "Cool, we got {num}\n"
 "new handshake{plural}!"
 msgstr ""
-"Τέλεια δικέ μου, πήραμε {num}\n"
-"νέες χειραψίες{plural}!"
+"Кул, фативме {num}\n"
+"нови ракувања!"
 
 #: voice.py:139
 msgid ""
@@ -299,41 +301,41 @@ msgid ""
 "went wrong ...\n"
 "Rebooting ..."
 msgstr ""
-"Ουπς, κάτι\n"
-"πήγε λάθος ...\n"
-"Επανεκκινούμαι ..."
+"Упс, нешто не е\n"
+"ко што треба ...\n"
+"Рестартирам ..."
 
 #: voice.py:143
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "Έριξα {num} σταθμούς\n"
+msgstr "Избацив {num} станици"
 
 #: voice.py:144
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "Έκανα {num} νέους φίλους\n"
+msgstr "{num} нови другарчиња"
 
 #: voice.py:145
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Πήρα {num} χειραψίες\n"
+msgstr "Фатив {num} ракувања"
 
 #: voice.py:147
 msgid "Met 1 peer"
-msgstr "Γνώρισα 1 φίλο"
+msgstr "Запознав 1 пријател"
 
 #: voice.py:149
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "Γνώρισα {num} φίλους"
+msgstr "Запознав {num} пријатели"
 
 #: voice.py:154
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
-"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi #pwnlog "
-"#pwnlife #hacktheplanet #skynet"
-msgstr ""
-"Pwnαρα για {duration} και έριξα {deauthed} πελάτες! Επίσης γνώρισα "
-"{associated} νέους φίλους και καταβρόχθισα {handshakes} χειραψίες! #pwnagotchi "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+"Си газам веќе {duration} и избацив {deauthed} клиенти! Запознав {associated} "
+"нови другарчиња и лапнав {handshakes} ракувања! #pwnagotchi #pwnlog "
+"#pwnlife #hacktheplanet #skynet"

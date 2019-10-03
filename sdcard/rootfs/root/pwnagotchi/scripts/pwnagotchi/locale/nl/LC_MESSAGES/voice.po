@@ -1,56 +1,59 @@
 # pwnigotchi voice data
 # Copyright (C) 2019
 # This file is distributed under the same license as the pwnagotchi package.
-# FIRST AUTHOR Perilis Fregkos <fregkos@gmail.com>, 2019.
+# FIRST AUTHOR justin-p@users.noreply.github.com, 2019.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-29 13:42+0200\n"
-"PO-Revision-Date: 2019-10-01 16:22+0000\n"
-"Last-Translator: Panos Vasilopoulos <hello@alwayslivid.com>\n"
+"PO-Revision-Date: 2019-09-29 14:00+0200\n"
+"Last-Translator: Justin-P <justin-p@users.noreply.github.com>\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
-"Language: el\n"
+"Language: english\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: voice.py:16
 msgid "ZzzzZZzzzzZzzz"
-msgstr ""
+msgstr "ZzzzZZzzzzZzzz"
 
 #: voice.py:21
 msgid ""
 "Hi, I'm Pwnagotchi!\n"
 "Starting ..."
 msgstr ""
-"Γεία, είμαι το Pwnagotchi!\n"
-"Εκκινούμαι ..."
+"Hoi, Ik ben\n"
+"Pwnagotchi!\n"
+"Opstarten ..."
 
 #: voice.py:22
 msgid ""
 "New day, new hunt,\n"
 "new pwns!"
 msgstr ""
-"Νέα μέρα, νέο κυνήγι,\n"
-"νέα pwns!"
+"Nieuwe dag,\n" 
+"nieuwe jacht,\n"
+"nieuwe pwns!"
 
 #: voice.py:23
 msgid "Hack the Planet!"
-msgstr "Hackαρε τον πλανήτη!"
+msgstr "Hack de Wereld!"
 
 #: voice.py:28
 msgid "AI ready."
-msgstr "ΤΝ έτοιμη."
+msgstr "AI is klaar."
 
 #: voice.py:29
 msgid ""
 "The neural network\n"
 "is ready."
 msgstr ""
-"Το νευρωνικό δίκτυο\n"
-"είναι έτοιμο."
+"Neuronen netwerk\n"
+"is klaar voor gebruik."
 
 #: voice.py:39
 #, python-brace-format
@@ -59,67 +62,71 @@ msgid ""
 "free! Your AP will\n"
 "say thanks."
 msgstr ""
-"Ε, το κανάλι {channel} είναι\n"
-"ελεύθερο! Το AP σου θα\n"
-"είναι ευγνώμων."
+"Hey, kanaal {channel} is\n"
+"vrij! Je AP zal je\n"
+"bedanken."
 
 #: voice.py:44
 msgid "I'm bored ..."
-msgstr "Βαριέμαι ..."
+msgstr "Ik verveel me ..."
 
 #: voice.py:45
 msgid "Let's go for a walk!"
-msgstr "Ας πάμε μια βόλτα!"
+msgstr "Laten we een rondje lopen!"
 
 #: voice.py:49
 msgid ""
 "This is the best\n"
 "day of my life!"
 msgstr ""
-"Είναι η καλύτερη\n"
-"μέρα της ζωής μου!"
+"Dit is de beste\n"
+"dag van mijn leven!"
 
 #: voice.py:53
 msgid "Shitty day :/"
-msgstr "Σκατένια μέρα :/"
+msgstr "Ruk dag :/"
 
 #: voice.py:58
 msgid "I'm extremely bored ..."
-msgstr "Βαριέμαι πάρα πολύ ..."
+msgstr "Ik verveel me \n"
+"kapot ..."
 
 #: voice.py:59
 msgid "I'm very sad ..."
-msgstr "Είμαι πολύ λυπημένο ..."
+msgstr "Ik ben erg\n" 
+"verdrietig ..."
 
 #: voice.py:60
 msgid "I'm sad"
-msgstr "Είμαι λυπημένο"
+msgstr "Ik ben verdrietig"
 
 #: voice.py:66
 msgid "I'm living the life!"
-msgstr "Ζω την ζωή μου!"
+msgstr "Beter kan het leven\n"
+"niet worden!"
 
 #: voice.py:67
 msgid "I pwn therefore I am."
-msgstr "Pwnάρω, άρα υπάρχω."
+msgstr "Ik pwn daarom besta ik."
 
 #: voice.py:68
 msgid "So many networks!!!"
-msgstr "Τόσα πολλά δίκτυα!!!"
+msgstr "Zo veel netwerken!!!"
 
 #: voice.py:69
 msgid ""
 "I'm having so much\n"
 "fun!"
-msgstr "Περνάω τέλεια!"
+msgstr "Dit is zo leuk!"
 
 #: voice.py:70
 msgid ""
 "My crime is that of\n"
 "curiosity ..."
 msgstr ""
-"Η περιέργεια είναι\n"
-"το μόνο έγκλημά μου ..."
+"Mijn enige misdrijf\n"
+"is mijn \n"
+"nieuwsgierigheid ..."
 
 #: voice.py:75
 #, python-brace-format
@@ -128,8 +135,9 @@ msgid ""
 "{name}!\n"
 "Nice to meet you. {name}"
 msgstr ""
-"Γειά {name}!\n"
-"Χάρηκα για τη γνωριμία. {name}"
+"Hallo\n"
+"{name}!\n"
+"Leuk je te ontmoeten. {name}"
 
 #: voice.py:76
 #, python-brace-format
@@ -138,9 +146,9 @@ msgid ""
 "{name}\n"
 "is nearby! {name}"
 msgstr ""
-"Η μονάδα\n"
+"Unit\n"
 "{name}\n"
-"είναι κοντά! {name}"
+"is dichtbij! {name}"
 
 #: voice.py:81
 #, python-brace-format
@@ -149,8 +157,8 @@ msgid ""
 "goodbye\n"
 "{name}"
 msgstr ""
-"Εμμ ...\n"
-"αντίο\n"
+"Uhm ...\n"
+"tot ziens\n"
 "{name}"
 
 #: voice.py:82
@@ -159,8 +167,8 @@ msgid ""
 "{name}\n"
 "is gone ..."
 msgstr ""
-"Το {name}\n"
-"έφυγε ..."
+"{name}\n"
+"is weg"
 
 #: voice.py:87
 #, python-brace-format
@@ -169,9 +177,9 @@ msgid ""
 "{name}\n"
 "is gone."
 msgstr ""
-"Ουπς ... \n"
-"Εξαφανίστηκε το\n"
-"{name}."
+"Whoopsie ...\n"
+"{name}\n"
+"is weg"
 
 #: voice.py:88
 #, python-brace-format
@@ -179,37 +187,37 @@ msgid ""
 "{name}\n"
 "missed!"
 msgstr ""
-"Έχασα το\n"
-"{name}!"
+"{name}\n"
+"gemist!"
 
 #: voice.py:89
 msgid "Missed!"
-msgstr "Το έχασα!"
+msgstr "Gemist!"
 
 #: voice.py:94
 msgid ""
 "Nobody wants to\n"
 "play with me ..."
 msgstr ""
-"Κανείς δε θέλει να\n"
-"παίξει μαζί μου ..."
+"Niemand wil met\n"
+"mij spelen ..."
 
 #: voice.py:95
 msgid "I feel so alone ..."
-msgstr "Νιώθω μοναχός μου ..."
+msgstr "Zo alleen ..."
 
 #: voice.py:96
 msgid "Where's everybody?!"
-msgstr "Μα, πού πήγαν όλοi;!"
+msgstr "Waar is iedereen?!"
 
 #: voice.py:101
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "Ξεκουράζομαι για {secs}s ..."
+msgstr "Dutje doen voor {secs}s ..."
 
 #: voice.py:102
 msgid "Zzzzz"
-msgstr ""
+msgstr "Zzzzz"
 
 #: voice.py:103
 #, python-brace-format
@@ -219,12 +227,12 @@ msgstr ""
 #: voice.py:112
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr "Περιμένω για {secs}s ..."
+msgstr "Even {secs}s wachten ..."
 
 #: voice.py:114
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "Ψάχνω τριγύρω ({secs})"
+msgstr "Rond kijken ({secs}s)"
 
 #: voice.py:121
 #, python-brace-format
@@ -233,9 +241,10 @@ msgid ""
 "{what}\n"
 "let's be friends!"
 msgstr ""
-"Εε!\n"
-"{what},\n"
-"ας γίνουμε φίλοι!"
+"Hey\n"
+"{what}\n"
+"Laten we vrienden\n"
+"worden!"
 
 #: voice.py:122
 #, python-brace-format
@@ -243,7 +252,7 @@ msgid ""
 "Associating to\n"
 "{what}"
 msgstr ""
-"Συνδέομαι με το\n"
+"Verbinden met\n"
 "{what}"
 
 #: voice.py:123
@@ -252,8 +261,7 @@ msgid ""
 "Yo\n"
 "{what}!"
 msgstr ""
-"Που'σ ρε τρελέ\n"
-"{what}!"
+
 
 #: voice.py:128
 #, python-brace-format
@@ -261,10 +269,10 @@ msgid ""
 "Just decided that\n"
 "{mac}\n"
 "needs no WiFi!"
-msgstr ""
-"Μόλις αποφάσισα ότι η\n"
+msgstr "Ik vind dat\n"
 "{mac}\n"
-"δε χρείαζεται WiFi!"
+"genoeg WiFi\n"
+"heeft gehad!"
 
 #: voice.py:129
 #, python-brace-format
@@ -272,7 +280,7 @@ msgid ""
 "Deauthenticating\n"
 "{mac}"
 msgstr ""
-"Πετάω έξω την\n"
+"De-autoriseren\n"
 "{mac}"
 
 #: voice.py:130
@@ -281,8 +289,9 @@ msgid ""
 "Kickbanning\n"
 "{mac}!"
 msgstr ""
-"Μπανάρω την\n"
-"{mac}!"
+"Ik ga\n"
+"{mac}\n"
+"even kicken!"
 
 #: voice.py:135
 #, python-brace-format
@@ -290,8 +299,8 @@ msgid ""
 "Cool, we got {num}\n"
 "new handshake{plural}!"
 msgstr ""
-"Τέλεια δικέ μου, πήραμε {num}\n"
-"νέες χειραψίες{plural}!"
+"Gaaf, we hebben {num}\n"
+"nieuwe handshake{plural}!"
 
 #: voice.py:139
 msgid ""
@@ -299,41 +308,41 @@ msgid ""
 "went wrong ...\n"
 "Rebooting ..."
 msgstr ""
-"Ουπς, κάτι\n"
-"πήγε λάθος ...\n"
-"Επανεκκινούμαι ..."
+"Oops, iets"
+"ging fout ...\n"
+"Rebooting ..."
 
 #: voice.py:143
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "Έριξα {num} σταθμούς\n"
+msgstr "{num} stations gekicked\n"
 
 #: voice.py:144
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "Έκανα {num} νέους φίλους\n"
+msgstr "{num} nieuwe vrienden\n"
 
 #: voice.py:145
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Πήρα {num} χειραψίες\n"
+msgstr "{num} nieuwe handshakes\n"
 
 #: voice.py:147
 msgid "Met 1 peer"
-msgstr "Γνώρισα 1 φίλο"
+msgstr "1 peer ontmoet"
 
 #: voice.py:149
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "Γνώρισα {num} φίλους"
+msgstr "{num} peers ontmoet"
 
 #: voice.py:154
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
-"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi #pwnlog "
-"#pwnlife #hacktheplanet #skynet"
-msgstr ""
-"Pwnαρα για {duration} και έριξα {deauthed} πελάτες! Επίσης γνώρισα "
-"{associated} νέους φίλους και καταβρόχθισα {handshakes} χειραψίες! #pwnagotchi "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+"Ik heb gepwned voor {duration} and heb {deauthed} clients gekicked! Ik heb ook "
+"{associated} nieuwe vrienden gevonden en heb {handshakes} handshakes gegeten! "
+"#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"

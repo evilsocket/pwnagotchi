@@ -80,6 +80,23 @@ usage: ./scripts/create_sibling.sh [OPTIONS]
 
 If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
 
+#### Update your pwnagotchi
+
+You can use the `scripts/update_pwnagotchi.sh` script to update to the most recent version of pwnagotchi.
+
+```shell
+usage: ./update_pwnagitchi.sh [OPTIONS]
+
+   Options:
+      -v                # Version to update to, can be a branch or commit. (default: master)
+      -u                # Url to clone from. (default: https://github.com/evilsocket/pwnagotchi)
+      -m                # Mode to restart to. (Supported: auto manual; default: auto)
+      -b                # Backup the current pwnagotchi config.
+      -r                # Restore the current pwnagotchi config. -b will be enabled.
+      -h                # Shows this help.             Shows this help.
+
+```
+
 ### UI
 
 The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
@@ -98,9 +115,12 @@ Pwnagotchi is able to speak multiple languages!! Currently supported are:
 
 * **english** (default)
 * german
+* dutch
+* greek
+* macedonian
+* italian
 
-If you want to add a language use the `language.sh` script.
-If you want to add for example the language **italian** you would type:
+If you want to add a language use the `language.sh` script. If you want to add for example the language **italian** you would type:
 
 ```shell
 ./scripts/language.sh add it
@@ -119,6 +139,20 @@ If you changed the `voice.py`- File, the translations need an update. Do it like
 ./scripts/language.sh compile it
 # DONE
 ```
+
+Now you can use the `preview.py`-script to preview the changes:
+
+```shell
+./scripts/preview.py --lang it --display ws2 --port 8080 &
+./scripts/preview.py --lang it --display inky --port 8081 &
+# Now open http://localhost:8080 and http://localhost:8081
+```
+
+### Plugins
+
+Pwnagotchi has a simple plugins system that you can use to customize your unit and its behaviour. You can place your plugins anywhere
+as python files and then edit the `config.yml` file (`main.plugins` value) to point to their containing folder. Check the [plugins folder](https://github.com/evilsocket/pwnagotchi/tree/master/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/plugins/default/) for a list of default 
+plugins and all the callbacks that you can define for your own customizations.
 
 ### Random Info
 

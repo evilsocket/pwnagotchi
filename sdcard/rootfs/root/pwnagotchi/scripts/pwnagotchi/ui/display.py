@@ -1,10 +1,10 @@
 import _thread
 from threading import Lock
 
-import io
+import shutil
 import core
 import os
-import pwnagotchi
+import pwnagotchi, pwnagotchi.plugins as plugins
 
 from pwnagotchi.ui.view import WHITE, View
 
@@ -13,7 +13,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class VideoHandler(BaseHTTPRequestHandler):
     _lock = Lock()
-    _buffer = None
     _index = """<html>
   <head>
     <title>%s</title>
@@ -36,36 +35,31 @@ class VideoHandler(BaseHTTPRequestHandler):
     @staticmethod
     def render(img):
         with VideoHandler._lock:
-            writer = io.BytesIO()
-            img.save(writer, format='PNG')
-            VideoHandler._buffer = writer.getvalue()
+            img.save("/root/pwnagotchi.png", format='PNG')
 
     def log_message(self, format, *args):
         return
 
-    def _w(self, data):
-        try:
-            self.wfile.write(data)
-        except:
-            pass
-
     def do_GET(self):
-        if self._buffer is None:
-            self.send_response(404)
-
-        elif self.path == '/':
+        if self.path == '/':
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self._w(bytes(self._index % (pwnagotchi.name(), 1000), "utf8"))
+            try:
+                self.wfile.write(bytes(self._index % (pwnagotchi.name(), 1000), "utf8"))
+            except:
+                pass
 
         elif self.path.startswith('/ui'):
             with self._lock:
                 self.send_response(200)
                 self.send_header('Content-type', 'image/png')
-                self.send_header('Content-length', '%d' % len(self._buffer))
                 self.end_headers()
-                self._w(self._buffer)
+                try:
+                    with open("/root/pwnagotchi.png", 'rb') as fp:
+                        shutil.copyfileobj(fp, self.wfile)
+                except:
+                    pass
         else:
             self.send_response(404)
 
@@ -80,8 +74,6 @@ class Display(View):
         self._video_address = config['ui']['display']['video']['address']
         self._display_type = config['ui']['display']['type']
         self._display_color = config['ui']['display']['color']
-        self.full_refresh_count = 0
-        self.full_refresh_trigger = config['ui']['display']['refresh'] 
 
         self._render_cb = None
         self._display = None
@@ -119,42 +111,44 @@ class Display(View):
 
     def _init_display(self):
         if self._is_inky():
+            core.log("initializing inky display")
             from inky import InkyPHAT
             self._display = InkyPHAT(self._display_color)
             self._display.set_border(InkyPHAT.BLACK)
             self._render_cb = self._inky_render
-            
+
         elif self._is_papirus():
-            from papirus import Papirus
+            core.log("initializing papirus display")
+            from pwnagotchi.ui.papirus.epd import EPD
             os.environ['EPD_SIZE'] = '2.0'
-            self._display = Papirus()
+            self._display = EPD()
             self._display.clear()
             self._render_cb = self._papirus_render
 
         elif self._is_waveshare1():
+            core.log("initializing waveshare v1 display")
             from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
-            # core.log("display module started")
             self._display = EPD()
             self._display.init(self._display.lut_full_update)
             self._display.Clear(0xFF)
             self._display.init(self._display.lut_partial_update)
             self._render_cb = self._waveshare_render
-            
+
         elif self._is_waveshare2():
+            core.log("initializing waveshare v2 display")
             from pwnagotchi.ui.waveshare.v2.waveshare import EPD
-            # core.log("display module started")
             self._display = EPD()
             self._display.init(self._display.FULL_UPDATE)
             self._display.Clear(WHITE)
             self._display.init(self._display.PART_UPDATE)
             self._render_cb = self._waveshare_render
-            
+
         else:
             core.log("unknown display type %s" % self._display_type)
 
-        self.on_render(self._on_view_rendered)
+        plugins.on('display_setup', self._display)
 
-        core.log("display type '%s' initialized (color:%s)" % (self._display_type, self._display_color))
+        self.on_render(self._on_view_rendered)
 
     def image(self):
         img = None
@@ -197,25 +191,16 @@ class Display(View):
 
     def _waveshare_render(self):
         buf = self._display.getbuffer(self.canvas)
-        if self._is_waveshare1:
-            if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
-                self._display.Clear(0x00)
+        if self._is_waveshare1():
             self._display.display(buf)
-        elif self._is_waveshare2:
-            if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
-                self._display.Clear(BLACK)
+        elif self._is_waveshare2():
             self._display.displayPartial(buf)
-        self._display.sleep()
-        if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
-           self.full_refresh_count = 0
-        elif self.full_refresh_trigger >= 0:
-           self.full_refresh_count += 1
 
     def _on_view_rendered(self, img):
         # core.log("display::_on_view_rendered")
         VideoHandler.render(img)
 
         if self._enabled:
-            self.canvas = img if self._rotation == 0 else img.rotate(self._rotation)
+            self.canvas = (img if self._rotation == 0 else img.rotate(self._rotation))
             if self._render_cb is not None:
                 self._render_cb()

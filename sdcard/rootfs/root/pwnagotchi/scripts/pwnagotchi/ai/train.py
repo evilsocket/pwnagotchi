@@ -7,6 +7,7 @@ import json
 
 import core
 
+import pwnagotchi.plugins as plugins
 import pwnagotchi.ai as ai
 from pwnagotchi.ai.epoch import Epoch
 
@@ -66,16 +67,22 @@ class Stats(object):
     def save(self):
         with self._lock:
             core.log("[ai] saving %s" % self.path)
-            with open(self.path, 'wt') as fp:
-                json.dump({
-                    'born_at': self.born_at,
-                    'epochs_lived': self.epochs_lived,
-                    'epochs_trained': self.epochs_trained,
-                    'rewards': {
-                        'best': self.best_reward,
-                        'worst': self.worst_reward
-                    }
-                }, fp)
+
+            data = json.dumps({
+                'born_at': self.born_at,
+                'epochs_lived': self.epochs_lived,
+                'epochs_trained': self.epochs_trained,
+                'rewards': {
+                    'best': self.best_reward,
+                    'worst': self.worst_reward
+                }
+            })
+
+            temp = "%s.tmp" % self.path
+            with open(temp, 'wt') as fp:
+                fp.write(data)
+
+            os.replace(temp, self.path)
 
 
 class AsyncTrainer(object):
@@ -92,6 +99,11 @@ class AsyncTrainer(object):
         self._is_training = training
         self._training_epochs = for_epochs
 
+        if training:
+            plugins.on('ai_training_start', self, for_epochs)
+        else:
+            plugins.on('ai_training_end', self)
+
     def is_training(self):
         return self._is_training
 
@@ -103,7 +115,9 @@ class AsyncTrainer(object):
 
     def _save_ai(self):
         core.log("[ai] saving model to %s ..." % self._nn_path)
-        self._model.save(self._nn_path)
+        temp = "%s.tmp" % self._nn_path
+        self._model.save(temp)
+        os.replace(temp, self._nn_path)
 
     def on_ai_step(self):
         self._model.env.render()
@@ -115,8 +129,10 @@ class AsyncTrainer(object):
 
     def on_ai_training_step(self, _locals, _globals):
         self._model.env.render()
+        plugins.on('ai_training_step', self, _locals, _globals)
 
     def on_ai_policy(self, new_params):
+        plugins.on('ai_policy', self, new_params)
         core.log("[ai] setting new policy:")
         for name, value in new_params.items():
             if name in self._config['personality']:
@@ -131,39 +147,46 @@ class AsyncTrainer(object):
         self.run('set wifi.sta.ttl %d' % self._config['personality']['sta_ttl'])
         self.run('set wifi.rssi.min %d' % self._config['personality']['min_rssi'])
 
+    def on_ai_ready(self):
+        self._view.on_ai_ready()
+        plugins.on('ai_ready', self)
+
     def on_ai_best_reward(self, r):
         core.log("[ai] best reward so far: %s" % r)
         self._view.on_motivated(r)
+        plugins.on('ai_best_reward', self, r)
 
     def on_ai_worst_reward(self, r):
         core.log("[ai] worst reward so far: %s" % r)
         self._view.on_demotivated(r)
+        plugins.on('ai_worst_reward', self, r)
 
     def _ai_worker(self):
         self._model = ai.load(self._config, self, self._epoch)
 
-        self.on_ai_ready()
+        if self._model:
+            self.on_ai_ready()
 
-        epochs_per_episode = self._config['ai']['epochs_per_episode']
+            epochs_per_episode = self._config['ai']['epochs_per_episode']
 
-        obs = None
-        while True:
-            self._model.env.render()
-            # enter in training mode?
-            if random.random() > self._config['ai']['laziness']:
-                core.log("[ai] learning for %d epochs ..." % epochs_per_episode)
-                try:
-                    self.set_training(True, epochs_per_episode)
-                    self._model.learn(total_timesteps=epochs_per_episode, callback=self.on_ai_training_step)
-                except Exception as e:
-                    core.log("[ai] error while training: %s" % e)
-                finally:
-                    self.set_training(False)
+            obs = None
+            while True:
+                self._model.env.render()
+                # enter in training mode?
+                if random.random() > self._config['ai']['laziness']:
+                    core.log("[ai] learning for %d epochs ..." % epochs_per_episode)
+                    try:
+                        self.set_training(True, epochs_per_episode)
+                        self._model.learn(total_timesteps=epochs_per_episode, callback=self.on_ai_training_step)
+                    except Exception as e:
+                        core.log("[ai] error while training: %s" % e)
+                    finally:
+                        self.set_training(False)
+                        obs = self._model.env.reset()
+                # init the first time
+                elif obs is None:
                     obs = self._model.env.reset()
-            # init the first time
-            elif obs is None:
-                obs = self._model.env.reset()
 
-            # run the inference
-            action, _ = self._model.predict(obs)
-            obs, _, _, _ = self._model.env.step(action)
+                # run the inference
+                action, _ = self._model.predict(obs)
+                obs, _, _, _ = self._model.env.step(action)
