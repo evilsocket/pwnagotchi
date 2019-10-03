@@ -201,6 +201,20 @@
         fi
         /root/pwnagotchi/scripts/startup.sh &
 
+  - name: configure lo interface
+    blockinfile:
+      path: /etc/network/interfaces.d/lo-cfg
+      block: |
+        auto lo
+        iface lo inet loopback
+
+  - name: configure wlan interface
+    blockinfile:
+      path: /etc/network/interfaces.d/wlan0-cfg
+      block: |
+        allow-hotplug wlan0
+        iface wlan0 inet static
+
   - name: configure usb interface
     blockinfile:
       path: /etc/network/interfaces.d/usb0-cfg
