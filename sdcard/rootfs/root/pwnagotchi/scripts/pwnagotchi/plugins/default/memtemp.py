@@ -7,7 +7,7 @@ __version__ = '1.0.0'
 __name__ = 'memtemp'
 __license__ = 'GPL3'
 __description__ = 'A plugin that will add a memory and temperature indicator'
-__enabled__ = False
+__enabled__ = True
 
 import struct
 
@@ -39,7 +39,10 @@ class MEMTEMP:
 
     def get_mem_info(self):
         try:
-            total, used, free = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+            # includes RAM + Swap Memory:
+#            total, used, free = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+            # without Swap, only real memory:
+            total, used, free = map(int, os.popen('free -t -m').readlines()[-3].split()[1:4])
             return "tm:"+str(total)+" um:"+str(used)+" fm:"+str(free)
         except:
             return "tm:0 um:0 fm:0"
