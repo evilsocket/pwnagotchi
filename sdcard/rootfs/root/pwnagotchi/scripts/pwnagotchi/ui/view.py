@@ -78,7 +78,6 @@ class View(object):
                                    label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
-
             'line1': Line([0, int(self._height * .12), self._width, int(self._height * .12)], color=BLACK),
             'line2': Line(
                 [0, self._height - int(self._height * .12), self._width, self._height - int(self._height * .12)],
@@ -111,7 +110,12 @@ class View(object):
 
         plugins.on('ui_setup', self)
 
-        _thread.start_new_thread(self._refresh_handler, ())
+        if config['ui']['fps'] > 0.0:
+            _thread.start_new_thread(self._refresh_handler, ())
+            self._ignore_changes = ()
+        else:
+            core.log("ui.fps is 0, the display will only update for major changes")
+            self._ignore_changes = ('uptime', 'name')
 
     def add_element(self, key, elem):
         self._state.add_element(key, elem)
@@ -311,13 +315,17 @@ class View(object):
 
     def update(self):
         with self._lock:
-            self._canvas = Image.new('1', (self._width, self._height), WHITE)
-            drawer = ImageDraw.Draw(self._canvas)
+            changes = self._state.changes(ignore=self._ignore_changes)
+            if len(changes):
+                self._canvas = Image.new('1', (self._width, self._height), WHITE)
+                drawer = ImageDraw.Draw(self._canvas)
 
-            plugins.on('ui_update', self)
+                plugins.on('ui_update', self)
 
-            for key, lv in self._state.items():
-                lv.draw(self._canvas, drawer)
+                for key, lv in self._state.items():
+                    lv.draw(self._canvas, drawer)
 
-            for cb in self._render_cbs:
-                cb(self._canvas)
+                for cb in self._render_cbs:
+                    cb(self._canvas)
+
+                self._state.reset()
