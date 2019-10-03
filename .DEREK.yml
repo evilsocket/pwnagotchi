@@ -1,0 +1,10 @@
+maintainers:
+ - evilsocket
+ - caquino
+ - dadav
+ - justin-p
+ 
+features:
+ - comments
+ - pr_description_required
+ 
