@@ -54,6 +54,8 @@ The supported models are:
 
 The only kind of displays supported are the ones listed above, but we are always happy to receive pull requests supporting new displays.
 
+You need to configure the display type in `config.yml` where you can find `ui.display.type`. 
+
 One thing to note, not all displays are created equaly, TFT displays for example work similar to an HDMI display, and they are not supported, currently all the displays supported are I2C displays.
 
 ### Color and Black & White displays
