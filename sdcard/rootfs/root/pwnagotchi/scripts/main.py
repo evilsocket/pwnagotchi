@@ -29,11 +29,7 @@ args = parser.parse_args()
 config = utils.load_config(args)
 utils.setup_logging(args, config)
 
-plugins.load_from_path(plugins.default_path, enabled=config['main']['plugins'])
-if 'custom_plugins' in config['main'] and config['main']['custom_plugins'] is not None:
-    plugins.load_from_path(config['main']['custom_plugins'], enabled=config['main']['plugins'])
-
-plugins.on('loaded')
+plugins.load(config)
 
 display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
 agent = Agent(view=display, config=config)

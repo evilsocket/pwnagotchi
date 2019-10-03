@@ -40,3 +40,11 @@ def load_from_path(path, enabled=()):
             loaded[name] = plugin
 
     return loaded
+
+
+def load(config):
+    load_from_path(default_path, enabled=config['main']['plugins'])
+    if 'custom_plugins' in config['main'] and config['main']['custom_plugins'] is not None:
+        load_from_path(config['main']['custom_plugins'], enabled=config['main']['plugins'])
+
+    on('loaded')
