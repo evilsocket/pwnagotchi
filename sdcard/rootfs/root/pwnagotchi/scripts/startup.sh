@@ -9,5 +9,3 @@ if ifconfig | grep usb0 | grep RUNNING; then
 else
     sudo -H -u root /usr/bin/screen -dmS pwnagotchi -c /root/pwnagotchi/data/screenrc.auto
 fi
-
-
