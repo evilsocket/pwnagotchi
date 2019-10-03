@@ -1,0 +1,288 @@
+# pwnigotchi voice data
+# Copyright (C) 2019
+# This file is distributed under the same license as the pwnagotchi package.
+# FIRST AUTHOR <7271496+quantumsheep@users.noreply.github.com>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-03 10:28+0200\n"
+"PO-Revision-Date: 2019-10-03 10:34+0200\n"
+"Last-Translator: quantumsheep <7271496+quantumsheep@users.noreply.github.com>\n"
+"Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
+"Language: french\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: voice.py:16
+msgid "ZzzzZZzzzzZzzz"
+msgstr ""
+
+#: voice.py:21
+msgid ""
+"Bonjour, je suis Pwnagotchi!\n"
+"Démarrage ..."
+msgstr ""
+
+#: voice.py:22
+msgid ""
+"New day, new hunt,\n"
+"Nouvelle journée, nouvelle chasse,\n"
+"nouveau pwns!"
+msgstr ""
+
+#: voice.py:23
+msgid "Hack la planète!"
+msgstr ""
+
+#: voice.py:28
+msgid "IA prête."
+msgstr ""
+
+#: voice.py:29
+msgid ""
+"Le réseau neuronal\n"
+"est prêt."
+msgstr ""
+
+#: voice.py:39
+#, python-brace-format
+msgid ""
+"Hey, le channel {channel} est\n"
+"libre! Ton AP va\n"
+"dis merci."
+msgstr ""
+
+#: voice.py:44
+msgid "Je m'ennuie ..."
+msgstr ""
+
+#: voice.py:45
+msgid "Allons faire un tour!"
+msgstr ""
+
+#: voice.py:49
+msgid ""
+"C'est le meilleur\n"
+"jour de ma vie!"
+msgstr ""
+
+#: voice.py:53
+msgid "Journée de merde :/"
+msgstr ""
+
+#: voice.py:58
+msgid "Je m'ennuie énormément ..."
+msgstr ""
+
+#: voice.py:59
+msgid "Je suis très triste ..."
+msgstr ""
+
+#: voice.py:60
+msgid "Je suis triste"
+msgstr ""
+
+#: voice.py:66
+msgid "Je vis la vie!"
+msgstr ""
+
+#: voice.py:67
+msgid "Je pwn donc je suis."
+msgstr ""
+
+#: voice.py:68
+msgid "Autant de réseaux!!!"
+msgstr ""
+
+#: voice.py:69
+msgid ""
+"Je m'amuse tellement!"
+msgstr ""
+
+#: voice.py:70
+msgid ""
+"Mon crime est celui de\n"
+"la curiosité ..."
+msgstr ""
+
+#: voice.py:75
+#, python-brace-format
+msgid ""
+"Bonjour\n"
+"{name}!\n"
+"Ravis de te rencontrer. {name}"
+msgstr ""
+
+#: voice.py:76
+#, python-brace-format
+msgid ""
+"L'unité\n"
+"{name}\n"
+"est proche! {name}"
+msgstr ""
+
+#: voice.py:81
+#, python-brace-format
+msgid ""
+"Hum ...\n"
+"au revoir\n"
+"{name}"
+msgstr ""
+
+#: voice.py:82
+#, python-brace-format
+msgid ""
+"{name}\n"
+"est parti ..."
+msgstr ""
+
+#: voice.py:87
+#, python-brace-format
+msgid ""
+"Oups ...\n"
+"{name}\n"
+"est parti."
+msgstr ""
+
+#: voice.py:88
+#, python-brace-format
+msgid ""
+"{name}\n"
+"raté!"
+msgstr ""
+
+#: voice.py:89
+msgid "Raté!"
+msgstr ""
+
+#: voice.py:94
+msgid ""
+"Personne ne veut\n"
+"jouer avec moi ..."
+msgstr ""
+
+#: voice.py:95
+msgid "Je me sens si seul ..."
+msgstr ""
+
+#: voice.py:96
+msgid "Où est tout le monde?!"
+msgstr ""
+
+#: voice.py:101
+#, python-brace-format
+msgid "Fais la sieste pendant {secs}s ..."
+msgstr ""
+
+#: voice.py:102
+msgid "Zzzzz"
+msgstr ""
+
+#: voice.py:103
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr ""
+
+#: voice.py:112
+#, python-brace-format
+msgid "Attends pendant {secs}s ..."
+msgstr ""
+
+#: voice.py:114
+#, python-brace-format
+msgid "Regarde autour ({secs}s)"
+msgstr ""
+
+#: voice.py:121
+#, python-brace-format
+msgid ""
+"Hey\n"
+"{what}\n"
+"soyons amis!"
+msgstr ""
+
+#: voice.py:122
+#, python-brace-format
+msgid ""
+"Association à\n"
+"{what}"
+msgstr ""
+
+#: voice.py:123
+#, python-brace-format
+msgid ""
+"Yo\n"
+"{what}!"
+msgstr ""
+
+#: voice.py:128
+#, python-brace-format
+msgid ""
+"Décidé à l'instant que\n"
+"{mac}\n"
+"n'a pas besoin de WiFi!"
+msgstr ""
+
+#: voice.py:129
+#, python-brace-format
+msgid ""
+"Désauthentification de\n"
+"{mac}"
+msgstr ""
+
+#: voice.py:130
+#, python-brace-format
+msgid ""
+"Kickbanning\n"
+"{mac}!"
+msgstr ""
+
+#: voice.py:135
+#, python-brace-format
+msgid ""
+"Cool, nous avons {num}\n"
+"nouveaux handshake{plural}!"
+msgstr ""
+
+#: voice.py:139
+msgid ""
+"Oups, quelque\n"
+"chose s'est mal passé ...\n"
+"Redémarrage ..."
+msgstr ""
+
+#: voice.py:143
+#, python-brace-format
+msgid "{num} stations kick\n"
+msgstr ""
+
+#: voice.py:144
+#, python-brace-format
+msgid "Fait {num} nouveaux amis\n"
+msgstr ""
+
+#: voice.py:145
+#, python-brace-format
+msgid "Récupéré {num} handshakes\n"
+msgstr ""
+
+#: voice.py:147
+msgid "1 peer rencontré"
+msgstr ""
+
+#: voice.py:149
+#, python-brace-format
+msgid "{num} peers recontrés"
+msgstr ""
+
+#: voice.py:154
+#, python-brace-format
+msgid ""
+"J'ai pwn durant {duration} et kick {deauthed} clients! J'ai aussi rencontré "
+"{associated} nouveaux amis and mangé {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
