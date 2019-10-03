@@ -56,7 +56,7 @@ Function Create-HNetObjects {
     .DESCRIPTION
         A helper function that does the heavy lifiting with NetCfg.HNetShare. This returns a PSObject containing the `INetSharingConfigurationForINetConnection` info of 2 Adapters.
         By default it tries to get the correct interfaces. This method might not be foolproof for every setup, but should work in most default senarios, if this causes issues these
-        can be passed as a param.
+        could be passed as a param, they would need to be implemented in Setup-PwnagotchiNetwork and the Param block of this file.
     
     .PARAMETER InternetAdaptor
         The output of Get-NetAdaptor filtered down to the 'main' uplink interface. Should default to the correct value.
