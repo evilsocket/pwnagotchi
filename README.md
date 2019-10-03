@@ -167,7 +167,7 @@ the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`.
 
 ## License
 
-`pwnagotchi` is made with ♥  by [@evilsocket](https://twitter.com/evilsocket) and it's released under the GPL3 license.
+`pwnagotchi` is made with ♥  by [@evilsocket](https://twitter.com/evilsocket) and the [amazing dev team](https://github.com/evilsocket/pwnagotchi/graphs/contributors). It's released under the GPL3 license.
 
 
 
