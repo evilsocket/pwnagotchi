@@ -1,5 +1,7 @@
 import subprocess
 
+version = '1.0.0plz2'
+
 _name = None
 
 

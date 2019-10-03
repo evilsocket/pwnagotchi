@@ -5,7 +5,6 @@ import logging
 
 import pwnagotchi
 import pwnagotchi.utils as utils
-import pwnagotchi.version as version
 import pwnagotchi.plugins as plugins
 
 from pwnagotchi.log import SessionParser
@@ -39,7 +38,7 @@ plugins.on('loaded')
 display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
 agent = Agent(view=display, config=config)
 
-logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, version.version))
+logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, pwnagotchi.version))
 
 for _, plugin in plugins.loaded.items():
     logging.debug("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))
