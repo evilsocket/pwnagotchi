@@ -1,18 +1,17 @@
-# //*****************************************************************************
+# *****************************************************************************
 # * | File        :	  epd2in13.py
 # * | Author      :   Waveshare team
 # * | Function    :   Electronic paper driver
 # * | Info        :
 # *----------------
-# * |	This version:   V3.1
-# * | Date        :   2019-03-20
-# * | Info        :   python3 demo
-# * fix: TurnOnDisplay()
-# ******************************************************************************//
+# * | This version:   V4.0
+# * | Date        :   2019-06-20
+# # | Info        :   python demo
+# -----------------------------------------------------------------------------
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and//or sell
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to  whom the Software is
 # furished to do so, subject to the following conditions:
 #
@@ -29,10 +28,9 @@
 #
 
 
+import logging
 from . import epdconfig
-from PIL import Image
-import RPi.GPIO as GPIO
-# import numpy as np
+import numpy as np
 
 # Display resolution
 EPD_WIDTH       = 122
@@ -43,8 +41,10 @@ class EPD:
         self.reset_pin = epdconfig.RST_PIN
         self.dc_pin = epdconfig.DC_PIN
         self.busy_pin = epdconfig.BUSY_PIN
+        self.cs_pin = epdconfig.CS_PIN
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
+
     lut_full_update = [
         0x22, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x11,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -61,33 +61,40 @@ class EPD:
         
     # Hardware reset
     def reset(self):
-        epdconfig.digital_write(self.reset_pin, GPIO.HIGH)
+        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.digital_write(self.reset_pin, 1)
         epdconfig.delay_ms(200) 
-        epdconfig.digital_write(self.reset_pin, GPIO.LOW)         # module reset
-        epdconfig.delay_ms(200)
-        epdconfig.digital_write(self.reset_pin, GPIO.HIGH)
+        epdconfig.digital_write(self.reset_pin, 0)
+        epdconfig.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 1)
         epdconfig.delay_ms(200)   
+        epdconfig.digital_write(self.cs_pin, 1)
 
     def send_command(self, command):
-        epdconfig.digital_write(self.dc_pin, GPIO.LOW)
+        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.digital_write(self.dc_pin, 0)
         epdconfig.spi_writebyte([command])
+        epdconfig.digital_write(self.cs_pin, 1)
 
     def send_data(self, data):
-        epdconfig.digital_write(self.dc_pin, GPIO.HIGH)
+        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.digital_write(self.dc_pin, 1)
         epdconfig.spi_writebyte([data])
+        epdconfig.digital_write(self.cs_pin, 1)
         
-    def wait_until_idle(self):
-        # print("busy")
+    def ReadBusy(self):
         while(epdconfig.digital_read(self.busy_pin) == 1):      # 0: idle, 1: busy
-            epdconfig.delay_ms(100)
-        # print("free busy")
+            epdconfig.delay_ms(100)            
 
     def TurnOnDisplay(self):
         self.send_command(0x22) # DISPLAY_UPDATE_CONTROL_2
         self.send_data(0xC4)
         self.send_command(0x20) # MASTER_ACTIVATION
         self.send_command(0xFF) # TERMINATE_FRAME_READ_WRITE
-        self.wait_until_idle()
+
+        logging.debug("e-Paper busy")
+        self.ReadBusy()
+        logging.debug("e-Paper busy release")
 
     def init(self, lut):
         if (epdconfig.module_init() != 0):
@@ -127,7 +134,7 @@ class EPD:
         return 0
         
 ##
- #  @brief: specify the memory area for data R//W
+ #  @brief: specify the memory area for data R/W
  ##
     def SetWindows(self, x_start, y_start, x_end, y_end):
         self.send_command(0x44) # SET_RAM_X_ADDRESS_START_END_POSITION
@@ -140,7 +147,7 @@ class EPD:
         self.send_data((y_end >> 8) & 0xFF)
 
 ##
- #  @brief: specify the start point for data R//W
+ #  @brief: specify the start point for data R/W
  ##
     def SetCursor(self, x, y):
         self.send_command(0x4E) # SET_RAM_X_ADDRESS_COUNTER
@@ -149,13 +156,13 @@ class EPD:
         self.send_command(0x4F) # SET_RAM_Y_ADDRESS_COUNTER
         self.send_data(y & 0xFF)
         self.send_data((y >> 8) & 0xFF)
-        self.wait_until_idle()
+        self.ReadBusy()
         
     def getbuffer(self, image):
         if self.width%8 == 0:
-            linewidth = self.width//8
+            linewidth = int(self.width/8)
         else:
-            linewidth = self.width//8 + 1
+            linewidth = int(self.width/8) + 1
          
         buf = [0xFF] * (linewidth * self.height)
         image_monocolor = image.convert('1')
@@ -163,31 +170,29 @@ class EPD:
         pixels = image_monocolor.load()
         
         if(imwidth == self.width and imheight == self.height):
-            # print("Vertical")
             for y in range(imheight):
                 for x in range(imwidth):                    
                     if pixels[x, y] == 0:
                         # x = imwidth - x
-                        buf[x // 8 + y * linewidth] &= ~(0x80 >> (x % 8))
+                        buf[int(x / 8) + y * linewidth] &= ~(0x80 >> (x % 8))
         elif(imwidth == self.height and imheight == self.width):
-            # print("Horizontal")
             for y in range(imheight):
                 for x in range(imwidth):
                     newx = y
                     newy = self.height - x - 1
                     if pixels[x, y] == 0:
                         # newy = imwidth - newy - 1
-                        buf[newx // 8 + newy*linewidth] &= ~(0x80 >> (y % 8))
+                        buf[int(newx / 8) + newy*linewidth] &= ~(0x80 >> (y % 8))
         return buf   
 
         
     def display(self, image):
         if self.width%8 == 0:
-            linewidth = self.width//8
+            linewidth = int(self.width/8)
         else:
-            linewidth = self.width//8 + 1
+            linewidth = int(self.width/8) + 1
 
-        self.SetWindows(0, 0, EPD_WIDTH, EPD_HEIGHT);
+        self.SetWindows(0, 0, self.width, self.height);
         for j in range(0, self.height):
             self.SetCursor(0, j);
             self.send_command(0x24);
@@ -197,11 +202,11 @@ class EPD:
     
     def Clear(self, color):
         if self.width%8 == 0:
-            linewidth = self.width//8
+            linewidth = int(self.width/8)
         else:
-            linewidth = self.width//8 + 1
+            linewidth = int(self.width/8) + 1
 
-        self.SetWindows(0, 0, EPD_WIDTH, EPD_HEIGHT);
+        self.SetWindows(0, 0, self.width, self.height);
         for j in range(0, self.height):
             self.SetCursor(0, j);
             self.send_command(0x24);
@@ -211,8 +216,10 @@ class EPD:
 
     def sleep(self):
         self.send_command(0x10) #enter deep sleep
-        # self.send_data(0x01)
-        epdconfig.delay_ms(100)    
-
+        self.send_data(0x01)
+        epdconfig.delay_ms(100)
+         
+        epdconfig.module_exit()
+        
 ### END OF FILE ###
 

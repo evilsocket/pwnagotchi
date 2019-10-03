@@ -152,6 +152,19 @@ def main():
         time.sleep(args.sleep)
         DISPLAY.on_deauth({'mac': 'DE:AD:BE:EF:CA:FE'})
         DISPLAY.update()
+        time.sleep(args.sleep)
+        DISPLAY.on_miss('test')
+        DISPLAY.update()
+        time.sleep(args.sleep)
+        DISPLAY.on_lonely()
+        DISPLAY.update()
+        time.sleep(args.sleep)
+        DISPLAY.on_handshakes(1)
+        DISPLAY.update()
+        time.sleep(args.sleep)
+        DISPLAY.on_rebooting()
+        DISPLAY.update()
+        time.sleep(args.sleep)
 
 
 if __name__ == '__main__':

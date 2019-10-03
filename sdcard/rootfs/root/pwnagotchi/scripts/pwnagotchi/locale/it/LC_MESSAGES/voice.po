@@ -1,347 +1,239 @@
-# pwnigotchi voice data
+# pwnaigotchi voice data
 # Copyright (C) 2019
 # This file is distributed under the same license as the pwnagotchi package.
-# 5h4d0wb0y <28193209+5h4d0wb0y@users.noreply.github.com>, 2019.
+# FIRST AUTHOR 5h4d0wb0y <28193209+5h4d0wb0y@users.noreply.github.com>, 2019.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 14:15+0200\n"
-"PO-Revision-Date: 2019-10-01 14:00+0200\n"
-"Last-Translator: 5h4d0wb0y <28193209+5h4d0wb0y@users.noreply.github.com>\n"
+"POT-Creation-Date: 2019-10-03 13:10+0200\n"
+"PO-Revision-Date: 2019-10-02 17:20+0000\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
 "Language: italian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:18
+#: voice.py:18
 msgid "ZzzzZZzzzzZzzz"
-msgstr "ZzzzZZzzzzZzzz"
-
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:23
-msgid ""
-"Hi, I'm Pwnagotchi!\n"
-"Starting ..."
 msgstr ""
-"Ciao, sono Pwnagotchi!\n"
-"Avviamento ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:24
-msgid ""
-"New day, new hunt,\n"
-"new pwns!"
-msgstr ""
-"Nuovo giorno, nuova caccia,\n"
-"nuovi pwns!"
+#: voice.py:22
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "Ciao! Piacere Pwnagotchi! Caricamento ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:25
+#: voice.py:23
+#, fuzzy
+msgid "New day, new hunt, new pwns!"
+msgstr "Nuovo giorno...nuovi handshakes!!!"
+
+#: voice.py:24
 msgid "Hack the Planet!"
-msgstr "Hack il pianeta!"
+msgstr ""
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:30
+#: voice.py:28
 msgid "AI ready."
 msgstr "IA pronta."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:31
-msgid ""
-"The neural network\n"
-"is ready."
-msgstr ""
-"La rete neurale\n"
-"è pronta."
+#: voice.py:29
+msgid "The neural network is ready."
+msgstr "La rete neurale è pronta."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:41
+#: voice.py:37
 #, python-brace-format
-msgid ""
-"Hey, channel {channel} is\n"
-"free! Your AP will\n"
-"say thanks."
-msgstr ""
-"Hey, il canale {channel} è\n"
-"libero! Il tuo AP\n"
-"dirà grazie."
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr "Hey, il canale {channel} è libero! Il tuo AP ringrazia."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:46
+#: voice.py:41
 msgid "I'm bored ..."
-msgstr "Sono annoiato ..."
+msgstr "Che noia ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:47
+#: voice.py:42
 msgid "Let's go for a walk!"
-msgstr "Andiamo a fare una \npasseggiata!"
-
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:51
-msgid ""
-"This is the best\n"
-"day of my life!"
 msgstr ""
-"Questo è il migliore\n"
-"giorno della mia vita!"
+"Andiamo a fare una passeggiata!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:55
+#: voice.py:45
+msgid "This is the best day of my life!"
+msgstr "Questo è il più bel giorno della mia vita!!!!"
+
+#: voice.py:48
 msgid "Shitty day :/"
 msgstr "Giorno di merda :/"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:60
+#: voice.py:52
 msgid "I'm extremely bored ..."
-msgstr ""
-"Sono estremamente\n"
-"annoiato ..."
+msgstr "Sono estremamente annoiato ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:61
+#: voice.py:53
 msgid "I'm very sad ..."
-msgstr "Sono molto triste ..."
+msgstr "Sono molto triste..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:62
+#: voice.py:54
 msgid "I'm sad"
 msgstr "Sono triste"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:68
+#: voice.py:59
 msgid "I'm living the life!"
-msgstr "Sto vivendo la vita!"
+msgstr "Mi sento vivo!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:69
+#: voice.py:60
 msgid "I pwn therefore I am."
-msgstr "Possiedo quindi sono."
+msgstr "Pwn ergo sum."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:70
+#: voice.py:61
 msgid "So many networks!!!"
-msgstr "Così tante reti!!!"
+msgstr "Qui è pieno di reti!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:71
-msgid ""
-"I'm having so much\n"
-"fun!"
+#: voice.py:62
+msgid "I'm having so much fun!"
+msgstr "Mi sto divertendo tantissimo!"
+
+#: voice.py:63
+msgid "My crime is that of curiosity ..."
 msgstr ""
-"Mi sto divertendo\n"
-"tanto!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:72
-msgid ""
-"My crime is that of\n"
-"curiosity ..."
-msgstr ""
-"La mia colpa è di\n"
-"essere curioso ..."
-
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:77
+#: voice.py:67
 #, python-brace-format
-msgid ""
-"Hello\n"
-"{name}!\n"
-"Nice to meet you. {name}"
-msgstr ""
-"Ciao\n"
-"{name}!\n"
-"Piacere di conoscerti. {name}"
+msgid "Hello {name}! Nice to meet you. {name}"
+msgstr "Ciao {name}! E' un piacere. {name}"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:78
+#: voice.py:68
 #, python-brace-format
-msgid ""
-"Unit\n"
-"{name}\n"
-"is nearby! {name}"
-msgstr ""
-"L'Unità\n"
-"{name}\n"
-"è vicina! {name}"
+msgid "Unit {name} is nearby! {name}"
+msgstr "L'Unità {name} è vicina! {name}"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:83
+#: voice.py:72
 #, python-brace-format
-msgid ""
-"Uhm ...\n"
-"goodbye\n"
-"{name}"
-msgstr ""
-"Uhm ...\n"
-"addio\n"
-"{name}"
+msgid "Uhm ... goodbye {name}"
+msgstr "Uhm ... addio {name}, mi mancherai..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:84
+#: voice.py:73
 #, python-brace-format
-msgid ""
-"{name}\n"
-"is gone ..."
-msgstr ""
-"{name}\n"
-"è andato ..."
+msgid "{name} is gone ..."
+msgstr "{name} se n'è andato ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:89
+#: voice.py:77
 #, python-brace-format
-msgid ""
-"Whoops ...\n"
-"{name}\n"
-"is gone."
-msgstr ""
-"Whoops ...\n"
-"{name}\n"
-"è andato."
+msgid "Whoops ... {name} is gone."
+msgstr "Whoops ...{name} se n'è andato."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:90
+#: voice.py:78
 #, python-brace-format
-msgid ""
-"{name}\n"
-"missed!"
-msgstr ""
-"{name}\n"
-"perso!"
+msgid "{name} missed!"
+msgstr "{name} è scomparso..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:91
+#: voice.py:79
 msgid "Missed!"
-msgstr "Perso!"
+msgstr "Ehi! Dove sei andato!?"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:96
-msgid ""
-"Nobody wants to\n"
-"play with me ..."
-msgstr ""
-"Nessuno vuole\n"
-"giocare con me..."
+#: voice.py:83
+msgid "Nobody wants to play with me ..."
+msgstr "Nessuno vuole giocare con me..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:97
+#: voice.py:84
 msgid "I feel so alone ..."
-msgstr "Mi sento così solo ..."
+msgstr "Mi sento così solo..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:98
+#: voice.py:85
 msgid "Where's everybody?!"
 msgstr "Dove sono tutti?!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:103
+#: voice.py:89
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "Pisolino per {secs}i ..."
+msgstr "Schiaccio un pisolino per {secs}s ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:104
+#: voice.py:90
 msgid "Zzzzz"
-msgstr "Zzzzz"
+msgstr ""
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:105
+#: voice.py:91
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
-msgstr "ZzzZzzz ({secs}i)"
+msgstr ""
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:114
+#: voice.py:98
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr "In attesa di {secs}i ..."
+msgstr "Aspetto {secs}s ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:116
+#: voice.py:100
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "Guardando intorno ({secs}s)"
+msgstr "Do uno sguardo qui intorno... ({secs}s)"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:123
+#: voice.py:106
 #, python-brace-format
-msgid ""
-"Hey\n"
-"{what}\n"
-"let's be friends!"
-msgstr ""
-"Hey\n"
-"{what}\n"
-"diventiamo amici!"
+msgid "Hey {what} let's be friends!"
+msgstr "Hey {what}! Diventiamo amici!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:124
+#: voice.py:107
 #, python-brace-format
-msgid ""
-"Associating to\n"
-"{what}"
-msgstr ""
-"Associarci a\n"
-"{what}"
+msgid "Associating to {what}"
+msgstr "Collegamento con {what} in corso..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:125
+#: voice.py:108
 #, python-brace-format
-msgid ""
-"Yo\n"
-"{what}!"
-msgstr ""
-"Yo\n"
-"{what}!"
+msgid "Yo {what}!"
+msgstr "Yo {what}!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:130
+#: voice.py:112
 #, python-brace-format
-msgid ""
-"Just decided that\n"
-"{mac}\n"
-"needs no WiFi!"
-msgstr ""
-"Ho appena deciso che\n"
-"{mac}\n"
-"non necessita di\n"
-"WiFi!"
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "Ho appena deciso che {mac} non necessita di WiFi!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:131
+#: voice.py:113
 #, python-brace-format
-msgid ""
-"Deauthenticating\n"
-"{mac}"
+msgid "Deauthenticating {mac}"
 msgstr ""
-"Dissociarci da\n"
-"{mac}"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:132
+#: voice.py:114
 #, python-brace-format
-msgid ""
-"Kickbanning\n"
-"{mac}!"
-msgstr ""
-"Sto prendendo\n"
-"a calci\n"
-"{mac}!"
+msgid "Kickbanning {mac}!"
+msgstr "Sto prendendo a calci {mac}!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:137
+#: voice.py:118
 #, python-brace-format
-msgid ""
-"Cool, we got {num}\n"
-"new handshake{plural}!"
-msgstr ""
-"Bene, abbiamo {num}\n"
-"nuovi handshake{plural}!"
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Bene, abbiamo {num} handshake{plural} in più!"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:141
-msgid ""
-"Ops, something\n"
-"went wrong ...\n"
-"Rebooting ..."
-msgstr ""
-"Ops, qualcosa\n"
-"è andato storto ...\n"
-"Riavvio ..."
+#: voice.py:121
+msgid "Ops, something went wrong ... Rebooting ..."
+msgstr "Ops, qualcosa è andato storto ... Riavvio ..."
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:145
+#: voice.py:124
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "Calciate {num} stazioni\n"
+msgstr "{num} stazioni pestate\n"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:146
+#: voice.py:125
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "Fatti {num} nuovi amici\n"
+msgstr "{num} nuovi amici\n"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:147
+#: voice.py:126
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Presi {num} handshakes\n"
+msgstr "{num} handshakes presi\n"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:149
+#: voice.py:128
 msgid "Met 1 peer"
-msgstr "Incontrato 1 peer"
+msgstr "1 peer incontrato"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:151
+#: voice.py:130
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "Incontrati {num} peers"
+msgstr "{num} peers incontrati"
 
-#: /home/sh4d0wb0y/Projects/GitHub/pwnagotchi/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py:156
+#: voice.py:135
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
-"Ho lavorato per {duration} e preso a calci i clienti di {deauthed}! Ho anche "
-"incontrato{associate} nuovi amici e ho mangiato {handshakes} handshakes! "
-"#pwnagotchi#pwnlog #pwnlife #hacktheplanet #skynet"
+"Ho lavorato per {duration} e preso a calci {deauthed} clients! Ho anche "
+"incontrato {associate} nuovi amici e ho mangiato {handshakes} handshakes! "
+"#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"

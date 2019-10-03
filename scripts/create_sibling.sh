@@ -5,18 +5,22 @@
 set -eu
 
 REQUIREMENTS=( wget gunzip git dd e2fsck resize2fs parted losetup qemu-system-x86_64 )
+DEBREQUIREMENTS=( wget gzip git parted qemu-system-x86 qemu-user-static bmap-tools )
 REPO_DIR="$(dirname "$(dirname "$(realpath "$0")")")"
 TMP_DIR="${REPO_DIR}/tmp"
 MNT_DIR="${TMP_DIR}/mnt"
+THIS_DIR=$(pwd)
 
 PWNI_NAME="pwnagotchi"
 PWNI_OUTPUT="pwnagotchi.img"
-PWNI_SIZE="4"
+PWNI_SIZE="8"
 
+OPT_SPARSE=0
 OPT_PROVISION_ONLY=0
 OPT_CHECK_DEPS_ONLY=0
 OPT_IMAGE_PROVIDED=0
 OPT_RASPBIAN_VERSION='latest'
+OPT_APTPROXY=""
 
 SUPPORTED_RASPBIAN_VERSIONS=( 'latest' 'buster' 'stretch' )
 
@@ -26,6 +30,18 @@ if [[ "$EUID" -ne 0 ]]; then
 fi
 
 function check_dependencies() {
+  if [ -f /etc/debian_version ];
+  then
+    echo "[+] Checking Debian dependencies"
+
+    for REQ in "${DEBREQUIREMENTS[@]}"; do
+      if ! dpkg -s "$REQ" >/dev/null 2>&1; then
+        echo "Dependency check failed for ${REQ}; use 'apt-get install ${REQ}' to install"
+        exit 1
+      fi
+    done
+  fi
+
   echo "[+] Checking dependencies"
   for REQ in "${REQUIREMENTS[@]}"; do
     if ! type "$REQ" >/dev/null 2>&1; then
@@ -76,8 +92,31 @@ function provide_raspbian() {
 }
 
 function setup_raspbian(){
-  echo "[+] Resize image"
-  dd if=/dev/zero bs=1G count="$PWNI_SIZE" >> "${TMP_DIR}/raspbian.img"
+  # Detect the ability to create sparse files
+  if [ "${OPT_SPARSE}" -eq 0 ];
+  then
+    which bmaptool >/dev/null 2>&1
+    if [ $? -eq 0 ];
+    then
+      echo "[+] Defaulting to sparse image generation as bmaptool is available"
+      OPT_SPARSE=1
+    else
+      echo "[!] bmaptool not available, not creating a sparse image"
+    fi
+  fi
+
+  # Note that we 'extend' the raspbian.img
+  if [ "${OPT_SPARSE}" -eq 1 ];
+  then
+    # Resize sparse (so that we can use bmaptool later)
+    echo "[+] Resizing sparse image of ${PWNI_SIZE}GB (1000s)"
+    truncate -s ${PWNI_SIZE}GB "${TMP_DIR}/raspbian.img"
+  else
+    echo "[+] Resizing full image to ${PWNI_SIZE}G"
+    # Full disk-space using image (appends to raspbian image)
+    dd if=/dev/zero bs=1G count="${PWNI_SIZE}" >> "${TMP_DIR}/raspbian.img"
+  fi
+
   echo "[+] Setup loop device"
   mkdir -p "${MNT_DIR}"
   LOOP_PATH="$(losetup --find --partscan --show "${TMP_DIR}/raspbian.img")"
@@ -107,9 +146,15 @@ function provision_raspbian() {
   cd "${MNT_DIR}"
   sed -i'' 's/^\([^#]\)/#\1/g' etc/ld.so.preload # add comments
   echo "[+] Run chroot commands"
-  LANG=C chroot . bin/bash -x <<EOF
+  LANG=C LC_ALL=C LC_CTYPE=C chroot . bin/bash -x <<EOF
   set -eu
   export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+  if [ ! -z "${OPT_APTPROXY}" ];
+  then
+	echo "[+] Using Proxy ${OPT_APTPROXY}"
+	echo "Acquire::http { Proxy \"${OPT_APTPROXY}\"; }" >/etc/apt/apt.conf.d/99pwnagotchi_proxy
+  fi
 
   uname -a
 
@@ -160,7 +205,7 @@ function provision_raspbian() {
 
   # install bettercap
   export GOPATH=/root/go
-  go get -u github.com/bettercap/bettercap
+  taskset -c 1 go get -u github.com/bettercap/bettercap
   mv "\$GOPATH/bin/bettercap" /usr/bin/bettercap
 
   # install bettercap caplets (cant run bettercap in chroot)
@@ -203,7 +248,11 @@ EOF
   cd "${REPO_DIR}"
   umount -R "${MNT_DIR}"
   losetup -D "$(losetup -l | awk '/raspbian\.img/{print $1}')"
-  mv "${TMP_DIR}/raspbian.img" "$PWNI_OUTPUT"
+  mv "${TMP_DIR}/raspbian.img" "${PWNI_OUTPUT}"
+  if [ "${OPT_SPARSE}" -eq 1 ];
+  then
+    bmaptool create -o "${PWNI_OUTPUT}.bmap" "${PWNI_OUTPUT}"
+  fi
 }
 
 function usage() {
@@ -226,8 +275,11 @@ EOF
   exit 0
 }
 
-while getopts ":n:i:o:s:v:dph" o; do
+while getopts "A:n:i:o:s:v:dph" o; do
   case "${o}" in
+    A)
+      OPT_APTPROXY="${OPTARG}"
+      ;;
     n)
       PWNI_NAME="${OPTARG}"
       ;;
@@ -283,4 +335,14 @@ fi
 setup_raspbian
 provision_raspbian
 
-echo -ne "[+] Congratz, it's a boy (⌐■_■)!\n[+] One more step: dd if=../$PWNI_OUTPUT of=<PATH_TO_SDCARD> bs=4M status=progress"
+echo -e "[+] Congratz, it's a boy (⌐■_■)!"
+echo -e "[+] One more step: dd if=../${PWNI_OUTPUT} of=<PATH_TO_SDCARD> bs=4M status=progress"
+
+if [ "${OPT_SPARSE}" -eq 1 ];
+then
+  echo -e "[t] To transfer use: rsync -vaS --progress $(whoami)@$(hostname -f):${THIS_DIR}/../${PWNI_OUTPUT} <DEST>"
+  echo -e "[t] To burn with bmaptool: bmaptool copy ~/${PWNI_OUTPUT} /dev/<DEVICE>"
+fi
+
+# Helpful OSX reminder
+echo -e "[t] Mac: use 'diskutil list' to figure out which device to burn to; 'diskutil unmountDisk' to unmount that disk'; then use /dev/rdiskX (note the 'r') for faster transfer"

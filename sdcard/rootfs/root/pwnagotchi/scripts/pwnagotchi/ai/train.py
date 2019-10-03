@@ -7,6 +7,7 @@ import json
 
 import core
 
+import pwnagotchi.plugins as plugins
 import pwnagotchi.ai as ai
 from pwnagotchi.ai.epoch import Epoch
 
@@ -68,14 +69,14 @@ class Stats(object):
             core.log("[ai] saving %s" % self.path)
 
             data = json.dumps({
-                    'born_at': self.born_at,
-                    'epochs_lived': self.epochs_lived,
-                    'epochs_trained': self.epochs_trained,
-                    'rewards': {
-                        'best': self.best_reward,
-                        'worst': self.worst_reward
-                    }
-                })
+                'born_at': self.born_at,
+                'epochs_lived': self.epochs_lived,
+                'epochs_trained': self.epochs_trained,
+                'rewards': {
+                    'best': self.best_reward,
+                    'worst': self.worst_reward
+                }
+            })
 
             temp = "%s.tmp" % self.path
             with open(temp, 'wt') as fp:
@@ -97,6 +98,11 @@ class AsyncTrainer(object):
     def set_training(self, training, for_epochs=0):
         self._is_training = training
         self._training_epochs = for_epochs
+
+        if training:
+            plugins.on('ai_training_start', self, for_epochs)
+        else:
+            plugins.on('ai_training_end', self)
 
     def is_training(self):
         return self._is_training
@@ -123,8 +129,10 @@ class AsyncTrainer(object):
 
     def on_ai_training_step(self, _locals, _globals):
         self._model.env.render()
+        plugins.on('ai_training_step', self, _locals, _globals)
 
     def on_ai_policy(self, new_params):
+        plugins.on('ai_policy', self, new_params)
         core.log("[ai] setting new policy:")
         for name, value in new_params.items():
             if name in self._config['personality']:
@@ -139,13 +147,19 @@ class AsyncTrainer(object):
         self.run('set wifi.sta.ttl %d' % self._config['personality']['sta_ttl'])
         self.run('set wifi.rssi.min %d' % self._config['personality']['min_rssi'])
 
+    def on_ai_ready(self):
+        self._view.on_ai_ready()
+        plugins.on('ai_ready', self)
+
     def on_ai_best_reward(self, r):
         core.log("[ai] best reward so far: %s" % r)
         self._view.on_motivated(r)
+        plugins.on('ai_best_reward', self, r)
 
     def on_ai_worst_reward(self, r):
         core.log("[ai] worst reward so far: %s" % r)
         self._view.on_demotivated(r)
+        plugins.on('ai_worst_reward', self, r)
 
     def _ai_worker(self):
         self._model = ai.load(self._config, self, self._epoch)

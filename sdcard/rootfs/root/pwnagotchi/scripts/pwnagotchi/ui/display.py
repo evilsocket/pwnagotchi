@@ -5,7 +5,7 @@ from PIL import Image
 import shutil
 import core
 import os
-import pwnagotchi
+import pwnagotchi, pwnagotchi.plugins as plugins
 
 from pwnagotchi.ui.view import WHITE, View
 
@@ -155,6 +155,8 @@ class Display(View):
 
         else:
             core.log("unknown display type %s" % self._display_type)
+
+        plugins.on('display_setup', self._display)
 
         self.on_render(self._on_view_rendered)
 
