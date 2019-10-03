@@ -265,7 +265,6 @@ usage: $0 [OPTIONS]
     -i <file>    # Provide the path of an already downloaded raspbian image
     -o <file>    # Name of the img-file (default: pwnagotchi.img)
     -s <size>    # Size which should be added to second partition (in Gigabyte) (default: 4)
-    -S           # Create a sparse image and generate bmap file (default when bmaptool is available)
     -v <version> # Version of raspbian (Supported: ${SUPPORTED_RASPBIAN_VERSIONS[*]}; default: latest)
     -p           # Only run provisioning (assumes the image is already mounted)
     -d           # Only run dependencies checks

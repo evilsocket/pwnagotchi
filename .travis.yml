@@ -1,23 +1,53 @@
 dist: bionic
-language: generic
+language: go
+
+go:
+  - 1.x
+
 env:
   global:
-  - LANG=C
-  - LC_ALL=C
-before_cache:
-- mountpoint -q $TRAVIS_BUILD_DIR/tmp/mnt && sudo umount -R $TRAVIS_BUILD_DIR/tmp/mnt
-- sudo find $TRAVIS_BUILD_DIR/tmp/ -name '*.img' -delete
+    - LANG=C
+    - LC_ALL=C
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "vBUokTv94n8s65STUgTiD6I0Iy8KXbBRvQUrAof8XG+U4ZMsH5PmDTpS+wz+SaxI6o0PRkfyOiPVdARhiKAFnfatG3q9EHllMQwqRR2YIju51A3aCxgEJ5uWDoybwQdipERUMMYwUO/8XZaRRpwFD2bdQBFWkBtQyMcAkrEL8BXckwQQ531oDN2hK5gAiTllqsOswV2idwUlBRU9jOtStzff+UgUYsp/ZebsRodyOYkEB2Ev15yARo2HTXbyZ2icwHPtMbx5zmNUSRtxs9a4hfzaK3m6ctK8qLYYUdQvXub/ruuACapdw4Ez88LY1agTecbZhFYmJzv8oANH1e4VUI4owuHnZCpU6LRutS4wOhglrkOrGo6lSUlJeA+RtQjyjBugjej9DDtDyyIlRU1ZaBF3qWR9N5EXKuquf0olOfmUR67ap1NykE9VUpzkYjkoVRTiPs/e2onM/nRNOvAQcIt75FD13u+Y/DcYQ8r7KpMIu1HNdtbVx8gMeq76bRhP1YdDg2jm+DdJ21KWjf5QHsbyoXDfJzdKlCloLIlAU3EPJhMoXsnNzre0/FXeUl6dfteR1axNS6U7e/vKsQ9rlUFZWIQaeVPjfXmFKblNNVQ5uFrrsB/EGHcJl7IUx5fvcRT5hMMNwC660YxVkBXDbRb5fxMW5/+K0BOi9cP6en8="
+  skip_cleanup: true
+  file_glob: true
+  file: pwnagotchi-*.zip
+  on:
+    tags: true
+    repo: evilsocket/pwnagotchi
+
+branches:
+  only:
+    - /^v[0-9]+\.[0-9]+\.[0-9]+[A-Za-z0-9]+?$/
+
 cache:
   apt: true
   directories:
-  - tmp/
-before_script:
-- sudo apt-get -y update
-- sudo apt-get -y install qemu-user-static binfmt-support qemu bmap-tools
-- sudo update-binfmts --display
-- unset GOROOT
-script:
-- sudo ./scripts/create_sibling.sh -n pwnagotchi -o pwnagotchi.img
-- zip -s 2g pwnagotchi.zip pwnagotchi.img
+    - qemu-4.1.0
 
-# TODO: deploy!
+before_script:
+  - test -d qemu-4.1.0 || ( wget https://download.qemu.org/qemu-4.1.0.tar.xz && tar xvJf qemu-4.1.0.tar.xz )
+  - cd qemu-4.1.0
+  - ./configure --target-list=arm-softmmu
+  - make -j$(nproc)
+  - sudo make install
+  - cd $TRAVIS_BUILD_DIR
+  - sudo apt-get -y update
+  - sudo apt-get -y install qemu-user-static binfmt-support bmap-tools kpartx
+  - sudo update-binfmts --display
+
+script:
+  - sudo make clean
+  - sudo -E env "PATH=$PATH" make install
+  - sudo make image -e PWN_HOSTNAME=pwnagotchi VERSION=$TRAVIS_TAG
+
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --local user.name "evilsocket"
+  - git config --local user.email "evilsocket@gmail.com"
+  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - git tag $TRAVIS_TAG

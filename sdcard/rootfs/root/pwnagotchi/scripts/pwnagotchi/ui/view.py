@@ -4,7 +4,7 @@ import time
 from PIL import Image, ImageDraw
 
 import core
-import pwnagotchi
+import pwnagotchi.plugins as plugins
 from pwnagotchi.voice import Voice
 
 import pwnagotchi.ui.fonts as fonts
@@ -41,7 +41,7 @@ def setup_display_specifics(config):
         name_pos = (int(width / 2) - 15, int(height * .15))
         status_pos = (int(width / 2) - 15, int(height * .30))
 
-    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1', 
+    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1',
                                              'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
         fonts.setup(10, 9, 10, 35)
 
@@ -78,13 +78,10 @@ class View(object):
                                    label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
-            # 'square':  Rect([1, 11, 124, 111]),
             'line1': Line([0, int(self._height * .12), self._width, int(self._height * .12)], color=BLACK),
             'line2': Line(
                 [0, self._height - int(self._height * .12), self._width, self._height - int(self._height * .12)],
                 color=BLACK),
-
-            # 'histogram': Histogram([4, 94], color = BLACK),
 
             'face': Text(value=faces.SLEEP, position=face_pos, color=BLACK, font=fonts.Huge),
 
@@ -92,8 +89,14 @@ class View(object):
             'friend_name': Text(value=None, position=(40, 93), font=fonts.BoldSmall, color=BLACK),
 
             'name': Text(value='%s>' % 'pwnagotchi', position=name_pos, color=BLACK, font=fonts.Bold),
-            # 'face2':   Bitmap( '/root/pwnagotchi/data/images/face_happy.bmp', (0, 20)),
-            'status': Text(value=self._voice.default(), position=status_pos, color=BLACK, font=fonts.Medium),
+
+            'status': Text(value=self._voice.default(),
+                           position=status_pos,
+                           color=BLACK,
+                           font=fonts.Medium,
+                           wrap=True,
+                           # the current maximum number of characters per line, assuming each character is 6 pixels wide
+                           max_length=(self._width - status_pos[0]) // 6),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK,
                                    position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
@@ -105,7 +108,23 @@ class View(object):
         for key, value in state.items():
             self._state.set(key, value)
 
-        _thread.start_new_thread(self._refresh_handler, ())
+        plugins.on('ui_setup', self)
+
+        if config['ui']['fps'] > 0.0:
+            _thread.start_new_thread(self._refresh_handler, ())
+            self._ignore_changes = ()
+        else:
+            core.log("ui.fps is 0, the display will only update for major changes")
+            self._ignore_changes = ('uptime', 'name')
+
+    def add_element(self, key, elem):
+        self._state.add_element(key, elem)
+
+    def width(self):
+        return self._width
+
+    def height(self):
+        return self._height
 
     def on_state_change(self, key, cb):
         self._state.add_listener(key, cb)
@@ -218,12 +237,12 @@ class View(object):
                 if sleeping:
                     if secs > 1:
                         self.set('face', faces.SLEEP)
-                        self.set('status', self._voice.on_napping(secs))
+                        self.set('status', self._voice.on_napping(int(secs)))
                     else:
                         self.set('face', faces.SLEEP2)
                         self.set('status', self._voice.on_awakening())
                 else:
-                    self.set('status', self._voice.on_waiting(secs))
+                    self.set('status', self._voice.on_waiting(int(secs)))
                     if step % 2 == 0:
                         self.set('face', faces.LOOK_R)
                     else:
@@ -289,13 +308,24 @@ class View(object):
         self.set('status', self._voice.on_rebooting())
         self.update()
 
+    def on_custom(self, text):
+        self.set('face', faces.DEBUG)
+        self.set('status', self._voice.custom(text))
+        self.update()
+
     def update(self):
         with self._lock:
-            self._canvas = Image.new('1', (self._width, self._height), WHITE)
-            drawer = ImageDraw.Draw(self._canvas)
+            changes = self._state.changes(ignore=self._ignore_changes)
+            if len(changes):
+                self._canvas = Image.new('1', (self._width, self._height), WHITE)
+                drawer = ImageDraw.Draw(self._canvas)
 
-            for key, lv in self._state.items():
-                lv.draw(self._canvas, drawer)
+                plugins.on('ui_update', self)
 
-            for cb in self._render_cbs:
-                cb(self._canvas)
+                for key, lv in self._state.items():
+                    lv.draw(self._canvas, drawer)
+
+                for cb in self._render_cbs:
+                    cb(self._canvas)
+
+                self._state.reset()

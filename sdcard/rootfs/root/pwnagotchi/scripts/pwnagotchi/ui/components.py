@@ -1,4 +1,5 @@
 from PIL import Image
+from textwrap import TextWrapper
 
 
 class Widget(object):
@@ -39,14 +40,21 @@ class FilledRect(Widget):
 
 
 class Text(Widget):
-    def __init__(self, value="", position=(0, 0), font=None, color=0):
+    def __init__(self, value="", position=(0, 0), font=None, color=0, wrap=False, max_length=0):
         super().__init__(position, color)
         self.value = value
         self.font = font
+        self.wrap = wrap
+        self.max_length = max_length
+        self.wrapper = TextWrapper(width=self.max_length, replace_whitespace=False) if wrap else None
 
     def draw(self, canvas, drawer):
         if self.value is not None:
-            drawer.text(self.xy, self.value, font=self.font, fill=self.color)
+            if self.wrap:
+                text = '\n'.join(self.wrapper.wrap(self.value))
+            else:
+                text = self.value
+            drawer.text(self.xy, text, font=self.font, fill=self.color)
 
 
 class LabeledValue(Widget):

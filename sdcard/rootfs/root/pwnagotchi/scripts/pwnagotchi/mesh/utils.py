@@ -1,7 +1,7 @@
 import _thread
 
 import core
-import pwnagotchi
+import pwnagotchi, pwnagotchi.plugins as plugins
 from pwnagotchi.mesh import get_identity
 
 
@@ -37,6 +37,8 @@ class AsyncAdvertiser(object):
 
     def _on_new_unit(self, peer):
         self._view.on_new_peer(peer)
+        plugins.on('peer_detected', self, peer)
 
     def _on_lost_unit(self, peer):
         self._view.on_lost_peer(peer)
+        plugins.on('peer_lost', self, peer)

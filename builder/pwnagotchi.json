@@ -1,0 +1,33 @@
+{
+  "variables": {
+    "home": "{{env `HOME`}}"
+  },
+  "builders": [{
+    "name": "pwnagotchi",
+    "type": "arm-image",
+    "iso_url" : "https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip",
+    "iso_checksum_type":"sha256",
+    "iso_checksum":"9e5cf24ce483bb96e7736ea75ca422e3560e7b455eee63dd28f66fa1825db70e",
+    "last_partition_extra_size" : 3221225472
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sed -i 's/^\\([^#]\\)/#\\1/g' /etc/ld.so.preload",
+        "apt-get -y update",
+        "apt-get install -y ansible"
+      ]
+    },
+    {
+      "type":"ansible-local",
+      "playbook_file": "pwnagotchi.yml"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sed -i 's/^#\\(.+\\)/\\1/g' /etc/ld.so.preload"
+      ]
+    }
+  ]
+}

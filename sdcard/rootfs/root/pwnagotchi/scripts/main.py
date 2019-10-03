@@ -5,7 +5,7 @@ import time
 import traceback
 
 import core
-import pwnagotchi
+import pwnagotchi, pwnagotchi.plugins as plugins
 
 from pwnagotchi.log import SessionParser
 from pwnagotchi.voice import Voice
@@ -25,38 +25,48 @@ args = parser.parse_args()
 if args.do_clear:
     print("clearing the display ...")
     with open(args.config, 'rt') as fp:
-      config = yaml.safe_load(fp)
-      cleardisplay=config['ui']['display']['type']
-      if cleardisplay in ('inkyphat', 'inky'):
-              print("inky display")
-              from inky import InkyPHAT
-              epd = InkyPHAT(config['ui']['display']['color'])
-              epd.set_border(InkyPHAT.BLACK)
-              self._render_cb = self._inky_render
-      elif cleardisplay in ('papirus', 'papi'):
-              print("papirus display")
-              from pwnagotchi.ui.papirus.epd import EPD
-              os.environ['EPD_SIZE'] = '2.0'
-              epd = EPD()
-              epd.clear()
-      elif cleardisplay in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1'):
-              print("waveshare v1 display")
-              from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
-              epd = EPD()
-              epd.init(epd.lut_full_update)
-              epd.Clear(0xFF)
-      elif cleardisplay in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2'):
-              print("waveshare v2 display")
-              from pwnagotchi.ui.waveshare.v2.waveshare import EPD
-              epd = EPD()
-              epd.init(epd.FULL_UPDATE)
-              epd.Clear(0xff)
-      else:
-              print("unknown display type %s" % cleardisplay)
-      quit()
+        config = yaml.safe_load(fp)
+        cleardisplay = config['ui']['display']['type']
+        if cleardisplay in ('inkyphat', 'inky'):
+            print("inky display")
+            from inky import InkyPHAT
+
+            epd = InkyPHAT(config['ui']['display']['color'])
+            epd.set_border(InkyPHAT.BLACK)
+            self._render_cb = self._inky_render
+        elif cleardisplay in ('papirus', 'papi'):
+            print("papirus display")
+            from pwnagotchi.ui.papirus.epd import EPD
+
+            os.environ['EPD_SIZE'] = '2.0'
+            epd = EPD()
+            epd.clear()
+        elif cleardisplay in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1'):
+            print("waveshare v1 display")
+            from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
+
+            epd = EPD()
+            epd.init(epd.lut_full_update)
+            epd.Clear(0xFF)
+        elif cleardisplay in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2'):
+            print("waveshare v2 display")
+            from pwnagotchi.ui.waveshare.v2.waveshare import EPD
+
+            epd = EPD()
+            epd.init(epd.FULL_UPDATE)
+            epd.Clear(0xff)
+        else:
+            print("unknown display type %s" % cleardisplay)
+        quit()
 
 with open(args.config, 'rt') as fp:
     config = yaml.safe_load(fp)
+
+plugins.load_from_path(plugins.default_path)
+if 'plugins' in config['main'] and config['main']['plugins'] is not None:
+    plugins.load_from_path(config['main']['plugins'])
+
+plugins.on('loaded')
 
 display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
 agent = Agent(view=display, config=config)
@@ -64,6 +74,9 @@ agent = Agent(view=display, config=config)
 core.log("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, pwnagotchi.version))
 # for key, value in config['personality'].items():
 #    core.log("  %s: %s" % (key, value))
+
+for _, plugin in plugins.loaded.items():
+    core.log("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))
 
 if args.do_manual:
     core.log("entering manual mode ...")
@@ -112,12 +125,14 @@ core.logfile = config['main']['log']
 
 agent.start_ai()
 agent.setup_events()
-agent.set_ready()
+agent.set_starting()
 agent.start_monitor_mode()
 agent.start_event_polling()
 
 # print initial stats
 agent.next_epoch()
+
+agent.set_ready()
 
 while True:
     try:
