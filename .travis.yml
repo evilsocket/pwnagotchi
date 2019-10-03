@@ -33,7 +33,7 @@ before_script:
   - sudo make install
   - cd $TRAVIS_BUILD_DIR
   - sudo apt-get -y update
-  - sudo apt-get -y install kpartx
+  - sudo apt-get -y install qemu-user-static kpartx
   - sudo update-binfmts --display
 script:
   - sudo make clean
