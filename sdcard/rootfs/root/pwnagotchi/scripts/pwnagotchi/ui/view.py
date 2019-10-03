@@ -78,13 +78,11 @@ class View(object):
                                    label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
-            # 'square':  Rect([1, 11, 124, 111]),
+
             'line1': Line([0, int(self._height * .12), self._width, int(self._height * .12)], color=BLACK),
             'line2': Line(
                 [0, self._height - int(self._height * .12), self._width, self._height - int(self._height * .12)],
                 color=BLACK),
-
-            # 'histogram': Histogram([4, 94], color = BLACK),
 
             'face': Text(value=faces.SLEEP, position=face_pos, color=BLACK, font=fonts.Huge),
 
@@ -92,8 +90,14 @@ class View(object):
             'friend_name': Text(value=None, position=(40, 93), font=fonts.BoldSmall, color=BLACK),
 
             'name': Text(value='%s>' % 'pwnagotchi', position=name_pos, color=BLACK, font=fonts.Bold),
-            # 'face2':   Bitmap( '/root/pwnagotchi/data/images/face_happy.bmp', (0, 20)),
-            'status': Text(value=self._voice.default(), position=status_pos, color=BLACK, font=fonts.Medium),
+
+            'status': Text(value=self._voice.default(),
+                           position=status_pos,
+                           color=BLACK,
+                           font=fonts.Medium,
+                           wrap=True,
+                           # the current maximum number of characters per line, assuming each character is 6 pixels wide
+                           max_length=(self._width - status_pos[0]) // 6),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK,
                                    position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,
@@ -298,6 +302,11 @@ class View(object):
     def on_rebooting(self):
         self.set('face', faces.BROKEN)
         self.set('status', self._voice.on_rebooting())
+        self.update()
+
+    def on_custom(self, text):
+        self.set('face', faces.DEBUG)
+        self.set('status', self._voice.custom(text))
         self.update()
 
     def update(self):
