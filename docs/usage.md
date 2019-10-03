@@ -1,4 +1,16 @@
-### Usage
+### User Interface
+
+The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
+
+![ui](https://i.imgur.com/XgIrcur.png)
+
+* **CH**: Current channel the unit is operating on or `*` when hopping on all channels.
+* **APS**: Number of access points on the current channel and total visible access points.
+* **UP**: Time since the unit has been activated.
+* **PWND**: Number of handshakes captured in this session and number of unique networks we own at least one handshake of, from the beginning.
+* **AUTO**: This indicates that the algorithm is running with AI disabled (or still loading), it disappears once the AI dependencies have been bootrapped and the neural network loaded.
+
+### Training the AI
 
 At its core Pwnagotchi is a very simple creature: we could summarize its main algorithm as:
 
@@ -95,17 +107,6 @@ reward = h + a + c + b + i + m
 
 By maximizing this reward value, the AI learns over time to find the set of parameters that better perform with the current environmental conditions.
 
-### User Interface
-
-The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
-
-![ui](https://i.imgur.com/XgIrcur.png)
-
-* **CH**: Current channel the unit is operating on or `*` when hopping on all channels.
-* **APS**: Number of access points on the current channel and total visible access points.
-* **UP**: Time since the unit has been activated.
-* **PWND**: Number of handshakes captured in this session and number of unique networks we own at least one handshake of, from the beginning.
-* **AUTO**: This indicates that the algorithm is running with AI disabled (or still loading), it disappears once the AI dependencies have been bootrapped and the neural network loaded.
 
 ### BetterCAP's Web UI
 
