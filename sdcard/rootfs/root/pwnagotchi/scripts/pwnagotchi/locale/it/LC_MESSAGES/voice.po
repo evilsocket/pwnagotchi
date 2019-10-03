@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-02 16:38+0000\n"
+"POT-Creation-Date: 2019-10-03 12:22+0200\n"
 "PO-Revision-Date: 2019-10-02 17:20+0000\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
 "Language: italian\n"
@@ -19,220 +19,193 @@ msgstr ""
 msgid "ZzzzZZzzzzZzzz"
 msgstr ""
 
-#: voice.py:23
-msgid ""
-"Hi, I'm Pwnagotchi!\n"
-"Starting ..."
+#: voice.py:22
+#, fuzzy
+msgid "Hi, I'm Pwnagotchi! Starting ..."
 msgstr ""
 "Ciao!\n"
 "Piacere Pwnagotchi!\n"
 "Caricamento ..."
 
-#: voice.py:24
-msgid ""
-"New day, new hunt,\n"
-"new pwns!"
+#: voice.py:23
+#, fuzzy
+msgid "New day, new hunt, new pwns!"
 msgstr ""
 "Nuovo giorno...\n"
 "nuovi handshakes!!!"
 
-#: voice.py:25
+#: voice.py:24
 msgid "Hack the Planet!"
 msgstr ""
 
-#: voice.py:30
+#: voice.py:28
 msgid "AI ready."
 msgstr "IA pronta."
 
-#: voice.py:31
-msgid ""
-"The neural network\n"
-"is ready."
+#: voice.py:29
+#, fuzzy
+msgid "The neural network is ready."
 msgstr ""
 "La rete neurale\n"
 "è pronta."
 
-#: voice.py:41
-#, python-brace-format
-msgid ""
-"Hey, channel {channel} is\n"
-"free! Your AP will\n"
-"say thanks."
+#: voice.py:37
+#, fuzzy, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr ""
 "Hey, il canale {channel} è\n"
 "libero! Il tuo AP\n"
 "ringrazia."
 
-#: voice.py:46
+#: voice.py:41
 msgid "I'm bored ..."
 msgstr "Che noia ..."
 
-#: voice.py:47
+#: voice.py:42
 msgid "Let's go for a walk!"
 msgstr ""
 "Andiamo a fare una\n"
 "passeggiata!"
 
-#: voice.py:51
-msgid ""
-"This is the best\n"
-"day of my life!"
+#: voice.py:45
+#, fuzzy
+msgid "This is the best day of my life!"
 msgstr ""
 "Questo è il più bel\n"
 "giorno della mia\n"
 "vita!!!!"
 
-#: voice.py:55
+#: voice.py:48
 msgid "Shitty day :/"
 msgstr "Giorno di merda :/"
 
-#: voice.py:60
+#: voice.py:52
 msgid "I'm extremely bored ..."
 msgstr ""
 "Sono estremamente\n"
 "annoiato ..."
 
-#: voice.py:61
+#: voice.py:53
 msgid "I'm very sad ..."
 msgstr "Sono molto triste..."
 
-#: voice.py:62
+#: voice.py:54
 msgid "I'm sad"
 msgstr "Sono triste"
 
-#: voice.py:68
+#: voice.py:59
 msgid "I'm living the life!"
 msgstr "Mi sento vivo!"
 
-#: voice.py:69
+#: voice.py:60
 msgid "I pwn therefore I am."
 msgstr "Pwn ergo sum."
 
-#: voice.py:70
+#: voice.py:61
 msgid "So many networks!!!"
 msgstr "Qui è pieno di reti!"
 
-#: voice.py:71
-msgid ""
-"I'm having so much\n"
-"fun!"
+#: voice.py:62
+#, fuzzy
+msgid "I'm having so much fun!"
 msgstr ""
 "Mi sto divertendo\n"
 "tantissimo!"
 
-#: voice.py:72
-msgid ""
-"My crime is that of\n"
-"curiosity ..."
+#: voice.py:63
+msgid "My crime is that of curiosity ..."
 msgstr ""
 
-#: voice.py:77
-#, python-brace-format
-msgid ""
-"Hello\n"
-"{name}!\n"
-"Nice to meet you. {name}"
+#: voice.py:67
+#, fuzzy, python-brace-format
+msgid "Hello {name}! Nice to meet you. {name}"
 msgstr ""
 "Ciao\n"
 "{name}!\n"
 "E' un piacere. {name}"
 
-#: voice.py:78
-#, python-brace-format
-msgid ""
-"Unit\n"
-"{name}\n"
-"is nearby! {name}"
+#: voice.py:68
+#, fuzzy, python-brace-format
+msgid "Unit {name} is nearby! {name}"
 msgstr ""
 "L'Unità\n"
 "{name}\n"
 "è vicina! {name}"
 
-#: voice.py:83
-#, python-brace-format
-msgid ""
-"Uhm ...\n"
-"goodbye\n"
-"{name}"
+#: voice.py:72
+#, fuzzy, python-brace-format
+msgid "Uhm ... goodbye {name}"
 msgstr ""
 "Uhm ...\n"
 "addio\n"
 "{name},\n"
 "mi mancherai..."
 
-#: voice.py:84
-#, python-brace-format
-msgid ""
-"{name}\n"
-"is gone ..."
+#: voice.py:73
+#, fuzzy, python-brace-format
+msgid "{name} is gone ..."
 msgstr ""
 "{name}\n"
 "se n'è andato ..."
 
-#: voice.py:89
-#, python-brace-format
-msgid ""
-"Whoops ...\n"
-"{name}\n"
-"is gone."
+#: voice.py:77
+#, fuzzy, python-brace-format
+msgid "Whoops ... {name} is gone."
 msgstr ""
 "Whoops ...\n"
 "{name}\n"
 "se n'è andato."
 
-#: voice.py:90
-#, python-brace-format
-msgid ""
-"{name}\n"
-"missed!"
+#: voice.py:78
+#, fuzzy, python-brace-format
+msgid "{name} missed!"
 msgstr ""
 "{name}\n"
 "è scomparso..."
 
-#: voice.py:91
+#: voice.py:79
 msgid "Missed!"
 msgstr ""
 "Ehi!\n"
 "Dove sei andato!?"
 
-#: voice.py:96
-msgid ""
-"Nobody wants to\n"
-"play with me ..."
+#: voice.py:83
+#, fuzzy
+msgid "Nobody wants to play with me ..."
 msgstr ""
 "Nessuno vuole\n"
 "giocare con me..."
 
-#: voice.py:97
+#: voice.py:84
 msgid "I feel so alone ..."
 msgstr "Mi sento così solo..."
 
-#: voice.py:98
+#: voice.py:85
 msgid "Where's everybody?!"
 msgstr "Dove sono tutti?!"
 
-#: voice.py:103
+#: voice.py:89
 #, python-brace-format
 msgid "Napping for {secs}s ..."
 msgstr ""
 "Schiaccio un \n"
 "pisolino per {secs}s ..."
 
-#: voice.py:104
+#: voice.py:90
 msgid "Zzzzz"
 msgstr ""
 
-#: voice.py:105
+#: voice.py:91
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
 msgstr ""
 
-#: voice.py:114
+#: voice.py:98
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
 msgstr "Aspetto {secs}s ..."
 
-#: voice.py:116
+#: voice.py:100
 #, python-brace-format
 msgid "Looking around ({secs}s)"
 msgstr ""
@@ -240,109 +213,91 @@ msgstr ""
 "qui intorno...\n"
 "({secs}s)"
 
-#: voice.py:123
-#, python-brace-format
-msgid ""
-"Hey\n"
-"{what}\n"
-"let's be friends!"
+#: voice.py:106
+#, fuzzy, python-brace-format
+msgid "Hey {what} let's be friends!"
 msgstr ""
 "Hey\n"
 "{what}\n"
 "Diventiamo amici!"
 
-#: voice.py:124
-#, python-brace-format
-msgid ""
-"Associating to\n"
-"{what}"
+#: voice.py:107
+#, fuzzy, python-brace-format
+msgid "Associating to {what}"
 msgstr ""
 "Collegamento con\n"
 "{what}\n"
 "in corso..."
 
-#: voice.py:125
-#, python-brace-format
-msgid ""
-"Yo\n"
-"{what}!"
+#: voice.py:108
+#, fuzzy, python-brace-format
+msgid "Yo {what}!"
 msgstr ""
 "Yo\n"
 "{what}!"
 
-#: voice.py:130
-#, python-brace-format
-msgid ""
-"Just decided that\n"
-"{mac}\n"
-"needs no WiFi!"
+#: voice.py:112
+#, fuzzy, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
 msgstr ""
 "Ho appena deciso che\n"
 "{mac}\n"
 "non necessita di\n"
 "WiFi!"
 
-#: voice.py:131
+#: voice.py:113
 #, python-brace-format
-msgid ""
-"Deauthenticating\n"
-"{mac}"
+msgid "Deauthenticating {mac}"
 msgstr ""
 
-#: voice.py:132
-#, python-brace-format
-msgid ""
-"Kickbanning\n"
-"{mac}!"
+#: voice.py:114
+#, fuzzy, python-brace-format
+msgid "Kickbanning {mac}!"
 msgstr ""
 "Sto prendendo\n"
 "a calci\n"
 "{mac}!"
 
-#: voice.py:137
-#, python-brace-format
-msgid ""
-"Cool, we got {num}\n"
-"new handshake{plural}!"
+#: voice.py:118
+#, fuzzy, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
 msgstr ""
 "Bene, abbiamo {num}\n"
 "handshake{plural} in più!"
 
-#: voice.py:141
-msgid ""
-"Ops, something\n"
-"went wrong ...\n"
-"Rebooting ..."
+#: voice.py:121
+#, fuzzy
+msgid "Ops, something went wrong ... Rebooting ..."
 msgstr ""
 "Ops, qualcosa\n"
 "è andato storto ...\n"
 "Riavvio ..."
 
-#: voice.py:145
+#: voice.py:124
 #, python-brace-format
 msgid "Kicked {num} stations\n"
 msgstr "{num} stazioni pestate\n"
 
-#: voice.py:146
+#: voice.py:125
 #, python-brace-format
 msgid "Made {num} new friends\n"
 msgstr "{num} nuovi amici\n"
 
-#: voice.py:147
+#: voice.py:126
 #, python-brace-format
 msgid "Got {num} handshakes\n"
 msgstr "{num} handshakes presi\n"
 
-#: voice.py:149
+#: voice.py:128
 msgid "Met 1 peer"
 msgstr "1 peer incontrato"
 
-#: voice.py:151
+#: voice.py:130
 #, python-brace-format
 msgid "Met {num} peers"
 msgstr "{num} peers incontrati"
 
-#: voice.py:156
+#: voice.py:135
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
