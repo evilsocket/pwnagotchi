@@ -1,15 +1,16 @@
 # pwnigotchi voice data
 # Copyright (C) 2019
 # This file is distributed under the same license as the pwnagotchi package.
-# FIRST AUTHOR Perilis Fregkos <fregkos@gmail.com>, 2019.
+# FIRST AUTHOR Periklis Fregkos <fregkos@gmail.com>, 2019.
+# CO AUTHOR Panos Vasilopoulos <hello@alwayslivid.com>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-29 13:42+0200\n"
-"PO-Revision-Date: 2019-10-01 16:22+0000\n"
-"Last-Translator: Panos Vasilopoulos <hello@alwayslivid.com>\n"
+"PO-Revision-Date: 2019-10-03 08:00+0000\n"
+"Last-Translator: Periklis Fregkos <fregkos@gmail.com>\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +26,7 @@ msgid ""
 "Hi, I'm Pwnagotchi!\n"
 "Starting ..."
 msgstr ""
-"Γεία, είμαι το Pwnagotchi!\n"
+"Γειά, είμαι το Pwnagotchi!\n"
 "Εκκινούμαι ..."
 
 #: voice.py:22
@@ -200,7 +201,7 @@ msgstr "Νιώθω μοναχός μου ..."
 
 #: voice.py:96
 msgid "Where's everybody?!"
-msgstr "Μα, πού πήγαν όλοi;!"
+msgstr "Μα, πού πήγαν όλοι;!"
 
 #: voice.py:101
 #, python-brace-format
@@ -252,7 +253,7 @@ msgid ""
 "Yo\n"
 "{what}!"
 msgstr ""
-"Που'σ ρε τρελέ\n"
+"Που'σαι ρε τρελέ\n"
 "{what}!"
 
 #: voice.py:128
@@ -291,7 +292,7 @@ msgid ""
 "new handshake{plural}!"
 msgstr ""
 "Τέλεια δικέ μου, πήραμε {num}\n"
-"νέες χειραψίες{plural}!"
+"νέες χειραψίες!"
 
 #: voice.py:139
 msgid ""
