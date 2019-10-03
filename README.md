@@ -116,6 +116,14 @@ usage: ./update_pwnagitchi.sh [OPTIONS]
 
 ```
 
+#### Backup your pwnagotchi
+
+You can use the `scripts/backup.sh` script to backup the important files of your unit.
+
+```shell
+usage: ./scripts/backup.sh HOSTNAME backup.zip
+```
+
 ### UI
 
 The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
@@ -236,7 +244,7 @@ def on_handshake(agent, filename, access_point, client_station):
 - checkout the `ui.video` section of the `config.yml` - if you don't want to use a display, you can connect to it with the browser and a cable.
 - If you get `[FAILED] Failed to start Remount Root and Kernel File Systems.` while booting pwnagotchi, make sure
 the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`. Use `sudo blkid` to find those values when you are using `create_sibling.sh`.
-- You can create a `/root/pwnagotchi.yml` configuration file to override the defaults.
+- You can create a `/root/custom.yml` configuration file to override the defaults.
 
 ## License
 

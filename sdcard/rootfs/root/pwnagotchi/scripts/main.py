@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('-C', '--config', action='store', dest='config', default='/root/pwnagotchi/config.yml',
                     help='Main configuration file.')
-parser.add_argument('-U', '--user-config', action='store', dest='user_config', default='/root/pwnagotchi.yml',
+parser.add_argument('-U', '--user-config', action='store', dest='user_config', default='/root/custom.yml',
                     help='If this file exists, configuration will be merged and this will override default values.')
 
 parser.add_argument('--manual', dest="do_manual", action="store_true", default=False, help="Manual mode.")
