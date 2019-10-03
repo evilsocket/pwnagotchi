@@ -37,6 +37,7 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 **THIS IS STILL ALPHA STAGE SOFTWARE, IF YOU DECIDE TO TRY TO USE IT, YOU ARE ON YOUR OWN, NO SUPPORT WILL BE PROVIDED, NEITHER FOR INSTALLATION OR FOR BUGS**
 
 However, there's [a Slack channel](https://join.slack.com/t/pwnagotchi/shared_invite/enQtNzc4NzY3MDE2OTAzLTg5NmNmNDJiMDM3ZWFkMWUwN2Y5NDk0Y2JlZWZjODlhMmRhNDZiOGMwYjJhM2UzNzA3YjA5NjJmZGY5NGI5NmI).
+
 ### Hardware
 
 - Raspberry Pi Zero W
@@ -235,6 +236,7 @@ def on_handshake(agent, filename, access_point, client_station):
 - checkout the `ui.video` section of the `config.yml` - if you don't want to use a display, you can connect to it with the browser and a cable.
 - If you get `[FAILED] Failed to start Remount Root and Kernel File Systems.` while booting pwnagotchi, make sure
 the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`. Use `sudo blkid` to find those values when you are using `create_sibling.sh`.
+- You can create a `/root/pwnagotchi.yml` configuration file to override the defaults.
 
 ## License
 
