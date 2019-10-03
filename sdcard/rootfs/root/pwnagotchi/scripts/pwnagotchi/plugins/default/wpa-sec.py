@@ -60,12 +60,12 @@ def on_internet_available(display, config, log):
         handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames]
         handshake_new = set(handshake_paths) - set(ALREADY_UPLOADED)
 
-        if handhake_new:
+        if handshake_new:
             logging.info("Internet connectivity detected.\
                           Uploading new handshakes to wpa-sec.stanev.org")
 
             for idx, handshake in enumerate(handshake_new):
-                display.set('status', f"Uploading handshake to wpa-sec.stanev.org ({idx + 1}/{len(handshake_new})")
+                display.set('status', "Uploading handshake to wpa-sec.stanev.org ({idx + 1}/{len(handshake_new})")
                 display.update(force=True)
                 try:
                     _upload_to_wpasec(handshake)
