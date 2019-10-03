@@ -17,3 +17,7 @@ Multiple units can talk to each other, advertising their own presence using a pa
 Depending on the status of the unit, several states and states transitions are configurable and represented on the display as different moods, expressions and sentences.
 
 If instead you just want to use your own parameters and save battery and CPU cycles, you can disable the AI in `config.yml` and enjoy an automated deauther, WPA handshake sniffer and portable bettercap + webui dedicated hardware.
+
+## License
+
+`pwnagotchi` is made with ♥  by [@evilsocket](https://twitter.com/evilsocket) and the [amazing dev team](https://github.com/evilsocket/pwnagotchi/graphs/contributors). It's released under the GPL3 license.
