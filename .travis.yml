@@ -24,18 +24,20 @@ branches:
   only:
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
-before_cache:
-  - mountpoint -q $TRAVIS_BUILD_DIR/tmp/mnt && sudo umount -R $TRAVIS_BUILD_DIR/tmp/mnt
-  - sudo find $TRAVIS_BUILD_DIR/tmp/ -name '*.img' -delete
-
 cache:
   apt: true
   directories:
-    - tmp/
+    - qemu-4.1.0
 
 before_script:
+  - test -d qemu-4.1.0 || ( wget https://download.qemu.org/qemu-4.1.0.tar.xz && tar xvJf qemu-4.1.0.tar.xz )
+  - cd qemu-4.1.0
+  - ./configure --target-list=arm-softmmu
+  - make -j$(nproc)
+  - sudo make install
+  - cd $TRAVIS_BUILD_DIR
   - sudo apt-get -y update
-  - sudo apt-get -y install qemu-user-static binfmt-support qemu bmap-tools kpartx
+  - sudo apt-get -y install qemu-user-static binfmt-support bmap-tools kpartx
   - sudo update-binfmts --display
 
 script:
