@@ -5,6 +5,7 @@
 # kovach <2214005+kovachwt@users.noreply.github.com>, 2019.
 #
 #, fuzzymsgid ""
+msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
@@ -23,18 +24,18 @@ msgstr "ДреееММмммМммм"
 
 #: voice.py:21
 msgid ""
-"Hi, I'm Pwnagotchi!\n"
+"Hi, I'm Pwnagotchi!"
 "Starting ..."
 msgstr ""
-"Здраво, јас сум Pwnagotchi!\n"
+"Здраво, јас сум Pwnagotchi!"
 "Почнувам ..."
 
 #: voice.py:22
 msgid ""
-"New day, new hunt,\n"
+"New day, new hunt,"
 "new pwns!"
 msgstr ""
-"Нов ден, нов лов,\n"
+"Нов ден, нов лов,"
 "ќе си газиме!"
 
 #: voice.py:23
@@ -47,21 +48,21 @@ msgstr "AI спремно."
 
 #: voice.py:29
 msgid ""
-"The neural network\n"
+"The neural network"
 "is ready."
 msgstr ""
-"Невронската мрежа\n"
+"Невронската мрежа"
 "е спремна."
 
 #: voice.py:39
 #, python-brace-format
 msgid ""
-"Hey, channel {channel} is\n"
-"free! Your AP will\n"
+"Hey, channel {channel} is"
+"free! Your AP will"
 "say thanks."
 msgstr ""
-"Еј, каналот {channel} е\n"
-"слободен! APто ќе ти\n"
+"Еј, каналот {channel} е"
+"слободен! APто ќе ти"
 "каже фала."
 
 #: voice.py:44
@@ -74,10 +75,10 @@ msgstr "Ајде да шетнеме!"
 
 #: voice.py:49
 msgid ""
-"This is the best\n"
+"This is the best"
 "day of my life!"
 msgstr ""
-"Ова ми е најдобриот \n"
+"Ова ми е најдобриот "
 "ден во животот!"
 
 #: voice.py:53
@@ -110,78 +111,78 @@ msgstr "Мммм колку мрежи!!!"
 
 #: voice.py:69
 msgid ""
-"I'm having so much\n"
+"I'm having so much"
 "fun!"
 msgstr "Јухуу забавноо ее!"
 
 #: voice.py:70
 msgid ""
-"My crime is that of\n"
+"My crime is that of"
 "curiosity ..."
 msgstr ""
-"Виновен сум само за\n"
+"Виновен сум само за"
 "љубопитност ..."
 
 #: voice.py:75
 #, python-brace-format
 msgid ""
-"Hello\n"
-"{name}!\n"
+"Hello"
+"{name}!"
 "Nice to meet you. {name}"
 msgstr ""
-"Здраво\n"
-"{name}!\n"
+"Здраво"
+"{name}!"
 "Мило ми е. {name}"
 
 #: voice.py:76
 #, python-brace-format
 msgid ""
-"Unit\n"
-"{name}\n"
+"Unit"
+"{name}"
 "is nearby! {name}"
 msgstr ""
-"Опаа\n"
-"{name}\n"
+"Опаа"
+"{name}"
 "е во близина! {name}"
 
 #: voice.py:81
 #, python-brace-format
 msgid ""
-"Uhm ...\n"
-"goodbye\n"
+"Uhm ..."
+"goodbye"
 "{name}"
 msgstr ""
-"Хмм ...\n"
-"чао\n"
+"Хмм ..."
+"чао"
 "{name}"
 
 #: voice.py:82
 #, python-brace-format
 msgid ""
-"{name}\n"
+"{name}"
 "is gone ..."
 msgstr ""
-"{name}\n"
+"{name}"
 "го снема ..."
 
 #: voice.py:87
 #, python-brace-format
 msgid ""
-"Whoops ...\n"
-"{name}\n"
+"Whoops ..."
+"{name}"
 "is gone."
 msgstr ""
-"Уупс ...\n"
-"{name}\n"
+"Уупс ..."
+"{name}"
 "го снема."
 
 #: voice.py:88
 #, python-brace-format
 msgid ""
-"{name}\n"
+"{name}"
 "missed!"
 msgstr ""
-"{name}\n"
+"{name}"
 "промаши!"
 
 #: voice.py:89
@@ -190,10 +191,10 @@ msgstr "Промаши!"
 
 #: voice.py:94
 msgid ""
-"Nobody wants to\n"
+"Nobody wants to"
 "play with me ..."
 msgstr ""
-"Никој не сака да\n"
+"Никој не сака да"
 "си игра со мене ..."
 
 #: voice.py:95
@@ -231,94 +232,94 @@ msgstr "Шарам наоколу ({secs}с)"
 #: voice.py:121
 #, python-brace-format
 msgid ""
-"Hey\n"
-"{what}\n"
+"Hey"
+"{what}"
 "let's be friends!"
 msgstr ""
-"Еј\n"
-"{what}\n"
+"Еј"
+"{what}"
 "ајде да се дружиме!"
 
 #: voice.py:122
 #, python-brace-format
 msgid ""
-"Associating to\n"
+"Associating to"
 "{what}"
 msgstr ""
-"Се закачувам на\n"
+"Се закачувам на"
 "{what}"
 
 #: voice.py:123
 #, python-brace-format
 msgid ""
-"Yo\n"
+"Yo"
 "{what}!"
 msgstr ""
-"Јо\n"
+"Јо"
 "{what}!"
 
 #: voice.py:128
 #, python-brace-format
 msgid ""
-"Just decided that\n"
-"{mac}\n"
+"Just decided that"
+"{mac}"
 "needs no WiFi!"
 msgstr ""
-"Знаеш што, на\n"
-"{mac}\n"
+"Знаеш што, на"
+"{mac}"
 "не му треба WiFi!"
 
 #: voice.py:129
 #, python-brace-format
 msgid ""
-"Deauthenticating\n"
+"Deauthenticating"
 "{mac}"
 msgstr ""
-"Го деавтентицирам\n"
+"Го деавтентицирам"
 "{mac}"
 
 #: voice.py:130
 #, python-brace-format
 msgid ""
-"Kickbanning\n"
+"Kickbanning"
 "{mac}!"
 msgstr ""
-"Кикбан\n"
+"Кикбан"
 "{mac}!"
 
 #: voice.py:135
 #, python-brace-format
 msgid ""
-"Cool, we got {num}\n"
+"Cool, we got {num}"
 "new handshake{plural}!"
 msgstr ""
-"Кул, фативме {num}\n"
+"Кул, фативме {num}"
 "нови ракувања!"
 
 #: voice.py:139
 msgid ""
-"Ops, something\n"
-"went wrong ...\n"
+"Ops, something"
+"went wrong ..."
 "Rebooting ..."
 msgstr ""
-"Упс, нешто не е\n"
-"ко што треба ...\n"
+"Упс, нешто не е"
+"ко што треба ..."
 "Рестартирам ..."
 
 #: voice.py:143
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "Избацив {num} станици"
+msgstr "Избацив {num} станици\n"
 
 #: voice.py:144
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "{num} нови другарчиња"
+msgstr "{num} нови другарчиња\n"
 
 #: voice.py:145
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Фатив {num} ракувања"
+msgstr "Фатив {num} ракувања\n"
 
 #: voice.py:147
 msgid "Met 1 peer"
