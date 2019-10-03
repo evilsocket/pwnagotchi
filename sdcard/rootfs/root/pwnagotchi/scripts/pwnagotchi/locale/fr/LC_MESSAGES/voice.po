@@ -1,18 +1,18 @@
 # pwnigotchi voice data
 # Copyright (C) 2019
 # This file is distributed under the same license as the pwnagotchi package.
-# FIRST AUTHOR <33197631+dadav@users.noreply.github.com>, 2019.
+# FIRST AUTHOR <7271496+quantumsheep@users.noreply.github.com>, 2019.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-29 13:42+0200\n"
-"PO-Revision-Date: 2019-09-29 14:00+0200\n"
-"Last-Translator: dadav <33197631+dadav@users.noreply.github.com>\n"
+"POT-Creation-Date: 2019-10-03 8:28+0200\n"
+"PO-Revision-Date: 2019-09-29 8:34+0200\n"
+"Last-Translator: quantumsheep <7271496+quantumsheep@users.noreply.github.com>\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
-"Language: english\n"
+"Language: french\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
