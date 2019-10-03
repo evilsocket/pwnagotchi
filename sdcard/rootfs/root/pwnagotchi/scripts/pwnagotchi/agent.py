@@ -9,7 +9,7 @@ import _thread
 
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
-from bettercap.client import Client
+from pwnagotchi.bettercap import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
 
