@@ -3,8 +3,6 @@ import argparse
 import time
 import logging
 
-import yaml
-
 import pwnagotchi
 import pwnagotchi.utils as utils
 import pwnagotchi.version as version
@@ -73,16 +71,7 @@ elif args.do_manual:
 else:
     logging.info("entering auto mode ...")
 
-    agent.start_ai()
-    agent.setup_events()
-    agent.set_starting()
-    agent.start_monitor_mode()
-    agent.start_event_polling()
-
-    # print initial stats
-    agent.next_epoch()
-
-    agent.set_ready()
+    agent.start()
 
     while True:
         try:

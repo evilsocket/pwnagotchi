@@ -138,6 +138,16 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         self.start_advertising()
 
+    def start(self):
+        self.start_ai()
+        self.setup_events()
+        self.set_starting()
+        self.start_monitor_mode()
+        self.start_event_polling()
+        # print initial stats
+        self.next_epoch()
+        self.set_ready()
+
     def wait_for(self, t, sleeping=True):
         plugins.on('sleep' if sleeping else 'wait', self, t)
         self._view.wait(t, sleeping)
