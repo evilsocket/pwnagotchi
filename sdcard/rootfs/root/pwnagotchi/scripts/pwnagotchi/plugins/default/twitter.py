@@ -28,6 +28,7 @@ def on_internet_available(config, log):
 
         picture = '/dev/shm/pwnagotchi.png'
 
+        UI.on_manual_mode(log)
         UI.update(force=True)
         UI.image().save(picture, 'png')
         UI.set('status', 'Tweeting...')
