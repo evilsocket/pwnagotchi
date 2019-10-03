@@ -119,6 +119,7 @@ Pwnagotchi is able to speak multiple languages!! Currently supported are:
 * greek
 * macedonian
 * italian
+* french
 
 If you want to add a language use the `language.sh` script. If you want to add for example the language **italian** you would type:
 
