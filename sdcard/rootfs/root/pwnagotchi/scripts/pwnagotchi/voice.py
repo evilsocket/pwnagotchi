@@ -137,3 +137,6 @@ class Voice:
             deauthed=log.deauthed,
             associated=log.associated,
             handshakes=log.handshakes)
+
+    def custom(self, text):
+        return self._(text)
