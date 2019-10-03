@@ -7,8 +7,6 @@ from datetime import datetime
 import logging
 import _thread
 
-import core
-
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
 from bettercap.client import Client
