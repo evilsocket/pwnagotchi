@@ -29,6 +29,9 @@
 
 import logging
 from . import epdconfig
+from PIL import Image
+import RPi.GPIO as GPIO
+# import numpy as np
 
 # Display resolution
 EPD_WIDTH       = 104
@@ -45,35 +48,33 @@ class EPD:
 
     # Hardware reset
     def reset(self):
-        epdconfig.digital_write(self.reset_pin, 1)
+        epdconfig.digital_write(self.reset_pin, GPIO.HIGH)
         epdconfig.delay_ms(200) 
-        epdconfig.digital_write(self.reset_pin, 0)
-        epdconfig.delay_ms(10)
-        epdconfig.digital_write(self.reset_pin, 1)
+        epdconfig.digital_write(self.reset_pin, GPIO.LOW)         # module reset
+        epdconfig.delay_ms(200)
+        epdconfig.digital_write(self.reset_pin, GPIO.HIGH)
         epdconfig.delay_ms(200)   
 
     def send_command(self, command):
-        epdconfig.digital_write(self.dc_pin, 0)
-        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.digital_write(self.dc_pin, GPIO.LOW)
+        epdconfig.digital_write(self.cs_pin, GPIO.LOW)
         epdconfig.spi_writebyte([command])
-        epdconfig.digital_write(self.cs_pin, 1)
+        epdconfig.digital_write(self.cs_pin, GPIO.HIGH)
 
     def send_data(self, data):
-        epdconfig.digital_write(self.dc_pin, 1)
-        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.digital_write(self.dc_pin, GPIO.HIGH)
+        epdconfig.digital_write(self.cs_pin, GPIO.LOW)
         epdconfig.spi_writebyte([data])
-        epdconfig.digital_write(self.cs_pin, 1)
+        epdconfig.digital_write(self.cs_pin, GPIO.HIGH)
         
     def ReadBusy(self):
-        logging.debug("e-Paper busy")
         while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
             epdconfig.delay_ms(100)
-        logging.debug("e-Paper busy release")
 
     def init(self):
         if (epdconfig.module_init() != 0):
             return -1
-            
+        # EPD hardware init start
         self.reset()
 
         self.send_command(0x06) # BOOSTER_SOFT_START
@@ -97,21 +98,17 @@ class EPD:
         return 0
 
     def getbuffer(self, image):
-        # logging.debug("bufsiz = ",int(self.width/8) * self.height)
         buf = [0xFF] * (int(self.width/8) * self.height)
         image_monocolor = image.convert('1')
         imwidth, imheight = image_monocolor.size
         pixels = image_monocolor.load()
-        # logging.debug("imwidth = %d, imheight = %d",imwidth,imheight)
         if(imwidth == self.width and imheight == self.height):
-            logging.debug("Vertical")
             for y in range(imheight):
                 for x in range(imwidth):
                     # Set the bits for the column of pixels at the current position.
                     if pixels[x, y] == 0:
                         buf[int((x + y * self.width) / 8)] &= ~(0x80 >> (x % 8))
         elif(imwidth == self.height and imheight == self.width):
-            logging.debug("Horizontal")
             for y in range(imheight):
                 for x in range(imwidth):
                     newx = y
@@ -120,7 +117,7 @@ class EPD:
                         buf[int((newx + newy*self.width) / 8)] &= ~(0x80 >> (y % 8))
         return buf
 
-    def display(self, imageblack, imagered):
+    def display(self, imageblack, imagecolor):
         self.send_command(0x10)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(imageblack[i])
@@ -128,7 +125,7 @@ class EPD:
         
         self.send_command(0x13)
         for i in range(0, int(self.width * self.height / 8)):
-            self.send_data(imagered[i])
+            self.send_data(imagecolor[i])
         self.send_command(0x92)
         
         self.send_command(0x12) # REFRESH

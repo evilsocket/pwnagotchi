@@ -207,10 +207,10 @@ class Display(View):
     def _waveshare_bc_render(self):
         buf_black = self._display.getbuffer(self.canvas)
         emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
-        buf_red = self._display.getbuffer(emptyImage)
+        buf_color = self._display.getbuffer(emptyImage)
         if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
             self._display.Clear()
-        self._display.display(buf_black,buf_red)
+        self._display.display(buf_black,buf_color)
         self._display.sleep()
         if self.full_refresh_trigger >= 0 and self.full_refresh_count == self.full_refresh_trigger:
            self.full_refresh_count = 0
