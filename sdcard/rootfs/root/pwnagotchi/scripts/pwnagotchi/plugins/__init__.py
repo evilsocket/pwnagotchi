@@ -2,8 +2,6 @@ import os
 import glob
 import importlib, importlib.util
 
-# import core
-
 default_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "default")
 loaded = {}
 

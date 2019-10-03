@@ -18,7 +18,7 @@ class Voice:
         return self._('ZzzzZZzzzzZzzz')
 
     def on_starting(self):
-        return random.choice([ 
+        return random.choice([
             self._('Hi, I\'m Pwnagotchi! Starting ...'),
             self._('New day, new hunt, new pwns!'),
             self._('Hack the Planet!')])
@@ -29,7 +29,7 @@ class Voice:
             self._('The neural network is ready.')])
 
     def on_normal(self):
-        return random.choice([ 
+        return random.choice([
             '',
             '...'])
 
@@ -37,7 +37,7 @@ class Voice:
         return self._('Hey, channel {channel} is free! Your AP will say thanks.').format(channel=channel)
 
     def on_bored(self):
-        return random.choice([ 
+        return random.choice([
             self._('I\'m bored ...'),
             self._('Let\'s go for a walk!')])
 
@@ -48,14 +48,14 @@ class Voice:
         return self._('Shitty day :/')
 
     def on_sad(self):
-        return random.choice([ 
+        return random.choice([
             self._('I\'m extremely bored ...'),
             self._('I\'m very sad ...'),
             self._('I\'m sad'),
             '...'])
 
     def on_excited(self):
-        return random.choice([ 
+        return random.choice([
             self._('I\'m living the life!'),
             self._('I pwn therefore I am.'),
             self._('So many networks!!!'),
@@ -63,29 +63,29 @@ class Voice:
             self._('My crime is that of curiosity ...')])
 
     def on_new_peer(self, peer):
-        return random.choice([ 
+        return random.choice([
             self._('Hello {name}! Nice to meet you. {name}').format(name=peer.name()),
             self._('Unit {name} is nearby! {name}').format(name=peer.name())])
 
     def on_lost_peer(self, peer):
-        return random.choice([ 
+        return random.choice([
             self._('Uhm ... goodbye {name}').format(name=peer.name()),
             self._('{name} is gone ...').format(name=peer.name())])
 
     def on_miss(self, who):
-        return random.choice([ 
+        return random.choice([
             self._('Whoops ... {name} is gone.').format(name=who),
             self._('{name} missed!').format(name=who),
             self._('Missed!')])
 
     def on_lonely(self):
-        return random.choice([ 
+        return random.choice([
             self._('Nobody wants to play with me ...'),
             self._('I feel so alone ...'),
             self._('Where\'s everybody?!')])
 
     def on_napping(self, secs):
-        return random.choice([ 
+        return random.choice([
             self._('Napping for {secs}s ...').format(secs=secs),
             self._('Zzzzz'),
             self._('ZzzZzzz ({secs}s)').format(secs=secs)])
@@ -94,7 +94,7 @@ class Voice:
         return random.choice(['...', '!'])
 
     def on_waiting(self, secs):
-        return random.choice([ 
+        return random.choice([
             self._('Waiting for {secs}s ...').format(secs=secs),
             '...',
             self._('Looking around ({secs}s)').format(secs=secs)])
@@ -102,13 +102,13 @@ class Voice:
     def on_assoc(self, ap):
         ssid, bssid = ap['hostname'], ap['mac']
         what = ssid if ssid != '' and ssid != '<hidden>' else bssid
-        return random.choice([ 
+        return random.choice([
             self._('Hey {what} let\'s be friends!').format(what=what),
             self._('Associating to {what}').format(what=what),
             self._('Yo {what}!').format(what=what)])
 
     def on_deauth(self, sta):
-        return random.choice([ 
+        return random.choice([
             self._('Just decided that {mac} needs no WiFi!').format(mac=sta['mac']),
             self._('Deauthenticating {mac}').format(mac=sta['mac']),
             self._('Kickbanning {mac}!').format(mac=sta['mac'])])

@@ -233,12 +233,12 @@ class View(object):
                 if sleeping:
                     if secs > 1:
                         self.set('face', faces.SLEEP)
-                        self.set('status', self._voice.on_napping(secs))
+                        self.set('status', self._voice.on_napping(int(secs)))
                     else:
                         self.set('face', faces.SLEEP2)
                         self.set('status', self._voice.on_awakening())
                 else:
-                    self.set('status', self._voice.on_waiting(secs))
+                    self.set('status', self._voice.on_waiting(int(secs)))
                     if step % 2 == 0:
                         self.set('face', faces.LOOK_R)
                     else:
