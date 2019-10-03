@@ -49,7 +49,7 @@ You can configure the refresh interval of the display via `ui.fps`, we advise to
 
 ## Host Connection Share
 
-If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh` or `scripts/macos_connection_share.sh` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it. Note this script takes as inputs the two interfaces and shouldn't be run without arguments.
+If you connect to the unit via `usb0` (thus using the data port), you might want to use the `scripts/linux_connection_share.sh`, `scripts/macos_connection_share.sh` or `scripts/win_connection_share.ps1` script to bring the interface up on your end and share internet connectivity from another interface, so you can update the unit and generally download things from the internet on it.
 
 ## Troubleshooting
 
