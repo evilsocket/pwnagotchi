@@ -17,6 +17,11 @@ def on_loaded():
     logging.warning("WARNING: plugin %s should be disabled!" % __name__)
 
 
+# called in manual mode when there's internet connectivity
+def on_internet_available(config, log):
+    pass
+
+
 # called to setup the ui elements
 def on_ui_setup(ui):
     # add custom UI elements

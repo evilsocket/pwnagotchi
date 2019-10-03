@@ -101,30 +101,33 @@ if args.do_manual:
         display.on_manual_mode(log)
         time.sleep(1)
 
-        if config['twitter']['enabled'] and log.is_new() and Agent.is_connected() and log.handshakes > 0:
-            import tweepy
+        if Agent.is_connected():
+            plugins.on('internet_available', config, log)
 
-            logging.info("detected a new session and internet connectivity!")
+            if config['twitter']['enabled'] and log.is_new() and log.handshakes > 0:
+                import tweepy
 
-            picture = '/dev/shm/pwnagotchi.png'
+                logging.info("detected a new session and internet connectivity!")
 
-            display.update(force=True)
-            display.image().save(picture, 'png')
-            display.set('status', 'Tweeting...')
-            display.update(force=True)
+                picture = '/dev/shm/pwnagotchi.png'
 
-            try:
-                auth = tweepy.OAuthHandler(config['twitter']['consumer_key'], config['twitter']['consumer_secret'])
-                auth.set_access_token(config['twitter']['access_token_key'], config['twitter']['access_token_secret'])
-                api = tweepy.API(auth)
+                display.update(force=True)
+                display.image().save(picture, 'png')
+                display.set('status', 'Tweeting...')
+                display.update(force=True)
 
-                tweet = Voice(lang=config['main']['lang']).on_log_tweet(log)
-                api.update_with_media(filename=picture, status=tweet)
-                log.save_session_id()
+                try:
+                    auth = tweepy.OAuthHandler(config['twitter']['consumer_key'], config['twitter']['consumer_secret'])
+                    auth.set_access_token(config['twitter']['access_token_key'], config['twitter']['access_token_secret'])
+                    api = tweepy.API(auth)
 
-                logging.info("tweeted: %s" % tweet)
-            except Exception as e:
-                logging.exception("error while tweeting")
+                    tweet = Voice(lang=config['main']['lang']).on_log_tweet(log)
+                    api.update_with_media(filename=picture, status=tweet)
+                    log.save_session_id()
+
+                    logging.info("tweeted: %s" % tweet)
+                except Exception as e:
+                    logging.exception("error while tweeting")
 
     quit()
 
