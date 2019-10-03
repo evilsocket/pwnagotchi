@@ -7,7 +7,7 @@ __version__ = '1.0.0'
 __name__ = 'memtemp'
 __license__ = 'GPL3'
 __description__ = 'A plugin that will add a memory and temperature indicator'
-__enabled__ = True
+__enabled__ = False
 
 import struct
 
