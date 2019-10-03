@@ -18,7 +18,7 @@ def on_loaded():
 
 
 # called in manual mode when there's internet connectivity
-def on_internet_available(config, log):
+def on_internet_available(ui, config, log):
     pass
 
 

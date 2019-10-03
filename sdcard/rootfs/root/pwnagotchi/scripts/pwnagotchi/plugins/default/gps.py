@@ -15,14 +15,14 @@ running = False
 
 
 def on_loaded():
-    logging.info("GPS plugin loaded for %s" % device)
+    logging.info("gps plugin loaded for %s" % device)
 
 
 def on_ready(agent):
     global running
 
     if os.path.exists(device):
-        logging.info("enabling GPS bettercap's module for %s" % device)
+        logging.info("enabling gps bettercap's module for %s" % device)
         try:
             agent.run('gps off')
         except:
