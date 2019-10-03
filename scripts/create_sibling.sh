@@ -335,7 +335,13 @@ fi
 setup_raspbian
 provision_raspbian
 
-echo -e "[+] Congratz, it's a boy (⌐■_■)!"
+#Make a baby with a random gender, maybe do something fun with this later!
+gender[0]="boy"
+gender[1]="girl"
+
+rand=$[ $RANDOM % 2 ]
+
+echo -e "[+] Congratz, it's a ${arr[$rand]} (⌐■_■)!"
 echo -e "[+] One more step: dd if=../${PWNI_OUTPUT} of=<PATH_TO_SDCARD> bs=4M status=progress"
 
 if [ "${OPT_SPARSE}" -eq 1 ];
