@@ -29,7 +29,7 @@ before_script:
   - make -j$(nproc)
   - sudo make install
   - cd $TRAVIS_BUILD_DIR
-  - sudo apt-get -y update
+  - sudo apt-get -y update || true
   - sudo apt-get -y install qemu-user-static binfmt-support bmap-tools kpartx
   - sudo update-binfmts --display
 script:
