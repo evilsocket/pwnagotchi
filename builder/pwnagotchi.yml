@@ -203,7 +203,7 @@
 
   - name: configure usb interface
     blockinfile:
-      path: /etc/network/interfaces.d/usb0.cfg
+      path: /etc/network/interfaces.d/usb0-cfg
       create: yes
       block: |
         allow-hotplug usb0
@@ -216,7 +216,7 @@
 
   - name: configure eth0 interface (pi2/3/4)
     blockinfile:
-      path: /etc/network/interfaces.d/eth0.cfg
+      path: /etc/network/interfaces.d/eth0-cfg
       create: yes
       block: |
         allow-hotplug eth0
