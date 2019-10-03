@@ -172,7 +172,7 @@
       dest: /usr/bin/memusage
       mode: 0755
       content: |
-        #!/usr/bin/env
+        #!/usr/bin/env bash
         free -m | awk '/Mem/ { printf( "%d %", $3 / $2 * 100 + 0.5 ) }'
 
   - name: create monstart script
