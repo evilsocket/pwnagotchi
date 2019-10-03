@@ -1,4 +1,6 @@
-### User Interface
+# Usage
+
+## User Interface
 
 The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
 
@@ -10,7 +12,7 @@ The UI is available either via display if installed, or via http://pwnagotchi.lo
 * **PWND**: Number of handshakes captured in this session and number of unique networks we own at least one handshake of, from the beginning.
 * **AUTO**: This indicates that the algorithm is running with AI disabled (or still loading), it disappears once the AI dependencies have been bootrapped and the neural network loaded.
 
-### Training the AI
+## Training the AI
 
 At its core Pwnagotchi is a very simple creature: we could summarize its main algorithm as:
 
@@ -27,7 +29,7 @@ while True:
         for client in ap.clients:
             # deauthenticate the client to get its half or full handshake
             deauthenticate(client)
-    
+
     wait_for_loot()
 ```
 
@@ -73,14 +75,11 @@ personality:
     sad_num_epochs: 25
 ```
 
-There is no optimal set of parameters for every situation: when the unit is moving (during a walk for instance) smaller timeouts and RSSI thresholds might be preferred
-in order to quickly remove routers that are not in range anymore, while when stationary in high density areas (like an office) other parameters might be better. 
-The role of the AI is to observe what's going on at the WiFi level, and adjust those parameters in order to maximize the cumulative reward of that loop / epoch.
+There is no optimal set of parameters for every situation: when the unit is moving (during a walk for instance) smaller timeouts and RSSI thresholds might be preferred in order to quickly remove routers that are not in range anymore, while when stationary in high density areas (like an office) other parameters might be better. The role of the AI is to observe what's going on at the WiFi level, and adjust those parameters in order to maximize the cumulative reward of that loop / epoch.
 
-#### Reward Function
+## Reward Function
 
-After each iteration of the main loop (an `epoch`), the reward, a score that represents how well the parameters performed, is computed as 
-(an excerpt from `pwnagotchi/ai/reward.py`):
+After each iteration of the main loop (an `epoch`), the reward, a score that represents how well the parameters performed, is computed as (an excerpt from `pwnagotchi/ai/reward.py`):
 
 ```python
 # state contains the information of the last epoch
@@ -107,15 +106,13 @@ reward = h + a + c + b + i + m
 
 By maximizing this reward value, the AI learns over time to find the set of parameters that better perform with the current environmental conditions.
 
+## BetterCAP's Web UI
 
-### BetterCAP's Web UI
-
-Moreover, given that the unit is running bettercap with API and Web UI, you'll be able to use the unit as a WiFi penetration testing portable station
-by accessing `http://pwnagotchi.local/`.
+Moreover, given that the unit is running bettercap with API and Web UI, you'll be able to use the unit as a WiFi penetration testing portable station by accessing `http://pwnagotchi.local/`.
 
 ![webui](https://raw.githubusercontent.com/bettercap/media/master/ui-events.png)
 
-### Update your Pwnagotchi
+## Update your Pwnagotchi
 
 You can use the `scripts/update_pwnagotchi.sh` script to update to the most recent version of pwnagotchi.
 
@@ -132,7 +129,7 @@ usage: ./update_pwnagitchi.sh [OPTIONS]
 
 ```
 
-### Backup your Pwnagotchi
+## Backup your Pwnagotchi
 
 You can use the `scripts/backup.sh` script to backup the important files of your unit.
 
@@ -140,12 +137,10 @@ You can use the `scripts/backup.sh` script to backup the important files of your
 usage: ./scripts/backup.sh HOSTNAME backup.zip
 ```
 
-### Random Info
+## Random Info
 
-- **On a rpi0w, it'll take approximately 30 minutes to load the AI**.
-- `/var/log/pwnagotchi.log` is your friend.
-- if connected to a laptop via usb data port, with internet connectivity shared, magic things will happen.
-- checkout the `ui.video` section of the `config.yml` - if you don't want to use a display, you can connect to it with the browser and a cable.
-- If you get `[FAILED] Failed to start Remount Root and Kernel File Systems.` while booting pwnagotchi, make sure
-the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`. Use `sudo blkid` to find those values when you are using `create_sibling.sh`.
-
+* **On a rpi0w, it'll take approximately 30 minutes to load the AI**.
+* `/var/log/pwnagotchi.log` is your friend.
+* if connected to a laptop via usb data port, with internet connectivity shared, magic things will happen.
+* checkout the `ui.video` section of the `config.yml` - if you don't want to use a display, you can connect to it with the browser and a cable.
+* If you get `[FAILED] Failed to start Remount Root and Kernel File Systems.` while booting pwnagotchi, make sure the `PARTUUID`s for `rootfs` and `boot` partitions are the same in `/etc/fstab`. Use `sudo blkid` to find those values when you are using `create_sibling.sh`.
