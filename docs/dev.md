@@ -1,4 +1,4 @@
-## Software
+# Software
 
 - Raspbian + [nexmon patches](https://re4son-kernel.com/re4son-pi-kernel/) for monitor mode, or any Linux with a monitor mode enabled interface (if you tune config.yml).
 
@@ -21,6 +21,7 @@ usage: ./scripts/create_sibling.sh [OPTIONS]
     -d           # Only run dependencies checks
     -h           # Show this help
 ```
+
 ## Adding a Language
 
 If you want to add a language use the `language.sh` script. If you want to add for example the language **italian** you would type:

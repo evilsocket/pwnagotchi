@@ -1,10 +1,6 @@
-## About the Project
+# About the Project
 
-[Pwnagotchi](https://twitter.com/pwnagotchi) is an "AI" that learns from the WiFi environment and instruments 
-[bettercap](https://www.bettercap.org/) in order to maximize the WPA key material that's being captured either passively
- or by performing deauthentication and association attakcs. This material is collected as pcap files containing any form 
- of handshake supported by [hashcat](https://hashcat.net/hashcat/), including [PMKIDs](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/), 
-full and half WPA handshakes.
+[Pwnagotchi](https://twitter.com/pwnagotchi) is an "AI" that learns from the WiFi environment and instruments [bettercap](https://www.bettercap.org/) in order to maximize the WPA key material that's being captured either passively or by performing deauthentication and association attakcs. This material is collected as pcap files containing any form  of handshake supported by [hashcat](https://hashcat.net/hashcat/), including [PMKIDs](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/), full and half WPA handshakes.
 
 ![handshake](https://i.imgur.com/pdA4vCZ.png)
 
