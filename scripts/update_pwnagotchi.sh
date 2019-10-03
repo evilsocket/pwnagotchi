@@ -19,8 +19,8 @@ function usage() {
       -v        # Version to update to, can be a branch or commit. (default: master)
       -u        # Url to clone from. (default: https://github.com/evilsocket/pwnagotchi)
       -m        # Mode to restart to. (Supported: ${SUPPORTED_RESTART_MODES[*]}; default: auto)
-      -b        # Backup the current pwnagotchi config, then overwrite with defaults.
-      -r        # Restore the current pwnagotchi config after upgrade. (-b will be enabled.)
+      -b        # Backup the current pwnagotchi config and hostname references, then overwrite with defaults.
+      -r        # Restore the current pwnagotchi config and hostname references after upgrade. (-b will be enabled.)
       -h        # Shows this help.
 
 EOF
@@ -37,10 +37,11 @@ function test_root() {
 function test_github() {
     wget -q  --spider $GIT_URL
     if [ $? -ne 0 ]; then
-        echo "[!] Cannot reach github. This script requires internet access and DNS resolution, ensure connection sharing is working and valid DNS server in /etc/resolv.conf."
+        echo "[!] Cannot reach github. This script requires internet access, ensure connection sharing is working."
         exit 2
     fi
 }
+
 while getopts "v:u:m:brh" o; do
   case "${o}" in
     v)
@@ -48,6 +49,13 @@ while getopts "v:u:m:brh" o; do
       ;;
     u)
       GIT_URL="${OPTARG}"
+      ;;
+    m)
+      if [[ "${SUPPORTED_RESTART_MODES[*]}" =~ ${OPTARG} ]]; then
+        MODE="${OPTARG}"
+      else
+        usage
+      fi
       ;;
     b)
       BACKUPCONFIG=1
@@ -58,13 +66,6 @@ while getopts "v:u:m:brh" o; do
       ;;
     h)
       usage
-      ;;
-    m)
-      if [[ "${SUPPORTED_RESTART_MODES[*]}" =~ ${OPTARG} ]]; then
-        MODE="${OPTARG}"
-      else
-        usage
-      fi
       ;;
     *)
       usage
@@ -86,15 +87,13 @@ if [ $VERSION != "master" ]; then
     git checkout $VERSION -q
 fi
 
-echo "[+] Updating..."
 if [ $BACKUPCONFIG -eq 1 ]; then
-    echo "[+] Creating backup of config.yml"
-    mv /root/pwnagotchi/config.yml /root/config.yml.bak -f
-    echo "[+] Creating backup of host files"
-    mv /etc/hosts /etc/hosts.bak -f
-    mv /etc/hostname /etc/hostname.bak -f
+    echo "[+] Creating backup of config.yml and hostname references"
+    mv /root/pwnagotchi/config.yml /root/config.bak -f
+    mv /etc/hosts /root/hosts.bak -f
+    mv /etc/hostname /root/hostname.bak -f
     mv /etc/motd /etc/motd.bak -f
-    mv /etc/network/interfaces /etc/network/interfaces.bak -f
+    mv /etc/network/interfaces /root/interfaces.bak -f
 fi
 
 echo "[+] Installing $(git log -1 --format="%h")"
@@ -105,13 +104,12 @@ cd /tmp
 rm $GIT_FOLDER -rf
 
 if [ $RESTORECONFIG -eq 1 ]; then
-    echo "[+] Restoring backup of config.yml"
+    echo "[+] Restoring backup of config.yml and hostname references"
     mv /root/config.yml.bak /root/pwnagotchi/config.yml -f
-    echo "[+] Restoring backup of host files"
-    mv /etc/hosts.bak /etc/hosts -f
-    mv /etc/hostname.bak /etc/hostname -f
+    mv /root/hosts.bak /etc/hosts -f
+    mv /root/hostname.bak /etc/hostname -f
+    mv /root/interfaces.bak /etc/network/interfaces -f
     mv /etc/motd.bak /etc/motd -f
-    mv /etc/network/interfaces.bak /etc/network/interfaces -f 
 fi
 
 echo "[+] Restarting pwnagotchi in $MODE mode. $( screen -X -S pwnagotchi quit)"
