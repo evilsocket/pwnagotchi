@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the pwnagotchi package.
 # FIRST AUTHOR justin-p@users.noreply.github.com, 2019.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
@@ -12,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2019-09-29 14:00+0200\n"
 "Last-Translator: Justin-P <justin-p@users.noreply.github.com>\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
-"Language: english\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,14 +21,12 @@ msgid "ZzzzZZzzzzZzzz"
 msgstr "ZzzzZZzzzzZzzz"
 
 #: voice.py:22
-#, fuzzy
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "Hoi, Ik benPwnagotchi!Opstarten ..."
+msgstr "Hoi, Ik ben Pwnagotchi! Opstarten ..."
 
 #: voice.py:23
-#, fuzzy
 msgid "New day, new hunt, new pwns!"
-msgstr "Nieuwe dag,nieuwe jacht,nieuwe pwns!"
+msgstr "Nieuwe dag, nieuwe jacht, nieuwe pwns!"
 
 #: voice.py:24
 msgid "Hack the Planet!"
@@ -40,14 +37,13 @@ msgid "AI ready."
 msgstr "AI is klaar."
 
 #: voice.py:29
-#, fuzzy
 msgid "The neural network is ready."
 msgstr "Neuronen netwerkis klaar voor gebruik."
 
 #: voice.py:37
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "Hey, kanaal {channel} isvrij! Je AP zal jebedanken."
+msgstr "Hey, kanaal {channel} is vrij! Je AP zal je bedanken."
 
 #: voice.py:41
 msgid "I'm bored ..."
@@ -58,9 +54,8 @@ msgid "Let's go for a walk!"
 msgstr "Laten we een rondje lopen!"
 
 #: voice.py:45
-#, fuzzy
 msgid "This is the best day of my life!"
-msgstr "Dit is de bestedag van mijn leven!"
+msgstr "Dit is de beste dag van mijn leven!"
 
 #: voice.py:48
 msgid "Shitty day :/"
@@ -91,7 +86,6 @@ msgid "So many networks!!!"
 msgstr "Zo veel netwerken!!!"
 
 #: voice.py:62
-#, fuzzy
 msgid "I'm having so much fun!"
 msgstr "Dit is zo leuk!"
 
@@ -101,41 +95,40 @@ msgid "My crime is that of curiosity ..."
 msgstr "Mijn enige misdrijfis mijn nieuwsgierigheid ..."
 
 #: voice.py:67
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Hello {name}! Nice to meet you. {name}"
-msgstr "Hallo{name}!Leuk je te ontmoeten. {name}"
+msgstr "Hallo {name}! Leuk je te ontmoeten. {name}"
 
 #: voice.py:68
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Unit {name} is nearby! {name}"
-msgstr "Unit{name}is dichtbij! {name}"
+msgstr "Unit {name} is dichtbij! {name}"
 
 #: voice.py:72
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Uhm ... goodbye {name}"
-msgstr "Uhm ...tot ziens{name}"
+msgstr "Uhm ...tot ziens {name}"
 
 #: voice.py:73
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{name} is gone ..."
-msgstr "{name}is weg"
+msgstr "{name} is weg"
 
 #: voice.py:77
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "Whoopsie ...{name}is weg"
+msgstr "Whoopsie ...{name} is weg"
 
 #: voice.py:78
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{name} missed!"
-msgstr "{name}gemist!"
+msgstr "{name} gemist!"
 
 #: voice.py:79
 msgid "Missed!"
 msgstr "Gemist!"
 
 #: voice.py:83
-#, fuzzy
 msgid "Nobody wants to play with me ..."
 msgstr "Niemand wil metmij spelen ..."
 
@@ -172,14 +165,14 @@ msgid "Looking around ({secs}s)"
 msgstr "Rond kijken ({secs}s)"
 
 #: voice.py:106
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr "Hey{what}Laten we vriendenworden!"
+msgstr "Hey {what}, laten we vriendenworden!"
 
 #: voice.py:107
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Associating to {what}"
-msgstr "Verbinden met{what}"
+msgstr "Verbinden met {what}"
 
 #: voice.py:108
 #, python-brace-format
@@ -187,29 +180,28 @@ msgid "Yo {what}!"
 msgstr ""
 
 #: voice.py:112
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "Ik vind dat{mac}genoeg WiFiheeft gehad!"
+msgstr "Ik vind dat {mac} genoeg WiFiheeft gehad!"
 
 #: voice.py:113
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Deauthenticating {mac}"
-msgstr "De-autoriseren{mac}"
+msgstr "De-autoriseren {mac}"
 
 #: voice.py:114
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr "Ik ga{mac}even kicken!"
+msgstr "Ik ga {mac} even kicken!"
 
 #: voice.py:118
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "Gaaf, we hebben {num}nieuwe handshake{plural}!"
+msgstr "Gaaf, we hebben {num} nieuwe handshake{plural}!"
 
 #: voice.py:121
-#, fuzzy
 msgid "Ops, something went wrong ... Rebooting ..."
-msgstr "Oops, ietsging fout ...Rebooting ..."
+msgstr "Oops, iets ging fout ...Rebooting ..."
 
 #: voice.py:124
 #, python-brace-format
