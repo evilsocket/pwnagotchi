@@ -39,7 +39,10 @@ class MEMTEMP:
 
     def get_mem_info(self):
         try:
-            total, used, free = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+            # includes RAM + Swap Memory:
+#            total, used, free = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+            # without Swap, only real memory:
+            total, used, free = map(int, os.popen('free -t -m').readlines()[-3].split()[1:4])
             return "tm:"+str(total)+" um:"+str(used)+" fm:"+str(free)
         except:
             return "tm:0 um:0 fm:0"
