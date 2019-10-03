@@ -1,11 +1,16 @@
 #!/usr/bin/python3
+import os
 import argparse
-import yaml
 import time
 import traceback
 
+import yaml
+
 import core
-import pwnagotchi, pwnagotchi.plugins as plugins
+import pwnagotchi
+import pwnagotchi.utils as utils
+import pwnagotchi.version as version
+import pwnagotchi.plugins as plugins
 
 from pwnagotchi.log import SessionParser
 from pwnagotchi.voice import Voice
@@ -14,53 +19,52 @@ from pwnagotchi.ui.display import Display
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('-C', '--config', action='store', dest='config', default='/root/pwnagotchi/config.yml')
+parser.add_argument('-C', '--config', action='store', dest='config', default='/root/pwnagotchi/config.yml',
+                    help='Main configuration file.')
+parser.add_argument('-U', '--user-config', action='store', dest='user_config', default='/root/pwnagotchi.yml',
+                    help='If this file exists, configuration will be merged and this will override default values.')
 
 parser.add_argument('--manual', dest="do_manual", action="store_true", default=False, help="Manual mode.")
 parser.add_argument('--clear', dest="do_clear", action="store_true", default=False,
                     help="Clear the ePaper display and exit.")
 
 args = parser.parse_args()
+config = utils.load_config(args)
 
 if args.do_clear:
     print("clearing the display ...")
-    with open(args.config, 'rt') as fp:
-        config = yaml.safe_load(fp)
-        cleardisplay = config['ui']['display']['type']
-        if cleardisplay in ('inkyphat', 'inky'):
-            print("inky display")
-            from inky import InkyPHAT
+    cleardisplay = config['ui']['display']['type']
+    if cleardisplay in ('inkyphat', 'inky'):
+        print("inky display")
+        from inky import InkyPHAT
 
-            epd = InkyPHAT(config['ui']['display']['color'])
-            epd.set_border(InkyPHAT.BLACK)
-            self._render_cb = self._inky_render
-        elif cleardisplay in ('papirus', 'papi'):
-            print("papirus display")
-            from pwnagotchi.ui.papirus.epd import EPD
+        epd = InkyPHAT(config['ui']['display']['color'])
+        epd.set_border(InkyPHAT.BLACK)
+        self._render_cb = self._inky_render
+    elif cleardisplay in ('papirus', 'papi'):
+        print("papirus display")
+        from pwnagotchi.ui.papirus.epd import EPD
 
-            os.environ['EPD_SIZE'] = '2.0'
-            epd = EPD()
-            epd.clear()
-        elif cleardisplay in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1'):
-            print("waveshare v1 display")
-            from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
+        os.environ['EPD_SIZE'] = '2.0'
+        epd = EPD()
+        epd.clear()
+    elif cleardisplay in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1'):
+        print("waveshare v1 display")
+        from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
 
-            epd = EPD()
-            epd.init(epd.lut_full_update)
-            epd.Clear(0xFF)
-        elif cleardisplay in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2'):
-            print("waveshare v2 display")
-            from pwnagotchi.ui.waveshare.v2.waveshare import EPD
+        epd = EPD()
+        epd.init(epd.lut_full_update)
+        epd.Clear(0xFF)
+    elif cleardisplay in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2'):
+        print("waveshare v2 display")
+        from pwnagotchi.ui.waveshare.v2.waveshare import EPD
 
-            epd = EPD()
-            epd.init(epd.FULL_UPDATE)
-            epd.Clear(0xff)
-        else:
-            print("unknown display type %s" % cleardisplay)
-        quit()
-
-with open(args.config, 'rt') as fp:
-    config = yaml.safe_load(fp)
+        epd = EPD()
+        epd.init(epd.FULL_UPDATE)
+        epd.Clear(0xff)
+    else:
+        print("unknown display type %s" % cleardisplay)
+    quit()
 
 plugins.load_from_path(plugins.default_path)
 if 'plugins' in config['main'] and config['main']['plugins'] is not None:
@@ -71,7 +75,7 @@ plugins.on('loaded')
 display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
 agent = Agent(view=display, config=config)
 
-core.log("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, pwnagotchi.version))
+core.log("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, version.version))
 # for key, value in config['personality'].items():
 #    core.log("  %s: %s" % (key, value))
 
