@@ -26,11 +26,10 @@ branches:
 
 cache:
   apt: true
-  directories:
-    - qemu-4.1.0
 
 before_script:
-  - test -d qemu-4.1.0 || ( wget https://download.qemu.org/qemu-4.1.0.tar.xz && tar xvJf qemu-4.1.0.tar.xz )
+  - wget https://download.qemu.org/qemu-4.1.0.tar.xz
+  - tar xvJf qemu-4.1.0.tar.xz
   - cd qemu-4.1.0
   - ./configure --target-list=arm-softmmu
   - make -j$(nproc)
