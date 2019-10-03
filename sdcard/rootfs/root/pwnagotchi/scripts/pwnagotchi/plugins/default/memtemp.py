@@ -7,7 +7,7 @@ __version__ = '1.0.0'
 __name__ = 'memtemp'
 __license__ = 'GPL3'
 __description__ = 'A plugin that will add a memory and temperature indicator'
-__enabled__ = False
+__enabled__ = True
 
 import struct
 
@@ -15,8 +15,16 @@ from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
 import pwnagotchi.ui.fonts as fonts
 
+import time
+
 
 class MEMTEMP:
+
+    # set the minimum seconds before refresh the values
+    refresh_wait = 30
+    
+    refresh_ts_last = time.time() - refresh_wait
+    
     def __init__(self):
         # only import when the module is loaded and enabled
         import os
@@ -52,4 +60,7 @@ def on_ui_setup(ui):
 
 
 def on_ui_update(ui):
-    ui.set('memtemp', "%s %s" % (memtemp.get_mem_info(), memtemp.get_temp()))
+    if time.time() > memtemp.refresh_ts_last + memtemp.refresh_wait:
+        ui.set('memtemp', "%s %s" % (memtemp.get_mem_info(), memtemp.get_temp()))
+        memtemp.refresh_ts_last = time.time()
+
