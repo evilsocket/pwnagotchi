@@ -9,8 +9,8 @@ import logging
 import requests
 
 READY = False
-EMAIL = None
 ALREADY_UPLOADED = None
+OPTIONS = dict()
 
 
 def on_loaded():
@@ -21,8 +21,8 @@ def on_loaded():
     global EMAIL
     global ALREADY_UPLOADED
 
-    if not EMAIL:
-        logging.error("OHC: EMAIL isn't set. Can't upload to onlinehashcrack.com")
+    if not 'email' in OPTIONS or ('email' in OPTIONS and OPTIONS['email'] is None):
+        logging.error("OHC: Email isn't set. Can't upload to onlinehashcrack.com")
         return
 
     try:
@@ -40,7 +40,7 @@ def _upload_to_ohc(path, timeout=30):
     Uploads the file to onlinehashcrack.com
     """
     with open(path, 'rb') as file_to_upload:
-        data = {'email': EMAIL}
+        data = {'email': OPTIONS['email']}
         payload = {'file': file_to_upload}
 
         try:

@@ -7,6 +7,7 @@ __description__ = 'This plugin creates tweets about the recent activity of pwnag
 import logging
 from pwnagotchi.voice import Voice
 
+OPTIONS = dict()
 
 def on_loaded():
     logging.info("twitter plugin loaded.")
@@ -14,7 +15,7 @@ def on_loaded():
 
 # called in manual mode when there's internet connectivity
 def on_internet_available(ui, config, log):
-    if config['twitter']['enabled'] and log.is_new() and log.handshakes > 0:
+    if log.is_new() and log.handshakes > 0:
         try:
             import tweepy
         except ImportError:
@@ -32,8 +33,8 @@ def on_internet_available(ui, config, log):
         ui.update(force=True)
 
         try:
-            auth = tweepy.OAuthHandler(config['twitter']['consumer_key'], config['twitter']['consumer_secret'])
-            auth.set_access_token(config['twitter']['access_token_key'], config['twitter']['access_token_secret'])
+            auth = tweepy.OAuthHandler(OPTIONS['consumer_key'], OPTIONS['consumer_secret'])
+            auth.set_access_token(OPTIONS['access_token_key'], OPTIONS['access_token_secret'])
             api = tweepy.API(auth)
 
             tweet = Voice(lang=config['main']['lang']).on_log_tweet(log)

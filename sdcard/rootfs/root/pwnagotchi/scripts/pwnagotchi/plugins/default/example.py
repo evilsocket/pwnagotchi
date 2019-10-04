@@ -11,6 +11,9 @@ from pwnagotchi.ui.view import BLACK
 import pwnagotchi.ui.fonts as fonts
 
 
+# Will be set with the options in config.yml config['main']['plugins'][__name__]
+OPTIONS = dict()
+
 # called when the plugin is loaded
 def on_loaded():
     logging.warning("WARNING: plugin %s should be disabled!" % __name__)
