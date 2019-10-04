@@ -46,7 +46,7 @@ if args.do_clear:
 elif args.do_manual:
     logging.info("entering manual mode ...")
 
-    log = SessionParser(config['main']['log'])
+    log = SessionParser(config)
     logging.info(
         "the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (
             log.duration_human,
