@@ -76,6 +76,7 @@ def on_internet_available(display, config, log):
                     ALREADY_UPLOADED.append(handshake)
                     with open('/root/.ohc_uploads', 'a') as f:
                         f.write(handshake + "\n")
+                    logging.info(f"OHC: Successfuly uploaded {handshake}")
                 except requests.exceptions.RequestException:
                     pass
                 except OSError as os_e:
