@@ -84,7 +84,7 @@ def on_ai_best_reward(agent, reward):
     pass
 
 
-# called when the AI got the best reward so far
+# called when the AI got the worst reward so far
 def on_ai_worst_reward(agent, reward):
     pass
 
