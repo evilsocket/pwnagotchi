@@ -44,10 +44,12 @@ def _upload_to_wpasec(path, timeout=30):
         payload = {'file': file_to_upload}
 
         try:
-            requests.post('https://wpa-sec.stanev.org/?submit',
+            result = requests.post('https://wpa-sec.stanev.org/?submit',
                     headers=headers,
                     files=payload,
                     timeout=timeout)
+            if ' already submitted' in result.text:
+                logging.warning(f"{path} was already submitted.")
         except requests.exceptions.RequestException as e:
             logging.error(f"WPA_SEC: Got an exception while uploading {path} -> {e}")
             raise e
