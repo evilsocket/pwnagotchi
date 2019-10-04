@@ -38,17 +38,6 @@ For hackers to learn reinforcement learning, WiFi networking and have an excuse 
 - [Project Twitter](https://twitter.com/pwnagotchi)
 - [Project Website](https://pwnagotchi.ai/)
 
-## Known Bugs
-
-- GLib-ERROR **: 20:50:46.361: getauxval () failed: No such file or directory
-
-Affected DEB & Versions: QEMU <=2.11 
-
-Fix: Upgrade QEMU to >=3.1
-
-Bug Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=923289
-
 ## License
 
 `pwnagotchi` is made with ♥  by [@evilsocket](https://twitter.com/evilsocket) and the [amazing dev team](https://github.com/evilsocket/pwnagotchi/graphs/contributors). It's released under the GPL3 license.
-

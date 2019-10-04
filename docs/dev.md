@@ -22,6 +22,14 @@ usage: ./scripts/create_sibling.sh [OPTIONS]
     -h           # Show this help
 ```
 
+#### Known Issues
+
+`GLib-ERROR **: 20:50:46.361: getauxval () failed: No such file or directory`
+
+- Affected DEB & Versions: QEMU <= 2.11 
+- Fix: Upgrade QEMU to >= 3.1
+- Bug Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=923289
+
 ## Adding a Language
 
 If you want to add a language use the `language.sh` script. If you want to add for example the language **italian** you would type:
