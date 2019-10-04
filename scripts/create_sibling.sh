@@ -341,7 +341,7 @@ gender[1]="girl"
 
 rand=$[ $RANDOM % 2 ]
 
-echo -e "[+] Congratz, it's a ${arr[$rand]} (⌐■_■)!"
+echo -e "[+] Congratz, it's a ${gender[$rand]} (⌐■_■)!"
 echo -e "[+] One more step: dd if=../${PWNI_OUTPUT} of=<PATH_TO_SDCARD> bs=4M status=progress"
 
 if [ "${OPT_SPARSE}" -eq 1 ];

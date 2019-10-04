@@ -190,7 +190,10 @@ class Display(View):
             ])
 
         self._display.set_image(img_buffer)
-        self._display.show()
+        try:
+            self._display.show()
+        except:
+            print("")
 
     def _papirus_render(self):
         self._display.display(self._canvas)
