@@ -129,11 +129,11 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         wifi_running = self.is_module_running('wifi')
         if wifi_running and restart:
             logging.debug("restarting wifi module ...")
-            self.restart('wifi.recon')
+            self.restart_module('wifi.recon')
             self.run('wifi.clear')
         elif not wifi_running:
             logging.debug("starting wifi module ...")
-            self.start('wifi.recon')
+            self.start_module('wifi.recon')
 
         self.start_advertising()
 
@@ -388,10 +388,10 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                 return m['running']
         return False
 
-    def start(self, module):
+    def start_module(self, module):
         self.run('%s on' % module)
 
-    def restart(self, module):
+    def restart_module(self, module):
         self.run('%s off; %s on' % (module, module))
 
     def _has_handshake(self, bssid):
