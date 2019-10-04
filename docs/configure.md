@@ -4,7 +4,7 @@ Once you wrote the image file on the SD card, there're a few steps you'll have t
 
 You'll need to configure it with a static IP address:
 
-- IP: `10.0.0.2`
+- IP: `10.0.0.1`
 - Netmask: `255.255.255.0`
 - Gateway: `10.0.0.1`
 - DNS (if required): `8.8.8.8` (or whatever)
