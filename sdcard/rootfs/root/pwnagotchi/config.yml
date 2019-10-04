@@ -6,8 +6,21 @@ main:
     custom_plugins:
     # which plugins to load and enable
     plugins:
-        - gps
-        - twitter
+      gps:
+        enabled: false
+      twitter:
+        enabled: false
+        consumer_key: aaa
+        consumer_secret: aaa
+        access_token_key: aaa
+        access_token_secret: aaa
+      onlinehashcrack:
+        enabled: false
+        email: ~
+      wpa-sec:
+        enabled: false
+        api_key: ~
+
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -114,13 +127,6 @@ ui:
             address: '10.0.0.2'
             port: 8080
 
-# twitter bot data
-twitter:
-    enabled: false
-    consumer_key: aaa
-    consumer_secret: aaa
-    access_token_key: aaa
-    access_token_secret: aaa
 
 # bettercap rest api configuration
 bettercap:

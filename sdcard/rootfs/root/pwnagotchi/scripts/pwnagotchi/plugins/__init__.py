@@ -43,12 +43,18 @@ def load_from_path(path, enabled=()):
 
 
 def load(config):
-    enabled = config['main']['plugins']
+    enabled = [name for name, options in config['main']['plugins'].items() if 'enabled' in options and options['enabled']]
     custom_path = config['main']['custom_plugins'] if 'custom_plugins' in config['main'] else None
     # load default plugins
-    load_from_path(default_path, enabled=enabled)
+    loaded = load_from_path(default_path, enabled=enabled)
+    # set the options
+    for name, plugin in loaded.items():
+        plugin.__dict__['OPTIONS'] = config['main']['plugins'][name]
     # load custom ones
     if custom_path is not None:
-        load_from_path(custom_path, enabled=enabled)
+        loaded = load_from_path(custom_path, enabled=enabled)
+        # set the options
+        for name, plugin in loaded.items():
+            plugin.__dict__['OPTIONS'] = config['main']['plugins'][name]
 
     on('loaded')

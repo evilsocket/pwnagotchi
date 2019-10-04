@@ -9,7 +9,6 @@ import logging
 import requests
 
 READY = False
-API_KEY = None
 ALREADY_UPLOADED = None
 
 
@@ -21,7 +20,7 @@ def on_loaded():
     global API_KEY
     global ALREADY_UPLOADED
 
-    if not API_KEY:
+    if not 'api_key' in OPTIONS or ('api_key' in OPTIONS and OPTIONS['api_key'] is None):
         logging.error("WPA_SEC: API-KEY isn't set. Can't upload to wpa-sec.stanev.org")
         return
 
@@ -40,7 +39,7 @@ def _upload_to_wpasec(path, timeout=30):
     Uploads the file to wpa-sec.stanev.org
     """
     with open(path, 'rb') as file_to_upload:
-        headers = {'key': API_KEY}
+        headers = {'key': OPTIONS['api_key']}
         payload = {'file': file_to_upload}
 
         try:
