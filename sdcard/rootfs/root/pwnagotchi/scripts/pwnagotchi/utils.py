@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 import glob
 import os
@@ -78,3 +79,20 @@ def blink(times=1, delay=0.3):
         led(False)
         time.sleep(delay)
     led(True)
+
+
+class StatusFile(object):
+    def __init__(self, path):
+        self._path = path
+        self._updated = None
+
+        if os.path.exists(path):
+            self._updated = datetime.fromtimestamp(os.path.getmtime(path))
+
+    def newer_then_days(self, days):
+        return self._updated is not None and (datetime.now() - self._updated).days < days
+
+    def update(self, data=None):
+        self._updated = datetime.now()
+        with open(self._path, 'w') as fp:
+            fp.write(str(self._updated) if data is None else data)

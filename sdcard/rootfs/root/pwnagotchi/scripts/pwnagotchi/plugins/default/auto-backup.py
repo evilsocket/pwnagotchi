@@ -4,21 +4,18 @@ __name__ = 'auto-backup'
 __license__ = 'GPL3'
 __description__ = 'This plugin backups files when internet is availaible.'
 
-import os
+from pwnagotchi.utils import StatusFile
 import logging
+import os
 import subprocess
-from datetime import datetime
 
 OPTIONS = dict()
-LAST_UPDATE = None
 READY = False
+STATUS = StatusFile('/root/.auto-backup')
+
 
 def on_loaded():
-    """
-    Gets called when the plugin gets loaded
-    """
     global READY
-    global LAST_UPDATE
 
     if 'files' not in OPTIONS or ('files' in OPTIONS and OPTIONS['files'] is None):
         logging.error("AUTO-BACKUP: No files to backup.")
@@ -32,31 +29,28 @@ def on_loaded():
         logging.error("AUTO-BACKUP: No commands given.")
         return
 
-    if os.path.exists('/root/.auto-backup'):
-        LAST_BACKUP = datetime.fromtimestamp(os.path.getmtime('/root/.auto-backup'))
-
     READY = True
 
 
 def on_internet_available(display, config, log):
-    """
-    Called in manual mode when there's internet connectivity
-    """
-    global LAST_UPDATE
+    global STATUS
 
     if READY:
-        if LAST_BACKUP is not None:
-            if (datetime.now() - LAST_BACKUP).days < OPTIONS['interval']:
-                return
+        if STATUS.newer_then_days(OPTIONS['interval']):
+            return
 
         files_to_backup = " ".join(OPTIONS['files'])
         try:
+            display.set('status', 'Backing up ...')
+            display.update()
+
             for cmd in OPTIONS['commands']:
                 subprocess.call(cmd.format(files=files_to_backup).split(), stdout=open(os.devnull, 'wb'))
-            logging.info("AUTO-BACKUP: Successfuly ran backup commands.")
-            LAST_BACKUP = datetime.now()
-            with open('/root/.auto-backup', 'w') as f:
-                f.write('success')
+
+            logging.info("AUTO-BACKUP: backup done")
+            STATUS.update()
         except OSError as os_e:
             logging.info(f"AUTO-BACKUP: Error: {os_e}")
 
+        display.set('status', 'Backup done!')
+        display.update()

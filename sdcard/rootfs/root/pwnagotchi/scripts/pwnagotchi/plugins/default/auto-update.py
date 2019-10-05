@@ -4,40 +4,36 @@ __name__ = 'auto-update'
 __license__ = 'GPL3'
 __description__ = 'This plugin performs an "apt update && apt upgrade" when internet is availaible.'
 
-import os
 import logging
 import subprocess
-from datetime import datetime
+from pwnagotchi.utils import StatusFile
 
 OPTIONS = dict()
-LAST_UPDATE = None
 READY = False
-STATUS_FILE = '/root/.auto-update'
+STATUS = StatusFile('/root/.auto-update')
 
 
 def on_loaded():
     global READY
-    global LAST_UPDATE
 
     if 'interval' not in OPTIONS or ('interval' in OPTIONS and OPTIONS['interval'] is None):
         logging.error("AUTO-UPDATE: Interval is not set.")
         return
 
-    if os.path.exists(STATUS_FILE):
-        LAST_UPDATE = datetime.fromtimestamp(os.path.getmtime(STATUS_FILE))
-
     READY = True
 
 
 def on_internet_available(display, config, log):
-    global LAST_UPDATE
+    global STATUS
 
     if READY:
-        if LAST_UPDATE is not None:
-            if (datetime.now() - LAST_UPDATE).days < OPTIONS['interval']:
-                return
+        if STATUS.newer_then_days(OPTIONS['interval']):
+            return
 
         try:
+            display.set('status', 'Updating ...')
+            display.update()
+
             logging.info("AUTO-UPDATE: updating packages index ...")
 
             update = subprocess.Popen('apt update -y', shell=True, stdin=None,
@@ -52,8 +48,9 @@ def on_internet_available(display, config, log):
 
             logging.info("AUTO-UPDATE: complete.")
 
-            LAST_UPDATE = datetime.now()
-            with open(STATUS_FILE, 'w') as f:
-                f.write('success')
+            STATUS.update()
         except Exception as e:
             logging.exception("AUTO-UPDATE ERROR")
+
+        display.set('status', 'Updated!')
+        display.update()
