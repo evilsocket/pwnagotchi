@@ -3,8 +3,9 @@
     - 127.0.0.1
   become: yes
   vars:
-    pwn_hostname: "pwnagotchi"
-    pwn_version: "master"
+    pwn_hostname: "{{ lookup('env', 'PWN_HOSTNAME') | default('pwnagotchi', true) }}"
+    pwn_version: "{{ lookup('env', 'PWN_VERSION') | default('master', true) }} "
+    bettercap_query: "assets[?contains(name, 'armv6l')].browser_download_url"
 
   tasks:
 
@@ -41,6 +42,19 @@
     apt:
       update_cache: yes
 
+  - name: remove unecessary apt packages
+    apt:
+      name: "{{ packages }}"
+      state: absent
+      purge: yes
+    var:
+      packages:
+        - rasberrypi-net-mods
+        - dhcpcd5
+        - triggerhappy
+        - wpa_supplicant
+        - nfs-common
+
   - name: upgrade apt distro
     apt:
       upgrade: dist
@@ -57,6 +71,7 @@
         - git
         - build-essential
         - python3-pip
+        - unzip
         - gawk
         - libopenmpi-dev
         - libatlas-base-dev
@@ -87,6 +102,26 @@
         - fonts-dejavu
         - fonts-dejavu-core
         - fonts-dejavu-extra
+        - python3-crypto
+        - python3-requests
+        - python3-yaml
+        - python3-smbus
+        - python3-inkyphat
+        - python3-numpy
+        - python3-pil
+        - python3-tweepy
+        - python3-opencv
+        - python3-termcolor
+        - python3-astor
+        - python3-backports.weakref
+        - python3-h5py
+        - python3-six
+        - python3-protobuf
+        - python3-wrapt
+        - python3-wheel
+        - python3-mock
+        - python3-scipy
+        - python3-cloudpickle
 
   - name: configure dphys-swapfile
     file:
@@ -104,8 +139,10 @@
         - apt-daily.service
         - apt-daily-upgrade.timer
         - apt-daily-upgrade.service
+        - wpa_supplicant.service
         - bluetooth.service
         - triggerhappy.service
+        - ifup@wlan0.service
 
   - name: enable dphys-swapfile service
     systemd:
@@ -113,16 +150,58 @@
       state: started
       enabled: yes
 
-  - name: build bettercap
-    command: go get -u github.com/bettercap/bettercap
-    environment:
-      GOPATH: /root/go
-      GOROOT: /usr/lib/go
+  - name: enable gadget serial port service
+    systemd:
+      name: getty@ttyGS0.service
+      state: started
+      enabled: yes
 
-  - name: install bettercap
-    copy:
-      src: /root/go/bin/bettercap
-      dest: /usr/bin/bettercap
+  - name: acquire python3 pip target
+    command: "python3 -c 'import sys;print(sys.path.pop())'"
+    register: pip_target
+
+  - name: install pip packages
+    pip:
+      name: "{{ packages }}"
+      extra_args: "--no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --prefer-binary --no-cache-dir --platform=armv6l --target={{ pip_target.stdout }}"
+    vars:
+      packages:
+        - inky
+        - smbus2
+        - absl-py>=0.1.6
+        - enum34
+        - gast==0.2.2
+        - google_pasta
+        - opt_einsum
+        - scapy
+        - gym
+        - keras_applications>=1.0.6
+        - keras_preprocessing>=1.0.5
+        - stable-baselines
+        - file_read_backwards
+        - tensorflow_estimator>=1.14.0,<1.15.0
+        - tensorboard>=1.13.0,<1.14.0
+
+  - name: install grpcio
+    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.hostedpi.com/simple/grpcio/grpcio-1.24.1-cp37-cp37m-linux_armv6l.whl"
+
+  - name: install tensorflow
+    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
+
+  - name: fetch bettercap release information
+    uri:
+      url: https://api.github.com/repos/bettercap/bettercap/releases/latest
+      return_content: yes
+    register: bettercap_release
+
+  - name: download and install bettercap
+    unarchive:
+      src: "{{ bettercap_release.content | from_json | json_query(bettercap_query) | first }}"
+      dest: /usr/bin
+      remote_src: yes
+      exclude:
+        - README.md
+        - LICENSE.md
       mode: 0755
 
   - name: clone bettercap caplets
@@ -150,10 +229,6 @@
     file:
       path: /tmp/pwnagotchi
       state: absent
-
-  - name: install python modules
-    pip:
-      requirements: /root/pwnagotchi/scripts/requirements.txt
 
   - name: create cpuusage script
     copy:
@@ -269,7 +344,7 @@
       state: present
       backup: no
       regexp: '(.*)$'
-      line: '\1 modules-load=dwc2,g_ether'
+      line: '\1 modules-load=dwc2,g_cdc'
 
   - name: configure ssh
     lineinfile:
