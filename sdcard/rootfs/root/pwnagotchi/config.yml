@@ -6,6 +6,9 @@ main:
     custom_plugins:
     # which plugins to load and enable
     plugins:
+      auto-update:
+        enabled: false
+        interval: 1 # every day
       auto-backup:
         enabled: false
         interval: 1 # every day

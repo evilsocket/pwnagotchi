@@ -10,7 +10,7 @@ import subprocess
 from datetime import datetime
 
 OPTIONS = dict()
-LAST_BACKUP = None
+LAST_UPDATE = None
 READY = False
 
 def on_loaded():
@@ -18,7 +18,7 @@ def on_loaded():
     Gets called when the plugin gets loaded
     """
     global READY
-    global LAST_BACKUP
+    global LAST_UPDATE
 
     if 'files' not in OPTIONS or ('files' in OPTIONS and OPTIONS['files'] is None):
         logging.error("AUTO-BACKUP: No files to backup.")
@@ -42,7 +42,7 @@ def on_internet_available(display, config, log):
     """
     Called in manual mode when there's internet connectivity
     """
-    global LAST_BACKUP
+    global LAST_UPDATE
 
     if READY:
         if LAST_BACKUP is not None:
