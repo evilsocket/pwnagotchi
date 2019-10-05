@@ -150,12 +150,6 @@
       state: started
       enabled: yes
 
-  - name: enable gadget serial port service
-    systemd:
-      name: getty@ttyGS0.service
-      state: started
-      enabled: yes
-
   - name: acquire python3 pip target
     command: "python3 -c 'import sys;print(sys.path.pop())'"
     register: pip_target
@@ -344,7 +338,7 @@
       state: present
       backup: no
       regexp: '(.*)$'
-      line: '\1 modules-load=dwc2,g_cdc'
+      line: '\1 modules-load=dwc2,g_ether'
 
   - name: configure ssh
     lineinfile:
