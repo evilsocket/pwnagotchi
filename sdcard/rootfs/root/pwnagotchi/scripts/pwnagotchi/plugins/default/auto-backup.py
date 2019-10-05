@@ -28,8 +28,8 @@ def on_loaded():
         logging.error("AUTO-BACKUP: Interval is not set.")
         return
 
-    if 'backup_cmd' not in OPTIONS or ('backup_cmd' in OPTIONS and OPTIONS['backup_cmd'] is None):
-        logging.error("AUTO-BACKUP: No backup_cmd given.")
+    if 'commands' not in OPTIONS or ('commands' in OPTIONS and OPTIONS['commands'] is None):
+        logging.error("AUTO-BACKUP: No commands given.")
         return
 
     if os.path.exists('/root/.auto-backup'):
@@ -51,9 +51,8 @@ def on_internet_available(display, config, log):
 
         files_to_backup = " ".join(OPTIONS['files'])
         try:
-            subprocess.call(OPTIONS['backup_cmd'].format(files=files_to_backup).split(), stdout=open(os.devnull, 'wb'))
-            if 'upload_cmd' in OPTIONS and OPTIONS['upload_cmd'] is not None:
-                subprocess.call(OPTIONS['upload_cmd'].split(), stdout=open(os.devnull, 'wb'))
+            for cmd in OPTIONS['commands']:
+                subprocess.call(cmd.format(files=files_to_backup).split(), stdout=open(os.devnull, 'wb'))
             logging.info("AUTO-BACKUP: Successfuly ran backup commands.")
             LAST_BACKUP = datetime.now()
             with open('/root/.auto-backup', 'w') as f:
