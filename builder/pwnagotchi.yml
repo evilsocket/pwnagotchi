@@ -244,6 +244,22 @@
         #!/usr/bin/env bash
         free -m | awk '/Mem/ { printf( "%d %", $3 / $2 * 100 + 0.5 ) }'
 
+  - name: create bootblink script
+    copy:
+      dest: /usr/bin/bootblink
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        for i in $(seq 1 "$1");
+        do
+        echo 0 >/sys/class/leds/led0/brightness
+        sleep 0.3
+        echo 1 >/sys/class/leds/led0/brightness
+        sleep 0.3
+        done
+        echo 0 >/sys/class/leds/led0/brightness
+        sleep 0.3
+
   - name: create monstart script
     copy:
       dest: /usr/bin/monstart
