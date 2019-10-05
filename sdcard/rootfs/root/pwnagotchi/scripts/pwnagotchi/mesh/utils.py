@@ -2,7 +2,6 @@ import _thread
 import logging
 
 import pwnagotchi
-import pwnagotchi.version as version
 import pwnagotchi.plugins as plugins
 from pwnagotchi.mesh import get_identity
 
@@ -24,7 +23,7 @@ class AsyncAdvertiser(object):
         self._advertiser = Advertiser(
             self._config['main']['iface'],
             pwnagotchi.name(),
-            version.version,
+            pwnagotchi.version,
             self._identity,
             period=0.3,
             data=self._config['personality'])

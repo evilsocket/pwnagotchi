@@ -89,7 +89,7 @@ fi
 
 if [ $BACKUPCONFIG -eq 1 ]; then
     echo "[+] Creating backup of config.yml and hostname references"
-    mv /root/pwnagotchi/config.yml /root/config.bak -f
+    mv /root/pwnagotchi/config.yml /root/config.yml.bak -f
     mv /etc/hosts /root/hosts.bak -f
     mv /etc/hostname /root/hostname.bak -f
     mv /etc/motd /etc/motd.bak -f

@@ -12,6 +12,7 @@
 
 - [Project Slack](https://join.slack.com/t/pwnagotchi/shared_invite/enQtNzc4NzY3MDE2OTAzLTg5NmNmNDJiMDM3ZWFkMWUwN2Y5NDk0Y2JlZWZjODlhMmRhNDZiOGMwYjJhM2UzNzA3YjA5NjJmZGY5NGI5NmI)
 - [Project Twitter](https://twitter.com/pwnagotchi)
+- [Project Subreddit](https://www.reddit.com/r/pwnagotchi/)
 - [Project Website](https://pwnagotchi.ai/)
 
 ## License

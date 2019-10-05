@@ -102,11 +102,14 @@ class Display(View):
     def _is_papirus(self):
         return self._display_type in ('papirus', 'papi')
 
-    def _is_waveshare1(self):
+    def _is_waveshare_v1(self):
         return self._display_type in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1')
 
-    def _is_waveshare2(self):
+    def _is_waveshare_v2(self):
         return self._display_type in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2')
+
+    def _is_waveshare(self):
+        return self._is_waveshare_v1() or self._is_waveshare_v2()
 
     def _init_display(self):
         if self._is_inky():
@@ -124,7 +127,7 @@ class Display(View):
             self._display.clear()
             self._render_cb = self._papirus_render
 
-        elif self._is_waveshare1():
+        elif self._is_waveshare_v1():
             logging.info("initializing waveshare v1 display")
             from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
             self._display = EPD()
@@ -133,7 +136,7 @@ class Display(View):
             self._display.init(self._display.lut_partial_update)
             self._render_cb = self._waveshare_render
 
-        elif self._is_waveshare2():
+        elif self._is_waveshare_v2():
             logging.info("initializing waveshare v2 display")
             from pwnagotchi.ui.waveshare.v2.waveshare import EPD
             self._display = EPD()
@@ -148,6 +151,18 @@ class Display(View):
         plugins.on('display_setup', self._display)
 
         self.on_render(self._on_view_rendered)
+
+    def clear(self):
+        if self._display is None:
+            logging.error("no display object created")
+        elif self._is_inky():
+            self._display.Clear()
+        elif self._is_papirus():
+            self._display.clear()
+        elif self._is_waveshare():
+            self._display.Clear(WHITE)
+        else:
+            logging.critical("unknown display type %s" % self._display_type)
 
     def _inky_render(self):
         if self._display_color != 'mono':
@@ -175,7 +190,10 @@ class Display(View):
             ])
 
         self._display.set_image(img_buffer)
-        self._display.show()
+        try:
+            self._display.show()
+        except:
+            print("")
 
     def _papirus_render(self):
         self._display.display(self._canvas)
@@ -183,9 +201,9 @@ class Display(View):
 
     def _waveshare_render(self):
         buf = self._display.getbuffer(self._canvas)
-        if self._is_waveshare1():
+        if self._is_waveshare_v1():
             self._display.display(buf)
-        elif self._is_waveshare2():
+        elif self._is_waveshare_v2():
             self._display.displayPartial(buf)
 
     def image(self):

@@ -1,10 +1,10 @@
-import os
 import hashlib
 import time
 import re
 import os
 from datetime import datetime
 
+from pwnagotchi.voice import Voice
 from pwnagotchi.mesh.peer import Peer
 from file_read_backwards import FileReadBackwards
 
@@ -125,17 +125,19 @@ class SessionParser(object):
         self.duration = '%02d:%02d:%02d' % (hours, mins, secs)
         self.duration_human = []
         if hours > 0:
-            self.duration_human.append('%d hours' % hours)
+            self.duration_human.append('%d %s' % (hours, self.voice.hhmmss(hours, 'h')))
         if mins > 0:
-            self.duration_human.append('%d minutes' % mins)
+            self.duration_human.append('%d %s' % (mins, self.voice.hhmmss(mins, 'm')))
         if secs > 0:
-            self.duration_human.append('%d seconds' % secs)
+            self.duration_human.append('%d %s' % (secs, self.voice.hhmmss(secs, 's')))
 
         self.duration_human = ', '.join(self.duration_human)
         self.avg_reward /= (self.epochs if self.epochs else 1)
 
-    def __init__(self, path='/var/log/pwnagotchi.log'):
-        self.path = path
+    def __init__(self, config):
+        self.config = config
+        self.voice = Voice(lang=config['main']['lang'])
+        self.path = config['main']['log']
         self.last_session = None
         self.last_session_id = ''
         self.last_saved_session_id = ''

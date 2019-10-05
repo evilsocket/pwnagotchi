@@ -7,10 +7,9 @@ from datetime import datetime
 import logging
 import _thread
 
-import core
-
+import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
-from bettercap.client import Client
+from pwnagotchi.bettercap import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
 
@@ -30,7 +29,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._started_at = time.time()
         self._filter = None if config['main']['filter'] is None else re.compile(config['main']['filter'])
         self._current_channel = 0
-        self._supported_channels = core.iface_channels(config['main']['iface'])
+        self._supported_channels = utils.iface_channels(config['main']['iface'])
         self._view = view
         self._access_points = []
         self._last_pwnd = None
@@ -130,13 +129,23 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         wifi_running = self.is_module_running('wifi')
         if wifi_running and restart:
             logging.debug("restarting wifi module ...")
-            self.restart('wifi.recon')
+            self.restart_module('wifi.recon')
             self.run('wifi.clear')
         elif not wifi_running:
             logging.debug("starting wifi module ...")
-            self.start('wifi.recon')
+            self.start_module('wifi.recon')
 
         self.start_advertising()
+
+    def start(self):
+        self.start_ai()
+        self.setup_events()
+        self.set_starting()
+        self.start_monitor_mode()
+        self.start_event_polling()
+        # print initial stats
+        self.next_epoch()
+        self.set_ready()
 
     def wait_for(self, t, sleeping=True):
         plugins.on('sleep' if sleeping else 'wait', self, t)
@@ -242,7 +251,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def _update_uptime(self, s):
         secs = time.time() - self._started_at
-        self._view.set('uptime', core.secs_to_hhmmss(secs))
+        self._view.set('uptime', utils.secs_to_hhmmss(secs))
         self._view.set('epoch', '%04d' % self._epoch.epoch)
 
     def _update_counters(self):
@@ -262,7 +271,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         if new_shakes > 0:
             self._epoch.track(handshake=True, inc=new_shakes)
 
-        tot = core.total_unique_handshakes(self._config['bettercap']['handshakes'])
+        tot = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
         txt = '%d (%d)' % (len(self._handshakes), tot)
 
         if self._last_pwnd is not None:
@@ -275,7 +284,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def _update_advertisement(self, s):
         run_handshakes = len(self._handshakes)
-        tot_handshakes = core.total_unique_handshakes(self._config['bettercap']['handshakes'])
+        tot_handshakes = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
         started = s['started_at'].split('.')[0]
         started = datetime.strptime(started, '%Y-%m-%dT%H:%M:%S')
         started = time.mktime(started.timetuple())
@@ -379,10 +388,10 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                 return m['running']
         return False
 
-    def start(self, module):
+    def start_module(self, module):
         self.run('%s on' % module)
 
-    def restart(self, module):
+    def restart_module(self, module):
         self.run('%s off; %s on' % (module, module))
 
     def _has_handshake(self, bssid):

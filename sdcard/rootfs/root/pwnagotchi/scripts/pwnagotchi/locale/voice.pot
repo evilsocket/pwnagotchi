@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-03 16:47+0200\n"
+"POT-Creation-Date: 2019-10-05 14:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -185,4 +185,22 @@ msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+
+msgid "hours"
+msgstr ""
+
+msgid "minutes"
+msgstr ""
+
+msgid "seconds"
+msgstr ""
+
+msgid "hour"
+msgstr ""
+
+msgid "minute"
+msgstr ""
+
+msgid "second"
 msgstr ""

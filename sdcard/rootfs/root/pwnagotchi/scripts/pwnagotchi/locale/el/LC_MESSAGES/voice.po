@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-03 16:44+0200\n"
+"POT-Creation-Date: 2019-10-05 14:10+0200\n"
 "PO-Revision-Date: 2019-10-03 08:00+0000\n"
 "Last-Translator: Periklis Fregkos <fregkos@gmail.com>\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
@@ -189,3 +189,21 @@ msgstr ""
 "Pwnαρα για {duration} και έριξα {deauthed} πελάτες! Επίσης γνώρισα "
 "{associated} νέους φίλους και καταβρόχθισα {handshakes} χειραψίες! "
 "#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr ""
+
+msgid "minutes"
+msgstr ""
+
+msgid "seconds"
+msgstr ""
+
+msgid "hour"
+msgstr ""
+
+msgid "minute"
+msgstr ""
+
+msgid "second"
+msgstr ""

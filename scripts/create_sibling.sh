@@ -5,7 +5,7 @@
 set -eu
 
 REQUIREMENTS=( wget gunzip git dd e2fsck resize2fs parted losetup qemu-system-x86_64 )
-DEBREQUIREMENTS=( wget gzip git parted qemu-system-x86 qemu-user-static bmap-tools )
+DEBREQUIREMENTS=( wget gzip git parted qemu-system-x86 qemu-user-static )
 REPO_DIR="$(dirname "$(dirname "$(realpath "$0")")")"
 TMP_DIR="${REPO_DIR}/tmp"
 MNT_DIR="${TMP_DIR}/mnt"
@@ -93,15 +93,13 @@ function provide_raspbian() {
 
 function setup_raspbian(){
   # Detect the ability to create sparse files
-  if [ "${OPT_SPARSE}" -eq 0 ];
-  then
-    which bmaptool >/dev/null 2>&1
-    if [ $? -eq 0 ];
-    then
+  if [ "${OPT_SPARSE}" -eq 0 ]; then
+    if [ which bmaptool -eq 0 ]; then
+      echo "[!] bmaptool not available, not creating a sparse image"
+      
+    else
       echo "[+] Defaulting to sparse image generation as bmaptool is available"
       OPT_SPARSE=1
-    else
-      echo "[!] bmaptool not available, not creating a sparse image"
     fi
   fi
 
@@ -335,7 +333,13 @@ fi
 setup_raspbian
 provision_raspbian
 
-echo -e "[+] Congratz, it's a boy (⌐■_■)!"
+#Make a baby with a random gender, maybe do something fun with this later!
+gender[0]="boy"
+gender[1]="girl"
+
+rand=$[ $RANDOM % 2 ]
+
+echo -e "[+] Congratz, it's a ${gender[$rand]} (⌐■_■)!"
 echo -e "[+] One more step: dd if=../${PWNI_OUTPUT} of=<PATH_TO_SDCARD> bs=4M status=progress"
 
 if [ "${OPT_SPARSE}" -eq 1 ];

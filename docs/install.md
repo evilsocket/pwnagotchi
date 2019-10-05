@@ -1,7 +1,9 @@
 # Installation
 
-The project has been developed to run on a Raspberry Pi 0 W configured as an [USB Ethernet gadget](https://learn.adafruit.com/turning-your-raspberry-pi-zero-into-a-usb-gadget/ethernet-gadget) device in order to connect to it via USB. 
-However, given the proper configuration tweaks, any GNU/Linux computer with a WiFi interface that supports monitor mode could be used.
+The project has been developed to run on a Raspberry Pi 0 W configured as an [USB Ethernet gadget](https://learn.adafruit.com/turning-your-raspberry-pi-zero-into-a-usb-gadget/ethernet-gadget) device in order to connect to it via USB. However, given the proper configuration tweaks, any GNU/Linux computer with a WiFi interface that supports monitor mode could be used.
+
+**An important note about the AI:** a network trained with a specific WiFi interface will only work with another interface if it supports 
+the same exact WiFi channels of the first one. For instance, you can not use a neural network trained on a Raspberry Pi Zero W (that only supports 2.4Ghz channels) with a 5Ghz antenna, but you'll need to train one from scratch for those channels.
 
 ## Required Hardware
 
@@ -34,9 +36,7 @@ Color displays have a much slower refresh rate, in some cases it can take up to 
 
 The easiest way to create a new Pwnagotchi is downloading the latest stable image from [our release page](https://github.com/evilsocket/pwnagotchi/releases) and write it to your SD card. You will need to use an image writing tool to install the image you have downloaded on your SD card.
 
-[balenaEtcher](https://www.balena.io/etcher/) is a graphical SD card writing tool that works on Mac OS, Linux and Windows, 
-and is the easiest option for most users. balenaEtcher also supports writing images directly from the zip file, 
-without any unzipping required. To write your image with balenaEtcher:
+[balenaEtcher](https://www.balena.io/etcher/) is a graphical SD card writing tool that works on Mac OS, Linux and Windows, and is the easiest option for most users. balenaEtcher also supports writing images directly from the zip file, without any unzipping required. To write your image with balenaEtcher:
 
 - Download the latest [Pwnagotchi .img file](https://github.com/evilsocket/pwnagotchi/releases).
 - Download [balenaEtcher](https://www.balena.io/etcher/) and install it.

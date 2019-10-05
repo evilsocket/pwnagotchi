@@ -1,6 +1,10 @@
-import yaml
-import os
+from datetime import datetime
 import logging
+import glob
+import os
+import time
+import subprocess
+import yaml
 
 
 # https://stackoverflow.com/questions/823196/yaml-merge-in-python
@@ -40,3 +44,55 @@ def setup_logging(args, config):
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
     root.addHandler(console_handler)
+
+
+def secs_to_hhmmss(secs):
+    mins, secs = divmod(secs, 60)
+    hours, mins = divmod(mins, 60)
+    return '%02d:%02d:%02d' % (hours, mins, secs)
+
+
+def total_unique_handshakes(path):
+    expr = os.path.join(path, "*.pcap")
+    return len(glob.glob(expr))
+
+
+def iface_channels(ifname):
+    channels = []
+    output = subprocess.getoutput("/sbin/iwlist %s freq" % ifname)
+    for line in output.split("\n"):
+        line = line.strip()
+        if line.startswith("Channel "):
+            channels.append(int(line.split()[1]))
+    return channels
+
+
+def led(on=True):
+    with open('/sys/class/leds/led0/brightness', 'w+t') as fp:
+        fp.write("%d" % (0 if on is True else 1))
+
+
+def blink(times=1, delay=0.3):
+    for t in range(0, times):
+        led(True)
+        time.sleep(delay)
+        led(False)
+        time.sleep(delay)
+    led(True)
+
+
+class StatusFile(object):
+    def __init__(self, path):
+        self._path = path
+        self._updated = None
+
+        if os.path.exists(path):
+            self._updated = datetime.fromtimestamp(os.path.getmtime(path))
+
+    def newer_then_days(self, days):
+        return self._updated is not None and (datetime.now() - self._updated).days < days
+
+    def update(self, data=None):
+        self._updated = datetime.now()
+        with open(self._path, 'w') as fp:
+            fp.write(str(self._updated) if data is None else data)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-03 16:43+0200\n"
+"POT-Creation-Date: 2019-10-05 14:10+0200\n"
 "PO-Revision-Date: 2019-10-02 17:20+0000\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
 "Language: italian\n"
@@ -187,3 +187,21 @@ msgstr ""
 "Ho lavorato per {duration} e preso a calci {deauthed} clients! Ho anche "
 "incontrato {associate} nuovi amici e ho mangiato {handshakes} handshakes! "
 "#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr "ore"
+
+msgid "minutes"
+msgstr "minuti"
+
+msgid "seconds"
+msgstr "secondi"
+
+msgid "hour"
+msgstr "ora"
+
+msgid "minute"
+msgstr "minuto"
+
+msgid "second"
+msgstr "secondo"

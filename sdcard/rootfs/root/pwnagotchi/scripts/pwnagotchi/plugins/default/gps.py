@@ -3,7 +3,6 @@ __version__ = '1.0.0'
 __name__ = 'gps'
 __license__ = 'GPL3'
 __description__ = 'Save GPS coordinates whenever an handshake is captured.'
-__enabled__ = True  # set to false if you just don't use GPS
 
 import logging
 import json
@@ -15,14 +14,14 @@ running = False
 
 
 def on_loaded():
-    logging.info("GPS plugin loaded for %s" % device)
+    logging.info("gps plugin loaded for %s" % device)
 
 
 def on_ready(agent):
     global running
 
     if os.path.exists(device):
-        logging.info("enabling GPS bettercap's module for %s" % device)
+        logging.info("enabling gps bettercap's module for %s" % device)
         try:
             agent.run('gps off')
         except:
