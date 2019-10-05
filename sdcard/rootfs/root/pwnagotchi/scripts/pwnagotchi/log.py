@@ -125,11 +125,11 @@ class SessionParser(object):
         self.duration = '%02d:%02d:%02d' % (hours, mins, secs)
         self.duration_human = []
         if hours > 0:
-            self.duration_human.append('%d %s' % (hours, self.voice.custom('hours' if hours > 1 else 'hour')))
+            self.duration_human.append('%d %s' % (hours, self.voice.hhmmss(hours, 'h')))
         if mins > 0:
-            self.duration_human.append('%d %s' % (mins, self.voice.custom('minutes' if mins > 1 else 'minute')))
+            self.duration_human.append('%d %s' % (mins, self.voice.hhmmss(mins, 'm')))
         if secs > 0:
-            self.duration_human.append('%d %s' % (secs, self.voice.custom('seconds' if secs > 1 else 'second')))
+            self.duration_human.append('%d %s' % (secs, self.voice.hhmmss(secs, 's')))
 
         self.duration_human = ', '.join(self.duration_human)
         self.avg_reward /= (self.epochs if self.epochs else 1)
