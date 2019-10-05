@@ -5,15 +5,18 @@
 - [Configuration](https://github.com/evilsocket/pwnagotchi/blob/master/docs/configure.md)
 - [Usage](https://github.com/evilsocket/pwnagotchi/blob/master/docs/usage.md)
 - [Plugins](https://github.com/evilsocket/pwnagotchi/blob/master/docs/plugins.md)
-- [Developement](https://github.com/evilsocket/pwnagotchi/blob/master/docs/dev.md)
+- [Development](https://github.com/evilsocket/pwnagotchi/blob/master/docs/dev.md)
 - [FAQ](https://github.com/evilsocket/pwnagotchi/blob/master/docs/faq.md)
+- [Community Hacks](https://github.com/evilsocket/pwnagotchi/blob/master/docs/hacks.md)
 
 ## Links
 
-- [Project Slack](https://join.slack.com/t/pwnagotchi/shared_invite/enQtNzc4NzY3MDE2OTAzLTg5NmNmNDJiMDM3ZWFkMWUwN2Y5NDk0Y2JlZWZjODlhMmRhNDZiOGMwYjJhM2UzNzA3YjA5NjJmZGY5NGI5NmI)
-- [Project Twitter](https://twitter.com/pwnagotchi)
-- [Project Subreddit](https://www.reddit.com/r/pwnagotchi/)
-- [Project Website](https://pwnagotchi.ai/)
+&nbsp; | Official Links
+---------|-------
+Slack | [pwnagotchi.slack.com](https://pwnagotchi.herokuapp.com)
+Twitter | [@pwnagotchi](https://twitter.com/pwnagotchi)
+Subreddit | [r/pwnagotchi](https://www.reddit.com/r/pwnagotchi/)
+Website | [pwnagotchi.ai](https://pwnagotchi.ai/)
 
 ## License
 
