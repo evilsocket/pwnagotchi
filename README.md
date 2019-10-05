@@ -7,6 +7,7 @@
     <a href=""><img alt="Contributors" src="https://img.shields.io/github/contributors/evilsocket/pwnagotchi"/></a>
     <a href="https://travis-ci.org/evilsocket/pwnagotchi"><img alt="Travis" src="https://img.shields.io/travis/evilsocket/pwnagotchi/master.svg?style=flat-square"></a>
     <a href="https://pwnagotchi.herokuapp.com/"><img alt="Slack" src="https://pwnagotchi.herokuapp.com/badge.svg"></a>
+    <a href="https://twitter.com/intent/follow?screen_name=pwnagotchi"><img src="https://img.shields.io/twitter/follow/pwnagotchi?style=social&logo=twitter" alt="follow on Twitter"></a>
   </p>
 </p>
 
