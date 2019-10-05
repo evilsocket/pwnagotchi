@@ -16,7 +16,6 @@
     services:
       enable:
         - dphys-swapfile.service
-        - getty@ttyGS0.service
       disable:
         - apt-daily.timer
         - apt-daily.service
@@ -335,7 +334,7 @@
       state: present
       backup: no
       regexp: '(.*)$'
-      line: '\1 modules-load=dwc2,g_cdc'
+      line: '\1 modules-load=dwc2,g_ether'
 
   - name: configure ssh
     lineinfile:
