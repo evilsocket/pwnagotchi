@@ -260,6 +260,21 @@
         echo 0 >/sys/class/leds/led0/brightness
         sleep 0.3
 
+  - name: create pwnagotchi-launcher script
+    copy:
+      dest: /usr/bin/pwnagotchi-launcher
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        # blink 10 times to signal ready state
+        /usr/bin/bootblink 10 &
+        # start a detached screen session with bettercap
+        if ifconfig | grep usb0 | grep RUNNING; then
+          /usr/bin/pwnagotchi --manual
+        else
+          /usr/bin/pwnagotchi
+        fi
+
   - name: create monstart script
     copy:
       dest: /usr/bin/monstart
@@ -285,6 +300,13 @@
           /opt/vc/bin/tvservice -o
         fi
         /root/pwnagotchi/scripts/startup.sh &
+
+  - name: create /etc/pwnagotchi/config.yml
+    blockinfile:
+      path: /etc/pwnagotchi/config.yml
+      create: yes
+      block: |
+        # put here your custom configuration overrides
 
   - name: configure lo interface
     blockinfile:

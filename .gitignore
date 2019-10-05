@@ -10,3 +10,7 @@ config.laptop.yml
 .idea
 packer_cache
 output-pwnagotchi
+.DS_Store
+build
+dist
+pwnagotchi.egg-info
