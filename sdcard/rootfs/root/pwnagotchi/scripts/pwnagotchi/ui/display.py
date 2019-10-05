@@ -208,9 +208,13 @@ class Display(View):
 
     def _waveshare_bc_render(self):
         buf_black = self._display.getbuffer(self.canvas)
-        emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
-        buf_color = self._display.getbuffer(emptyImage)
-        self._display.display(buf_black,buf_color)
+        # emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
+        # buf_color = self._display.getbuffer(emptyImage)
+        # self._display.display(buf_black,buf_color)
+
+        # Custom display function that only handles black
+        # Was included in epd2in13bc.py 
+        self._display.displayBlack(buf_black)
 
 
         
