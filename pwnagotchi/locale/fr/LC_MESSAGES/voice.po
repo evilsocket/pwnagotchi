@@ -25,20 +25,20 @@ msgid "Hi, I'm Pwnagotchi! Starting ..."
 msgstr "Bonjour, je suis Pwnagotchi! Démarrage ..."
 
 msgid "New day, new hunt, new pwns!"
-msgstr "Nouvelle journée, nouvelle chasse, nouveau pwns!"
+msgstr "Nouveau jour, nouvelle chasse, nouveaux pwns !"
 
 msgid "Hack the Planet!"
 msgstr "Hack la planète!"
 
 msgid "AI ready."
-msgstr "IA prête."
+msgstr "L'IA est prête."
 
 msgid "The neural network is ready."
 msgstr "Le réseau neuronal est prêt."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "Hey, le channel {channel} est libre! Ton AP va dis merci."
+msgstr "Hey, le channel {channel} est libre! Ton point d'accès va te remercier."
 
 msgid "I'm bored ..."
 msgstr "Je m'ennuie ..."
@@ -68,17 +68,17 @@ msgid "I pwn therefore I am."
 msgstr "Je pwn donc je suis."
 
 msgid "So many networks!!!"
-msgstr "Autant de réseaux!!!"
+msgstr "Tellement de réseaux!!!"
 
 msgid "I'm having so much fun!"
 msgstr "Je m'amuse tellement!"
 
 msgid "My crime is that of curiosity ..."
-msgstr "Mon crime est celui de la curiosité ..."
+msgstr "Mon crime, c'est la curiosité ..."
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you. {name}"
-msgstr "Bonjour {name}! Ravis de te rencontrer. {name}"
+msgstr "Bonjour {name}! Ravi de te rencontrer. {name}"
 
 #, python-brace-format
 msgid "Unit {name} is nearby! {name}"
@@ -145,7 +145,7 @@ msgstr ""
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "Décidé à l'instant que {mac} n'a pas besoin de WiFi!"
+msgstr "Je viens de décider que {mac} n'a pas besoin de WiFi!"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
@@ -153,11 +153,11 @@ msgstr "Désauthentification de {mac}"
 
 #, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr ""
+msgstr "Je kick et je bannis {mac}!"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "Cool, nous avons {num} nouveaux handshake{plural}!"
+msgstr "Cool, on a {num} nouveaux handshake{plural}!"
 
 msgid "Ops, something went wrong ... Rebooting ..."
 msgstr "Oups, quelque chose s'est mal passé ... Redémarrage ..."
@@ -188,7 +188,7 @@ msgid ""
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
 "J'ai pwn durant {duration} et kick {deauthed} clients! J'ai aussi rencontré "
-"{associated} nouveaux amis and mangé {handshakes} handshakes! #pwnagotchi "
+"{associated} nouveaux amis et dévoré {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"
