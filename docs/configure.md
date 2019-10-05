@@ -40,6 +40,8 @@ For instance, you can change `main.lang` to one of the supported languages:
 - macedonian
 - italian
 - french
+- russian
+- swedish
 
 ## Display Selection
 

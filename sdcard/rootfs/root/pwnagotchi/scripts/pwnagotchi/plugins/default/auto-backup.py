@@ -30,6 +30,7 @@ def on_loaded():
         return
 
     READY = True
+    logging.info("AUTO-BACKUP: Successfuly loaded.")
 
 
 def on_internet_available(display, config, log):
@@ -41,11 +42,17 @@ def on_internet_available(display, config, log):
 
         files_to_backup = " ".join(OPTIONS['files'])
         try:
+            logging.info("AUTO-BACKUP: Backing up ...")
             display.set('status', 'Backing up ...')
             display.update()
 
             for cmd in OPTIONS['commands']:
-                subprocess.call(cmd.format(files=files_to_backup).split(), stdout=open(os.devnull, 'wb'))
+                logging.info(f"AUTO-BACKUP: Running {cmd.format(files=files_to_backup)}")
+                process = subprocess.Popen(cmd.format(files=files_to_backup), shell=True, stdin=None,
+                                          stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
+                process.wait()
+                if process.returncode > 0:
+                    raise OSError(f"Command failed (rc: {process.returncode})")
 
             logging.info("AUTO-BACKUP: backup done")
             STATUS.update()

@@ -1,6 +1,6 @@
 # main algorithm configuration
 main:
-    # currently implemented: en (default), de, el, fr, it, mk, nl, se
+    # currently implemented: en (default), de, el, fr, it, mk, nl, ru, se
     lang: en
     # custom plugins path, if null only default plugins with be loaded
     custom_plugins:
@@ -15,7 +15,7 @@ main:
         files:
           - /root/brain.nn
           - /root/brain.json
-          - /root/custom.yaml
+          - /root/custom.yml
           - /root/handshakes
           - /etc/ssh
           - /etc/hostname
@@ -24,7 +24,7 @@ main:
           - /var/log/pwnagotchi.log
         commands:
           - 'tar czf /tmp/backup.tar.gz {files}'
-          - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date).tar.gz'
+          - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date +%s).tar.gz'
       gps:
         enabled: false
       twitter:
