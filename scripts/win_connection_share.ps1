@@ -5,7 +5,7 @@
     .DESCRIPTION
         A script that setups Internet Connection Sharing for Pwnagotchi. 
 
-        Note: Internet Connection Sharing on Windows can be a bit unstable on windows between reboots.
+        Note: Internet Connection Sharing on Windows can be a bit unstable on between reboots.
               You might need to run this script occasionally to disable and re-enable Internet Connection Sharing.
     
     .PARAMETER EnableInternetConnectionSharing
@@ -15,7 +15,7 @@
         Disable Internet Connection Sharing
     
     .PARAMETER SetPwnagotchiSubnet
-        Change the Internet Connection Sharing subnet to the Pwnagotchi. Defaults to 10.0.0.1.
+        Change the Internet Connection Sharing subnet to the Pwnagotchi subnet. The USB Gadget Interface IP will default to 10.0.0.1.
     
     .PARAMETER ScopeAddress
         Custom ScopeAddress (The IP Address of the USB Gadget Interface.)
@@ -55,14 +55,12 @@ Function Create-HNetObjects {
     
     .DESCRIPTION
         A helper function that does the heavy lifiting with NetCfg.HNetShare. This returns a PSObject containing the `INetSharingConfigurationForINetConnection` info of 2 Adapters.
-        By default it tries to get the correct interfaces. This method might not be foolproof for every setup, but should work in most default senarios, if this causes issues these
-        could be passed as a param, they would need to be implemented in Setup-PwnagotchiNetwork and the Param block of this file.
     
     .PARAMETER InternetAdaptor
-        The output of Get-NetAdaptor filtered down to the 'main' uplink interface. Should default to the correct value.
+        The output of Get-NetAdaptor filtered down to the 'main' uplink interface.
     
     .PARAMETER RNDISGadget
-        The output of Get-NetAdaptor filtered down to the 'USB Ethernet/RNDIS Gadget' interface. Should default to the correct value.
+        The output of Get-NetAdaptor filtered down to the 'USB Ethernet/RNDIS Gadget' interface.
     
     .EXAMPLE
         PS> $HNetObject = Create-HNetObjects
@@ -73,8 +71,8 @@ Function Create-HNetObjects {
     #>
     [Cmdletbinding()]
     Param (
-        $InternetAdaptor = $(Get-NetAdapter | Where-Object {$_.MediaConnectionState -eq 'Connected' -and $_.PhysicalMediaType -ne 'Unspecified'} | Sort-Object LinkSpeed -Descending),
-        $RNDISGadget     = $(Get-NetAdapter | Where-Object {$_.MediaConnectionState -eq 'Connected' -and $_.InterfaceDescription -eq "USB Ethernet/RNDIS Gadget"})
+        $InternetAdaptor = $(Select-NetAdaptor -Message "Please select your main a ethernet adaptor with internet access that will be used for internet sharing."),
+        $RNDISGadget = $(Select-NetAdaptor -Message "Please select your 'USB Ethernet/RNDIS Gadget' adaptor")
     )
     Begin {
         regsvr32.exe /s hnetcfg.dll
@@ -190,25 +188,25 @@ Function Set-PwnagotchiSubnet {
 Function Setup-PwnagotchiNetwork {
     <#
     .SYNOPSIS
-    Function to setup networking.
+        Function to setup networking.
     
     .DESCRIPTION
-    Function to setup networking. Main function calls helpers functions.
+        Function to setup networking. Main function calls helpers functions.
     
     .PARAMETER EnableInternetConnectionSharing
-    Enable Internet Connection Sharing
+        Enable Internet Connection Sharing
     
     .PARAMETER DisableInternetConnectionSharing
-    Disable Internet Connection Sharing
+        Disable Internet Connection Sharing
     
     .PARAMETER SetPwnagotchiSubnet
-    Change the Internet Connection Sharing subnet to the Pwnagotchi. Defaults to 10.0.0.1.
+        Change the Internet Connection Sharing subnet to the Pwnagotchi. Defaults to 10.0.0.1.
     
     .PARAMETER ScopeAddress
-    Custom ScopeAddress (the ICS ip address)
+        Custom ScopeAddress (the ICS ip address)
     
     .EXAMPLE
-    PS> Setup-PwnagotchiNetwork -EnableInternetConnectionSharing
+        PS> Setup-PwnagotchiNetwork -EnableInternetConnectionSharing
     
     #>
     
@@ -260,6 +258,33 @@ Function Setup-PwnagotchiNetwork {
         }
     }
 }
-
+Function Select-NetAdaptor {
+    <#
+    .SYNOPSIS
+        A menu function to select the correct network adaptors.
+    
+    .DESCRIPTION
+        A menu function to select the correct network adaptors.
+    
+    .PARAMETER Message
+        Message that will be displayed during the question.
+    
+    #>
+    
+    Param (
+        $Message
+    )
+    $Adaptors = Get-NetAdapter | Where-Object {$_.MediaConnectionState -eq 'Connected'} | Sort-Object LinkSpeed -Descending
+    do { 
+        Write-Host $Message
+        $index = 1
+        foreach ($Adaptor in $Adaptors) {
+            Write-Host "[$index] $($Adaptor.Name), $($Adaptor.InterfaceDescription)"
+            $index++
+        }   
+        $Selection = Read-Host "Number"
+    } until ($Adaptors[$selection-1])
+     Return $Adaptors[$selection-1]
+}
 # Dynamically create params for Setup-PwnagotchiNetwork function based of param input of script.
 Setup-PwnagotchiNetwork @psBoundParameters
