@@ -86,7 +86,9 @@ class Advertiser(object):
         logging.info("started advertiser thread (period:%s sid:%s) ..." % (str(self._period), self._me.session_id))
         while self._running:
             try:
-                sendp(self._frame, iface=self._iface, verbose=False, count=5, inter=self._period)
+                sendp(self._frame, iface=self._iface, verbose=False, count=1, inter=self._period)
+            except OSError as ose:
+                logging.warning("non critical issue while sending advertising packet: %s" % ose)
             except Exception as e:
                 logging.exception("error")
             time.sleep(self._period)
