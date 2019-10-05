@@ -4,12 +4,12 @@ import os
 import re
 import socket
 from datetime import datetime
+import logging
 import _thread
 
-import core
-
+import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
-from bettercap.client import Client
+from pwnagotchi.bettercap import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
 
@@ -29,7 +29,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._started_at = time.time()
         self._filter = None if config['main']['filter'] is None else re.compile(config['main']['filter'])
         self._current_channel = 0
-        self._supported_channels = core.iface_channels(config['main']['iface'])
+        self._supported_channels = utils.iface_channels(config['main']['iface'])
         self._view = view
         self._access_points = []
         self._last_pwnd = None
@@ -82,7 +82,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         plugins.on('rebooting', self)
 
     def setup_events(self):
-        core.log("connecting to %s ..." % self.url)
+        logging.info("connecting to %s ..." % self.url)
 
         for tag in self._config['bettercap']['silence']:
             try:
@@ -109,33 +109,43 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             s = self.session()
             for iface in s['interfaces']:
                 if iface['name'] == mon_iface:
-                    core.log("found monitor interface: %s" % iface['name'])
+                    logging.info("found monitor interface: %s" % iface['name'])
                     has_mon = True
                     break
 
             if has_mon is False:
                 if mon_start_cmd is not None and mon_start_cmd != '':
-                    core.log("starting monitor interface ...")
+                    logging.info("starting monitor interface ...")
                     self.run('!%s' % mon_start_cmd)
                 else:
-                    core.log("waiting for monitor interface %s ..." % mon_iface)
+                    logging.info("waiting for monitor interface %s ..." % mon_iface)
                     time.sleep(1)
 
-        core.log("supported channels: %s" % self._supported_channels)
-        core.log("handshakes will be collected inside %s" % self._config['bettercap']['handshakes'])
+        logging.info("supported channels: %s" % self._supported_channels)
+        logging.info("handshakes will be collected inside %s" % self._config['bettercap']['handshakes'])
 
         self._reset_wifi_settings()
 
         wifi_running = self.is_module_running('wifi')
         if wifi_running and restart:
-            core.log("restarting wifi module ...")
-            self.restart('wifi.recon')
+            logging.debug("restarting wifi module ...")
+            self.restart_module('wifi.recon')
             self.run('wifi.clear')
         elif not wifi_running:
-            core.log("starting wifi module ...")
-            self.start('wifi.recon')
+            logging.debug("starting wifi module ...")
+            self.start_module('wifi.recon')
 
         self.start_advertising()
+
+    def start(self):
+        self.start_ai()
+        self.setup_events()
+        self.set_starting()
+        self.start_monitor_mode()
+        self.start_event_polling()
+        # print initial stats
+        self.next_epoch()
+        self.set_ready()
 
     def wait_for(self, t, sleeping=True):
         plugins.on('sleep' if sleeping else 'wait', self, t)
@@ -150,13 +160,13 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             for ch in self._epoch.non_overlapping_channels:
                 if ch not in busy_channels:
                     self._epoch.non_overlapping_channels[ch] += 1
-                    core.log("channel %d is free from %d epochs" % (ch, self._epoch.non_overlapping_channels[ch]))
+                    logging.info("channel %d is free from %d epochs" % (ch, self._epoch.non_overlapping_channels[ch]))
                 elif self._epoch.non_overlapping_channels[ch] > 0:
                     self._epoch.non_overlapping_channels[ch] -= 1
             # report any channel that has been free for at least 3 epochs
             for ch, num_epochs_free in self._epoch.non_overlapping_channels.items():
                 if num_epochs_free >= 3:
-                    core.log("channel %d has been free for %d epochs" % (ch, num_epochs_free))
+                    logging.info("channel %d has been free for %d epochs" % (ch, num_epochs_free))
                     self.set_free_channel(ch)
 
     def recon(self):
@@ -172,14 +182,14 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         if not channels:
             self._current_channel = 0
-            # core.log("RECON %ds" % recon_time)
+            logging.debug("RECON %ds" % recon_time)
             self.run('wifi.recon.channel clear')
         else:
-            # core.log("RECON %ds ON CHANNELS %s" % (recon_time, ','.join(map(str, channels))))
+            logging.debug("RECON %ds ON CHANNELS %s" % (recon_time, ','.join(map(str, channels))))
             try:
                 self.run('wifi.recon.channel %s' % ','.join(map(str, channels)))
             except Exception as e:
-                core.log("error: %s" % e)
+                logging.exception("error")
 
         self.wait_for(recon_time, sleeping=False)
 
@@ -204,7 +214,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                     if self._filter_included(ap):
                         aps.append(ap)
         except Exception as e:
-            core.log("error: %s" % e)
+            logging.exception("error")
 
         aps.sort(key=lambda ap: ap['channel'])
         return self.set_access_points(aps)
@@ -241,7 +251,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def _update_uptime(self, s):
         secs = time.time() - self._started_at
-        self._view.set('uptime', core.secs_to_hhmmss(secs))
+        self._view.set('uptime', utils.secs_to_hhmmss(secs))
         self._view.set('epoch', '%04d' % self._epoch.epoch)
 
     def _update_counters(self):
@@ -261,7 +271,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         if new_shakes > 0:
             self._epoch.track(handshake=True, inc=new_shakes)
 
-        tot = core.total_unique_handshakes(self._config['bettercap']['handshakes'])
+        tot = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
         txt = '%d (%d)' % (len(self._handshakes), tot)
 
         if self._last_pwnd is not None:
@@ -274,7 +284,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def _update_advertisement(self, s):
         run_handshakes = len(self._handshakes)
-        tot_handshakes = core.total_unique_handshakes(self._config['bettercap']['handshakes'])
+        tot_handshakes = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
         started = s['started_at'].split('.')[0]
         started = datetime.strptime(started, '%Y-%m-%dT%H:%M:%S')
         started = time.mktime(started.timetuple())
@@ -289,7 +299,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._view.set_closest_peer(peer)
 
     def _save_recovery_data(self):
-        core.log("writing recovery data to %s ..." % RECOVERY_DATA_FILE)
+        logging.warning("writing recovery data to %s ..." % RECOVERY_DATA_FILE)
         with open(RECOVERY_DATA_FILE, 'w') as fp:
             data = {
                 'started_at': self._started_at,
@@ -304,7 +314,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         try:
             with open(RECOVERY_DATA_FILE, 'rt') as fp:
                 data = json.load(fp)
-                core.log("found recovery data: %s" % data)
+                logging.info("found recovery data: %s" % data)
                 self._started_at = data['started_at']
                 self._epoch.epoch = data['epoch']
                 self._handshakes = data['handshakes']
@@ -312,7 +322,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                 self._last_pwnd = data['last_pwnd']
 
                 if delete:
-                    core.log("deleting %s" % RECOVERY_DATA_FILE)
+                    logging.info("deleting %s" % RECOVERY_DATA_FILE)
                     os.unlink(RECOVERY_DATA_FILE)
         except:
             if not no_exceptions:
@@ -323,7 +333,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         self.run('events.clear')
 
-        core.log("event polling started ...")
+        logging.debug("event polling started ...")
         while True:
             time.sleep(1)
 
@@ -349,21 +359,21 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                         new_shakes += 1
                         ap_and_station = self._find_ap_sta_in(sta_mac, ap_mac, s)
                         if ap_and_station is None:
-                            core.log("!!! captured new handshake: %s !!!" % key)
+                            logging.warning("!!! captured new handshake: %s !!!" % key)
                             self._last_pwnd = ap_mac
                             plugins.on('handshake', self, filename, ap_mac, sta_mac)
                         else:
                             (ap, sta) = ap_and_station
                             self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
                                 'hostname'] != '<hidden>' else ap_mac
-                            core.log("!!! captured new handshake on channel %d: %s (%s) -> %s [%s (%s)] !!!" % ( \
+                            logging.warning("!!! captured new handshake on channel %d: %s (%s) -> %s [%s (%s)] !!!" % ( \
                                 ap['channel'],
                                 sta['mac'], sta['vendor'],
                                 ap['hostname'], ap['mac'], ap['vendor']))
                             plugins.on('handshake', self, filename, ap, sta)
 
             except Exception as e:
-                core.log("error: %s" % e)
+                logging.exception("error")
 
             finally:
                 self._update_handshakes(new_shakes)
@@ -378,10 +388,10 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                 return m['running']
         return False
 
-    def start(self, module):
+    def start_module(self, module):
         self.run('%s on' % module)
 
-    def restart(self, module):
+    def restart_module(self, module):
         self.run('%s off; %s on' % (module, module))
 
     def _has_handshake(self, bssid):
@@ -404,7 +414,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         return self._history[who] < self._config['personality']['max_interactions']
 
     def _on_miss(self, who):
-        core.log("it looks like %s is not in range anymore :/" % who)
+        logging.info("it looks like %s is not in range anymore :/" % who)
         self._epoch.track(miss=True)
         self._view.on_miss(who)
 
@@ -416,18 +426,18 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         if 'is an unknown BSSID' in error:
             self._on_miss(who)
         else:
-            core.log("error: %s" % e)
+            logging.error("%s" % e)
 
     def associate(self, ap, throttle=0):
         if self.is_stale():
-            core.log("recon is stale, skipping assoc(%s)" % ap['mac'])
+            logging.debug("recon is stale, skipping assoc(%s)" % ap['mac'])
             return
 
         if self._config['personality']['associate'] and self._should_interact(ap['mac']):
             self._view.on_assoc(ap)
 
             try:
-                core.log("sending association frame to %s (%s %s) on channel %d [%d clients]..." % ( \
+                logging.info("sending association frame to %s (%s %s) on channel %d [%d clients]..." % ( \
                     ap['hostname'], ap['mac'], ap['vendor'], ap['channel'], len(ap['clients'])))
                 self.run('wifi.assoc %s' % ap['mac'])
                 self._epoch.track(assoc=True)
@@ -441,14 +451,14 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def deauth(self, ap, sta, throttle=0):
         if self.is_stale():
-            core.log("recon is stale, skipping deauth(%s)" % sta['mac'])
+            logging.debug("recon is stale, skipping deauth(%s)" % sta['mac'])
             return
 
         if self._config['personality']['deauth'] and self._should_interact(sta['mac']):
             self._view.on_deauth(sta)
 
             try:
-                core.log("deauthing %s (%s) from %s (%s %s) on channel %d ..." % (
+                logging.info("deauthing %s (%s) from %s (%s %s) on channel %d ..." % (
                     sta['mac'], sta['vendor'], ap['hostname'], ap['mac'], ap['vendor'], ap['channel']))
                 self.run('wifi.deauth %s' % sta['mac'])
                 self._epoch.track(deauth=True)
@@ -462,7 +472,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def set_channel(self, channel, verbose=True):
         if self.is_stale():
-            core.log("recon is stale, skipping set_channel(%d)" % channel)
+            logging.debug("recon is stale, skipping set_channel(%d)" % channel)
             return
 
         # if in the previous loop no client stations has been deauthenticated
@@ -478,10 +488,12 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         if channel != self._current_channel:
             if self._current_channel != 0 and wait > 0:
                 if verbose:
-                    core.log("waiting for %ds on channel %d ..." % (wait, self._current_channel))
+                    logging.info("waiting for %ds on channel %d ..." % (wait, self._current_channel))
+                else:
+                    logging.debug("waiting for %ds on channel %d ..." % (wait, self._current_channel))
                 self.wait_for(wait)
             if verbose and self._epoch.any_activity:
-                core.log("CHANNEL %d" % channel)
+                logging.info("CHANNEL %d" % channel)
             try:
                 self.run('wifi.recon.channel %d' % channel)
                 self._current_channel = channel
@@ -491,7 +503,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                 plugins.on('channel_hop', self, channel)
 
             except Exception as e:
-                core.log("error: %s" % e)
+                logging.error("error: %s" % e)
 
     def is_stale(self):
         return self._epoch.num_missed > self._config['personality']['max_misses_for_recon']
@@ -502,7 +514,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def _reboot(self):
         self.set_rebooting()
         self._save_recovery_data()
-        core.log("rebooting the system ...")
+        logging.warning("rebooting the system ...")
         os.system("/usr/bin/sync")
         os.system("/usr/sbin/shutdown -r now")
 
@@ -514,24 +526,24 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         # after X misses during an epoch, set the status to lonely
         if was_stale:
-            core.log("agent missed %d interactions -> lonely" % did_miss)
+            logging.warning("agent missed %d interactions -> lonely" % did_miss)
             self.set_lonely()
         # after X times being bored, the status is set to sad
         elif self._epoch.inactive_for >= self._config['personality']['sad_num_epochs']:
-            core.log("%d epochs with no activity -> sad" % self._epoch.inactive_for)
+            logging.warning("%d epochs with no activity -> sad" % self._epoch.inactive_for)
             self.set_sad()
         # after X times being inactive, the status is set to bored
         elif self._epoch.inactive_for >= self._config['personality']['bored_num_epochs']:
-            core.log("%d epochs with no activity -> bored" % self._epoch.inactive_for)
+            logging.warning("%d epochs with no activity -> bored" % self._epoch.inactive_for)
             self.set_bored()
         # after X times being active, the status is set to happy / excited
         elif self._epoch.active_for >= self._config['personality']['excited_num_epochs']:
-            core.log("%d epochs with activity -> excited" % self._epoch.active_for)
+            logging.warning("%d epochs with activity -> excited" % self._epoch.active_for)
             self.set_excited()
 
         plugins.on('epoch', self, self._epoch.epoch - 1, self._epoch.data())
 
         if self._epoch.blind_for >= self._config['main']['mon_max_blind_epochs']:
-            core.log("%d epochs without visible access points -> rebooting ..." % self._epoch.blind_for)
+            logging.critical("%d epochs without visible access points -> rebooting ..." % self._epoch.blind_for)
             self._reboot()
             self._epoch.blind_for = 0

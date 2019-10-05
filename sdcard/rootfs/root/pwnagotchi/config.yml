@@ -1,9 +1,45 @@
 # main algorithm configuration
 main:
-    # currently implemented: en (default), de, nl, it
+    # currently implemented: en (default), de, el, fr, it, mk, nl, se
     lang: en
     # custom plugins path, if null only default plugins with be loaded
-    plugins: null
+    custom_plugins:
+    # which plugins to load and enable
+    plugins:
+      auto-update:
+        enabled: false
+        interval: 1 # every day
+      auto-backup:
+        enabled: false
+        interval: 1 # every day
+        files:
+          - /root/brain.nn
+          - /root/brain.json
+          - /root/custom.yaml
+          - /root/handshakes
+          - /etc/ssh
+          - /etc/hostname
+          - /etc/hosts
+          - /etc/motd
+          - /var/log/pwnagotchi.log
+        commands:
+          - 'tar czf /tmp/backup.tar.gz {files}'
+          - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date).tar.gz'
+      gps:
+        enabled: false
+      twitter:
+        enabled: false
+        consumer_key: aaa
+        consumer_secret: aaa
+        access_token_key: aaa
+        access_token_secret: aaa
+      onlinehashcrack:
+        enabled: false
+        email: ~
+      wpa-sec:
+        enabled: false
+        api_key: ~
+
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -15,7 +51,9 @@ main:
     # if true, will not restart the wifi module
     no_restart: false
     # access points to ignore
-    whitelist: []
+    whitelist:
+        - EXAMPLE_NETWORK
+        - ANOTHER_EXAMPLE_NETWORK
     # if not null, filter access points by this regular expression
     filter: null
     # cryptographic key for identity
@@ -23,7 +61,7 @@ main:
 
 ai:
     # if false, only the default 'personality' will be used
-    enabled: false
+    enabled: true
     path: /root/brain.nn
     # 1.0 - laziness = probability of start training
     laziness: 0.1
@@ -95,7 +133,7 @@ ui:
     # IMPORTANT: The lifespan of an eINK display depends on the cumulative amount of refreshes. If you want to
     # preserve your display over time, you should set this value to 0.0 so that the display will be refreshed only
     # if any of the important data fields changed (the uptime and blinking cursor won't trigger a refresh).
-    fps: 0.3
+    fps: 0.0
     display:
         enabled: true
         rotation: 180
@@ -108,13 +146,6 @@ ui:
             address: '10.0.0.2'
             port: 8080
 
-# twitter bot data
-twitter:
-    enabled: false
-    consumer_key: aaa
-    consumer_secret: aaa
-    access_token_key: aaa
-    access_token_secret: aaa
 
 # bettercap rest api configuration
 bettercap:
@@ -143,6 +174,3 @@ bettercap:
         - wifi.ap.new
         - wifi.ap.lost
         - mod.started
-
-
-

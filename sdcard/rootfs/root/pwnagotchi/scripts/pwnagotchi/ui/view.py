@@ -1,9 +1,10 @@
 import _thread
 from threading import Lock
 import time
+import logging
 from PIL import Image, ImageDraw
 
-import core
+import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
 from pwnagotchi.voice import Voice
 
@@ -94,8 +95,9 @@ class View(object):
 
             'face': Text(value=faces.SLEEP, position=face_pos, color=BLACK, font=fonts.Huge),
 
-            'friend_face': Text(value=None, position=(0, 90), font=fonts.Bold, color=BLACK),
-            'friend_name': Text(value=None, position=(40, 93), font=fonts.BoldSmall, color=BLACK),
+            'friend_face': Text(value=None, position=(0, (self._height * 0.88) - 15), font=fonts.Bold, color=BLACK),
+            'friend_name': Text(value=None, position=(40, (self._height * 0.88) - 13), font=fonts.BoldSmall,
+                                color=BLACK),
 
             'name': Text(value='%s>' % 'pwnagotchi', position=name_pos, color=BLACK, font=fonts.Bold),
 
@@ -123,7 +125,7 @@ class View(object):
             _thread.start_new_thread(self._refresh_handler, ())
             self._ignore_changes = ()
         else:
-            core.log("ui.fps is 0, the display will only update for major changes")
+            logging.warning("ui.fps is 0, the display will only update for major changes")
             self._ignore_changes = ('uptime', 'name')
 
     def add_element(self, key, elem):
@@ -144,7 +146,7 @@ class View(object):
 
     def _refresh_handler(self):
         delay = 1.0 / self._config['ui']['fps']
-        # core.log("view refresh handler started with period of %.2fs" % delay)
+        # logging.info("view refresh handler started with period of %.2fs" % delay)
 
         while True:
             name = self._state.get('name')
@@ -174,7 +176,7 @@ class View(object):
         self.set('channel', '-')
         self.set('aps', "%d" % log.associated)
         self.set('shakes', '%d (%s)' % (log.handshakes, \
-                                        core.total_unique_handshakes(self._config['bettercap']['handshakes'])))
+                                        utils.total_unique_handshakes(self._config['bettercap']['handshakes'])))
         self.set_closest_peer(log.last_peer)
 
     def is_normal(self):
@@ -322,10 +324,10 @@ class View(object):
         self.set('status', self._voice.custom(text))
         self.update()
 
-    def update(self):
+    def update(self, force=False):
         with self._lock:
             changes = self._state.changes(ignore=self._ignore_changes)
-            if len(changes):
+            if force or len(changes):
                 self._canvas = Image.new('1', (self._width, self._height), WHITE)
                 drawer = ImageDraw.Draw(self._canvas)
 

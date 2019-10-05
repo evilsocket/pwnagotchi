@@ -7,16 +7,16 @@ import warnings
 # https://stackoverflow.com/questions/15777951/how-to-suppress-pandas-future-warning
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-import core
+import logging
 
 
 def load(config, agent, epoch, from_disk=True):
     config = config['ai']
     if not config['enabled']:
-        core.log("ai disabled")
+        logging.info("ai disabled")
         return False
 
-    core.log("[ai] bootstrapping dependencies ...")
+    logging.info("[ai] bootstrapping dependencies ...")
 
     from stable_baselines import A2C
     from stable_baselines.common.policies import MlpLstmPolicy
@@ -27,16 +27,16 @@ def load(config, agent, epoch, from_disk=True):
     env = wrappers.Environment(agent, epoch)
     env = DummyVecEnv([lambda: env])
 
-    core.log("[ai] bootstrapping model ...")
+    logging.info("[ai] bootstrapping model ...")
 
     a2c = A2C(MlpLstmPolicy, env, **config['params'])
 
     if from_disk and os.path.exists(config['path']):
-        core.log("[ai] loading %s ..." % config['path'])
+        logging.info("[ai] loading %s ..." % config['path'])
         a2c.load(config['path'], env)
     else:
-        core.log("[ai] model created:")
+        logging.info("[ai] model created:")
         for key, value in config['params'].items():
-            core.log("      %s: %s" % (key, value))
+            logging.info("      %s: %s" % (key, value))
 
     return a2c

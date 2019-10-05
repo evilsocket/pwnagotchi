@@ -138,5 +138,21 @@ class Voice:
             associated=log.associated,
             handshakes=log.handshakes)
 
-    def custom(self, text):
-        return self._(text)
+    def hhmmss(self, count, fmt):
+        if count > 1:
+            # plural
+            if fmt == "h":
+                return self._("hours")
+            if fmt == "m":
+                return self._("minutes")
+            if fmt == "s":
+                return self._("seconds")
+        else:
+            # sing
+            if fmt == "h":
+                return self._("hour")
+            if fmt == "m":
+                return self._("minute")
+            if fmt == "s":
+                return self._("second")
+        return fmt

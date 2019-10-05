@@ -27,17 +27,34 @@ def load_from_file(filename):
     return plugin_name, instance
 
 
-def load_from_path(path):
+def load_from_path(path, enabled=()):
     global loaded
-
     for filename in glob.glob(os.path.join(path, "*.py")):
         name, plugin = load_from_file(filename)
         if name in loaded:
             raise Exception("plugin %s already loaded from %s" % (name, plugin.__file__))
-        elif not plugin.__enabled__:
+        elif name not in enabled:
             # print("plugin %s is not enabled" % name)
             pass
         else:
             loaded[name] = plugin
 
     return loaded
+
+
+def load(config):
+    enabled = [name for name, options in config['main']['plugins'].items() if 'enabled' in options and options['enabled']]
+    custom_path = config['main']['custom_plugins'] if 'custom_plugins' in config['main'] else None
+    # load default plugins
+    loaded = load_from_path(default_path, enabled=enabled)
+    # set the options
+    for name, plugin in loaded.items():
+        plugin.__dict__['OPTIONS'] = config['main']['plugins'][name]
+    # load custom ones
+    if custom_path is not None:
+        loaded = load_from_path(custom_path, enabled=enabled)
+        # set the options
+        for name, plugin in loaded.items():
+            plugin.__dict__['OPTIONS'] = config['main']['plugins'][name]
+
+    on('loaded')

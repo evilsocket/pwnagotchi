@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-03 12:22+0200\n"
+"POT-Creation-Date: 2019-10-05 14:10+0200\n"
 "PO-Revision-Date: 2019-10-03 08:00+0000\n"
 "Last-Translator: Periklis Fregkos <fregkos@gmail.com>\n"
 "Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
@@ -17,225 +17,169 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: voice.py:18
 msgid "ZzzzZZzzzzZzzz"
 msgstr ""
 
-#: voice.py:22
-#, fuzzy
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "Γειά, είμαι το Pwnagotchi!Εκκινούμαι ..."
+msgstr "Γειά, είμαι το Pwnagotchi! Εκκινούμαι ..."
 
-#: voice.py:23
-#, fuzzy
 msgid "New day, new hunt, new pwns!"
-msgstr "Νέα μέρα, νέο κυνήγι,νέα pwns!"
+msgstr "Νέα μέρα, νέο κυνήγι, νέα pwns!"
 
-#: voice.py:24
 msgid "Hack the Planet!"
 msgstr "Hackαρε τον πλανήτη!"
 
-#: voice.py:28
 msgid "AI ready."
 msgstr "ΤΝ έτοιμη."
 
-#: voice.py:29
-#, fuzzy
 msgid "The neural network is ready."
 msgstr "Το νευρωνικό δίκτυοείναι έτοιμο."
 
-#: voice.py:37
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr "Ε, το κανάλι {channel} είναιελεύθερο! Το AP σου θαείναι ευγνώμων."
 
-#: voice.py:41
 msgid "I'm bored ..."
 msgstr "Βαριέμαι ..."
 
-#: voice.py:42
 msgid "Let's go for a walk!"
 msgstr "Ας πάμε μια βόλτα!"
 
-#: voice.py:45
-#, fuzzy
 msgid "This is the best day of my life!"
 msgstr "Είναι η καλύτερημέρα της ζωής μου!"
 
-#: voice.py:48
 msgid "Shitty day :/"
 msgstr "Σκατένια μέρα :/"
 
-#: voice.py:52
 msgid "I'm extremely bored ..."
 msgstr "Βαριέμαι πάρα πολύ ..."
 
-#: voice.py:53
 msgid "I'm very sad ..."
 msgstr "Είμαι πολύ λυπημένο ..."
 
-#: voice.py:54
 msgid "I'm sad"
 msgstr "Είμαι λυπημένο"
 
-#: voice.py:59
 msgid "I'm living the life!"
 msgstr "Ζω την ζωή μου!"
 
-#: voice.py:60
 msgid "I pwn therefore I am."
 msgstr "Pwnάρω, άρα υπάρχω."
 
-#: voice.py:61
 msgid "So many networks!!!"
 msgstr "Τόσα πολλά δίκτυα!!!"
 
-#: voice.py:62
-#, fuzzy
 msgid "I'm having so much fun!"
 msgstr "Περνάω τέλεια!"
 
-#: voice.py:63
-#, fuzzy
 msgid "My crime is that of curiosity ..."
 msgstr "Η περιέργεια είναιτο μόνο έγκλημά μου ..."
 
-#: voice.py:67
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Hello {name}! Nice to meet you. {name}"
 msgstr "Γειά {name}!Χάρηκα για τη γνωριμία. {name}"
 
-#: voice.py:68
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Unit {name} is nearby! {name}"
-msgstr "Η μονάδα{name}είναι κοντά! {name}"
+msgstr "Η μονάδα {name} είναι κοντά! {name}"
 
-#: voice.py:72
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Uhm ... goodbye {name}"
-msgstr "Εμμ ...αντίο{name}"
+msgstr "Εμμ ...αντίο {name}"
 
-#: voice.py:73
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{name} is gone ..."
-msgstr "Το {name}έφυγε ..."
+msgstr "Το {name} έφυγε ..."
 
-#: voice.py:77
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "Ουπς ... Εξαφανίστηκε το{name}."
+msgstr "Ουπς ... Εξαφανίστηκε το {name}."
 
-#: voice.py:78
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{name} missed!"
-msgstr "Έχασα το{name}!"
+msgstr "Έχασα το {name}!"
 
-#: voice.py:79
 msgid "Missed!"
 msgstr "Το έχασα!"
 
-#: voice.py:83
-#, fuzzy
 msgid "Nobody wants to play with me ..."
 msgstr "Κανείς δε θέλει ναπαίξει μαζί μου ..."
 
-#: voice.py:84
 msgid "I feel so alone ..."
 msgstr "Νιώθω μοναχός μου ..."
 
-#: voice.py:85
 msgid "Where's everybody?!"
 msgstr "Μα, πού πήγαν όλοι;!"
 
-#: voice.py:89
 #, python-brace-format
 msgid "Napping for {secs}s ..."
 msgstr "Ξεκουράζομαι για {secs}s ..."
 
-#: voice.py:90
 msgid "Zzzzz"
 msgstr ""
 
-#: voice.py:91
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
 msgstr ""
 
-#: voice.py:98
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
 msgstr "Περιμένω για {secs}s ..."
 
-#: voice.py:100
 #, python-brace-format
 msgid "Looking around ({secs}s)"
 msgstr "Ψάχνω τριγύρω ({secs})"
 
-#: voice.py:106
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr "Εε!{what},ας γίνουμε φίλοι!"
+msgstr "Εε! {what}, ας γίνουμε φίλοι!"
 
-#: voice.py:107
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Associating to {what}"
-msgstr "Συνδέομαι με το{what}"
+msgstr "Συνδέομαι με το {what}"
 
-#: voice.py:108
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Yo {what}!"
-msgstr "Που'σαι ρε τρελέ{what}!"
+msgstr "Που'σαι ρε τρελέ {what}!"
 
-#: voice.py:112
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "Μόλις αποφάσισα ότι η{mac}δε χρείαζεται WiFi!"
+msgstr "Μόλις αποφάσισα ότι η {mac} δε χρείαζεται WiFi!"
 
-#: voice.py:113
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Deauthenticating {mac}"
-msgstr "Πετάω έξω την{mac}"
+msgstr "Πετάω έξω την {mac}"
 
-#: voice.py:114
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr "Μπανάρω την{mac}!"
+msgstr "Μπανάρω την {mac}!"
 
-#: voice.py:118
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "Τέλεια δικέ μου, πήραμε {num}νέες χειραψίες!"
+msgstr "Τέλεια δικέ μου, πήραμε {num} νέες χειραψίες!"
 
-#: voice.py:121
-#, fuzzy
 msgid "Ops, something went wrong ... Rebooting ..."
-msgstr "Ουπς, κάτιπήγε λάθος ...Επανεκκινούμαι ..."
+msgstr "Ουπς, κάτιπήγε λάθος ... Επανεκκινούμαι ..."
 
-#: voice.py:124
 #, python-brace-format
 msgid "Kicked {num} stations\n"
 msgstr "Έριξα {num} σταθμούς\n"
 
-#: voice.py:125
 #, python-brace-format
 msgid "Made {num} new friends\n"
 msgstr "Έκανα {num} νέους φίλους\n"
 
-#: voice.py:126
 #, python-brace-format
 msgid "Got {num} handshakes\n"
 msgstr "Πήρα {num} χειραψίες\n"
 
-#: voice.py:128
 msgid "Met 1 peer"
 msgstr "Γνώρισα 1 φίλο"
 
-#: voice.py:130
 #, python-brace-format
 msgid "Met {num} peers"
 msgstr "Γνώρισα {num} φίλους"
 
-#: voice.py:135
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
@@ -245,3 +189,21 @@ msgstr ""
 "Pwnαρα για {duration} και έριξα {deauthed} πελάτες! Επίσης γνώρισα "
 "{associated} νέους φίλους και καταβρόχθισα {handshakes} χειραψίες! "
 "#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr ""
+
+msgid "minutes"
+msgstr ""
+
+msgid "seconds"
+msgstr ""
+
+msgid "hour"
+msgstr ""
+
+msgid "minute"
+msgstr ""
+
+msgid "second"
+msgstr ""

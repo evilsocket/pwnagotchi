@@ -1,7 +1,6 @@
+import logging
 import requests
 from requests.auth import HTTPBasicAuth
-
-import core
 
 
 class Client(object):
@@ -19,11 +18,11 @@ class Client(object):
             return r.json()
         except Exception as e:
             if r.status_code == 200:
-                core.log("error while decoding json: error='%s' resp='%s'" % (e, r.text))
+                logging.error("error while decoding json: error='%s' resp='%s'" % (e, r.text))
             else:
                 err = "error %d: %s" % (r.status_code, r.text.strip())
                 if verbose_errors:
-                    core.log(err)
+                    logging.info(err)
                 raise Exception(err)
             return r.text
 

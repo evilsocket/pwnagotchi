@@ -3,9 +3,8 @@ __version__ = '1.0.0'
 __name__ = 'gps'
 __license__ = 'GPL3'
 __description__ = 'Save GPS coordinates whenever an handshake is captured.'
-__enabled__ = True  # set to false if you just don't use GPS
 
-import core
+import logging
 import json
 import os
 
@@ -15,14 +14,14 @@ running = False
 
 
 def on_loaded():
-    core.log("GPS plugin loaded for %s" % device)
+    logging.info("gps plugin loaded for %s" % device)
 
 
 def on_ready(agent):
     global running
 
     if os.path.exists(device):
-        core.log("enabling GPS bettercap's module for %s" % device)
+        logging.info("enabling gps bettercap's module for %s" % device)
         try:
             agent.run('gps off')
         except:
@@ -33,7 +32,7 @@ def on_ready(agent):
         agent.run('gps on')
         running = True
     else:
-        core.log("no GPS detected")
+        logging.warning("no GPS detected")
 
 
 def on_handshake(agent, filename, access_point, client_station):
@@ -42,6 +41,6 @@ def on_handshake(agent, filename, access_point, client_station):
         gps = info['gps']
         gps_filename = filename.replace('.pcap', '.gps.json')
 
-        core.log("saving GPS to %s (%s)" % (gps_filename, gps))
+        logging.info("saving GPS to %s (%s)" % (gps_filename, gps))
         with open(gps_filename, 'w+t') as fp:
             json.dump(gps, fp)
