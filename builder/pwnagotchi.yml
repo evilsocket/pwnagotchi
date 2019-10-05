@@ -42,6 +42,19 @@
     apt:
       update_cache: yes
 
+  - name: remove unecessary apt packages
+    apt:
+      name: "{{ packages }}"
+      state: absent
+      purge: yes
+    var:
+      packages:
+        - rasberrypi-net-mods
+        - dhcpcd5
+        - triggerhappy
+        - wpa_supplicant
+        - nfs-common
+
   - name: upgrade apt distro
     apt:
       upgrade: dist
@@ -101,13 +114,14 @@
         - python3-termcolor
         - python3-astor
         - python3-backports.weakref
-        - python3-keras-applications
-        - python3-keras-preprocessing
+        - python3-h5py
         - python3-six
         - python3-protobuf
         - python3-wrapt
         - python3-wheel
         - python3-mock
+        - python3-scipy
+        - python3-cloudpickle
 
   - name: configure dphys-swapfile
     file:
@@ -125,8 +139,10 @@
         - apt-daily.service
         - apt-daily-upgrade.timer
         - apt-daily-upgrade.service
+        - wpa_supplicant.service
         - bluetooth.service
         - triggerhappy.service
+        - ifup@wlan0.service
 
   - name: enable dphys-swapfile service
     systemd:
@@ -134,33 +150,43 @@
       state: started
       enabled: yes
 
+  - name: enable gadget serial port service
+    systemd:
+      name: getty@ttyGS0.service
+      state: started
+      enabled: yes
+
   - name: acquire python3 pip target
     command: "python3 -c 'import sys;print(sys.path.pop())'"
     register: pip_target
 
-  - name: install pip packages that are not architecture tied
+  - name: install pip packages
     pip:
       name: "{{ packages }}"
       extra_args: "--no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --prefer-binary --no-cache-dir --platform=armv6l --target={{ pip_target.stdout }}"
     vars:
       packages:
-        - absl-py
+        - inky
+        - smbus2
+        - absl-py>=0.1.6
         - enum34
-        - gast
+        - gast==0.2.2
         - google_pasta
         - opt_einsum
-        - tensorboard
         - scapy
         - gym
+        - keras_applications>=1.0.6
+        - keras_preprocessing>=1.0.5
         - stable-baselines
         - file_read_backwards
-        - tensorflow_estimator
+        - tensorflow_estimator>=1.14.0,<1.15.0
+        - tensorboard>=1.13.0,<1.14.0
 
   - name: install grpcio
     command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.hostedpi.com/simple/grpcio/grpcio-1.24.1-cp37-cp37m-linux_armv6l.whl"
 
   - name: install tensorflow
-    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://storage.googleapis.com/tensorflow/raspberrypi/tensorflow-1.14.0-cp34-none-linux_armv6l.whl"
+    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
 
   - name: fetch bettercap release information
     uri:
@@ -318,7 +344,7 @@
       state: present
       backup: no
       regexp: '(.*)$'
-      line: '\1 modules-load=dwc2,g_ether'
+      line: '\1 modules-load=dwc2,g_cdc'
 
   - name: configure ssh
     lineinfile:
