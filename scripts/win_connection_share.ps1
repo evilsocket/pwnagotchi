@@ -15,7 +15,7 @@
         Disable Internet Connection Sharing
     
     .PARAMETER SetPwnagotchiSubnet
-        Change the Internet Connection Sharing subnet to the Pwnagotchi subnet. The USB Gadget Interface IP ip default to 10.0.0.1.
+        Change the Internet Connection Sharing subnet to the Pwnagotchi subnet. The USB Gadget Interface IP will default to 10.0.0.1.
     
     .PARAMETER ScopeAddress
         Custom ScopeAddress (The IP Address of the USB Gadget Interface.)
