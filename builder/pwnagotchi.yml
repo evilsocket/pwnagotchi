@@ -47,7 +47,7 @@
       name: "{{ packages }}"
       state: absent
       purge: yes
-    var:
+    vars:
       packages:
         - rasberrypi-net-mods
         - dhcpcd5
