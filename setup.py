@@ -11,7 +11,7 @@ with open('requirements.txt') as fp:
 
 setup(name='pwnagotchi',
       version=pwnagotchi.version,
-      description='Pwnagotchi is a cute AI that eats WPA handshakes.',
+      description='(⌐■_■) - Deep Reinforcement Learning instrumenting bettercap for WiFI pwning.',
       author='evilsocket && the dev team',
       author_email='evilsocket@gmail.com',
       url='https://pwnagotchi.ai/',
