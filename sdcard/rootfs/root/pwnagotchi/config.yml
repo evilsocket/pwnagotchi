@@ -6,6 +6,14 @@ main:
     custom_plugins:
     # which plugins to load and enable
     plugins:
+      auto-backup:
+        enabled: false
+        interval: 1 # every day
+        files:
+          - /root/brain.nn
+        commands:
+          - 'tar czf /tmp/backup.tar.gz {files}'
+          - 'scp /tmp/backup.tar.gz 10.0.0.1:/backups/backup-$(date).tar.gz'
       gps:
         enabled: false
       twitter:
