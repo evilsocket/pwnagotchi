@@ -4,13 +4,16 @@
 
 The UI is available either via display if installed, or via http://pwnagotchi.local:8080/ if you connect to the unit via `usb0` and set a static address on the network interface (change `pwnagotchi` with the hostname of your unit).
 
-![ui](https://i.imgur.com/XgIrcur.png)
+![ui](https://i.imgur.com/c7xh4hN.png)
 
 * **CH**: Current channel the unit is operating on or `*` when hopping on all channels.
 * **APS**: Number of access points on the current channel and total visible access points.
 * **UP**: Time since the unit has been activated.
 * **PWND**: Number of handshakes captured in this session and number of unique networks we own at least one handshake of, from the beginning.
-* **AUTO**: This indicates that the algorithm is running with AI disabled (or still loading), it disappears once the AI dependencies have been bootrapped and the neural network loaded.
+* **MODE**: 
+   * **AUTO:** This indicates that the Pwnagotchi algorithm is running in AUTOMATIC mode, with AI disabled (or still loading); it disappears once the AI dependencies have been bootstrapped and the neural network has finished loading.
+   * **MANU:** This appears when the unit is running in MANUAL mode.
+* **FRIEND:** If another unit is nearby, its presence will be indicated here. If more than one unit is nearby, only one—whichever has the stronger signal strength—will be displayed.
 
 ## Training the AI
 
