@@ -1,6 +1,6 @@
 import subprocess
 
-version = '1.0.0plz4'
+version = '1.0.0a'
 
 _name = None
 
