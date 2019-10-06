@@ -39,6 +39,9 @@ main:
       wpa-sec:
         enabled: false
         api_key: ~
+      wigle:
+        enabled: false
+        api_key: ~
 
     # monitor interface to use
     iface: mon0
