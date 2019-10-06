@@ -291,6 +291,22 @@
         #!/usr/bin/env bash
         ifconfig mon0 down && iw dev mon0 del
 
+  - name: create hdmion script
+    copy:
+      dest: /usr/bin/hdmion
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        sudo /opt/vc/bin/tvservice -p
+
+  - name: create hdmioff script
+    copy:
+      dest: /usr/bin/hdmioff
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        sudo /opt/vc/bin/tvservice -o
+
   - name: configure rc.local
     blockinfile:
       path: /etc/rc.local
