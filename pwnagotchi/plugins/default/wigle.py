@@ -126,11 +126,10 @@ def _extract_gps_data(path):
         with open(path, 'r') as json_file:
             return json.load(json_file)
     except OSError as os_err:
-        logging.error("WIGLE: %s", os_err)
+        raise os_err
     except json.JSONDecodeError as json_err:
-        logging.error("WIGLE: %s", json_err)
+        raise json_err
 
-    return None
 
 def _format_auth(data):
     out = ""
@@ -203,16 +202,18 @@ def on_internet_available(display, config, log):
     if READY:
         handshake_dir = config['bettercap']['handshakes']
         all_files = os.listdir(handshake_dir)
-        gps_files = [os.path.join(handshake_dir, filename)
+        all_gps_files = [os.path.join(handshake_dir, filename)
                      for filename in all_files
                      if filename.endswith('.gps.json')]
-        gps_new = set(gps_files) - set(ALREADY_UPLOADED) - set(SKIP)
+        new_gps_files = set(all_gps_files) - set(ALREADY_UPLOADED) - set(SKIP)
 
-        if gps_new:
+        if new_gps_files:
             logging.info("WIGLE: Internet connectivity detected. Uploading new handshakes to wigle.net")
 
-            lines = list()
-            for gps_file in gps_new:
+            csv_entries = list()
+            no_err_entries = list()
+
+            for gps_file in new_gps_files:
                 pcap_filename = gps_file.replace('.gps.json', '.pcap')
 
                 if not os.path.exists(pcap_filename):
@@ -220,7 +221,17 @@ def on_internet_available(display, config, log):
                     SKIP.append(gps_file)
                     continue
 
-                gps_data = _extract_gps_data(gps_file)
+                try:
+                    gps_data = _extract_gps_data(gps_file)
+                except OSError as os_err:
+                    logging.error("WIGLE: %s", os_err)
+                    SKIP.append(gps_file)
+                    continue
+                except json.JSONDecodeError as json_err:
+                    logging.error("WIGLE: %s", json_err)
+                    SKIP.append(gps_file)
+                    continue
+
                 try:
                     pcap_data = _analyze_pcap(pcap_filename)
                 except Scapy_Exception as sc_e:
@@ -228,34 +239,37 @@ def on_internet_available(display, config, log):
                     SKIP.append(gps_file)
                     continue
 
+                # encrypption-key is only there if privacy-cap was set
                 if 'encryption' in pcap_data:
                     if not pcap_data['encryption']:
                         pcap_data['encryption'].add('WEP')
                 else:
+                    # no encryption, nothing to eat :(
                     pcap_data['encryption'] = set()
                     pcap_data['encryption'].add('OPN')
 
                 if len(pcap_data) < 5:
-                    # not enough data
+                    # not enough data; try next time
                     SKIP.append(gps_file)
                     continue
 
                 new_entry = _transform_wigle_entry(gps_data, pcap_data)
-                lines.append(new_entry)
+                csv_entries.append(new_entry)
+                no_err_entries.append(gps_file)
 
-            if lines:
+            if csv_entries:
                 display.set('status', "Uploading gps-data to wigle.net ...")
                 display.update(force=True)
                 try:
-                    _send_to_wigle(lines, OPTIONS['api_key'])
-                    ALREADY_UPLOADED += gps_new
+                    _send_to_wigle(csv_entries, OPTIONS['api_key'])
+                    ALREADY_UPLOADED += no_err_entries
                     with open('/root/.wigle_uploads', 'a') as up_file:
-                        for gps in gps_new:
+                        for gps in no_err_entries:
                             up_file.write(gps + "\n")
-                    logging.info("WIGLE: Successfuly uploaded %d files", len(gps_new))
+                    logging.info("WIGLE: Successfuly uploaded %d files", len(no_err_entries))
                 except requests.exceptions.RequestException as re_e:
-                    SKIP += lines
+                    SKIP += no_err_entries
                     logging.error("WIGLE: Got an exception while uploading %s", re_e)
                 except OSError as os_e:
-                    SKIP += lines
+                    SKIP += no_err_entries
                     logging.error("WIGLE: Got the following error: %s", os_e)
