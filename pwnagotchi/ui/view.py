@@ -153,7 +153,7 @@ class View(object):
         self.set('face', faces.AWAKE)
 
     def on_ai_ready(self):
-        self.set('mode', '')
+        self.set('mode', '  AI')
         self.set('face', faces.HAPPY)
         self.set('status', self._voice.on_ai_ready())
         self.update()
