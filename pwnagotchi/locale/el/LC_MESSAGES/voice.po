@@ -33,11 +33,11 @@ msgid "AI ready."
 msgstr "ΤΝ έτοιμη."
 
 msgid "The neural network is ready."
-msgstr "Το νευρωνικό δίκτυοείναι έτοιμο."
+msgstr "Το νευρωνικό δίκτυο είναι έτοιμο."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "Ε, το κανάλι {channel} είναιελεύθερο! Το AP σου θαείναι ευγνώμων."
+msgstr "Ε, το κανάλι {channel} είναιελεύθερο! Το AP σου θα είναι ευγνώμων."
 
 msgid "I'm bored ..."
 msgstr "Βαριέμαι ..."

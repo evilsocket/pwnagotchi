@@ -1,0 +1,15 @@
+crypto==1.4.1
+requests==2.21.0
+PyYAML==5.1
+scapy==2.4.3
+gym==0.14.0
+stable-baselines==2.7.0
+tensorflow==1.13.1
+tensorflow-estimator==1.14.0
+tweepy==3.6.0
+file-read-backwards==2.0.0
+numpy==1.17.2
+inky==0.0.5
+smbus2==0.3.0
+Pillow==5.4.1
+spidev==3.4

@@ -16,7 +16,6 @@
     services:
       enable:
         - dphys-swapfile.service
-        - getty@ttyGS0.service
       disable:
         - apt-daily.timer
         - apt-daily.service
@@ -245,6 +244,37 @@
         #!/usr/bin/env bash
         free -m | awk '/Mem/ { printf( "%d %", $3 / $2 * 100 + 0.5 ) }'
 
+  - name: create bootblink script
+    copy:
+      dest: /usr/bin/bootblink
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        for i in $(seq 1 "$1");
+        do
+        echo 0 >/sys/class/leds/led0/brightness
+        sleep 0.3
+        echo 1 >/sys/class/leds/led0/brightness
+        sleep 0.3
+        done
+        echo 0 >/sys/class/leds/led0/brightness
+        sleep 0.3
+
+  - name: create pwnagotchi-launcher script
+    copy:
+      dest: /usr/bin/pwnagotchi-launcher
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        # blink 10 times to signal ready state
+        /usr/bin/bootblink 10 &
+        # start a detached screen session with bettercap
+        if ifconfig | grep usb0 | grep RUNNING; then
+          /usr/bin/pwnagotchi --manual
+        else
+          /usr/bin/pwnagotchi
+        fi
+
   - name: create monstart script
     copy:
       dest: /usr/bin/monstart
@@ -261,6 +291,22 @@
         #!/usr/bin/env bash
         ifconfig mon0 down && iw dev mon0 del
 
+  - name: create hdmion script
+    copy:
+      dest: /usr/bin/hdmion
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        sudo /opt/vc/bin/tvservice -p
+
+  - name: create hdmioff script
+    copy:
+      dest: /usr/bin/hdmioff
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        sudo /opt/vc/bin/tvservice -o
+
   - name: configure rc.local
     blockinfile:
       path: /etc/rc.local
@@ -270,6 +316,13 @@
           /opt/vc/bin/tvservice -o
         fi
         /root/pwnagotchi/scripts/startup.sh &
+
+  - name: create /etc/pwnagotchi/config.yml
+    blockinfile:
+      path: /etc/pwnagotchi/config.yml
+      create: yes
+      block: |
+        # put here your custom configuration overrides
 
   - name: configure lo interface
     blockinfile:
@@ -335,7 +388,7 @@
       state: present
       backup: no
       regexp: '(.*)$'
-      line: '\1 modules-load=dwc2,g_cdc'
+      line: '\1 modules-load=dwc2,g_ether'
 
   - name: configure ssh
     lineinfile:

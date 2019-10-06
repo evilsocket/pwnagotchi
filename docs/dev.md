@@ -26,7 +26,7 @@ usage: ./scripts/create_sibling.sh [OPTIONS]
 
 `GLib-ERROR **: 20:50:46.361: getauxval () failed: No such file or directory`
 
-- Affected DEB & Versions: QEMU <= 2.11 
+- Affected DEB & Versions: QEMU <= 2.11
 - Fix: Upgrade QEMU to >= 3.1
 - Bug Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=923289
 
@@ -55,7 +55,6 @@ If you changed the `voice.py`- File, the translations need an update. Do it like
 Now you can use the `preview.py`-script to preview the changes:
 
 ```shell
-./scripts/preview.py --lang it --display ws2 --port 8080 &
-./scripts/preview.py --lang it --display inky --port 8081 &
-# Now open http://localhost:8080 and http://localhost:8081
+./scripts/preview.py --lang it --display ws1 ws2 inky --output preview.png
+# Now open preview.png
 ```

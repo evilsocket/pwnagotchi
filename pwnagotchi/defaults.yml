@@ -153,8 +153,8 @@ bettercap:
     scheme: http
     hostname: localhost
     port: 8081
-    username: user
-    password: pass
+    username: pwnagotchi
+    password: pwnagotchi
     # folder where bettercap stores the WPA handshakes, given that
     # wifi.handshakes.aggregate will be set to false and individual
     # pcap files will be created in order to minimize the chances
