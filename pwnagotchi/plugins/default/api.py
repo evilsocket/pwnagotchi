@@ -38,7 +38,6 @@ def on_internet_available(ui, keypair, config, log):
         }
 
         logging.info("api: enrolling unit to %s ..." % api_address)
-
         r = requests.post(api_address, json=enroll)
         if r.status_code == 200:
             token = r.json()
