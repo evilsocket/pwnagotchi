@@ -36,12 +36,12 @@ For hackers to learn reinforcement learning, WiFi networking, and have an excuse
 
 ---
 - [About the Project](https://github.com/evilsocket/pwnagotchi/blob/master/docs/about.md)
-- [FAQ](https://github.com/evilsocket/pwnagotchi/blob/master/docs/faq.md)
 - [How to Install](https://github.com/evilsocket/pwnagotchi/blob/master/docs/install.md)
 - [Configuration](https://github.com/evilsocket/pwnagotchi/blob/master/docs/configure.md)
 - [Usage](https://github.com/evilsocket/pwnagotchi/blob/master/docs/usage.md)
 - [Plugins](https://github.com/evilsocket/pwnagotchi/blob/master/docs/plugins.md)
 - [Development](https://github.com/evilsocket/pwnagotchi/blob/master/docs/dev.md)
+- [FAQ](https://github.com/evilsocket/pwnagotchi/blob/master/docs/faq.md)
 - [Community Hacks](https://github.com/evilsocket/pwnagotchi/blob/master/docs/hacks.md)
 
 ## Links
