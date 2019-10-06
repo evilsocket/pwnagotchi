@@ -6,7 +6,7 @@ import yaml
 
 sys.path.insert(0,
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                             '../pwnagotchi/'))
+                             '../'))
 
 from pwnagotchi.ui.display import Display, VideoHandler
 from PIL import Image
