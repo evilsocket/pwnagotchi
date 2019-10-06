@@ -17,25 +17,27 @@ Multiple units within close physical proximity can "talk" to each other, adverti
 
 Of course, it is possible to run your Pwnagotchi with the AI disabled (configurable in `config.yml`). Why might you want to do this? Perhaps you simply want to use your own fixed parameters (instead of letting the AI decide for you), or maybe you want to save battery and CPU cycles, or maybe it's just you have strong concerns about aiding and abetting baby Skynet. Whatever your particular reasons may be: an AI-disabled Pwnagotchi is still a simple and very effective automated deauther, WPA handshake sniffer, and portable [bettercap](https://www.bettercap.org/) + [webui](https://github.com/evilsocket/pwnagotchi/blob/master/docs/usage.md#bettercaps-web-ui) dedicated hardware.
 
-## WPA/WPA2 Handshakes 101
+## WiFi Handshakes 101
 
-Before a device that's connecting to a wireless access point (say, your phone connecting to your home WiFi) is able to securely transmit and receive data, a process called *4-Way Handshake* needs to happen in order for WPA encryption keys to be generated. 
-This process consists in the exchange of four packets (therefore the "4" in the name) between the station and the AP that are used to derive session keys from the main access point WiFi password, once the packets are successfully 
-exchanged and the keys generated, the client station is authenticated and can start sending data packets that are secured by encryption.
+In order to understand why it's valuable to have an AI that wants to eat handshakes, it's helpful to understand a little bit about how handshakes are used in the WPA/WPA2 wireless protocol.
 
-<p>
+Before a client device that's connecting to a wireless access point—say, for instance, your phone connecting to your home WiFi network—is able to securely transmit to and receive data from that access point, a process called the **4-Way Handshake** needs to happen in order for the WPA encryption keys to be generated. This process consists of the exchange of four packets (hence the "4" in "4-Way") between the client device and the AP; these are used to derive session keys from the access point's WiFi password. Once the packets are successfully exchanged and the keys have been generated, the client device is authenticated and can start sending and receiving data packets to and from the wireless AP that are secured by encryption.
+
+<p align="center">
 <img src="https://i.imgur.com/nI8IE6a.png"/>
 <br/>
 <small>image taken from <a target="_blank" href="https://www.wifi-professionals.com/2019/01/4-way-handshake">wifi-professionals.com</a></small>
 </p>
 
-The catch here is that these four packets can be "sniffed" by an attacker and, through the use of dictionary and/or bruteforce attacks, the original WiFi key can be recovered from them. Technically speaking, the recovery of 
-the WiFi key doesn't necessarily need all four packets: an half-handshake (containing ony two of the four packets) can be cracked too, and in some (most) cases even just [a single packet is enough](https://hashcat.net/forum/thread-7717-post-41447.html), even without clients.
+So...what's the catch? Well, these four packets can easily be "sniffed" by an attacker monitoring nearby (say, with a Pwnagotchi :innocent:). And once recorded, that attacker can use [dictionary and/or bruteforce attacks](https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2) to crack the handshakes and recover the original WiFi key. In fact, **successful recovery of the WiFi key doesn't necessarily even need all four packets!** A half-handshake (containing only two of the four packets) can be cracked, too—and in some *(most)* cases, just [a single packet is enough](https://hashcat.net/forum/thread-7717-post-41447.html), *even without clients.*
 
-In order to get these packets, Pwnagotchi will deauthenticate client stations it detects (thus forcing them to reauthenticate to their access point, resending the handshake packets) and send association frames to the access points 
+In order to ~~eat~~ collect as many of these crackable handshake packets as possible, Pwnagotchi uses two strategies:
+
+- **Deauthenticating the client stations it detects.** A deauthenticated device must reauthenticate to its access point by resending the 4-Way Handshake, thereby giving Pwnagotchi another chance to sniff the handshake packets and collect more crackable material.
+- **Send association frames directly to the access points themselves**
 to try to force them to [leak the PMKID](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/).
 
-All the handshakes captured this way are saved into `.pcap` files (organized as one file per access point containing all the captured handshakes for that access point) that can later be [cracked with proper hardware and software](https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2).
+All the handshakes captured this way are saved into `.pcap` files on Pwnagotchi's filesystem. Each PCAP file that Pwnagotchi generates is organized according to access point; one PCAP will contain all the handshakes that Pwnagotchi has ever captured for that particular AP. These handshakes can later be [cracked with proper hardware and software](https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2).
 
 ## License
 
