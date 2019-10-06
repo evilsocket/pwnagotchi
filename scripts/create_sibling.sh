@@ -96,7 +96,6 @@ function setup_raspbian(){
   if [ "${OPT_SPARSE}" -eq 0 ]; then
     if ! type "bmaptool" > /dev/null; then
       echo "[!] bmaptool not available, not creating a sparse image"
-      
     else
       echo "[+] Defaulting to sparse image generation as bmaptool is available"
       OPT_SPARSE=1
