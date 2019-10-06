@@ -33,7 +33,7 @@ So...what's the catch? Well, these four packets can easily be "sniffed" by an at
 
 In order to ~~eat~~ collect as many of these crackable handshake packets as possible, Pwnagotchi uses two strategies:
 
-- **Deauthenticating the client stations it detects.** A deauthenticated device must reauthenticate to its access point by resending the 4-Way Handshake, thereby giving Pwnagotchi another chance to sniff the handshake packets and collect more crackable material.
+- **Deauthenticating the client stations it detects.** A deauthenticated device must reauthenticate to its access point by re-performing the 4-Way Handshake with the AP, thereby giving Pwnagotchi another chance to sniff the handshake packets and collect more crackable material.
 - **Send association frames directly to the access points themselves**
 to try to force them to [leak the PMKID](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/).
 
