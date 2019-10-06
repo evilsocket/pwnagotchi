@@ -62,7 +62,7 @@ def on_internet_available(display, config, log):
     if READY:
         handshake_dir = config['bettercap']['handshakes']
         handshake_filenames = os.listdir(handshake_dir)
-        handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames]
+        handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames if filename.endswith('.pcap')]
         handshake_new = set(handshake_paths) - set(ALREADY_UPLOADED)
 
         if handshake_new:
