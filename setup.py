@@ -19,6 +19,7 @@ setup(name='pwnagotchi',
       install_requires=required,
       scripts=['bin/pwnagotchi'],
       package_data={'pwnagotchi': ('pwnagotchi/defaults.yml',)},
+      packages=find_packages(),
       classifiers=[
           'Programming Language :: Python :: 3',
           'Development Status :: 5 - Production/Stable',
