@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-C', '--config', action='store', dest='config',
-                        default=os.path.join(os.path.abspath(os.path.dirname(pwnagotchi.__file__)), '/defaults.yml'),
+                        default=os.path.join(os.path.abspath(os.path.dirname(pwnagotchi.__file__)), 'defaults.yml'),
                         help='Main configuration file.')
     parser.add_argument('-U', '--user-config', action='store', dest='user_config', default='/etc/pwnagotchi/config.yml',
                         help='If this file exists, configuration will be merged and this will override default values.')
