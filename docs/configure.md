@@ -7,13 +7,13 @@ Once you've [written the image file onto the SD card](https://github.com/evilsoc
 1. First, start with connecting the USB cable to the data port of the Raspberry Pi and the RPi to your computer. 
 2. After a few seconds, the board will boot and you will see a new Ethernet interface on your host computer.
 3. You'll need to configure it with a static IP address:
+     - IP: `10.0.0.1`
+     - Netmask: `255.255.255.0`
+     - Gateway: `10.0.0.1`
+     - DNS (if required): `8.8.8.8` (or whatever)
 
-  - IP: `10.0.0.1`
-  - Netmask: `255.255.255.0`
-  - Gateway: `10.0.0.1`
-  - DNS (if required): `8.8.8.8` (or whatever)
-
-4. If everything's been configured properly, you will now be able to `ping` both `10.0.0.2` or `pwnagotchi.local` (if you haven't customized the hostname yet—if you have named your unit already, this address will be *your unit's name* + `.local`).
+4. If everything's been configured properly, you will now be able to `ping` both `10.0.0.2` or `pwnagotchi.local`
+     * If you have already customized the hostname of your Pwnagotchi, `pwnagotchi.local` won't work. Instead, try *your unit's hostname* + `.local`.
 
 5. **Congratulations!** You can now connect to your unit using SSH:
 
