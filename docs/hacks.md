@@ -95,7 +95,7 @@ sudo bt-network -a hci0 -s nap pan0 &
 - Shutdown mobile data.
 - Connect to the newly available Bluetooth device (which has the name of your Pwnagotchi).
    - Once connected, you can test: `http://172.26.0.1:8080`
-- You can also install bettercap's UI (`sudo buttercap` then `ui.update`) 
+- You can also install bettercap's UI (`sudo bettercap` then `ui.update`) 
    - You'll need to change the http caplets to change `127.0.0.1` to `0.0.0.0`.
 - You can connect to the shell with a terminal emulator ...
 
