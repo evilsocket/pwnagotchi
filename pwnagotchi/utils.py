@@ -89,6 +89,9 @@ class StatusFile(object):
         if os.path.exists(path):
             self._updated = datetime.fromtimestamp(os.path.getmtime(path))
 
+    def newer_then_minutes(self, minutes):
+        return self._updated is not None and ((datetime.now() - self._updated).seconds / 60) < minutes
+
     def newer_then_days(self, days):
         return self._updated is not None and (datetime.now() - self._updated).days < days
 

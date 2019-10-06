@@ -12,7 +12,6 @@ import csv
 from datetime import datetime
 import requests
 from pwnagotchi.mesh.wifi import freq_to_channel
-from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
 
 READY = False
 ALREADY_UPLOADED = None
@@ -26,6 +25,8 @@ AKMSUITE_TYPES = {
 }
 
 def _handle_packet(packet, result):
+    from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, \
+        Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
     """
     Analyze each packet and extract the data from Dot11 layers
     """
@@ -76,6 +77,8 @@ def _handle_packet(packet, result):
 
 
 def _analyze_pcap(pcap):
+    from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, \
+        Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
     """
     Iterate over the packets and extract data
     """
@@ -192,7 +195,9 @@ def _send_to_wigle(lines, api_key, timeout=30):
         raise re_e
 
 
-def on_internet_available(display, config, log):
+def on_internet_available(display, keypair, config, log):
+    from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, \
+        Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
     """
     Called in manual mode when there's internet connectivity
     """

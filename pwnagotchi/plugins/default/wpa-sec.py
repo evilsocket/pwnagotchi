@@ -54,7 +54,7 @@ def _upload_to_wpasec(path, timeout=30):
             raise e
 
 
-def on_internet_available(display, config, log):
+def on_internet_available(display, keypair, config, log):
     """
     Called in manual mode when there's internet connectivity
     """

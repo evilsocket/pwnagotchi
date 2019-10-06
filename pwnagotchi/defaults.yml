@@ -6,6 +6,8 @@ main:
     custom_plugins:
     # which plugins to load and enable
     plugins:
+      api:
+        enabled: false
       auto-update:
         enabled: false
         interval: 1 # every day

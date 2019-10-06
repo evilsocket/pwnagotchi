@@ -33,7 +33,7 @@ def on_loaded():
     logging.info("AUTO-BACKUP: Successfuly loaded.")
 
 
-def on_internet_available(display, config, log):
+def on_internet_available(display, keypair, config, log):
     global STATUS
 
     if READY:
