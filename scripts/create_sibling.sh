@@ -94,7 +94,7 @@ function provide_raspbian() {
 function setup_raspbian(){
   # Detect the ability to create sparse files
   if [ "${OPT_SPARSE}" -eq 0 ]; then
-    if [ which bmaptool -eq 0 ]; then
+    if ! type "bmaptool" > /dev/null; then
       echo "[!] bmaptool not available, not creating a sparse image"
       
     else
