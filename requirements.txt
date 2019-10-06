@@ -1,6 +1,6 @@
 crypto==1.4.1
 requests==2.21.0
-PyYAML==3.13
+PyYAML==5.1
 scapy==2.4.3
 gym==0.14.0
 stable-baselines==2.7.0
