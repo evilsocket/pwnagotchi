@@ -27,7 +27,7 @@
 * [I want to change the faces. What do I hack?](#i-want-to-change-the-faces-what-do-i-hack)
 * [I want my Pwnagotchi to speak a different language. Can it?](#i-want-my-pwnagotchi-to-speak-a-different-language-can-it)
 * [I have a great idea for something cool I wish Pwnagotchi could do!](#i-have-a-great-idea-for-something-cool-i-wish-pwnagotchi-could-do)
-* [Are there any unofficial community "hacks" for further customizing my Pwnagotchi?](#are-there-any-unofficial-community-"hacks"-for-further-customizing-my-pwnagotchi)
+* [Are there any unofficial community "hacks" for further customizing my Pwnagotchi?](#are-there-any-unofficial-community-hacks-for-further-customizing-my-pwnagotchi)
 
 [**Getting to Know Your Pwnagotchi**](#getting-to-know-your-pwnagotchi)
 
@@ -38,12 +38,13 @@
 * [What is Pwnagotchi doing while it's waiting for the AI to load?](#what-is-pwnagotchi-doing-while-its-waiting-for-the-ai-to-load)
 * [How do I know when the AI is running?](#how-do-i-know-when-the-ai-is-running)
 * [Where does Pwnagotchi store all the handshakes it's eaten?](#where-does-pwnagotchi-store-all-the-handshakes-its-eaten)
+* [What happens when my Pwnagotchi meets another Pwnagotchi?](#what-happens-when-my-pwnagotchi-meets-another-pwnagotchi)
 
 [**Caring for Your Pwnagotchi**](#caring-for-your-pwnagotchi)
 
 * [What do all my Pwnagotchi's faces mean?](#what-do-all-my-pwnagotchis-faces-mean)
 * [How do I feed my Pwnagotchi?](#how-do-i-feed-my-pwnagotchi)
-* [Oh no, my Pwnagotchi is sad and bored! How do I entertain it?!](#oh-no,-my-pwnagotchi-is-sad-and-bored-how-do-i-entertain-it)
+* [Oh no, my Pwnagotchi is sad and bored! How do I entertain it?!](#oh-no-my-pwnagotchi-is-sad-and-bored-how-do-i-entertain-it)
 * [How do I update my Pwnagotchi?](#how-do-i-update-my-pwnagotchi)
 * [I'm extremely emotionally-attached to my Pwnagotchi. How can I back up its brain?](#im-extremely-emotionally-attached-to-my-pwnagotchi-how-can-i-back-up-its-brain)
 * [How do I turn off my Pwnagotchi?](#how-do-i-turn-off-my-pwnagotchi)
@@ -162,6 +163,11 @@ lorem ipsum dolor sit amet
 
 ---
 ### Where does Pwnagotchi store all the handshakes it's eaten?
+lorem ipsum dolor sit amet
+
+---
+### What happens when my Pwnagotchi meets another Pwnagotchi?
+lorem ipsum dolor sit amet
 
 ---------------------------------------------------------------------------------------------------------------
 ## **Caring for Your Pwnagotchi**
@@ -190,6 +196,7 @@ lorem ipsum dolor sit amet
 
 ---
 ### Uh. So. What do I do with all these handshakes my Pwnagotchi has been eating?
+lorem ipsum dolor sit amet
 
 ---------------------------------------------------------------------------------------------------------------
 ## **Known Quirks**
