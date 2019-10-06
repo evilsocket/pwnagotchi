@@ -22,7 +22,7 @@ def on_loaded():
 def on_internet_available(ui, keypair, config, log):
     global STATUS
 
-    if STATUS.newer_then_minutes(10):
+    if STATUS.newer_then_minutes(25):
         return
 
     try:
