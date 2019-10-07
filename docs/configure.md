@@ -54,13 +54,14 @@ But if you want, you can change `main.lang` to one of the supported languages:
 ## PwnGRID
 
 By default the `grid` [plugin](https://github.com/evilsocket/pwnagotchi/blob/master/docs/plugins.md) is **only partially** enabled, this means that whenever the unit will detect internet connectivity in manual mode, it'll signal its 
-presence to the PwnGRID server without sending any data. 
+presence to the PwnGRID server without sending any data other than: 
+
+- The cryptographic identity of the unit, generated at first boot and used for authentication.
+- The output of the `uname -a` command on the unit used to determine the type of hardware.
 
 It is possible to fully opt-in and also enable the unit to send basic information about the pwned networks. None of the captured cryptographic material is sent to this server, 
 just the minimum information to enroll the unit in the database and know how many networks it "conquered" so far, namely:
 
-- The cryptographic identity of the unit, generated at first boot and used for authentication.
-- The output of the `uname -a` command on the unit used to determine the type of hardware.
 - The list of networks that the unit collected handshakes of, made of their `BSSID` and `ESSID`.
 
 Other than for easy unit identification and debugging, this data is collected in order to build drankings, scoreboards and regional statistics. **Like Pokèmon Go, but for WiFi!**
