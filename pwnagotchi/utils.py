@@ -20,13 +20,15 @@ def merge_config(user, default):
 
 
 def load_config(args):
-    with open(args.config, 'rt') as fp:
+    with open(args.config) as fp:
         config = yaml.safe_load(fp)
 
     if os.path.exists(args.user_config):
-        with open(args.user_config, 'rt') as fp:
+        with open(args.user_config) as fp:
             user_config = yaml.safe_load(fp)
-            config = merge_config(user_config, config)
+            # if the file is empty, safe_load will return None and merge_config will boom.
+            if user_config:
+                config = merge_config(user_config, config)
 
     return config
 
