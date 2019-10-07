@@ -69,63 +69,70 @@ def get_api_token(log, keys):
 
 def parse_packet(packet, info):
     from scapy.all import Dot11Elt, Dot11Beacon, Dot11, Dot11ProbeResp, Dot11AssoReq, Dot11ReassoReq
-
     if packet.haslayer(Dot11Beacon):
-        if packet.haslayer(Dot11Beacon) \
-                or packet.haslayer(Dot11ProbeResp) \
-                or packet.haslayer(Dot11AssoReq) \
-                or packet.haslayer(Dot11ReassoReq):
-            if 'bssid' not in info and hasattr(packet[Dot11], 'addr3'):
+        if packet.haslayer(Dot11ProbeResp) or packet.haslayer(Dot11AssoReq) or packet.haslayer(Dot11ReassoReq):
+            if hasattr(packet[Dot11], 'addr3'):
                 info['bssid'] = packet[Dot11].addr3
-            if 'essid' not in info and hasattr(packet[Dot11Elt], 'info'):
+            if hasattr(packet[Dot11Elt], 'info'):
                 info['essid'] = packet[Dot11Elt].info.decode('utf-8')
-
     return info
 
 
 def parse_pcap(filename):
     logging.info("api: parsing %s ..." % filename)
 
-    essid = bssid = None
+    net_id = os.path.basename(filename).replace('.pcap', '')
+
+    if '_' in net_id:
+        # /root/handshakes/ESSID_BSSID.pcap
+        essid, bssid = net_id.split('_')
+    else:
+        # /root/handshakes/BSSID.pcap
+        essid, bssid = '', net_id
+
+    it = iter(bssid)
+    bssid = ':'.join([a + b for a, b in zip(it, it)])
+
+    info = {
+        'essid': essid,
+        'bssid': bssid
+    }
 
     try:
         from scapy.all import rdpcap
 
-        info = {}
-
         for pkt in rdpcap(filename):
             info = parse_packet(pkt, info)
-            if 'essid' in info and info['essid'] is not None and 'bssid' in info and info['bssid'] is not None:
-                break
-
-        bssid = info['bssid'] if 'bssid' in info else None
-        essid = info['essid'] if 'essid' in info else None
 
     except Exception as e:
-        bssid = None
         logging.error("api: %s" % e)
 
-    return essid, bssid
+    return info['essid'], info['bssid']
 
 
-def api_report_ap(token, essid, bssid):
-    logging.info("api: reporting %s (%s)" % (essid, bssid))
-
-    try:
-        api_address = 'https://api.pwnagotchi.ai/api/v1/unit/report/ap'
-        headers = {'Authorization': 'access_token %s' % token}
-        report = {
-            'essid': essid,
-            'bssid': bssid,
-        }
-        r = requests.post(api_address, headers=headers, json=report)
-        if r.status_code != 200:
-            raise Exception("(status %d) %s" % (r.status_code, r.text))
-    except Exception as e:
-        logging.error("api: %s" % e)
-        return False
-
-    return True
+def api_report_ap(log, keys, token, essid, bssid):
+    while True:
+        logging.info("api: reporting %s (%s)" % (essid, bssid))
+        try:
+            api_address = 'https://api.pwnagotchi.ai/api/v1/unit/report/ap'
+            headers = {'Authorization': 'access_token %s' % token}
+            report = {
+                'essid': essid,
+                'bssid': bssid,
+            }
+            r = requests.post(api_address, headers=headers, json=report)
+            if r.status_code != 200:
+                if r.status_code == 401:
+                    logging.warning("token expired")
+                    token = get_api_token(log, keys)
+                    continue
+                else:
+                    raise Exception("(status %d) %s" % (r.status_code, r.text))
+            else:
+                return True
+        except Exception as e:
+            logging.error("api: %s" % e)
+            return False
 
 
 def on_internet_available(ui, keys, config, log):
@@ -149,7 +156,7 @@ def on_internet_available(ui, keys, config, log):
                     if net_id not in reported:
                         essid, bssid = parse_pcap(pcap_file)
                         if bssid:
-                            if api_report_ap(token, essid, bssid):
+                            if api_report_ap(log, keys, token, essid, bssid):
                                 reported.append(net_id)
                                 REPORT.update(data={'reported': reported})
             else:
