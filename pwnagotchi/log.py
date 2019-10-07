@@ -13,7 +13,7 @@ LAST_SESSION_FILE = '/root/.pwnagotchi-last-session'
 
 class SessionParser(object):
     EPOCH_TOKEN = '[epoch '
-    EPOCH_PARSER = re.compile(r'^\s*\[epoch (\d+)\] (.+)')
+    EPOCH_PARSER = re.compile(r'^.+\[epoch (\d+)\] (.+)')
     EPOCH_DATA_PARSER = re.compile(r'([a-z_]+)=([^\s]+)')
     TRAINING_TOKEN = ' training epoch '
     START_TOKEN = 'connecting to http'
