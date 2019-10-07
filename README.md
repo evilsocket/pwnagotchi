@@ -36,15 +36,7 @@ For hackers to learn reinforcement learning, WiFi networking, and have an excuse
 
 **IMPORTANT NOTE:** If you'd like to alphatest Pwnagotchi and are trying to get yours up and running while the project is still very unstable, please understand that the documentation here may not reflect what is currently implemented. If you have questions, ask the community of alphatesters in the [official Pwnagotchi Slack](https://pwnagotchi.herokuapp.com). The Pwnagotchi dev team is entirely focused on the v1.0 release and will NOT be providing support for alphatesters trying to get their Pwnagotchis working in the meantime. All technical support during this period of development is being provided by your fellow alphatesters in the Slack (thanks, everybody! :heart:).
 
----
-- [About the Project](https://github.com/evilsocket/pwnagotchi/blob/master/docs/about.md)
-- [How to Install](https://github.com/evilsocket/pwnagotchi/blob/master/docs/install.md)
-- [Configuration](https://github.com/evilsocket/pwnagotchi/blob/master/docs/configure.md)
-- [Usage](https://github.com/evilsocket/pwnagotchi/blob/master/docs/usage.md)
-- [Plugins](https://github.com/evilsocket/pwnagotchi/blob/master/docs/plugins.md)
-- [Development](https://github.com/evilsocket/pwnagotchi/blob/master/docs/dev.md)
-- [FAQ](https://github.com/evilsocket/pwnagotchi/blob/master/docs/faq.md)
-- [Community Hacks](https://github.com/evilsocket/pwnagotchi/blob/master/docs/hacks.md)
+https://www.pwnagotchi.ai
 
 ## Links
 
