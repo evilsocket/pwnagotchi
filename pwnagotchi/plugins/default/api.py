@@ -7,6 +7,7 @@ __description__ = 'This plugin signals the unit cryptographic identity to api.pw
 import logging
 import json
 import requests
+import subprocess
 import pwnagotchi
 from pwnagotchi.utils import StatusFile
 
@@ -27,6 +28,7 @@ def on_internet_available(ui, keypair, config, log):
 
     try:
         logging.info("api: signign enrollment request ...")
+
         identity = "%s@%s" % (pwnagotchi.name(), keypair.fingerprint)
         _, signature_b64 = keypair.sign(identity)
 
@@ -34,7 +36,16 @@ def on_internet_available(ui, keypair, config, log):
         enroll = {
             'identity': identity,
             'public_key': keypair.pub_key_pem_b64,
-            'signature': signature_b64
+            'signature': signature_b64,
+            'data': {
+                'duration': log.duration,
+                'epochs': log.epochs,
+                'train_epochs': log.train_epochs,
+                'avg_reward': log.avg_reward,
+                'min_reward': log.min_reward,
+                'max_reward': log.max_reward,
+                'uname': subprocess.getoutput("uname -a")
+            }
         }
 
         logging.info("api: enrolling unit to %s ..." % api_address)
