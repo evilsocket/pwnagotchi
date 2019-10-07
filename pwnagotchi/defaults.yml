@@ -18,9 +18,8 @@ main:
         files:
           - /root/brain.nn
           - /root/brain.json
-          - /root/custom.yml
-          - /root/handshakes
-          - /etc/ssh
+          - /root/handshakes/
+          - /etc/pwnagotchi/
           - /etc/hostname
           - /etc/hosts
           - /etc/motd
