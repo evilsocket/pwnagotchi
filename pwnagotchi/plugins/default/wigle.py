@@ -12,6 +12,7 @@ import csv
 from datetime import datetime
 import requests
 from pwnagotchi.mesh.wifi import freq_to_channel
+from pwnagotchi.utils import WifiInfo, FieldNotFoundError, extract_from_pcap
 
 READY = False
 ALREADY_UPLOADED = None
@@ -151,13 +152,13 @@ def _transform_wigle_entry(gps_data, pcap_data):
 
     writer = csv.writer(dummy, delimiter=",", quoting=csv.QUOTE_NONE)
     writer.writerow([
-        pcap_data['bssid'],
-        pcap_data['essid'].decode('utf-8'),
-        _format_auth(pcap_data['encryption']),
+        pcap_data[WifiInfo.BSSID],
+        pcap_data[WifiInfo.ESSID],
+        _format_auth(pcap_data[WifiInfo.ENCRYPTION]),
         datetime.strptime(gps_data['Updated'].rsplit('.')[0],
                           "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d %H:%M:%S'),
-        pcap_data['channel'],
-        pcap_data['rssi'],
+        pcap_data[WifiInfo.CHANNEL],
+        pcap_data[WifiInfo.RSSI],
         gps_data['Latitude'],
         gps_data['Longitude'],
         gps_data['Altitude'],
@@ -238,23 +239,17 @@ def on_internet_available(display, keypair, config, log):
                     continue
 
                 try:
-                    pcap_data = _analyze_pcap(pcap_filename)
-                except Scapy_Exception as sc_e:
-                    logging.error("WIGLE: %s", sc_e)
+                    pcap_data = extract_from_pcap(pcap_filename, [WifiInfo.BSSID,
+                                                                  WifiInfo.ESSID,
+                                                                  WifiInfo.ENCRYPTION,
+                                                                  WifiInfo.CHANNEL,
+                                                                  WifiInfo.RSSI])
+                except FieldNotFoundError:
+                    logging.error("WIGLE: Could not extract all informations. Skip %s", gps_file)
                     SKIP.append(gps_file)
                     continue
-
-                # encrypption-key is only there if privacy-cap was set
-                if 'encryption' in pcap_data:
-                    if not pcap_data['encryption']:
-                        pcap_data['encryption'].add('WEP')
-                else:
-                    # no encryption, nothing to eat :(
-                    pcap_data['encryption'] = set()
-                    pcap_data['encryption'].add('OPN')
-
-                if len(pcap_data) < 5:
-                    # not enough data; try next time
+                except Scapy_Exception as sc_e:
+                    logging.error("WIGLE: %s", sc_e)
                     SKIP.append(gps_file)
                     continue
 

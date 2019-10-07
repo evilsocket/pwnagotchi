@@ -11,6 +11,7 @@ import glob
 import subprocess
 import pwnagotchi
 import pwnagotchi.utils as utils
+from pwnagotchi.utils import WifiInfo, extract_from_pcap
 
 OPTIONS = dict()
 AUTH = utils.StatusFile('/root/.api-enrollment.json', data_format='json')
@@ -67,17 +68,6 @@ def get_api_token(log, keys):
     return AUTH.data["token"]
 
 
-def parse_packet(packet, info):
-    from scapy.all import Dot11Elt, Dot11Beacon, Dot11, Dot11ProbeResp, Dot11AssoReq, Dot11ReassoReq
-    if packet.haslayer(Dot11Beacon):
-        if packet.haslayer(Dot11ProbeResp) or packet.haslayer(Dot11AssoReq) or packet.haslayer(Dot11ReassoReq):
-            if hasattr(packet[Dot11], 'addr3'):
-                info['bssid'] = packet[Dot11].addr3
-            if hasattr(packet[Dot11Elt], 'info'):
-                info['essid'] = packet[Dot11Elt].info.decode('utf-8')
-    return info
-
-
 def parse_pcap(filename):
     logging.info("api: parsing %s ..." % filename)
 
@@ -94,20 +84,16 @@ def parse_pcap(filename):
     bssid = ':'.join([a + b for a, b in zip(it, it)])
 
     info = {
-        'essid': essid,
-        'bssid': bssid
+        WifiInfo.ESSID: essid,
+        WifiInfo.BSSID: bssid,
     }
 
     try:
-        from scapy.all import rdpcap
-
-        for pkt in rdpcap(filename):
-            info = parse_packet(pkt, info)
-
+        info = extract_from_pcap(filename, [WifiInfo.BSSID, WifiInfo.ESSID])
     except Exception as e:
         logging.error("api: %s" % e)
 
-    return info['essid'], info['bssid']
+    return info[WifiInfo.ESSID], info[WifiInfo.BSSID]
 
 
 def api_report_ap(log, keys, token, essid, bssid):
