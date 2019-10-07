@@ -30,6 +30,7 @@ def on_internet_available(ui, keypair, config, log):
         logging.info("api: signign enrollment request ...")
 
         identity = "%s@%s" % (pwnagotchi.name(), keypair.fingerprint)
+        # sign the identity string to prove we own both keys
         _, signature_b64 = keypair.sign(identity)
 
         api_address = 'https://api.pwnagotchi.ai/api/v1/unit/enroll'
@@ -44,6 +45,10 @@ def on_internet_available(ui, keypair, config, log):
                 'avg_reward': log.avg_reward,
                 'min_reward': log.min_reward,
                 'max_reward': log.max_reward,
+                'deauthed': log.deauthed,
+                'associated': log.associated,
+                'handshakes': log.handshakes,
+                'peers': log.peers,
                 'uname': subprocess.getoutput("uname -a")
             }
         }
