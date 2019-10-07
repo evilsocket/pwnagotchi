@@ -112,6 +112,7 @@ def parse_pcap(filename):
 
 def api_report_ap(log, keys, token, essid, bssid):
     while True:
+        token = AUTH.data['token']
         logging.info("api: reporting %s (%s)" % (essid, bssid))
         try:
             api_address = 'https://api.pwnagotchi.ai/api/v1/unit/report/ap'
