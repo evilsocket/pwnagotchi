@@ -6,8 +6,8 @@ main:
     custom_plugins:
     # which plugins to load and enable
     plugins:
-      api:
-        enabled: false
+      grid:
+        enabled: true
         report: true # report pwned networks
       auto-update:
         enabled: false

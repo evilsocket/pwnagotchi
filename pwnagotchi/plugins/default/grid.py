@@ -1,8 +1,8 @@
 __author__ = 'evilsocket@gmail.com'
 __version__ = '1.0.0'
-__name__ = 'api'
+__name__ = 'grid'
 __license__ = 'GPL3'
-__description__ = 'This plugin signals the unit cryptographic identity to api.pwnagotchi.ai'
+__description__ = 'This plugin signals the unit cryptographic identity and list of pwned networks and list of pwned networks to api.pwnagotchi.ai'
 
 import os
 import logging
