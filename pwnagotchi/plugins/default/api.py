@@ -95,6 +95,8 @@ def parse_pcap(filename):
 
         for pkt in rdpcap(filename):
             info = parse_packet(pkt, info)
+            if 'essid' in info and info['essid'] is not None and 'bssid' in info and info['bssid'] is not None:
+                break
 
         bssid = info['bssid'] if 'bssid' in info else None
         essid = info['essid'] if 'essid' in info else None
