@@ -154,7 +154,15 @@ def on_internet_available(ui, keys, config, log):
             if OPTIONS['report']:
                 for pcap_file in pcap_files:
                     net_id = os.path.basename(pcap_file).replace('.pcap', '')
-                    if net_id not in reported:
+                    do_skip = False
+                    for skip in OPTIONS['exclude']:
+                        skip = skip.lower()
+                        net = net_id.lower()
+                        if skip in net or skip.replace(':', '') in net:
+                            do_skip = True
+                            break
+
+                    if net_id not in reported and not do_skip:
                         essid, bssid = parse_pcap(pcap_file)
                         if bssid:
                             if api_report_ap(log, keys, token, essid, bssid):

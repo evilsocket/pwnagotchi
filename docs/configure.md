@@ -76,7 +76,20 @@ main:
         report: true # full-opt in
 ```
 
-If you prefer to completely opt-out by also disabling signaling:
+Even if fully opted-in, you can still disable reporting for specific networks, for instance if you don't want your home network to be in the system:
+
+```yaml
+main:
+    plugins:
+      grid:
+        enabled: true
+        report: true
+        exclude:
+          - MyHomeNetwork
+          - de:ad:be:ef:de:ad # both ESSIDs and BSSIDs are supported
+```
+
+If instead you prefer to completely opt-out by also disabling signaling:
 
 ```yaml
 main:
