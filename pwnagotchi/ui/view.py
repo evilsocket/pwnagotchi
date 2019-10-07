@@ -15,7 +15,7 @@ from pwnagotchi.ui.state import State
 
 WHITE = 0xff
 BLACK = 0x00
-
+ROOT = None
 
 def setup_display_specifics(config):
     width = 0
@@ -57,9 +57,12 @@ def setup_display_specifics(config):
 
 class View(object):
     def __init__(self, config, state={}):
+        global ROOT
+
         self._render_cbs = []
         self._config = config
         self._canvas = None
+        self._frozen = False
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
 
@@ -118,6 +121,8 @@ class View(object):
         else:
             logging.warning("ui.fps is 0, the display will only update for major changes")
             self._ignore_changes = ('uptime', 'name')
+
+        ROOT = self
 
     def add_element(self, key, elem):
         self._state.add_element(key, elem)
@@ -261,6 +266,12 @@ class View(object):
 
         self.on_normal()
 
+    def on_shutdown(self):
+        self.set('face', faces.SLEEP)
+        self.set('status', self._voice.on_shutdown())
+        self.update(force=True)
+        self._frozen = True
+
     def on_bored(self):
         self.set('face', faces.BORED)
         self.set('status', self._voice.on_bored())
@@ -323,6 +334,9 @@ class View(object):
 
     def update(self, force=False):
         with self._lock:
+            if self._frozen:
+                return
+
             changes = self._state.changes(ignore=self._ignore_changes)
             if force or len(changes):
                 self._canvas = Image.new('1', (self._width, self._height), WHITE)
