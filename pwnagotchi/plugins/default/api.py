@@ -151,8 +151,7 @@ def on_internet_available(ui, keys, config, log):
                         if bssid:
                             if api_report_ap(token, essid, bssid):
                                 reported.append(net_id)
-
-                REPORT.update(data={'reported': reported})
+                                REPORT.update(data={'reported': reported})
             else:
                 logging.info("api: reporting disabled")
 
