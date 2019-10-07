@@ -128,7 +128,7 @@ class Display(View):
             self._display.clear()
             self._render_cb = self._papirus_render
 
-        elif self._is_waveshare1():
+        elif self._is_waveshare_v1():
             logging.info("initializing waveshare v1 display")
             if self._display_color == 'black':
                 from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
