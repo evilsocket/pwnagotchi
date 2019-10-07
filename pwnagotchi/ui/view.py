@@ -168,7 +168,7 @@ class View(object):
         self.set('aps', "%d" % log.associated)
         self.set('shakes', '%d (%s)' % (log.handshakes, \
                                         utils.total_unique_handshakes(self._config['bettercap']['handshakes'])))
-        self.set_closest_peer(log.last_peer)
+        self.set_closest_peer(log.last_peer, log.peers)
 
     def is_normal(self):
         return self._state.get('face') not in (
@@ -188,7 +188,7 @@ class View(object):
         self.set('status', self._voice.on_normal())
         self.update()
 
-    def set_closest_peer(self, peer):
+    def set_closest_peer(self, peer, num_total):
         if peer is None:
             self.set('friend_face', None)
             self.set('friend_name', None)
@@ -206,6 +206,12 @@ class View(object):
             name = '▌' * num_bars
             name += '│' * (4 - num_bars)
             name += ' %s %d (%d)' % (peer.name(), peer.pwnd_run(), peer.pwnd_total())
+
+            if num_total > 1:
+                if num_total > 9000:
+                    name += ' of over 9000'
+                else:
+                    name += ' of %d' % num_total
 
             self.set('friend_face', peer.face())
             self.set('friend_name', name)

@@ -296,7 +296,8 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def _update_peers(self):
         peer = self._advertiser.closest_peer()
-        self._view.set_closest_peer(peer)
+        tot = self._advertiser.num_peers()
+        self._view.set_closest_peer(peer, tot)
 
     def _save_recovery_data(self):
         logging.warning("writing recovery data to %s ..." % RECOVERY_DATA_FILE)

@@ -122,7 +122,7 @@ def main():
     for display in list_of_displays:
         emotions = list()
         if args.showpeer:
-            display.set_closest_peer(DummyPeer())
+            display.set_closest_peer(DummyPeer(), 10)
         display.on_starting()
         display.update()
         emotions.append(display.get_image())
