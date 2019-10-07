@@ -8,7 +8,7 @@ main:
     plugins:
       grid:
         enabled: true
-        report: true # report pwned networks
+        report: false # don't report pwned networks by default!
       auto-update:
         enabled: false
         interval: 1 # every day

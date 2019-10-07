@@ -53,27 +53,29 @@ But if you want, you can change `main.lang` to one of the supported languages:
 
 ## PwnGRID
 
-By default the `grid` [plugin](https://github.com/evilsocket/pwnagotchi/blob/master/docs/plugins.md) is enabled, this means that whenever the unit will detect internet connectivity in manual mode, it'll signal its 
-presence to the PwnGRID server and periodically send a list of the networks that it has pwned. None of the captured cryptographic material is sent to this server, 
+By default the `grid` [plugin](https://github.com/evilsocket/pwnagotchi/blob/master/docs/plugins.md) is **only partially** enabled, this means that whenever the unit will detect internet connectivity in manual mode, it'll signal its 
+presence to the PwnGRID server without sending any data. 
+
+It is possible to fully opt-in and also enable the unit to send basic information about the pwned networks. None of the captured cryptographic material is sent to this server, 
 just the minimum information to enroll the unit in the database and know how many networks it "conquered" so far, namely:
 
 - The cryptographic identity of the unit, generated at first boot and used for authentication.
 - The output of the `uname -a` command on the unit used to determine the type of hardware.
 - The list of networks that the unit collected handshakes of, made of their `BSSID` and `ESSID`.
 
-Other than for easy unit identification and debugging, this data is collected in order to build rankings, scoreboards and regional statistics. **Like Pokèmon Go, but for WiFi!**
+Other than for easy unit identification and debugging, this data is collected in order to build drankings, scoreboards and regional statistics. **Like Pokèmon Go, but for WiFi!**
 
-If you want to partially opt-out from this feature and have your unit only signal its presence without sending the list of networks, you can put this in your `/etc/pwnagotchi/config.yml` file:
+In order to fully opt-in, you can put this in your `/etc/pwnagotchi/config.yml` file:
 
 ```yaml
 main:
     plugins:
       grid:
         enabled: true
-        report: false # partial opt-out
+        report: true # full-opt in
 ```
 
-If you prefer to completely opt-out by disabling signaling:
+If you prefer to completely opt-out by also disabling signaling:
 
 ```yaml
 main:
