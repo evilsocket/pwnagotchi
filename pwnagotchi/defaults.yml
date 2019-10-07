@@ -8,6 +8,7 @@ main:
     plugins:
       api:
         enabled: false
+        report: true # report pwned networks
       auto-update:
         enabled: false
         interval: 1 # every day
