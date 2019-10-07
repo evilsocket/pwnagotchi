@@ -51,6 +51,32 @@ But if you want, you can change `main.lang` to one of the supported languages:
 - Russian
 - Swedish
 
+## PwnGRID
+
+By default the `grid` [plugin](https://github.com/evilsocket/pwnagotchi/blob/master/docs/plugins.md) is enabled, this means that whenever the unit will detect internet connectivity in manual mode, it'll signal its 
+presence to the PwnGRID server and periodically send a list of the networks that it has pwned. None of the captured cryptographic material is sent to this server, 
+just the minimum information to enroll the unit in the database and know how many networks it "conquered" so far.
+
+If you want to partially opt-out from this feature and have your unit only signal its presence without sending the list of networks, you can put this in your `/etc/pwnagotchi/config.yml` file:
+
+```yaml
+main:
+    plugins:
+      grid:
+        enabled: true
+        report: false # partial opt-out
+```
+
+If you prefer to completely opt-out and also disable signaling:
+
+```yaml
+main:
+    plugins:
+      grid:
+        enabled: false # full opt-out
+        report: false
+```
+
 ## Display Selection
 
 **Set the type of display you want to use via `ui.display.type`.**
