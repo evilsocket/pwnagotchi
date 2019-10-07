@@ -33,7 +33,7 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub pi@10.0.0.2
 
 You can now set a new name for your unit by [changing the hostname](https://geek-university.com/raspberry-pi/change-raspberry-pis-hostname/)!
 
-Create the `/root/custom.yml` file (either via SSH or by directly editing the SD card contents from a computer) that will override the [default configuration](https://github.com/evilsocket/pwnagotchi/blob/master/sdcard/rootfs/root/pwnagotchi/config.yml) with your custom values.
+Open the `/etc/pwnagotchi/config.yml` file (either via SSH or by directly editing the SD card contents from a computer) that will override the [default configuration](https://github.com/evilsocket/pwnagotchi/blob/master/pwnagotchi/defaults.yml) with your custom values.
 
 ## Choose your Pwnagotchi's language
 
