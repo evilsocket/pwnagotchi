@@ -5,7 +5,7 @@
   vars:
     pwnagotchi:
       hostname: "{{ lookup('env', 'PWN_HOSTNAME') | default('pwnagotchi', true) }}"
-      version: "{{ lookup('env', 'PWN_VERSION') | default('master', true) }} "
+      version: "{{ lookup('env', 'PWN_VERSION') | default('master', true) }}"
     system:
       boot_options:
         - "dtoverlay=dwc2"
