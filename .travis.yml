@@ -22,15 +22,8 @@ branches:
 cache:
   apt: true
 before_script:
-  - wget https://download.qemu.org/qemu-4.1.0.tar.xz
-  - tar xvJf qemu-4.1.0.tar.xz
-  - cd qemu-4.1.0
-  - "./configure --target-list=arm-softmmu"
-  - make -j$(nproc)
-  - sudo make install
-  - cd $TRAVIS_BUILD_DIR
   - sudo apt-get -y update || true
-  - sudo apt-get -y install qemu-user-static binfmt-support bmap-tools kpartx
+  - sudo apt-get -y install qemu-system-arm qemu-user-static binfmt-support bmap-tools kpartx
   - sudo update-binfmts --display
 script:
   - sudo make clean

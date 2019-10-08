@@ -11,11 +11,11 @@
         - "dtoverlay=dwc2"
         - "dtparam=spi=on"
         - "dtoverlay=spi1-3cs"
-        - "dtoverlay=pi3-disable-bt"
-        - "dtparam=audio=off"
     services:
       enable:
         - dphys-swapfile.service
+        - pwnagotchi.service
+        - bettercap.service
       disable:
         - apt-daily.timer
         - apt-daily.service
@@ -26,23 +26,6 @@
         - triggerhappy.service
         - ifup@wlan0.service
     packages:
-      pip:
-        install:
-          - inky
-          - smbus2
-          - absl-py>=0.1.6
-          - enum34
-          - gast==0.2.2
-          - google_pasta
-          - opt_einsum
-          - scapy
-          - gym
-          - keras_applications>=1.0.6
-          - keras_preprocessing>=1.0.5
-          - stable-baselines
-          - file_read_backwards
-          - tensorflow_estimator>=1.14.0,<1.15.0
-          - tensorboard>=1.13.0,<1.14.0
       apt:
         remove:
           - rasberrypi-net-mods
@@ -57,6 +40,7 @@
           - git
           - build-essential
           - python3-pip
+          - python3-mpi4py
           - unzip
           - gawk
           - libopenmpi-dev
@@ -65,6 +49,7 @@
           - libqtgui4
           - libqt4-test
           - libopenjp2-7
+          - libtiff5
           - tcpdump
           - lsof
           - libilmbase23
@@ -76,6 +61,7 @@
           - libpcap-dev
           - libusb-1.0-0-dev
           - libnetfilter-queue-dev
+          - libopenmpi3
           - dphys-swapfile
           - kalipi-kernel
           - kalipi-bootloader
@@ -88,26 +74,7 @@
           - fonts-dejavu
           - fonts-dejavu-core
           - fonts-dejavu-extra
-          - python3-crypto
-          - python3-requests
-          - python3-yaml
-          - python3-smbus
-          - python3-inkyphat
-          - python3-numpy
           - python3-pil
-          - python3-tweepy
-          - python3-opencv
-          - python3-termcolor
-          - python3-astor
-          - python3-backports.weakref
-          - python3-h5py
-          - python3-six
-          - python3-protobuf
-          - python3-wrapt
-          - python3-wheel
-          - python3-mock
-          - python3-scipy
-          - python3-cloudpickle
 
     bettercap:
       query: "assets[?contains(name, 'armv6l')].browser_download_url"
@@ -171,16 +138,30 @@
     command: "python3 -c 'import sys;print(sys.path.pop())'"
     register: pip_target
 
-  - name: install pip packages
-    pip:
-      name: "{{packages.pip.install}}"
-      extra_args: "--no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --prefer-binary --no-cache-dir --platform=armv6l --target={{ pip_target.stdout }}"
+  - name: clone pwnagotchi repository
+    git:
+      repo: https://github.com/evilsocket/pwnagotchi.git
+      dest: /usr/local/src/pwnagotchi
 
-  - name: install grpcio
-    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.hostedpi.com/simple/grpcio/grpcio-1.24.1-cp37-cp37m-linux_armv6l.whl"
+  - name: build pwnagotchi wheel
+    command: "python3 setup.py sdist bdist_wheel"
+    args:
+      chdir: /usr/local/src/pwnagotchi
+
+  - name: install opencv-python
+    pip:
+      name: "https://www.piwheels.hostedpi.com/simple/opencv-python/opencv_python-3.4.3.18-cp37-cp37m-linux_armv6l.whl"
+      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
 
   - name: install tensorflow
-    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
+    pip:
+      name: "https://www.piwheels.hostedpi.com/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
+      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
+
+  - name: install pwnagotchi wheel and dependencies
+    pip:
+      name: "{{ lookup('fileglob', '/usr/local/src/pwnagotchi/dist/pwnagotchi*.whl') }}"
+      extra_args: "--no-cache-dir"
 
   - name: fetch bettercap release information
     uri:
@@ -207,22 +188,6 @@
     make:
       chdir: /tmp/caplets
       target: install
-
-  - name: clone pwnagotchi repository
-    git:
-      repo: https://github.com/evilsocket/pwnagotchi.git
-      dest: /tmp/pwnagotchi
-
-  - name: copy pwnagotchi files to final destination
-    copy:
-      src: /tmp/pwnagotchi/sdcard/rootfs/root/pwnagotchi/
-      dest: /root/pwnagotchi/
-      mode: preserve
-
-  - name: remove pwnagotchi files from temporary repository
-    file:
-      path: /tmp/pwnagotchi
-      state: absent
 
   - name: create cpuusage script
     copy:
@@ -270,9 +235,9 @@
         /usr/bin/bootblink 10 &
         # start a detached screen session with bettercap
         if ifconfig | grep usb0 | grep RUNNING; then
-          /usr/bin/pwnagotchi --manual
+          /usr/local/bin/pwnagotchi --manual
         else
-          /usr/bin/pwnagotchi
+          /usr/local/bin/pwnagotchi
         fi
 
   - name: create monstart script
@@ -307,7 +272,7 @@
         #!/usr/bin/env bash
         sudo /opt/vc/bin/tvservice -o
 
-  - name: configure rc.local
+  - name: add HDMI powersave to rc.local
     blockinfile:
       path: /etc/rc.local
       insertbefore: "exit 0"
@@ -315,7 +280,6 @@
         if ! /opt/vc/bin/tvservice -s | grep HDMI; then
           /opt/vc/bin/tvservice -o
         fi
-        /root/pwnagotchi/scripts/startup.sh &
 
   - name: create /etc/pwnagotchi/config.yml
     blockinfile:
@@ -390,13 +354,6 @@
       regexp: '(.*)$'
       line: '\1 modules-load=dwc2,g_ether'
 
-  - name: configure ssh
-    lineinfile:
-      dest: /etc/ssh/sshd_config
-      backup: no
-      regexp: '#?PermitRootLogin (.*)$'
-      line: 'PermitRootLogin yes'
-
   - name: configure motd
     copy:
       dest: /etc/motd
@@ -410,17 +367,63 @@
     apt:
       autoremove: yes
 
+  - name: add bettercap service to systemd
+    copy:
+      dest: /etc/systemd/system/bettercap.service
+      content: |
+        [Unit]
+        Description=bettercap api.rest service.
+        Documentation=https://bettercap.org
+        Wants=network.target
+        After=network.target
+
+        [Service]
+        Type=simple
+        PermissionsStartOnly=true
+        ExecStart=/usr/bin/bettercap -no-colors -caplet pwnagotchi
+        Restart=always
+        RestartSec=30
+
+        [Install]
+        WantedBy=multi-user.target
+    notify:
+      - reload systemd services
+
+  - name: add pwnagotchi service to systemd
+    copy:
+      dest: /etc/systemd/system/pwnagotchi.service
+      content: |
+        [Unit]
+        Description=pwnagotchi Deep Reinforcement Learning instrumenting bettercap for WiFI pwning.
+        Documentation=https://pwnagotchi.ai
+        Wants=network.target
+        After=bettercap.service
+
+        [Service]
+        Type=simple
+        PermissionsStartOnly=true
+        ExecStart=/usr/bin/pwnagotchi-launcher
+        Restart=always
+        RestartSec=30
+
+        [Install]
+        WantedBy=multi-user.target
+    notify:
+      - reload systemd services
+
   - name: enable services
     systemd:
-      name: "{{services.enable}}"
+      name: "{{ item }}"
       state: started
       enabled: yes
+    with_items: "{{ services.enable }}"
 
   - name: disable unecessary services
     systemd:
-      name: "{{services.disable}}"
+      name: "{{ item }}"
       state: stopped
       enabled: no
+    with_items: "{{ services.disable }}"
 
   - name: remove ssh keys
     file:
@@ -428,3 +431,10 @@
       path: "{{item}}"
     with_fileglob:
       - "/etc/ssh/ssh_host*_key*"
+
+  handlers:
+  - name: reload systemd services
+    systemd:
+      daemon_reload: yes
+
+
