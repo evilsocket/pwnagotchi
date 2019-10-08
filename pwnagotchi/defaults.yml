@@ -31,6 +31,7 @@ main:
           - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date +%s).tar.gz'
       net-pos:
         enabled: false
+        api_key: 'test'
       gps:
         enabled: false
         speed: 19200
