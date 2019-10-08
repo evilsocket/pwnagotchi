@@ -26,6 +26,8 @@
         - triggerhappy.service
         - ifup@wlan0.service
     packages:
+      bettercap:
+        url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
       apt:
         remove:
           - rasberrypi-net-mods
@@ -75,9 +77,6 @@
           - fonts-dejavu-core
           - fonts-dejavu-extra
           - python3-pil
-
-    bettercap:
-      query: "assets[?contains(name, 'armv6l')].browser_download_url"
 
   tasks:
 
@@ -163,15 +162,9 @@
       name: "{{ lookup('fileglob', '/usr/local/src/pwnagotchi/dist/pwnagotchi*.whl') }}"
       extra_args: "--no-cache-dir"
 
-  - name: fetch bettercap release information
-    uri:
-      url: https://api.github.com/repos/bettercap/bettercap/releases/latest
-      return_content: yes
-    register: bettercap_release
-
   - name: download and install bettercap
     unarchive:
-      src: "{{ bettercap_release.content | from_json | json_query(bettercap.query) | first }}"
+      src: "{{ packages.bettercap.url }}"
       dest: /usr/bin
       remote_src: yes
       exclude:
