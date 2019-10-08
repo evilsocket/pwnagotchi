@@ -13,14 +13,14 @@ OPTIONS = dict()
 
 
 def on_loaded():
-    logging.info("gps plugin loaded for %s" % device)
+    logging.info("gps plugin loaded for %s" % OPTIONS['device'])
 
 
 def on_ready(agent):
     global running
 
-    if os.path.exists(device):
-        logging.info("enabling gps bettercap's module for %s" % device)
+    if os.path.exists(OPTIONS['device']):
+        logging.info("enabling gps bettercap's module for %s" % OPTIONS['device'])
         try:
             agent.run('gps off')
         except:
