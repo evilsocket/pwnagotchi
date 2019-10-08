@@ -182,6 +182,9 @@
       chdir: /tmp/caplets
       target: install
 
+  - name: install bettercap http ui
+    command: "/usr/bin/bettercap -eval 'caplets.update; ui.update; q'"
+
   - name: create cpuusage script
     copy:
       dest: /usr/bin/cpuusage
@@ -237,6 +240,26 @@
           fi
         else
           /usr/local/bin/pwnagotchi
+        fi
+
+  - name: create bettercap-launcher script
+    copy:
+      dest: /usr/bin/bettercap-launcher
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        # blink 10 times to signal ready state
+        /usr/bin/bootblink 10 &
+        if ifconfig | grep usb0 | grep RUNNING; then
+          # if override file exists, go into auto mode
+          if [ -f /root/.pwnagotchi-auto ]; then
+            rm /root/.pwnagotchi-auto
+            /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto
+          else
+            /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual
+          fi
+        else
+          /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto
         fi
 
   - name: create monstart script
