@@ -241,6 +241,12 @@ def on_internet_available(agent):
                     SKIP.append(gps_file)
                     continue
 
+                if gps_data['Latitude'] == 0 and gps_data['Longitude'] == 0:
+                    logging.warning("WIGLE: Not enough gps-informations for %s. Trying again next time.", gps_file)
+                    SKIP.append(gps_file)
+                    continue
+
+
                 try:
                     pcap_data = extract_from_pcap(pcap_filename, [WifiInfo.BSSID,
                                                                   WifiInfo.ESSID,
