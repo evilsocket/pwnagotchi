@@ -33,7 +33,7 @@ def on_loaded():
     logging.info("AUTO-BACKUP: Successfuly loaded.")
 
 
-def on_internet_available(display, keypair, config, log):
+def on_internet_available(agent):
     global STATUS
 
     if READY:
@@ -42,6 +42,8 @@ def on_internet_available(display, keypair, config, log):
 
         files_to_backup = " ".join(OPTIONS['files'])
         try:
+            display = agent.view()
+
             logging.info("AUTO-BACKUP: Backing up ...")
             display.set('status', 'Backing up ...')
             display.update()

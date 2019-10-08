@@ -163,17 +163,17 @@ class View(object):
         self.set('status', self._voice.on_ai_ready())
         self.update()
 
-    def on_manual_mode(self, log):
+    def on_manual_mode(self, last_session):
         self.set('mode', 'MANU')
-        self.set('face', faces.SAD if log.handshakes == 0 else faces.HAPPY)
-        self.set('status', self._voice.on_log(log))
-        self.set('epoch', "%04d" % log.epochs)
-        self.set('uptime', log.duration)
+        self.set('face', faces.SAD if last_session.handshakes == 0 else faces.HAPPY)
+        self.set('status', self._voice.on_last_session_data(last_session))
+        self.set('epoch', "%04d" % last_session.epochs)
+        self.set('uptime', last_session.duration)
         self.set('channel', '-')
-        self.set('aps', "%d" % log.associated)
-        self.set('shakes', '%d (%s)' % (log.handshakes, \
+        self.set('aps', "%d" % last_session.associated)
+        self.set('shakes', '%d (%s)' % (last_session.handshakes, \
                                         utils.total_unique_handshakes(self._config['bettercap']['handshakes'])))
-        self.set_closest_peer(log.last_peer, log.peers)
+        self.set_closest_peer(last_session.last_peer, last_session.peers)
 
     def is_normal(self):
         return self._state.get('face') not in (

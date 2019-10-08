@@ -12,6 +12,9 @@ class AsyncAdvertiser(object):
         self._keypair = keypair
         self._advertiser = None
 
+    def keypair(self):
+        return self._keypair
+
     def start_advertising(self):
         _thread.start_new_thread(self._adv_worker, ())
 

@@ -54,11 +54,14 @@ def _upload_to_wpasec(path, timeout=30):
             raise e
 
 
-def on_internet_available(display, keypair, config, log):
+def on_internet_available(agent):
     """
     Called in manual mode when there's internet connectivity
     """
     if READY:
+        config = agent.config()
+        display = agent.view()
+
         handshake_dir = config['bettercap']['handshakes']
         handshake_filenames = os.listdir(handshake_dir)
         handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames if filename.endswith('.pcap')]

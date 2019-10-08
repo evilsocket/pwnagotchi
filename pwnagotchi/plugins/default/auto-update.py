@@ -23,12 +23,14 @@ def on_loaded():
     READY = True
 
 
-def on_internet_available(display, keypair, config, log):
+def on_internet_available(agent):
     global STATUS
 
     if READY:
         if STATUS.newer_then_days(OPTIONS['interval']):
             return
+
+        display = agent.view()
 
         try:
             display.set('status', 'Updating ...')

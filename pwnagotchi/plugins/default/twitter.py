@@ -14,8 +14,12 @@ def on_loaded():
 
 
 # called in manual mode when there's internet connectivity
-def on_internet_available(ui, keypair, config, log):
-    if log.is_new() and log.handshakes > 0:
+def on_internet_available(agent):
+    config = agent.config()
+    display = agent.view()
+    last_session = agent.last_session
+
+    if last_session.is_new() and last_session.handshakes > 0:
         try:
             import tweepy
         except ImportError:
@@ -26,20 +30,20 @@ def on_internet_available(ui, keypair, config, log):
 
         picture = '/dev/shm/pwnagotchi.png'
 
-        ui.on_manual_mode(log)
-        ui.update(force=True)
-        ui.image().save(picture, 'png')
-        ui.set('status', 'Tweeting...')
-        ui.update(force=True)
+        display.on_manual_mode(last_session)
+        display.update(force=True)
+        display.image().save(picture, 'png')
+        display.set('status', 'Tweeting...')
+        display.update(force=True)
 
         try:
             auth = tweepy.OAuthHandler(OPTIONS['consumer_key'], OPTIONS['consumer_secret'])
             auth.set_access_token(OPTIONS['access_token_key'], OPTIONS['access_token_secret'])
             api = tweepy.API(auth)
 
-            tweet = Voice(lang=config['main']['lang']).on_log_tweet(log)
+            tweet = Voice(lang=config['main']['lang']).on_last_session_tweet(last_session)
             api.update_with_media(filename=picture, status=tweet)
-            log.save_session_id()
+            last_session.save_session_id()
 
             logging.info("tweeted: %s" % tweet)
         except Exception as e:

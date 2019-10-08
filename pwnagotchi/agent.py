@@ -9,6 +9,7 @@ import _thread
 
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
+from pwnagotchi.log import LastSession
 from pwnagotchi.bettercap import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
@@ -35,6 +36,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._last_pwnd = None
         self._history = {}
         self._handshakes = {}
+        self.last_session = LastSession(self._config)
 
     @staticmethod
     def is_connected():
@@ -47,6 +49,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def config(self):
         return self._config
+
+    def view(self):
+        return self._view
 
     def supported_channels(self):
         return self._supported_channels

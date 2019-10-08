@@ -196,7 +196,7 @@ def _send_to_wigle(lines, api_key, timeout=30):
         raise re_e
 
 
-def on_internet_available(display, keypair, config, log):
+def on_internet_available(agent):
     from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, \
         Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
     """
@@ -206,6 +206,9 @@ def on_internet_available(display, keypair, config, log):
     global SKIP
 
     if READY:
+        config = agent.config()
+        display = agent.view()
+
         handshake_dir = config['bettercap']['handshakes']
         all_files = os.listdir(handshake_dir)
         all_gps_files = [os.path.join(handshake_dir, filename)

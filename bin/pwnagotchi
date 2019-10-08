@@ -9,7 +9,6 @@ if __name__ == '__main__':
     import pwnagotchi.utils as utils
     import pwnagotchi.plugins as plugins
 
-    from pwnagotchi.log import SessionParser
     from pwnagotchi.identity import KeyPair
     from pwnagotchi.agent import Agent
     from pwnagotchi.ui.display import Display
@@ -51,22 +50,23 @@ if __name__ == '__main__':
     elif args.do_manual:
         logging.info("entering manual mode ...")
 
-        log = SessionParser(config)
+        agent.last_session.parse()
+
         logging.info(
             "the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (
-                log.duration_human,
-                log.epochs,
-                log.train_epochs,
-                log.avg_reward,
-                log.min_reward,
-                log.max_reward))
+                agent.last_session.duration_human,
+                agent.last_session.epochs,
+                agent.last_session.train_epochs,
+                agent.last_session.avg_reward,
+                agent.last_session.min_reward,
+                agent.last_session.max_reward))
 
         while True:
-            display.on_manual_mode(log)
+            display.on_manual_mode(agent.last_session)
             time.sleep(1)
 
             if Agent.is_connected():
-                plugins.on('internet_available', display, keypair, config, log)
+                plugins.on('internet_available', agent)
 
     else:
         logging.info("entering auto mode ...")
@@ -104,5 +104,9 @@ if __name__ == '__main__':
                 # WiFi electromagnetic fields affect time like gravitational fields
                 # affect ours ... neat ^_^
                 agent.next_epoch()
+
+                if Agent.is_connected():
+                    plugins.on('internet_available', agent)
+
             except Exception as e:
                 logging.exception("main loop exception")
