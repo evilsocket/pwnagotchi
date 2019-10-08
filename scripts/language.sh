@@ -6,8 +6,8 @@ DEPENDENCIES=( 'xgettext' 'msgfmt' 'msgmerge' )
 COMMANDS=( 'add' 'update' 'delete' 'compile' )
 
 REPO_DIR="$(dirname "$(dirname "$(realpath "$0")")")"
-LOCALE_DIR="${REPO_DIR}/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/locale"
-VOICE_FILE="${REPO_DIR}/sdcard/rootfs/root/pwnagotchi/scripts/pwnagotchi/voice.py"
+LOCALE_DIR="${REPO_DIR}/pwnagotchi/locale"
+VOICE_FILE="${REPO_DIR}/pwnagotchi/voice.py"
 
 function usage() {
 cat <<EOF
