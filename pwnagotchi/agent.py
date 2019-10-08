@@ -9,6 +9,7 @@ import _thread
 
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
+from pwnagotchi.log import LastSession
 from pwnagotchi.bettercap import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
@@ -17,13 +18,13 @@ RECOVERY_DATA_FILE = '/root/.pwnagotchi-recovery'
 
 
 class Agent(Client, AsyncAdvertiser, AsyncTrainer):
-    def __init__(self, view, config):
+    def __init__(self, view, config, keypair):
         Client.__init__(self, config['bettercap']['hostname'],
                         config['bettercap']['scheme'],
                         config['bettercap']['port'],
                         config['bettercap']['username'],
                         config['bettercap']['password'])
-        AsyncAdvertiser.__init__(self, config, view)
+        AsyncAdvertiser.__init__(self, config, view, keypair)
         AsyncTrainer.__init__(self, config)
 
         self._started_at = time.time()
@@ -35,6 +36,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._last_pwnd = None
         self._history = {}
         self._handshakes = {}
+        self.last_session = LastSession(self._config)
 
     @staticmethod
     def is_connected():
@@ -47,6 +49,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def config(self):
         return self._config
+
+    def view(self):
+        return self._view
 
     def supported_channels(self):
         return self._supported_channels
@@ -296,7 +301,8 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def _update_peers(self):
         peer = self._advertiser.closest_peer()
-        self._view.set_closest_peer(peer)
+        tot = self._advertiser.num_peers()
+        self._view.set_closest_peer(peer, tot)
 
     def _save_recovery_data(self):
         logging.warning("writing recovery data to %s ..." % RECOVERY_DATA_FILE)

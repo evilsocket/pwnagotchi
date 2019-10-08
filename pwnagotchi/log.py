@@ -11,9 +11,9 @@ from file_read_backwards import FileReadBackwards
 LAST_SESSION_FILE = '/root/.pwnagotchi-last-session'
 
 
-class SessionParser(object):
+class LastSession(object):
     EPOCH_TOKEN = '[epoch '
-    EPOCH_PARSER = re.compile(r'^\s*\[epoch (\d+)\] (.+)')
+    EPOCH_PARSER = re.compile(r'^.+\[epoch (\d+)\] (.+)')
     EPOCH_DATA_PARSER = re.compile(r'([a-z_]+)=([^\s]+)')
     TRAINING_TOKEN = ' training epoch '
     START_TOKEN = 'connecting to http'
@@ -70,27 +70,27 @@ class SessionParser(object):
             if started_at is None:
                 started_at = stopped_at
 
-            if SessionParser.DEAUTH_TOKEN in line and line not in cache:
+            if LastSession.DEAUTH_TOKEN in line and line not in cache:
                 self.deauthed += 1
                 cache[line] = 1
 
-            elif SessionParser.ASSOC_TOKEN in line and line not in cache:
+            elif LastSession.ASSOC_TOKEN in line and line not in cache:
                 self.associated += 1
                 cache[line] = 1
 
-            elif SessionParser.HANDSHAKE_TOKEN in line and line not in cache:
+            elif LastSession.HANDSHAKE_TOKEN in line and line not in cache:
                 self.handshakes += 1
                 cache[line] = 1
 
-            elif SessionParser.TRAINING_TOKEN in line:
+            elif LastSession.TRAINING_TOKEN in line:
                 self.train_epochs += 1
 
-            elif SessionParser.EPOCH_TOKEN in line:
+            elif LastSession.EPOCH_TOKEN in line:
                 self.epochs += 1
-                m = SessionParser.EPOCH_PARSER.findall(line)
+                m = LastSession.EPOCH_PARSER.findall(line)
                 if m:
                     epoch_num, epoch_data = m[0]
-                    m = SessionParser.EPOCH_DATA_PARSER.findall(epoch_data)
+                    m = LastSession.EPOCH_DATA_PARSER.findall(epoch_data)
                     for key, value in m:
                         if key == 'reward':
                             reward = float(value)
@@ -101,7 +101,7 @@ class SessionParser(object):
                             elif reward > self.max_reward:
                                 self.max_reward = reward
 
-            elif SessionParser.PEER_TOKEN in line:
+            elif LastSession.PEER_TOKEN in line:
                 m = self._peer_parser.findall(line)
                 if m:
                     name, pubkey, rssi, sid, pwnd_tot, uptime = m[0]
@@ -134,6 +134,30 @@ class SessionParser(object):
         self.duration_human = ', '.join(self.duration_human)
         self.avg_reward /= (self.epochs if self.epochs else 1)
 
+    def parse(self):
+        lines = []
+
+        if os.path.exists(self.path):
+            with FileReadBackwards(self.path, encoding="utf-8") as fp:
+                for line in fp:
+                    line = line.strip()
+                    if line != "" and line[0] != '[':
+                        continue
+                    lines.append(line)
+                    if LastSession.START_TOKEN in line:
+                        break
+            lines.reverse()
+
+        if len(lines) == 0:
+            lines.append("Initial Session");
+
+        self.last_session = lines
+        self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()
+        self.last_saved_session_id = self._get_last_saved_session_id()
+
+        self._parse_stats()
+        self.parsed = True
+
     def __init__(self, config):
         self.config = config
         self.voice = Voice(lang=config['main']['lang'])
@@ -150,28 +174,10 @@ class SessionParser(object):
         self.last_peer = None
         self._peer_parser = re.compile(
             'detected unit (.+)@(.+) \(v.+\) on channel \d+ \(([\d\-]+) dBm\) \[sid:(.+) pwnd_tot:(\d+) uptime:(\d+)\]')
-
-        lines = []
-
-        if os.path.exists(self.path):
-            with FileReadBackwards(self.path, encoding="utf-8") as fp:
-                for line in fp:
-                    line = line.strip()
-                    if line != "" and line[0] != '[':
-                        continue
-                    lines.append(line)
-                    if SessionParser.START_TOKEN in line:
-                        break
-            lines.reverse()
-
-        if len(lines) == 0:
-            lines.append("Initial Session");
-
-        self.last_session = lines
-        self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()
-        self.last_saved_session_id = self._get_last_saved_session_id()
-
-        self._parse_stats()
+        self.last_session = []
+        self.last_session_id = None
+        self.last_saved_session_id = None
+        self.parsed = False
 
     def is_new(self):
         return self.last_session_id != self.last_saved_session_id

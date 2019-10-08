@@ -90,6 +90,11 @@ class Voice:
             self._('Zzzzz'),
             self._('ZzzZzzz ({secs}s)').format(secs=secs)])
 
+    def on_shutdown(self):
+        return random.choice([
+            self._('Good night.'),
+            self._('Zzz')])
+
     def on_awakening(self):
         return random.choice(['...', '!'])
 
@@ -120,23 +125,23 @@ class Voice:
     def on_rebooting(self):
         return self._("Ops, something went wrong ... Rebooting ...")
 
-    def on_log(self, log):
-        status = self._('Kicked {num} stations\n').format(num=log.deauthed)
-        status += self._('Made {num} new friends\n').format(num=log.associated)
-        status += self._('Got {num} handshakes\n').format(num=log.handshakes)
-        if log.peers == 1:
+    def on_last_session_data(self, last_session):
+        status = self._('Kicked {num} stations\n').format(num=last_session.deauthed)
+        status += self._('Made {num} new friends\n').format(num=last_session.associated)
+        status += self._('Got {num} handshakes\n').format(num=last_session.handshakes)
+        if last_session.peers == 1:
             status += self._('Met 1 peer')
-        elif log.peers > 0:
-            status += self._('Met {num} peers').format(num=log.peers)
+        elif last_session.peers > 0:
+            status += self._('Met {num} peers').format(num=last_session.peers)
         return status
 
-    def on_log_tweet(self, log):
+    def on_last_session_tweet(self, last_session):
         return self._(
             'I\'ve been pwning for {duration} and kicked {deauthed} clients! I\'ve also met {associated} new friends and ate {handshakes} handshakes! #pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet').format(
-            duration=log.duration_human,
-            deauthed=log.deauthed,
-            associated=log.associated,
-            handshakes=log.handshakes)
+            duration=last_session.duration_human,
+            deauthed=last_session.deauthed,
+            associated=last_session.associated,
+            handshakes=last_session.handshakes)
 
     def hhmmss(self, count, fmt):
         if count > 1:

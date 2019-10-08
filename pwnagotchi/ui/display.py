@@ -15,11 +15,29 @@ class VideoHandler(BaseHTTPRequestHandler):
     _lock = Lock()
     _index = """<html>
   <head>
-    <title>%s</title>
+      <title>%s</title>
+      <style>
+        .block {
+          -webkit-appearance: button;
+          -moz-appearance: button;
+          appearance: button;
+
+          display: block;
+          cursor: pointer;
+          text-align: center;
+        }
+    </style>
   </head>
   <body>
-    <img src="/ui" id="ui"/>
-
+    <div style="position: absolute; top:0; left:0; width:100%%;">
+        <img src="/ui" id="ui" style="width:100%%"/>
+        <br/>
+        <hr/>
+        <form action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
+            <input type="submit" class="block" value="Shutdown"/>
+        </form>
+    </div>
+    
     <script type="text/javascript">
     window.onload = function() {
         var image = document.getElementById("ui");
@@ -49,6 +67,9 @@ class VideoHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(self._index % (pwnagotchi.name(), 1000), "utf8"))
             except:
                 pass
+
+        elif self.path.startswith('/shutdown'):
+            pwnagotchi.shutdown()
 
         elif self.path.startswith('/ui'):
             with self._lock:

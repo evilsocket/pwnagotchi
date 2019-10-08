@@ -1,99 +1,99 @@
 #!/usr/bin/env python3
-
 import sys
 import os
-import time
 import argparse
-from http.server import HTTPServer
-import shutil
-import logging
 import yaml
 
 sys.path.insert(0,
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                             '../sdcard/rootfs/root/pwnagotchi/scripts/'))
+                             '../'))
 
+import pwnagotchi.ui.faces as faces
 from pwnagotchi.ui.display import Display, VideoHandler
+from PIL import Image
 
 
 class CustomDisplay(Display):
 
+    def __init__(self, config, state):
+        self.last_image = None
+        super(CustomDisplay, self).__init__(config, state)
+
     def _http_serve(self):
-        if self._video_address is not None:
-            self._httpd = HTTPServer((self._video_address, self._video_port),
-                                     CustomVideoHandler)
-            logging.info("ui available at http://%s:%d/" % (self._video_address,
-                                                        self._video_port))
-            self._httpd.serve_forever()
-        else:
-            logging.info("could not get ip of usb0, video server not starting")
+        # do nothing
+        pass
 
     def _on_view_rendered(self, img):
-        CustomVideoHandler.render(img)
+        self.last_image = img
 
-        if self._enabled:
-            self.canvas = (img if self._rotation == 0 else img.rotate(self._rotation))
-            if self._render_cb is not None:
-                self._render_cb()
-
-
-class CustomVideoHandler(VideoHandler):
-
-    @staticmethod
-    def render(img):
-        with CustomVideoHandler._lock:
-            try:
-                img.save("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), format='PNG')
-            except BaseException:
-                logging.exception("could not write preview")
-
-    def do_GET(self):
-        if self.path == '/':
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
-            try:
-                self.wfile.write(
-                    bytes(
-                        self._index %
-                        ('localhost', 1000), "utf8"))
-            except BaseException:
-                pass
-
-        elif self.path.startswith('/ui'):
-            with self._lock:
-                self.send_response(200)
-                self.send_header('Content-type', 'image/png')
-                self.end_headers()
-                try:
-                    with open("/tmp/pwnagotchi-{rand}.png".format(rand=id(CustomVideoHandler)), 'rb') as fp:
-                        shutil.copyfileobj(fp, self.wfile)
-                except BaseException:
-                    logging.exception("could not open preview")
-        else:
-            self.send_response(404)
+    def get_image(self):
+        """
+        Return the saved image
+        """
+        return self.last_image
 
 
 class DummyPeer:
+
+    def __init__(self):
+        self.rssi = -50
+
     @staticmethod
     def name():
         return "beta"
+
+    @staticmethod
+    def pwnd_run():
+        return 50
+
+    @staticmethod
+    def pwnd_total():
+        return 100
+
+    @staticmethod
+    def face():
+        return faces.FRIEND
+
+
+def append_images(images, horizontal=True, xmargin=0, ymargin=0):
+    w, h = zip(*(i.size for i in images))
+
+    if horizontal:
+        t_w = sum(w)
+        t_h = max(h)
+    else:
+        t_w = max(w)
+        t_h = sum(h)
+
+    result = Image.new('RGB', (t_w, t_h))
+
+    x_offset = 0
+    y_offset = 0
+
+    for im in images:
+        result.paste(im, (x_offset, y_offset))
+        if horizontal:
+            x_offset += im.size[0] + xmargin
+        else:
+            y_offset += im.size[1] + ymargin
+
+    return result
 
 
 def main():
     parser = argparse.ArgumentParser(description="This program emulates\
                                      the pwnagotchi display")
-    parser.add_argument('--display', help="Which display to use.",
+    parser.add_argument('--displays', help="Which displays to use.", nargs="+",
                         default="waveshare_2")
-    parser.add_argument('--port', help="Which port to use",
-                        default=8080)
-    parser.add_argument('--sleep', type=int, help="Time between emotions",
-                        default=2)
     parser.add_argument('--lang', help="Language to use",
                         default="en")
+    parser.add_argument('--output', help="Path to output image (PNG)", default="preview.png")
+    parser.add_argument('--show-peer', dest="showpeer", help="This options will show a dummy peer", action="store_true")
+    parser.add_argument('--xmargin', help="Add X-Margin", type=int, default=5)
+    parser.add_argument('--ymargin', help="Add Y-Margin", type=int, default=5)
     args = parser.parse_args()
 
-    CONFIG = yaml.load('''
+    config_template = '''
     main:
         lang: {lang}
     ui:
@@ -107,64 +107,80 @@ def main():
             video:
                 enabled: true
                 address: "0.0.0.0"
-                port: {port}
-    '''.format(display=args.display,
-               port=args.port,
-               lang=args.lang))
+                port: 8080
+    '''
 
-    DISPLAY = CustomDisplay(config=CONFIG, state={'name': '%s>' % 'preview'})
+    list_of_displays = list()
+    for display_type in args.displays:
+        config = yaml.safe_load(config_template.format(display=display_type,
+                                                       lang=args.lang))
+        display = CustomDisplay(config=config, state={'name': f"{display_type}>"})
+        list_of_displays.append(display)
 
-    while True:
-        DISPLAY.on_starting()
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_ai_ready()
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_normal()
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_new_peer(DummyPeer())
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_lost_peer(DummyPeer())
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_free_channel('6')
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.wait(args.sleep)
-        DISPLAY.update()
-        DISPLAY.on_bored()
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_sad()
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_motivated(1)
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_demotivated(-1)
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_excited()
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_deauth({'mac': 'DE:AD:BE:EF:CA:FE'})
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_miss('test')
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_lonely()
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_handshakes(1)
-        DISPLAY.update()
-        time.sleep(args.sleep)
-        DISPLAY.on_rebooting()
-        DISPLAY.update()
-        time.sleep(args.sleep)
+    columns = list()
+
+    for display in list_of_displays:
+        emotions = list()
+        if args.showpeer:
+            display.set_closest_peer(DummyPeer(), 10)
+        display.on_starting()
+        display.update()
+        emotions.append(display.get_image())
+        display.on_ai_ready()
+        display.update()
+        emotions.append(display.get_image())
+        display.on_normal()
+        display.update()
+        emotions.append(display.get_image())
+        display.on_new_peer(DummyPeer())
+        display.update()
+        emotions.append(display.get_image())
+        display.on_lost_peer(DummyPeer())
+        display.update()
+        emotions.append(display.get_image())
+        display.on_free_channel('6')
+        display.update()
+        emotions.append(display.get_image())
+        display.wait(2)
+        display.update()
+        emotions.append(display.get_image())
+        display.on_bored()
+        display.update()
+        emotions.append(display.get_image())
+        display.on_sad()
+        display.update()
+        emotions.append(display.get_image())
+        display.on_motivated(1)
+        display.update()
+        emotions.append(display.get_image())
+        display.on_demotivated(-1)
+        display.update()
+        emotions.append(display.get_image())
+        display.on_excited()
+        display.update()
+        emotions.append(display.get_image())
+        display.on_deauth({'mac': 'DE:AD:BE:EF:CA:FE'})
+        display.update()
+        emotions.append(display.get_image())
+        display.on_miss('test')
+        display.update()
+        emotions.append(display.get_image())
+        display.on_lonely()
+        display.update()
+        emotions.append(display.get_image())
+        display.on_handshakes(1)
+        display.update()
+        emotions.append(display.get_image())
+        display.on_rebooting()
+        display.update()
+        emotions.append(display.get_image())
+
+        # append them all together (vertical)
+        columns.append(append_images(emotions, horizontal=False, xmargin=args.xmargin, ymargin=args.ymargin))
+
+    # append columns side by side
+    final_image = append_images(columns, horizontal=True, xmargin=args.xmargin, ymargin=args.ymargin)
+    final_image.save(args.output, 'PNG')
 
 
 if __name__ == '__main__':

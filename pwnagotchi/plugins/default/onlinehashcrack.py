@@ -55,14 +55,17 @@ def _upload_to_ohc(path, timeout=30):
             raise e
 
 
-def on_internet_available(display, config, log):
+def on_internet_available(agent):
     """
     Called in manual mode when there's internet connectivity
     """
     if READY:
+        display = agent.view()
+        config = agent.config()
+
         handshake_dir = config['bettercap']['handshakes']
         handshake_filenames = os.listdir(handshake_dir)
-        handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames]
+        handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames if filename.endswith('.pcap')]
         handshake_new = set(handshake_paths) - set(ALREADY_UPLOADED)
 
         if handshake_new:

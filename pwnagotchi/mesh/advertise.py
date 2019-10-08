@@ -152,7 +152,7 @@ class Advertiser(object):
         if self._is_broadcasted_advertisement(dot11):
             try:
                 dot11elt = p.getlayer(Dot11Elt)
-                if dot11elt.ID == wifi.Dot11ElemID_Identity:
+                if dot11elt.ID == wifi.Dot11ElemID_Whisper:
                     self._parse_identity(p[RadioTap], dot11, dot11elt)
 
                 else:

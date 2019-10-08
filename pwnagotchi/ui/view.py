@@ -15,7 +15,7 @@ from pwnagotchi.ui.state import State
 
 WHITE = 0xff
 BLACK = 0x00
-
+ROOT = None
 
 def setup_display_specifics(config):
     width = 0
@@ -57,9 +57,12 @@ def setup_display_specifics(config):
 
 class View(object):
     def __init__(self, config, state={}):
+        global ROOT
+
         self._render_cbs = []
         self._config = config
         self._canvas = None
+        self._frozen = False
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
 
@@ -119,6 +122,8 @@ class View(object):
             logging.warning("ui.fps is 0, the display will only update for major changes")
             self._ignore_changes = ('uptime', 'name')
 
+        ROOT = self
+
     def add_element(self, key, elem):
         self._state.add_element(key, elem)
 
@@ -153,22 +158,22 @@ class View(object):
         self.set('face', faces.AWAKE)
 
     def on_ai_ready(self):
-        self.set('mode', '')
+        self.set('mode', '  AI')
         self.set('face', faces.HAPPY)
         self.set('status', self._voice.on_ai_ready())
         self.update()
 
-    def on_manual_mode(self, log):
+    def on_manual_mode(self, last_session):
         self.set('mode', 'MANU')
-        self.set('face', faces.SAD if log.handshakes == 0 else faces.HAPPY)
-        self.set('status', self._voice.on_log(log))
-        self.set('epoch', "%04d" % log.epochs)
-        self.set('uptime', log.duration)
+        self.set('face', faces.SAD if last_session.handshakes == 0 else faces.HAPPY)
+        self.set('status', self._voice.on_last_session_data(last_session))
+        self.set('epoch', "%04d" % last_session.epochs)
+        self.set('uptime', last_session.duration)
         self.set('channel', '-')
-        self.set('aps', "%d" % log.associated)
-        self.set('shakes', '%d (%s)' % (log.handshakes, \
+        self.set('aps', "%d" % last_session.associated)
+        self.set('shakes', '%d (%s)' % (last_session.handshakes, \
                                         utils.total_unique_handshakes(self._config['bettercap']['handshakes'])))
-        self.set_closest_peer(log.last_peer)
+        self.set_closest_peer(last_session.last_peer, last_session.peers)
 
     def is_normal(self):
         return self._state.get('face') not in (
@@ -188,7 +193,7 @@ class View(object):
         self.set('status', self._voice.on_normal())
         self.update()
 
-    def set_closest_peer(self, peer):
+    def set_closest_peer(self, peer, num_total):
         if peer is None:
             self.set('friend_face', None)
             self.set('friend_name', None)
@@ -206,6 +211,12 @@ class View(object):
             name = '▌' * num_bars
             name += '│' * (4 - num_bars)
             name += ' %s %d (%d)' % (peer.name(), peer.pwnd_run(), peer.pwnd_total())
+
+            if num_total > 1:
+                if num_total > 9000:
+                    name += ' of over 9000'
+                else:
+                    name += ' of %d' % num_total
 
             self.set('friend_face', peer.face())
             self.set('friend_name', name)
@@ -254,6 +265,12 @@ class View(object):
             secs -= part
 
         self.on_normal()
+
+    def on_shutdown(self):
+        self.set('face', faces.SLEEP)
+        self.set('status', self._voice.on_shutdown())
+        self.update(force=True)
+        self._frozen = True
 
     def on_bored(self):
         self.set('face', faces.BORED)
@@ -317,6 +334,9 @@ class View(object):
 
     def update(self, force=False):
         with self._lock:
+            if self._frozen:
+                return
+
             changes = self._state.changes(ignore=self._ignore_changes)
             if force or len(changes):
                 self._canvas = Image.new('1', (self._width, self._height), WHITE)
