@@ -19,7 +19,7 @@ REPORT = utils.StatusFile('/root/.api-report.json', data_format='json')
 
 
 def on_loaded():
-    logging.info("api plugin loaded.")
+    logging.info("grid plugin loaded.")
 
 
 def get_api_token(last_session, keys):
