@@ -28,6 +28,7 @@
     packages:
       bettercap:
         url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
+        ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       apt:
         remove:
           - rasberrypi-net-mods
@@ -182,8 +183,12 @@
       chdir: /tmp/caplets
       target: install
 
-  - name: install bettercap http ui
-    command: "/usr/bin/bettercap -eval 'caplets.update; ui.update; q'"
+  - name: download and install bettercap ui
+    unarchive:
+      src: "{{ packages.bettercap.ui }}"
+      dest: /usr/local/share/bettercap/
+      remote_src: yes
+      mode: 0755
 
   - name: create cpuusage script
     copy:
@@ -402,7 +407,7 @@
         [Service]
         Type=simple
         PermissionsStartOnly=true
-        ExecStart=/usr/local/bin/bettercap-launcher
+        ExecStart=/usr/bin/bettercap-launcher
         Restart=always
         RestartSec=30
 
