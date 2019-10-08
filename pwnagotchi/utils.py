@@ -7,6 +7,9 @@ import time
 import subprocess
 import yaml
 import json
+import shutil
+
+import pwnagotchi
 
 
 # https://stackoverflow.com/questions/823196/yaml-merge-in-python
@@ -21,6 +24,28 @@ def merge_config(user, default):
 
 
 def load_config(args):
+    default_config_path = os.path.dirname(args.config)
+    if not os.path.exists(default_config_path):
+        os.makedirs(default_config_path)
+
+    ref_defaults_file = os.path.join(os.path.dirname(pwnagotchi.__file__), 'defaults.yml')
+    ref_defaults_data = None
+
+    if not os.path.exists(args.config):
+        # logging not configured here yet
+        print("copying %s to %s ..." % (ref_defaults_file, args.config))
+        shutil.copy(ref_defaults_file, args.config)
+    else:
+        with open(ref_defaults_file) as fp:
+            ref_defaults_data = fp.read()
+
+        with open(args.config) as fp:
+            defaults_data = fp.read()
+
+        if ref_defaults_data != defaults_data:
+            print("!!! file in %s is different than release defaults, overwriting !!!" % args.config)
+            shutil.copy(ref_defaults_file, args.config)
+
     with open(args.config) as fp:
         config = yaml.safe_load(fp)
 
