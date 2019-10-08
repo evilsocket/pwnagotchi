@@ -29,7 +29,7 @@ main:
         commands:
           - 'tar czf /tmp/backup.tar.gz {files}'
           - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date +%s).tar.gz'
-      geowifi:
+      wifips:
         enabled: false
       gps:
         enabled: false
