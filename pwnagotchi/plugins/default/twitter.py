@@ -14,7 +14,7 @@ def on_loaded():
 
 
 # called in manual mode when there's internet connectivity
-def on_internet_available(ui, config, log):
+def on_internet_available(ui, keypair, config, log):
     if log.is_new() and log.handshakes > 0:
         try:
             import tweepy

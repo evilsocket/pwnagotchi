@@ -10,13 +10,14 @@ if __name__ == '__main__':
     import pwnagotchi.plugins as plugins
 
     from pwnagotchi.log import SessionParser
+    from pwnagotchi.identity import KeyPair
     from pwnagotchi.agent import Agent
     from pwnagotchi.ui.display import Display
 
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-C', '--config', action='store', dest='config',
-                        default=os.path.join(os.path.abspath(os.path.dirname(pwnagotchi.__file__)), '/defaults.yml'),
+                        default=os.path.join(os.path.dirname(pwnagotchi.__file__), 'defaults.yml'),
                         help='Main configuration file.')
     parser.add_argument('-U', '--user-config', action='store', dest='user_config', default='/etc/pwnagotchi/config.yml',
                         help='If this file exists, configuration will be merged and this will override default values.')
@@ -34,10 +35,11 @@ if __name__ == '__main__':
 
     plugins.load(config)
 
+    keypair = KeyPair()
     display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
-    agent = Agent(view=display, config=config)
+    agent = Agent(view=display, config=config, keypair=keypair)
 
-    logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent._identity, pwnagotchi.version))
+    logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent._keypair.fingerprint, pwnagotchi.version))
 
     for _, plugin in plugins.loaded.items():
         logging.debug("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))
@@ -64,7 +66,7 @@ if __name__ == '__main__':
             time.sleep(1)
 
             if Agent.is_connected():
-                plugins.on('internet_available', display, config, log)
+                plugins.on('internet_available', display, keypair, config, log)
 
     else:
         logging.info("entering auto mode ...")

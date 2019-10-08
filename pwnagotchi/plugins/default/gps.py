@@ -8,9 +8,8 @@ import logging
 import json
 import os
 
-device = '/dev/ttyUSB0'
-speed = 19200
 running = False
+OPTIONS = dict()
 
 
 def on_loaded():
@@ -27,8 +26,8 @@ def on_ready(agent):
         except:
             pass
 
-        agent.run('set gps.device %s' % device)
-        agent.run('set gps.speed %d' % speed)
+        agent.run('set gps.device %s' % OPTIONS['device'])
+        agent.run('set gps.speed %d' % OPTIONS['speed'])
         agent.run('gps on')
         running = True
     else:

@@ -17,13 +17,13 @@ RECOVERY_DATA_FILE = '/root/.pwnagotchi-recovery'
 
 
 class Agent(Client, AsyncAdvertiser, AsyncTrainer):
-    def __init__(self, view, config):
+    def __init__(self, view, config, keypair):
         Client.__init__(self, config['bettercap']['hostname'],
                         config['bettercap']['scheme'],
                         config['bettercap']['port'],
                         config['bettercap']['username'],
                         config['bettercap']['password'])
-        AsyncAdvertiser.__init__(self, config, view)
+        AsyncAdvertiser.__init__(self, config, view, keypair)
         AsyncTrainer.__init__(self, config)
 
         self._started_at = time.time()
@@ -296,7 +296,8 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def _update_peers(self):
         peer = self._advertiser.closest_peer()
-        self._view.set_closest_peer(peer)
+        tot = self._advertiser.num_peers()
+        self._view.set_closest_peer(peer, tot)
 
     def _save_recovery_data(self):
         logging.warning("writing recovery data to %s ..." % RECOVERY_DATA_FILE)

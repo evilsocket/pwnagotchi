@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 import pwnagotchi
 
@@ -18,7 +19,9 @@ setup(name='pwnagotchi',
       license='GPL',
       install_requires=required,
       scripts=['bin/pwnagotchi'],
-      package_data={'pwnagotchi': ('pwnagotchi/defaults.yml',)},
+      package_data={'pwnagotchi': ['defaults.yml', 'pwnagotchi/defaults.yml']},
+      include_package_data=True,
+      packages=find_packages(),
       classifiers=[
           'Programming Language :: Python :: 3',
           'Development Status :: 5 - Production/Stable',

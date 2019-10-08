@@ -6,6 +6,11 @@ main:
     custom_plugins:
     # which plugins to load and enable
     plugins:
+      grid:
+        enabled: true
+        report: false # don't report pwned networks by default!
+        exclude: # do not report the following networks (accepts both ESSIDs and BSSIDs)
+          - YourHomeNetworkHere
       auto-update:
         enabled: false
         interval: 1 # every day
@@ -15,9 +20,8 @@ main:
         files:
           - /root/brain.nn
           - /root/brain.json
-          - /root/custom.yml
-          - /root/handshakes
-          - /etc/ssh
+          - /root/handshakes/
+          - /etc/pwnagotchi/
           - /etc/hostname
           - /etc/hosts
           - /etc/motd
@@ -27,6 +31,8 @@ main:
           - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date +%s).tar.gz'
       gps:
         enabled: false
+        speed: 19200
+        device: /dev/ttyUSB0
       twitter:
         enabled: false
         consumer_key: aaa
@@ -37,6 +43,9 @@ main:
         enabled: false
         email: ~
       wpa-sec:
+        enabled: false
+        api_key: ~
+      wigle:
         enabled: false
         api_key: ~
 

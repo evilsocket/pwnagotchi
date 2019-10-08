@@ -1,6 +1,10 @@
 import subprocess
+import os
+import logging
+import time
+import pwnagotchi.ui.view as view
 
-version = '1.0.0plz4'
+version = '1.0.0a'
 
 _name = None
 
@@ -46,3 +50,13 @@ def temperature(celsius=True):
         temp = int(fp.read().strip())
     c = int(temp / 1000)
     return c if celsius else ((c * (9 / 5)) + 32)
+
+
+def shutdown():
+    logging.warning("shutting down ...")
+    if view.ROOT:
+        view.ROOT.on_shutdown()
+        # give it some time to refresh the ui
+        time.sleep(5)
+    os.system("sync")
+    os.system("halt")

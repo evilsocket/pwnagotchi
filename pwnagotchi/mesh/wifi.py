@@ -1,6 +1,6 @@
 SignatureAddress = 'de:ad:be:ef:de:ad'
 BroadcastAddress = 'ff:ff:ff:ff:ff:ff'
-Dot11ElemID_Identity = 222
+Dot11ElemID_Whisper = 222
 NumChannels = 140
 
 def freq_to_channel(freq):
@@ -30,7 +30,7 @@ def encapsulate(payload, addr_from, addr_to=BroadcastAddress):
     while data_left > 0:
         sz = min(chunk_size, data_left)
         chunk = payload[data_off: data_off + sz]
-        frame /= Dot11Elt(ID=Dot11ElemID_Identity, info=chunk, len=sz)
+        frame /= Dot11Elt(ID=Dot11ElemID_Whisper, info=chunk, len=sz)
         data_off += sz
         data_left -= sz
 

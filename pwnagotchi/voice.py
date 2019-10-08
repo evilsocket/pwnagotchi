@@ -90,6 +90,11 @@ class Voice:
             self._('Zzzzz'),
             self._('ZzzZzzz ({secs}s)').format(secs=secs)])
 
+    def on_shutdown(self):
+        return random.choice([
+            self._('Good night.'),
+            self._('Zzz')])
+
     def on_awakening(self):
         return random.choice(['...', '!'])
 

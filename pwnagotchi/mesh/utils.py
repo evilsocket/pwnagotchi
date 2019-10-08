@@ -3,14 +3,13 @@ import logging
 
 import pwnagotchi
 import pwnagotchi.plugins as plugins
-from pwnagotchi.mesh import get_identity
 
 
 class AsyncAdvertiser(object):
-    def __init__(self, config, view):
+    def __init__(self, config, view, keypair):
         self._config = config
         self._view = view
-        self._public_key, self._identity = get_identity(config)
+        self._keypair = keypair
         self._advertiser = None
 
     def start_advertising(self):
@@ -24,7 +23,7 @@ class AsyncAdvertiser(object):
             self._config['main']['iface'],
             pwnagotchi.name(),
             pwnagotchi.version,
-            self._identity,
+            self._keypair.fingerprint,
             period=0.3,
             data=self._config['personality'])
 
