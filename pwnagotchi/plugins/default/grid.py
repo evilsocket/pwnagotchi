@@ -135,10 +135,10 @@ def on_internet_available(agent):
         num_reported = len(reported)
         num_new = num_networks - num_reported
 
+        token = get_api_token(agent.last_session, agent.keypair())
         if num_new > 0:
             if OPTIONS['report']:
                 logging.info("grid: %d new networks to report" % num_new)
-                token = get_api_token(agent.last_session, agent.keypair())
 
                 for pcap_file in pcap_files:
                     net_id = os.path.basename(pcap_file).replace('.pcap', '')
