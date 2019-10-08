@@ -48,6 +48,9 @@ main:
       wigle:
         enabled: false
         api_key: ~
+      screen_refresh:
+        enabled: false
+        refresh_interval: 50
 
     # monitor interface to use
     iface: mon0
