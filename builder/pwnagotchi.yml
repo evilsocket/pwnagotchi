@@ -402,7 +402,7 @@
         [Service]
         Type=simple
         PermissionsStartOnly=true
-        ExecStart=/usr/bin/bettercap -no-colors -caplet pwnagotchi
+        ExecStart=/usr/local/bin/bettercap-launcher
         Restart=always
         RestartSec=30
 
