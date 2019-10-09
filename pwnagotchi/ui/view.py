@@ -39,7 +39,7 @@ def setup_display_specifics(config):
         width = 200
         height = 96
         face_pos = (0, int(height / 4))
-        name_pos = (int(width / 2) - 15, int(height * .15))
+        name_pos = (5, int(height * .15))
         status_pos = (int(width / 2) - 15, int(height * .30))
 
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1',
@@ -49,8 +49,8 @@ def setup_display_specifics(config):
         width = 250
         height = 122
         face_pos = (0, 40)
-        name_pos = (125, 20)
-        status_pos = (125, 35)
+        name_pos = (5, 20)
+        status_pos = (125, 20)
 
     return width, height, face_pos, name_pos, status_pos
 
