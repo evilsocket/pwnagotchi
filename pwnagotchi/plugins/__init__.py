@@ -1,6 +1,7 @@
 import os
 import glob
 import importlib, importlib.util
+import logging
 
 default_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "default")
 loaded = {}
@@ -13,10 +14,13 @@ def dummy_callback():
 def on(event_name, *args, **kwargs):
     global loaded
     cb_name = 'on_%s' % event_name
-    for _, plugin in loaded.items():
+    for plugin_name, plugin in loaded.items():
         if cb_name in plugin.__dict__:
             # print("calling %s %s(%s)" %(cb_name, args, kwargs))
-            plugin.__dict__[cb_name](*args, **kwargs)
+            try:
+                plugin.__dict__[cb_name](*args, **kwargs)
+            except Exception as e:
+                logging.error("error while running %s.%s : %s" % (plugin_name, cb_name, e))
 
 
 def load_from_file(filename):
