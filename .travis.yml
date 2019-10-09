@@ -23,9 +23,9 @@ deploy:
     secure: uaQZjN/BU50COqp/9JLfU7YDHuHSbntPrWwdIdEwTZ83SIurlcUCf+86mKnBYfyobJ/7lCTdWMWcrC/xJclzMTolktTsD8gg/8qJ2n68xqvEEN0SH1GfdaSbOzUNwak7ih8b4ajIn0dr4tUrBy/5/yXFW+3FGS8+l75XHQcpPC8Am5W2Z0fwg3K2cC2E2xgpv1HdOYRqtyW47lz0RfmNw3JTvf+aYstw6+DY/5g8ab08uuq6HliDPNSskXBfUo6KgQ+ZP3+Zb/7YaxqqXFYtDxCF7AxZrNWcuFeuem7i4n6oTkx1Z44SvP2QPdEuzegCs0NgZzO36R6NB+BCA2cYYDgC8j2moXa0GT5yX0J80Cof+fqYk5gMepgNyJoktNEuzPnJQRhhIMWli3RPLiIB9EA98SXCKgebFYvDRUkEvQlgwSA/71V/0y8Cgw9x7G+XkiIeU7ivMjUV0igbRVBSLH0Shr+v1eXpJKMO7YOUoh6ujZx8gLxmm+5a4sSraoGd2f3+ZUmk1VzP61jwbaypO9leGIMEBANdA1BFHLX27ma5lEn2VD52llxGkHg461EwsTtYuEzBHKp8WnBSGHUinkfQrvpKHX04xAnuWLCNWoadGSWSpucVhsXKVrj/q3vdq/94l3LcETX+oqCiVxyyrF/xjDEdr7Y4AxDpkGZepFY=
   skip_cleanup: true
   file_glob: true
+  draft: true
   file:
     - pwnagotchi-*.zip
     - pwnagotchi-*.sha256
-  draft: true
   on:
     repo: dadav/pwnagotchi
