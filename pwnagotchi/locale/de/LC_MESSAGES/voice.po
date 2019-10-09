@@ -105,7 +105,7 @@ msgid "Nobody wants to play with me ..."
 msgstr "Niemand will mit mir spielen ..."
 
 msgid "I feel so alone ..."
-msgstr "Ich fühl michso alleine ..."
+msgstr "Ich fühl mich so alleine ..."
 
 msgid "Where's everybody?!"
 msgstr "Wo sind denn alle?"
@@ -176,7 +176,7 @@ msgstr "{num} Freunde gefunden\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "{num} Handshakes aufgez.\n"
+msgstr "{num} H.shakes aufgez.\n"
 
 msgid "Met 1 peer"
 msgstr "1 Peer getroffen."
