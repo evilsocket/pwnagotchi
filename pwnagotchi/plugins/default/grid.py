@@ -8,6 +8,7 @@ import os
 import logging
 import requests
 import glob
+import json
 import subprocess
 import pwnagotchi
 import pwnagotchi.utils as utils
@@ -37,6 +38,13 @@ def get_api_token(last_session, keys):
     # sign the identity string to prove we own both keys
     _, signature_b64 = keys.sign(identity)
 
+    brain = {}
+    try:
+        with open('/root/brain.json') as fp:
+            brain = json.load(fp)
+    except:
+        pass
+
     api_address = 'https://api.pwnagotchi.ai/api/v1/unit/enroll'
     enrollment = {
         'identity': identity,
@@ -53,7 +61,8 @@ def get_api_token(last_session, keys):
             'associated': last_session.associated,
             'handshakes': last_session.handshakes,
             'peers': last_session.peers,
-            'uname': subprocess.getoutput("uname -a")
+            'uname': subprocess.getoutput("uname -a"),
+            'brain': brain
         }
     }
 
