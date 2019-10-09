@@ -44,6 +44,7 @@
           - build-essential
           - python3-pip
           - python3-mpi4py
+          - python3-smbus
           - unzip
           - gawk
           - libopenmpi-dev
