@@ -137,19 +137,23 @@
     apt:
       update_cache: yes
 
+  - name: Lock packages
+    dpkg_selections:
+      name: "{{ item }}"
+      selection: hold
+    with_items:
+      - "{{ packages.apt.hold }}"
+
   - name: remove unecessary apt packages
     apt:
       name: "{{ packages.apt.remove }}"
       state: absent
       purge: yes
 
-  - name: upgrade apt distro
-    apt:
-      upgrade: dist
-
   - name: install packages
     apt:
       name: "{{ packages.apt.install }}"
+      force: yes
       state: present
 
   - name: configure dphys-swapfile
@@ -190,7 +194,7 @@
 
   - name: clone pwnagotchi repository
     git:
-      repo: https://github.com/evilsocket/pwnagotchi.git
+      repo: https://github.com/dadav/pwnagotchi.git
       dest: /usr/local/src/pwnagotchi
 
   - name: build pwnagotchi wheel
@@ -370,13 +374,9 @@
       path: /etc/pwnagotchi
       state: directory
 
-  - name: check if user configuration exists
-    stat:
-      path: /etc/pwnagotchi/config.yml
-    register: user_config
-
   - name: create /etc/pwnagotchi/config.yml
     copy:
+      force: no # dont replace if already there
       dest: /etc/pwnagotchi/config.yml
       content: |
         # Add your configuration overrides on this file any configuration changes done to defaults.yml will be lost!
@@ -387,7 +387,6 @@
         #     type: 'inkyphat'
         #     color: 'black'
         #
-    when: not user_config.stat.exists
 
   - name: configure lo interface
     copy:
@@ -489,6 +488,19 @@
     apt:
       autoremove: yes
 
+  - name: create pwnagotchi slice
+    copy:
+      dest: /etc/systemd/system/pwn.slice
+      content: |
+        [Unit]
+        Description=pwnagotchi slice
+        Before=slices.target
+
+        [Slice]
+        CPUShares=2048
+    notify:
+      - reload systemd services
+
   - name: add pwngrid-peer service to systemd
     copy:
       dest: /etc/systemd/system/pwngrid-peer.service
@@ -505,6 +517,7 @@
         ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666 -wait -log /var/log/pwngrid-peer.log
         Restart=always
         RestartSec=30
+        Slice=pwn.slice
 
         [Install]
         WantedBy=multi-user.target
@@ -523,12 +536,12 @@
 
         [Service]
         Type=simple
-        PermissionsStartOnly=true
         ExecStartPre=/usr/bin/monstart
         ExecStart=/usr/bin/bettercap-launcher
         ExecStopPost=/usr/bin/monstop
         Restart=always
         RestartSec=30
+        Slice=pwn.slice
 
         [Install]
         WantedBy=multi-user.target
@@ -547,10 +560,10 @@
 
         [Service]
         Type=simple
-        PermissionsStartOnly=true
         ExecStart=/usr/bin/pwnagotchi-launcher
         Restart=always
         RestartSec=30
+        Slice=pwn.slice
 
         [Install]
         WantedBy=multi-user.target

@@ -1,3 +1,4 @@
+---
 # WARNING WARNING WARNING WARNING
 #
 # This file is recreated with default settings on every pwnagotchi restart,
@@ -13,7 +14,7 @@ main:
     # which plugins to load and enable
     plugins:
       grid:
-        enabled: true
+        enabled: false
         report: false # don't report pwned networks by default!
         exclude: # do not report the following networks (accepts both ESSIDs and BSSIDs)
           - YourHomeNetworkHere
@@ -35,13 +36,13 @@ main:
           - /var/log/pwnagotchi.log
         commands:
           - 'tar czf /tmp/backup.tar.gz {files}'
-          - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date +%s).tar.gz'
+          - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/$(hostname)-$(date +%s).tar.gz'
       net-pos:
         enabled: false
         api_key: 'test'
       gps:
         enabled: false
-        speed: 19200
+        speed: 4800 # globalsat 4
         device: /dev/ttyUSB0
       twitter:
         enabled: false

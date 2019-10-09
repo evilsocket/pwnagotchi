@@ -1,5 +1,5 @@
 __author__ = '33197631+dadav@users.noreply.github.com'
-__version__ = '1.0.0'
+__version__ = '2.0.0'
 __name__ = 'wigle'
 __license__ = 'GPL3'
 __description__ = 'This plugin automatically uploades collected wifis to wigle.net'
@@ -11,88 +11,12 @@ from io import StringIO
 import csv
 from datetime import datetime
 import requests
-from pwnagotchi.mesh.wifi import freq_to_channel
-from pwnagotchi.utils import WifiInfo, FieldNotFoundError, extract_from_pcap
+from pwnagotchi.utils import WifiInfo, FieldNotFoundError, extract_from_pcap, StatusFile
 
 READY = False
-ALREADY_UPLOADED = None
-SKIP = None
+REPORT = StatusFile('/root/.wigle_uploads', data_format='json')
+SKIP = list()
 OPTIONS = dict()
-
-AKMSUITE_TYPES = {
-    0x00: "Reserved",
-    0x01: "802.1X",
-    0x02: "PSK",
-}
-
-def _handle_packet(packet, result):
-    from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, \
-        Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
-    """
-    Analyze each packet and extract the data from Dot11 layers
-    """
-
-    if hasattr(packet, 'cap') and 'privacy' in packet.cap:
-        # packet is encrypted
-        if 'encryption' not in result:
-            result['encryption'] = set()
-
-    if packet.haslayer(Dot11Beacon):
-        if packet.haslayer(Dot11Beacon)\
-                or packet.haslayer(Dot11ProbeResp)\
-                or packet.haslayer(Dot11AssoReq)\
-                or packet.haslayer(Dot11ReassoReq):
-            if 'bssid' not in result and hasattr(packet[Dot11], 'addr3'):
-                result['bssid'] = packet[Dot11].addr3
-            if 'essid' not in result and hasattr(packet[Dot11Elt], 'info'):
-                result['essid'] = packet[Dot11Elt].info
-            if 'channel' not in result and hasattr(packet[Dot11Elt:3], 'info'):
-                result['channel'] = int(ord(packet[Dot11Elt:3].info))
-
-    if packet.haslayer(RadioTap):
-        if 'rssi' not in result and hasattr(packet[RadioTap], 'dBm_AntSignal'):
-            result['rssi'] = packet[RadioTap].dBm_AntSignal
-        if 'channel' not in result and hasattr(packet[RadioTap], 'ChannelFrequency'):
-            result['channel'] = freq_to_channel(packet[RadioTap].ChannelFrequency)
-
-    # see: https://fossies.org/linux/scapy/scapy/layers/dot11.py
-    if packet.haslayer(Dot11EltRSN):
-        if hasattr(packet[Dot11EltRSN], 'akm_suites'):
-            auth = AKMSUITE_TYPES.get(packet[Dot11EltRSN].akm_suites[0].suite)
-            result['encryption'].add(f"WPA2/{auth}")
-        else:
-            result['encryption'].add("WPA2")
-
-    if packet.haslayer(Dot11EltVendorSpecific)\
-    and (packet.haslayer(Dot11EltMicrosoftWPA)
-         or packet.info.startswith(b'\x00P\xf2\x01\x01\x00')):
-
-        if hasattr(packet, 'akm_suites'):
-            auth = AKMSUITE_TYPES.get(packet.akm_suites[0].suite)
-            result['encryption'].add(f"WPA2/{auth}")
-        else:
-            result['encryption'].add("WPA2")
-    # end see
-
-    return result
-
-
-def _analyze_pcap(pcap):
-    from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, \
-        Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
-    """
-    Iterate over the packets and extract data
-    """
-    result = dict()
-
-    try:
-        packets = rdpcap(pcap)
-        for packet in packets:
-            result = _handle_packet(packet, result)
-    except Scapy_Exception as sc_e:
-        raise sc_e
-
-    return result
 
 
 def on_loaded():
@@ -100,21 +24,10 @@ def on_loaded():
     Gets called when the plugin gets loaded
     """
     global READY
-    global ALREADY_UPLOADED
-    global SKIP
-
-    SKIP = list()
 
     if 'api_key' not in OPTIONS or ('api_key' in OPTIONS and OPTIONS['api_key'] is None):
         logging.error("WIGLE: api_key isn't set. Can't upload to wigle.net")
         return
-
-    try:
-        with open('/root/.wigle_uploads', 'r') as f:
-            ALREADY_UPLOADED = f.read().splitlines()
-    except OSError:
-        logging.warning('WIGLE: No upload-file found.')
-        ALREADY_UPLOADED = []
 
     READY = True
 
@@ -197,24 +110,24 @@ def _send_to_wigle(lines, api_key, timeout=30):
 
 
 def on_internet_available(agent):
-    from scapy.all import RadioTap, Dot11Elt, Dot11Beacon, rdpcap, Scapy_Exception, Dot11, Dot11ProbeResp, Dot11AssoReq, \
-        Dot11ReassoReq, Dot11EltRSN, Dot11EltVendorSpecific, Dot11EltMicrosoftWPA
+    from scapy.all import Scapy_Exception
     """
     Called in manual mode when there's internet connectivity
     """
-    global ALREADY_UPLOADED
+    global REPORT
     global SKIP
 
     if READY:
         config = agent.config()
         display = agent.view()
+        reported = REPORT.data_field_or('reported', default=list())
 
         handshake_dir = config['bettercap']['handshakes']
         all_files = os.listdir(handshake_dir)
         all_gps_files = [os.path.join(handshake_dir, filename)
                      for filename in all_files
                      if filename.endswith('.gps.json')]
-        new_gps_files = set(all_gps_files) - set(ALREADY_UPLOADED) - set(SKIP)
+        new_gps_files = set(all_gps_files) - set(reported) - set(SKIP)
 
         if new_gps_files:
             logging.info("WIGLE: Internet connectivity detected. Uploading new handshakes to wigle.net")
@@ -271,10 +184,8 @@ def on_internet_available(agent):
                 display.update(force=True)
                 try:
                     _send_to_wigle(csv_entries, OPTIONS['api_key'])
-                    ALREADY_UPLOADED += no_err_entries
-                    with open('/root/.wigle_uploads', 'a') as up_file:
-                        for gps in no_err_entries:
-                            up_file.write(gps + "\n")
+                    reported += no_err_entries
+                    REPORT.update(data={'reported': reported})
                     logging.info("WIGLE: Successfuly uploaded %d files", len(no_err_entries))
                 except requests.exceptions.RequestException as re_e:
                     SKIP += no_err_entries

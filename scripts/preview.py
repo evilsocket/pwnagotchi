@@ -61,9 +61,13 @@ def append_images(images, horizontal=True, xmargin=0, ymargin=0):
     if horizontal:
         t_w = sum(w)
         t_h = max(h)
+        if xmargin:
+            t_w += len(images) * xmargin
     else:
         t_w = max(w)
         t_h = sum(h)
+        if ymargin:
+            t_h += len(images) * ymargin
 
     result = Image.new('RGB', (t_w, t_h))
 
