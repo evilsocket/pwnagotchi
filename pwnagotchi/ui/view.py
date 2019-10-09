@@ -30,8 +30,8 @@ def setup_display_specifics(config):
         width = 212
         height = 104
         face_pos = (0, int(height / 4))
-        name_pos = (int(width / 2) - 15, int(height * .15))
-        status_pos = (int(width / 2) - 15, int(height * .30))
+        name_pos = (5, int(height * .15))
+        status_pos = (int(width / 2) - 15, int(height * .15))
 
     elif config['ui']['display']['type'] in ('papirus', 'papi'):
         fonts.setup(10, 8, 10, 23)
@@ -40,7 +40,7 @@ def setup_display_specifics(config):
         height = 96
         face_pos = (0, int(height / 4))
         name_pos = (5, int(height * .15))
-        status_pos = (int(width / 2) - 15, int(height * .30))
+        status_pos = (int(width / 2) - 15, int(height * .15))
 
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1',
                                              'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
