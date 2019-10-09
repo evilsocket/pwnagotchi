@@ -407,7 +407,9 @@
         [Service]
         Type=simple
         PermissionsStartOnly=true
+        ExecStartPre=/usr/bin/monstart
         ExecStart=/usr/bin/bettercap-launcher
+        ExecStopPost=/usr/bin/monstop
         Restart=always
         RestartSec=30
 
