@@ -40,7 +40,7 @@ msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr "Ei, o canal {channel} está livre! Seu AP ira agradecer."
 
 msgid "I'm bored ..."
-msgstr "Estou entediado"
+msgstr "Estou entediado ..."
 
 msgid "Let's go for a walk!"
 msgstr "Vamos dar uma caminhada!"
@@ -52,7 +52,7 @@ msgid "Shitty day :/"
 msgstr "Dia de merda :/"
 
 msgid "I'm extremely bored ..."
-msgstr "Estou extremamente entediado"
+msgstr "Estou extremamente entediado ..."
 
 msgid "I'm very sad ..."
 msgstr "Estou muito triste ..."
