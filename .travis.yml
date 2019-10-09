@@ -29,3 +29,4 @@ deploy:
     - pwnagotchi-*.sha256
   on:
     repo: dadav/pwnagotchi
+    tags: true
