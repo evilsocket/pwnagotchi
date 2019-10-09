@@ -17,10 +17,15 @@ def on_loaded():
     global READY
 
     if 'interval' not in OPTIONS or ('interval' in OPTIONS and OPTIONS['interval'] is None):
-        logging.error("AUTO-UPDATE: Interval is not set.")
+        logging.error("auto-update: Interval is not set.")
         return
 
     READY = True
+
+
+def run(cmd):
+    return subprocess.Popen(cmd, shell=True, stdin=None, stdout=open("/dev/null", "w"), stderr=None,
+                            executable="/bin/bash")
 
 
 def on_internet_available(agent):
@@ -36,23 +41,20 @@ def on_internet_available(agent):
             display.set('status', 'Updating ...')
             display.update()
 
-            logging.info("AUTO-UPDATE: updating packages index ...")
+            logging.info("auto-update: updating pwnagotchi ...")
+            run('pip3 install --upgrade --upgrade-strategy only-if-needed pwnagotchi').wait()
 
-            update = subprocess.Popen('apt update -y', shell=True, stdin=None,
-                                      stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
-            update.wait()
+            if OPTIONS['system']:
+                logging.info("auto-update: updating packages index ...")
+                run('apt update -y').wait()
 
-            logging.info("AUTO-UPDATE: updating packages ...")
+                logging.info("auto-update: updating packages ...")
+                run('apt upgrade -y').wait()
 
-            upgrade = subprocess.Popen('apt upgrade -y', shell=True, stdin=None,
-                                       stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
-            upgrade.wait()
-
-            logging.info("AUTO-UPDATE: complete.")
-
+            logging.info("auto-update: complete.")
             STATUS.update()
         except Exception as e:
-            logging.exception("AUTO-UPDATE ERROR")
+            logging.exception("auto-update ERROR")
 
         display.set('status', 'Updated!')
         display.update()

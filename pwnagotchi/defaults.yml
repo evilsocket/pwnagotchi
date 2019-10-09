@@ -13,6 +13,7 @@ main:
           - YourHomeNetworkHere
       auto-update:
         enabled: false
+        system: false # set to true to also enable system updates via apt
         interval: 1 # every day
       auto-backup:
         enabled: false
