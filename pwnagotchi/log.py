@@ -22,6 +22,29 @@ class LastSession(object):
     HANDSHAKE_TOKEN = '!!! captured new handshake '
     PEER_TOKEN = 'detected unit '
 
+    def __init__(self, config):
+        self.config = config
+        self.voice = Voice(lang=config['main']['lang'])
+        self.path = config['main']['log']
+        self.last_session = []
+        self.last_session_id = ''
+        self.last_saved_session_id = ''
+        self.duration = ''
+        self.duration_human = ''
+        self.deauthed = 0
+        self.associated = 0
+        self.handshakes = 0
+        self.peers = 0
+        self.last_peer = None
+        self.epochs = 0
+        self.train_epochs = 0
+        self.min_reward = 1000
+        self.max_reward = -1000
+        self.avg_reward = 0
+        self._peer_parser = re.compile(
+            'detected unit (.+)@(.+) \(v.+\) on channel \d+ \(([\d\-]+) dBm\) \[sid:(.+) pwnd_tot:(\d+) uptime:(\d+)\]')
+        self.parsed = False
+
     def _get_last_saved_session_id(self):
         saved = ''
         try:
@@ -157,27 +180,6 @@ class LastSession(object):
 
         self._parse_stats()
         self.parsed = True
-
-    def __init__(self, config):
-        self.config = config
-        self.voice = Voice(lang=config['main']['lang'])
-        self.path = config['main']['log']
-        self.last_session = None
-        self.last_session_id = ''
-        self.last_saved_session_id = ''
-        self.duration = ''
-        self.duration_human = ''
-        self.deauthed = 0
-        self.associated = 0
-        self.handshakes = 0
-        self.peers = 0
-        self.last_peer = None
-        self._peer_parser = re.compile(
-            'detected unit (.+)@(.+) \(v.+\) on channel \d+ \(([\d\-]+) dBm\) \[sid:(.+) pwnd_tot:(\d+) uptime:(\d+)\]')
-        self.last_session = []
-        self.last_session_id = None
-        self.last_saved_session_id = None
-        self.parsed = False
 
     def is_new(self):
         return self.last_session_id != self.last_saved_session_id
