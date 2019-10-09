@@ -98,7 +98,7 @@ def on_internet_available(agent):
                 ALREADY_SAVED.append(np_file)
                 _append_saved(np_file)
 
-                display.set('status', f"Fetching positions ({idx+1}/{len(new_np_files)}")
+                display.set('status', f"Fetching positions ({idx+1}/{len(new_np_files)})")
                 display.update(force=True)
 
 
