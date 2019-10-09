@@ -1,6 +1,6 @@
 # main algorithm configuration
 main:
-    # currently implemented: en (default), de, el, fr, it, mk, nl, ru, se, es
+    # currently implemented: en (default), de, el, fr, it, mk, nl, ru, se, pt-BR, es
     lang: en
     # custom plugins path, if null only default plugins with be loaded
     custom_plugins:
