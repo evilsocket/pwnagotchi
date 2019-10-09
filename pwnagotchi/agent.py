@@ -38,6 +38,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._handshakes = {}
         self.last_session = LastSession(self._config)
 
+        if not os.path.exists(config['bettercap']['handshakes']):
+            os.makedirs(config['bettercap']['handshakes'])
+
     @staticmethod
     def is_connected():
         try:
