@@ -27,7 +27,7 @@ msgid "New day, new hunt, new pwns!"
 msgstr "Novo dia, Nova caça, Novos pwns!"
 
 msgid "Hack the Planet!"
-msgstr "Hackei o Planeta!"
+msgstr "Hackeie o Planeta!"
 
 msgid "AI ready."
 msgstr "AI pronta."
