@@ -11,11 +11,14 @@
         - "dtoverlay=dwc2"
         - "dtparam=spi=on"
         - "dtoverlay=spi1-3cs"
+        - "dtoverlay=i2c_arm=on"
+        - "dtoverlay=i2c1=on"
     services:
       enable:
         - dphys-swapfile.service
         - pwnagotchi.service
         - bettercap.service
+        - epd-fuse.service
       disable:
         - apt-daily.timer
         - apt-daily.service
@@ -79,6 +82,10 @@
           - fonts-dejavu-core
           - fonts-dejavu-extra
           - python3-pil
+          - python3-smbus
+          - libfuse-dev
+          - bc
+          - fonts-freefont-ttf
 
   tasks:
 
@@ -134,6 +141,33 @@
     file:
       path: /etc/dphys-swapfile
       content: "CONF_SWAPSIZE=1024"
+
+  - name: clone papirus repository
+    git:
+      repo: https://github.com/repaper/gratis.git
+      dest: /usr/local/src/gratis
+
+  - name: build papirus service
+    make:
+      chdir: /usr/local/src/gratis
+      target: rpi
+      params:
+        EPD_IO: epd_io.h
+        PANEL_VERSION: 'V231_G2'
+
+  - name: install papirus service
+    make:
+      chdir: /usr/local/src/gratis
+      target: rpi-install
+      params:
+        EPD_IO: epd_io.h
+        PANEL_VERSION: 'V231_G2'
+
+  - name: configure papirus display size
+    lineinfile:
+      dest: /etc/default/epd-fuse
+      regexp: "#EPD_SIZE=2.0"
+      line: "EPD_SIZE=2.0"
 
   - name: acquire python3 pip target
     command: "python3 -c 'import sys;print(sys.path.pop())'"
