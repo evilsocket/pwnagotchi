@@ -74,10 +74,10 @@ def parse_pcap(filename):
     net_id = os.path.basename(filename).replace('.pcap', '')
 
     if '_' in net_id:
-        # /root/handshakes/ESSID_BSSID.pcap
+        # /home/pi/handshakes/ESSID_BSSID.pcap
         essid, bssid = net_id.split('_')
     else:
-        # /root/handshakes/BSSID.pcap
+        # /home/pi/handshakes/BSSID.pcap
         essid, bssid = '', net_id
 
     it = iter(bssid)
