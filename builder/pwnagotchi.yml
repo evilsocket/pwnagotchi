@@ -429,6 +429,19 @@
     apt:
       autoremove: yes
 
+  - name: create pwnagotchi slice
+    copy:
+      dest: /etc/systemd/system/pwn.slice
+      content: |
+        [Unit]
+        Description=pwnagotchi slice
+        Before=slices.target
+
+        [Slice]
+        CPUShares=2048
+    notify:
+      - reload systemd services
+
   - name: add bettercap service to systemd
     copy:
       dest: /etc/systemd/system/bettercap.service
@@ -441,12 +454,12 @@
 
         [Service]
         Type=simple
-        PermissionsStartOnly=true
         ExecStartPre=/usr/bin/monstart
         ExecStart=/usr/bin/bettercap-launcher
         ExecStopPost=/usr/bin/monstop
         Restart=always
         RestartSec=30
+        Slice=pwn.slice
 
         [Install]
         WantedBy=multi-user.target
@@ -465,10 +478,10 @@
 
         [Service]
         Type=simple
-        PermissionsStartOnly=true
         ExecStart=/usr/bin/pwnagotchi-launcher
         Restart=always
         RestartSec=30
+        Slice=pwnagotchi.slice
 
         [Install]
         WantedBy=multi-user.target
