@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-05 14:10+0200\n"
+"POT-Creation-Date: 2019-10-09 17:42+0200\n"
 "PO-Revision-Date: 2019-09-29 14:00+0200\n"
 "Last-Translator: dadav <33197631+dadav@users.noreply.github.com>\n"
 "Language-Team: DE <33197631+dadav@users.noreply.github.com>\n"
@@ -121,6 +121,12 @@ msgstr ""
 msgid "ZzzZzzz ({secs}s)"
 msgstr ""
 
+msgid "Good night."
+msgstr "Gute Nacht."
+
+msgid "Zzz"
+msgstr ""
+
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
 msgstr "Warte für {secs}s ..."
@@ -139,7 +145,7 @@ msgstr "Verbinde mit {what}"
 
 #, python-brace-format
 msgid "Yo {what}!"
-msgstr ""
+msgstr "Jo {what}!"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"

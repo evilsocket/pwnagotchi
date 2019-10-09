@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-05 14:10+0200\n"
+"POT-Creation-Date: 2019-10-09 17:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,6 +120,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
+msgstr ""
+
+msgid "Good night."
+msgstr ""
+
+msgid "Zzz"
 msgstr ""
 
 #, python-brace-format
