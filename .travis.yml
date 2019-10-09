@@ -14,7 +14,7 @@ deploy:
   file_glob: true
   file:
     - pwnagotchi-*.zip
-    - pwnagotchi-*.sha
+    - pwnagotchi-*.sha256
   on:
     tags: true
     repo: evilsocket/pwnagotchi
