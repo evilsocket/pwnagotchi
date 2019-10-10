@@ -62,7 +62,8 @@ def get_api_token(last_session, keys):
             'handshakes': last_session.handshakes,
             'peers': last_session.peers,
             'uname': subprocess.getoutput("uname -a"),
-            'brain': brain
+            'brain': brain,
+            'version': pwnagotchi.version
         }
     }
 
