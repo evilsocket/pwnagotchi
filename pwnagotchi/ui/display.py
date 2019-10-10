@@ -237,7 +237,7 @@ class Display(View):
             self._display.displayPartial(buf)
 
     def _waveshare_bc_render(self):
-        buf_black = self._display.getbuffer(self.canvas)
+        buf_black = self._display.getbuffer(self._canvas)
         # emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
         # buf_color = self._display.getbuffer(emptyImage)
         # self._display.display(buf_black,buf_color)
