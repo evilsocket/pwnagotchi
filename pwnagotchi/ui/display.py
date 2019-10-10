@@ -17,7 +17,7 @@ class InkyPhatDisplay:
         self._display = None
         self._display_color = 'black'
 
-    def is_appropriate(self, display_type):
+    def is_applicable(self, display_type):
         return display_type in ('inkyphat', 'inky')
 
     def create(self, display_color):
@@ -37,6 +37,9 @@ class InkyPhatDisplay:
         status_pos = (int(width / 2) - 15, int(height * .15))
 
         return width, height, face_pos, name_pos, status_pos
+
+    def get_display(self):
+        return self._display
 
     def clear(self):
         self._display.Clear()
@@ -78,7 +81,7 @@ class PapirusDisplay:
     def __init__(self):
         self._display = None
 
-    def is_appropriate(self, display_type):
+    def is_applicable(self, display_type):
         return display_type in ('papirus', 'papi')
 
     def create(self, display_color):
@@ -99,6 +102,9 @@ class PapirusDisplay:
 
         return width, height, face_pos, name_pos, status_pos
 
+    def get_display(self):
+        return self._display
+
     def clear(self):
         self._display.clear()
 
@@ -111,7 +117,7 @@ class WaveShare1Display:
     def __init__(self):
         self._display = None
 
-    def is_appropriate(self, display_type):
+    def is_applicable(self, display_type):
         return display_type in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1')
 
     def create(self, display_color):
@@ -133,6 +139,9 @@ class WaveShare1Display:
 
         return width, height, face_pos, name_pos, status_pos
 
+    def get_display(self):
+        return self._display
+
     def clear(self):
         self._display.Clear(WHITE)
 
@@ -146,7 +155,7 @@ class WaveShare2Display:
     def __init__(self):
         self._display = None
 
-    def is_appropriate(self, display_type):
+    def is_applicable(self, display_type):
         return display_type in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2')
 
     def create(self, display_color):
@@ -166,6 +175,9 @@ class WaveShare2Display:
         name_pos = (5, 20)
         status_pos = (125, 20)
         return width, height, face_pos, name_pos, status_pos
+
+    def get_display(self):
+        return self._display
 
     def clear(self):
         self._display.Clear(WHITE)
@@ -251,9 +263,8 @@ class VideoHandler(BaseHTTPRequestHandler):
             self.send_response(404)
 
 
-class Display(View):
-    def __init__(self, config, state={}):
-        super(Display, self).__init__(config, state)
+class Display:
+    def __init__(self, config):
         self._enabled = config['ui']['display']['enabled']
         self._rotation = config['ui']['display']['rotation']
         self._video_enabled = config['ui']['display']['video']['enabled']
@@ -261,8 +272,6 @@ class Display(View):
         self._video_address = config['ui']['display']['video']['address']
         self._display_type = config['ui']['display']['type']
         self._display_color = config['ui']['display']['color']
-
-        self._render_cb = None
         self._display = None
         self._httpd = None
 
@@ -278,14 +287,17 @@ class Display(View):
         if self._enabled:
             self._init_display(self._display_type)
         else:
-            self.on_render(self._on_view_rendered)
+            self.clear()
             logging.warning("display module is disabled")
+
+        logging.info("video_enabled = {%s}" % self._video_enabled)
 
         if self._video_enabled:
             _thread.start_new_thread(self._http_serve, ())
 
     def _http_serve(self):
         if self._video_address is not None:
+            logging.info("Creating HttpServer {%s} {%s}" % (self._video_address, self._video_port))
             self._httpd = HTTPServer((self._video_address, self._video_port), VideoHandler)
             logging.info("ui available at http://%s:%d/" % (self._video_address, self._video_port))
             self._httpd.serve_forever()
@@ -304,7 +316,18 @@ class Display(View):
 
         plugins.on('display_setup', self._renderer.get_display())
 
-        self.on_render(self._on_view_rendered)
+    def _prepare_image(self, canvas):
+        img = None
+        if canvas is not None:
+            img = canvas if self._rotation == 0 else canvas.rotate(-self._rotation)
+
+        return img
+
+    def get_specifics(self):
+        if self._renderer is None:
+            logging.error("no display object created")
+
+        return self._renderer.get_display_specifics()
 
     def clear(self):
         if self._renderer is None:
@@ -312,16 +335,9 @@ class Display(View):
 
         self._renderer.clear()
 
-    def image(self):
-        img = None
-        if self._canvas is not None:
-            img = self._canvas if self._rotation == 0 else self._canvas.rotate(-self._rotation)
-        return img
+    def render(self, canvas):
+        VideoHandler.render(canvas)
 
-    def _on_view_rendered(self, img):
-        VideoHandler.render(img)
-
-        if self._enabled:
-            self._canvas = (img if self._rotation == 0 else img.rotate(self._rotation))
-            if self._render_cb is not None:
-                self._render_cb()
+        img = self._prepare_image(canvas)
+        if self._enabled and self._renderer is not None:
+            self._renderer.render(img)

@@ -17,57 +17,18 @@ WHITE = 0xff
 BLACK = 0x00
 ROOT = None
 
-def setup_display_specifics(config):
-    width = 0
-    height = 0
-    face_pos = (0, 0)
-    name_pos = (0, 0)
-    status_pos = (0, 0)
-
-    if config['ui']['display']['type'] in ('inky', 'inkyphat'):
-        fonts.setup(10, 8, 10, 25)
-
-        width = 212
-        height = 104
-        face_pos = (0, int(height / 4))
-        name_pos = (5, int(height * .15))
-        status_pos = (int(width / 2) - 15, int(height * .15))
-
-    elif config['ui']['display']['type'] in ('papirus', 'papi'):
-        fonts.setup(10, 8, 10, 23)
-
-        width = 200
-        height = 96
-        face_pos = (0, int(height / 4))
-        name_pos = (5, int(height * .15))
-        status_pos = (int(width / 2) - 15, int(height * .15))
-
-    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1',
-                                             'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
-        fonts.setup(10, 9, 10, 35)
-
-        width = 250
-        height = 122
-        face_pos = (0, 40)
-        name_pos = (5, 20)
-        status_pos = (125, 20)
-
-    return width, height, face_pos, name_pos, status_pos
-
 
 class View(object):
-    def __init__(self, config, state={}):
+    def __init__(self, config, display, state={}):
         global ROOT
 
-        self._render_cbs = []
         self._config = config
-        self._canvas = None
         self._frozen = False
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
+        self._display = display
 
-        self._width, self._height, \
-        face_pos, name_pos, status_pos = setup_display_specifics(config)
+        self._width, self._height, face_pos, name_pos, status_pos = display.get_specifics()
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
@@ -135,10 +96,6 @@ class View(object):
 
     def on_state_change(self, key, cb):
         self._state.add_listener(key, cb)
-
-    def on_render(self, cb):
-        if cb not in self._render_cbs:
-            self._render_cbs.append(cb)
 
     def _refresh_handler(self):
         delay = 1.0 / self._config['ui']['fps']
@@ -339,15 +296,15 @@ class View(object):
 
             changes = self._state.changes(ignore=self._ignore_changes)
             if force or len(changes):
-                self._canvas = Image.new('1', (self._width, self._height), WHITE)
-                drawer = ImageDraw.Draw(self._canvas)
+
+                canvas = Image.new('1', (self._width, self._height), WHITE)
+                drawer = ImageDraw.Draw(canvas)
 
                 plugins.on('ui_update', self)
 
                 for key, lv in self._state.items():
-                    lv.draw(self._canvas, drawer)
+                    lv.draw(canvas, drawer)
 
-                for cb in self._render_cbs:
-                    cb(self._canvas)
+                self._display.render(canvas)
 
                 self._state.reset()

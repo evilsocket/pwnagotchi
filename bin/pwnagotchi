@@ -2,7 +2,6 @@
 if __name__ == '__main__':
     import argparse
     import time
-    import os
     import logging
 
     import pwnagotchi
@@ -12,6 +11,7 @@ if __name__ == '__main__':
     from pwnagotchi.identity import KeyPair
     from pwnagotchi.agent import Agent
     from pwnagotchi.ui.display import Display
+    from pwnagotchi.ui.view import View
 
     parser = argparse.ArgumentParser()
 
@@ -34,8 +34,10 @@ if __name__ == '__main__':
     plugins.load(config)
 
     keypair = KeyPair()
-    display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
-    agent = Agent(view=display, config=config, keypair=keypair)
+
+    display = Display(config=config)
+    view = View(config=config, display= display, state={'name': '%s>' % pwnagotchi.name()})
+    agent = Agent(view=view, config=config, keypair=keypair)
 
     logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent._keypair.fingerprint, pwnagotchi.version))
 
@@ -61,7 +63,7 @@ if __name__ == '__main__':
                 agent.last_session.max_reward))
 
         while True:
-            display.on_manual_mode(agent.last_session)
+            view.on_manual_mode(agent.last_session)
             time.sleep(1)
 
             if Agent.is_connected():
