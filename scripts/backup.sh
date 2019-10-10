@@ -10,7 +10,7 @@ TEMP_BACKUP_FOLDER=/tmp/pwnagotchi_backup
 FILES_TO_BACKUP=(
   /root/brain.nn
   /root/brain.json
-  /home/pi/handshakes
+  /var/handshakes
   /etc/pwnagotchi/
   /etc/hostname
   /etc/hosts

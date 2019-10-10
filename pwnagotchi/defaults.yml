@@ -21,7 +21,7 @@ main:
         files:
           - /root/brain.nn
           - /root/brain.json
-          - /home/pi/handshakes/
+          - /var/handshakes/
           - /etc/pwnagotchi/
           - /etc/hostname
           - /etc/hosts
@@ -175,7 +175,7 @@ bettercap:
     # wifi.handshakes.aggregate will be set to false and individual
     # pcap files will be created in order to minimize the chances
     # of a single pcap file to get corrupted
-    handshakes: /home/pi/handshakes
+    handshakes: /var/handshakes
     # events to mute in bettercap's events stream
     silence:
         - ble.device.new
