@@ -33,6 +33,12 @@
         url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       apt:
+        hold:
+          - firmware-atheros
+          - firmware-brcm80211
+          - firmware-libertas
+          - firmware-misc-nonfree
+          - firmware-realtek
         remove:
           - rasberrypi-net-mods
           - dhcpcd5
@@ -117,6 +123,12 @@
     apt_repository:
       repo: deb http://http.re4son-kernel.com/re4son/ kali-pi main
       state: present
+
+  - name: add firmware packages to hold
+    dpkg_selections:
+      name: "{{ item }}"
+      selection: hold
+    with_items: "{{ packages.apt.hold }}"
 
   - name: update apt package cache
     apt:
@@ -343,34 +355,48 @@
           /opt/vc/bin/tvservice -o
         fi
 
-  - name: create /etc/pwnagotchi/config.yml
-    blockinfile:
+  - name: create /etc/pwnagotchi folder
+    file:
+      path: /etc/pwnagotchi
+      state: directory
+
+  - name: check if user configuration exists
+    stat:
       path: /etc/pwnagotchi/config.yml
-      create: yes
-      block: |
-        # put here your custom configuration overrides
+    register: user_config
+
+  - name: create /etc/pwnagotchi/config.yml
+    copy:
+      dest: /etc/pwnagotchi/config.yml
+      content: |
+        # Add your configuration overrides on this file any configuration changes done to defaults.yml will be lost!
+        # Example:
+        #
+        # ui:
+        #   display:
+        #     type: 'inkyphat'
+        #     color: 'black'
+        #
+    when: not user_config.stat.exists
 
   - name: configure lo interface
-    blockinfile:
-      path: /etc/network/interfaces.d/lo-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/lo-cfg
+      content: |
         auto lo
         iface lo inet loopback
 
   - name: configure wlan interface
-    blockinfile:
-      path: /etc/network/interfaces.d/wlan0-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/wlan0-cfg
+      content: |
         allow-hotplug wlan0
         iface wlan0 inet static
 
   - name: configure usb interface
-    blockinfile:
-      path: /etc/network/interfaces.d/usb0-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/usb0-cfg
+      content: |
         allow-hotplug usb0
         iface usb0 inet static
           address 10.0.0.2
@@ -380,10 +406,9 @@
           gateway 10.0.0.1
 
   - name: configure eth0 interface (pi2/3/4)
-    blockinfile:
-      path: /etc/network/interfaces.d/eth0-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/eth0-cfg
+      content: |
         allow-hotplug eth0
         iface eth0 inet dhcp
 
@@ -397,8 +422,7 @@
       dest: /boot/config.txt
       insertafter: EOF
       line: '{{ item }}'
-    with_items:
-      - "{{system.boot_options}}"
+    with_items: "{{system.boot_options}}"
 
   - name: change root partition
     replace:
@@ -500,5 +524,3 @@
   - name: reload systemd services
     systemd:
       daemon_reload: yes
-
-
