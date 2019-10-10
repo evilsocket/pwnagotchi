@@ -10,9 +10,8 @@ TEMP_BACKUP_FOLDER=/tmp/pwnagotchi_backup
 FILES_TO_BACKUP=(
   /root/brain.nn
   /root/brain.json
-  /root/custom.yaml
   /root/handshakes
-  /etc/ssh
+  /etc/pwnagotchi/
   /etc/hostname
   /etc/hosts
   /etc/motd

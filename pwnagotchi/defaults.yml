@@ -1,0 +1,192 @@
+# main algorithm configuration
+main:
+    # currently implemented: en (default), de, el, fr, it, mk, nl, ru, se, pt-BR, es
+    lang: en
+    # custom plugins path, if null only default plugins with be loaded
+    custom_plugins:
+    # which plugins to load and enable
+    plugins:
+      grid:
+        enabled: true
+        report: false # don't report pwned networks by default!
+        exclude: # do not report the following networks (accepts both ESSIDs and BSSIDs)
+          - YourHomeNetworkHere
+      auto-update:
+        enabled: false
+        system: false # set to true to also enable system updates via apt
+        interval: 1 # every day
+      auto-backup:
+        enabled: false
+        interval: 1 # every day
+        files:
+          - /root/brain.nn
+          - /root/brain.json
+          - /root/handshakes/
+          - /etc/pwnagotchi/
+          - /etc/hostname
+          - /etc/hosts
+          - /etc/motd
+          - /var/log/pwnagotchi.log
+        commands:
+          - 'tar czf /tmp/backup.tar.gz {files}'
+          - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date +%s).tar.gz'
+      net-pos:
+        enabled: false
+        api_key: 'test'
+      gps:
+        enabled: false
+        speed: 19200
+        device: /dev/ttyUSB0
+      twitter:
+        enabled: false
+        consumer_key: aaa
+        consumer_secret: aaa
+        access_token_key: aaa
+        access_token_secret: aaa
+      onlinehashcrack:
+        enabled: false
+        email: ~
+      wpa-sec:
+        enabled: false
+        api_key: ~
+      wigle:
+        enabled: false
+        api_key: ~
+      screen_refresh:
+        enabled: false
+        refresh_interval: 50
+
+    # monitor interface to use
+    iface: mon0
+    # command to run to bring the mon interface up in case it's not up already
+    mon_start_cmd: /usr/bin/monstart
+    mon_stop_cmd: /usr/bin/monstop
+    mon_max_blind_epochs: 50
+    # log file
+    log: /var/log/pwnagotchi.log
+    # if true, will not restart the wifi module
+    no_restart: false
+    # access points to ignore
+    whitelist:
+        - EXAMPLE_NETWORK
+        - ANOTHER_EXAMPLE_NETWORK
+    # if not null, filter access points by this regular expression
+    filter: null
+    # cryptographic key for identity
+    pubkey: /etc/ssh/ssh_host_rsa_key.pub
+
+ai:
+    # if false, only the default 'personality' will be used
+    enabled: true
+    path: /root/brain.nn
+    # 1.0 - laziness = probability of start training
+    laziness: 0.1
+    # how many epochs to train on
+    epochs_per_episode: 50
+    params:
+        # discount factor
+        gamma: 0.99
+        # the number of steps to run for each environment per update
+        n_steps: 1
+        # value function coefficient for the loss calculation
+        vf_coef: 0.25
+        # entropy coefficient for the loss calculation
+        ent_coef: 0.01
+        # maximum value for the gradient clipping
+        max_grad_norm: 0.5
+        # the learning rate
+        learning_rate: 0.0010
+        # rmsprop decay parameter
+        alpha: 0.99
+        # rmsprop epsilon
+        epsilon: 0.00001
+        # the verbosity level: 0 none, 1 training information, 2 tensorflow debug
+        verbose: 1
+        # type of scheduler for the learning rate update ('linear', 'constant', 'double_linear_con', 'middle_drop' or 'double_middle_drop')
+        lr_schedule: 'constant'
+        # the log location for tensorboard (if None, no logging)
+        tensorboard_log: null
+
+personality:
+    # advertise our presence
+    advertise: true
+    # perform a deauthentication attack to client stations in order to get full or half handshakes
+    deauth: true
+    # send association frames to APs in order to get the PMKID
+    associate: true
+    # list of channels to recon on, or empty for all channels
+    channels: []
+    # minimum WiFi signal strength in dBm
+    min_rssi: -200
+    # number of seconds for wifi.ap.ttl
+    ap_ttl: 120
+    # number of seconds for wifi.sta.ttl
+    sta_ttl: 300
+    # time in seconds to wait during channel recon
+    recon_time: 30
+    # number of inactive epochs after which recon_time gets multiplied by recon_inactive_multiplier
+    max_inactive_scale: 2
+    # if more than max_inactive_scale epochs are inactive, recon_time *= recon_inactive_multiplier
+    recon_inactive_multiplier: 2
+    # time in seconds to wait during channel hopping if activity has been performed
+    hop_recon_time: 10
+    # time in seconds to wait during channel hopping if no activity has been performed
+    min_recon_time: 5
+    # maximum amount of deauths/associations per BSSID per session
+    max_interactions: 3
+    # maximum amount of misses before considering the data stale and triggering a new recon
+    max_misses_for_recon: 5
+    # number of active epochs that triggers the excited state
+    excited_num_epochs: 10
+    # number of inactive epochs that triggers the bored state
+    bored_num_epochs: 15
+    # number of inactive epochs that triggers the sad state
+    sad_num_epochs: 25
+
+# ui configuration
+ui:
+    # ePaper display can update every 3 secs anyway, set to 0 to only refresh for major data changes
+    # IMPORTANT: The lifespan of an eINK display depends on the cumulative amount of refreshes. If you want to
+    # preserve your display over time, you should set this value to 0.0 so that the display will be refreshed only
+    # if any of the important data fields changed (the uptime and blinking cursor won't trigger a refresh).
+    fps: 0.0
+    display:
+        enabled: true
+        rotation: 180
+        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2
+        type: 'waveshare_2'
+        # Possible options red/yellow/black (black used for monocromatic displays)
+        color: 'black'
+        video:
+            enabled: true
+            address: '10.0.0.2'
+            port: 8080
+
+
+# bettercap rest api configuration
+bettercap:
+    # api scheme://hostname:port username and password
+    scheme: http
+    hostname: localhost
+    port: 8081
+    username: pwnagotchi
+    password: pwnagotchi
+    # folder where bettercap stores the WPA handshakes, given that
+    # wifi.handshakes.aggregate will be set to false and individual
+    # pcap files will be created in order to minimize the chances
+    # of a single pcap file to get corrupted
+    handshakes: /root/handshakes
+    # events to mute in bettercap's events stream
+    silence:
+        - ble.device.new
+        - ble.device.lost
+        - ble.device.disconnected
+        - ble.device.connected
+        - ble.device.service.discovered
+        - ble.device.characteristic.discovered
+        - wifi.client.new
+        - wifi.client.lost
+        - wifi.client.probe
+        - wifi.ap.new
+        - wifi.ap.lost
+        - mod.started

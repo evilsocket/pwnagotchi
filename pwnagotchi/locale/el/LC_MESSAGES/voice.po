@@ -1,0 +1,209 @@
+# pwnigotchi voice data
+# Copyright (C) 2019
+# This file is distributed under the same license as the pwnagotchi package.
+# FIRST AUTHOR Periklis Fregkos <fregkos@gmail.com>, 2019.
+# CO AUTHOR Panos Vasilopoulos <hello@alwayslivid.com>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-05 14:10+0200\n"
+"PO-Revision-Date: 2019-10-03 08:00+0000\n"
+"Last-Translator: Periklis Fregkos <fregkos@gmail.com>\n"
+"Language-Team: pwnagotchi <33197631+dadav@users.noreply.github.com>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ZzzzZZzzzzZzzz"
+msgstr ""
+
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "Γειά, είμαι το Pwnagotchi! Εκκινούμαι ..."
+
+msgid "New day, new hunt, new pwns!"
+msgstr "Νέα μέρα, νέο κυνήγι, νέα pwns!"
+
+msgid "Hack the Planet!"
+msgstr "Hackαρε τον πλανήτη!"
+
+msgid "AI ready."
+msgstr "ΤΝ έτοιμη."
+
+msgid "The neural network is ready."
+msgstr "Το νευρωνικό δίκτυο είναι έτοιμο."
+
+#, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr "Ε, το κανάλι {channel} είναιελεύθερο! Το AP σου θα είναι ευγνώμων."
+
+msgid "I'm bored ..."
+msgstr "Βαριέμαι ..."
+
+msgid "Let's go for a walk!"
+msgstr "Ας πάμε μια βόλτα!"
+
+msgid "This is the best day of my life!"
+msgstr "Είναι η καλύτερημέρα της ζωής μου!"
+
+msgid "Shitty day :/"
+msgstr "Σκατένια μέρα :/"
+
+msgid "I'm extremely bored ..."
+msgstr "Βαριέμαι πάρα πολύ ..."
+
+msgid "I'm very sad ..."
+msgstr "Είμαι πολύ λυπημένο ..."
+
+msgid "I'm sad"
+msgstr "Είμαι λυπημένο"
+
+msgid "I'm living the life!"
+msgstr "Ζω την ζωή μου!"
+
+msgid "I pwn therefore I am."
+msgstr "Pwnάρω, άρα υπάρχω."
+
+msgid "So many networks!!!"
+msgstr "Τόσα πολλά δίκτυα!!!"
+
+msgid "I'm having so much fun!"
+msgstr "Περνάω τέλεια!"
+
+msgid "My crime is that of curiosity ..."
+msgstr "Η περιέργεια είναιτο μόνο έγκλημά μου ..."
+
+#, python-brace-format
+msgid "Hello {name}! Nice to meet you. {name}"
+msgstr "Γειά {name}!Χάρηκα για τη γνωριμία. {name}"
+
+#, python-brace-format
+msgid "Unit {name} is nearby! {name}"
+msgstr "Η μονάδα {name} είναι κοντά! {name}"
+
+#, python-brace-format
+msgid "Uhm ... goodbye {name}"
+msgstr "Εμμ ...αντίο {name}"
+
+#, python-brace-format
+msgid "{name} is gone ..."
+msgstr "Το {name} έφυγε ..."
+
+#, python-brace-format
+msgid "Whoops ... {name} is gone."
+msgstr "Ουπς ... Εξαφανίστηκε το {name}."
+
+#, python-brace-format
+msgid "{name} missed!"
+msgstr "Έχασα το {name}!"
+
+msgid "Missed!"
+msgstr "Το έχασα!"
+
+msgid "Nobody wants to play with me ..."
+msgstr "Κανείς δε θέλει ναπαίξει μαζί μου ..."
+
+msgid "I feel so alone ..."
+msgstr "Νιώθω μοναχός μου ..."
+
+msgid "Where's everybody?!"
+msgstr "Μα, πού πήγαν όλοι;!"
+
+#, python-brace-format
+msgid "Napping for {secs}s ..."
+msgstr "Ξεκουράζομαι για {secs}s ..."
+
+msgid "Zzzzz"
+msgstr ""
+
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr ""
+
+#, python-brace-format
+msgid "Waiting for {secs}s ..."
+msgstr "Περιμένω για {secs}s ..."
+
+#, python-brace-format
+msgid "Looking around ({secs}s)"
+msgstr "Ψάχνω τριγύρω ({secs})"
+
+#, python-brace-format
+msgid "Hey {what} let's be friends!"
+msgstr "Εε! {what}, ας γίνουμε φίλοι!"
+
+#, python-brace-format
+msgid "Associating to {what}"
+msgstr "Συνδέομαι με το {what}"
+
+#, python-brace-format
+msgid "Yo {what}!"
+msgstr "Που'σαι ρε τρελέ {what}!"
+
+#, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "Μόλις αποφάσισα ότι η {mac} δε χρείαζεται WiFi!"
+
+#, python-brace-format
+msgid "Deauthenticating {mac}"
+msgstr "Πετάω έξω την {mac}"
+
+#, python-brace-format
+msgid "Kickbanning {mac}!"
+msgstr "Μπανάρω την {mac}!"
+
+#, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Τέλεια δικέ μου, πήραμε {num} νέες χειραψίες!"
+
+msgid "Ops, something went wrong ... Rebooting ..."
+msgstr "Ουπς, κάτιπήγε λάθος ... Επανεκκινούμαι ..."
+
+#, python-brace-format
+msgid "Kicked {num} stations\n"
+msgstr "Έριξα {num} σταθμούς\n"
+
+#, python-brace-format
+msgid "Made {num} new friends\n"
+msgstr "Έκανα {num} νέους φίλους\n"
+
+#, python-brace-format
+msgid "Got {num} handshakes\n"
+msgstr "Πήρα {num} χειραψίες\n"
+
+msgid "Met 1 peer"
+msgstr "Γνώρισα 1 φίλο"
+
+#, python-brace-format
+msgid "Met {num} peers"
+msgstr "Γνώρισα {num} φίλους"
+
+#, python-brace-format
+msgid ""
+"I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+"Pwnαρα για {duration} και έριξα {deauthed} πελάτες! Επίσης γνώρισα "
+"{associated} νέους φίλους και καταβρόχθισα {handshakes} χειραψίες! "
+"#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr ""
+
+msgid "minutes"
+msgstr ""
+
+msgid "seconds"
+msgstr ""
+
+msgid "hour"
+msgstr ""
+
+msgid "minute"
+msgstr ""
+
+msgid "second"
+msgstr ""

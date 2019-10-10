@@ -2,6 +2,7 @@
 *.img.bmap
 *.pcap
 *.po~
+preview.png
 __pycache__
 _backups
 _emulation
@@ -10,3 +11,7 @@ config.laptop.yml
 .idea
 packer_cache
 output-pwnagotchi
+.DS_Store
+build
+dist
+pwnagotchi.egg-info

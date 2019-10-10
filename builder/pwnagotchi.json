@@ -1,7 +1,4 @@
 {
-  "variables": {
-    "home": "{{env `HOME`}}"
-  },
   "builders": [{
     "name": "pwnagotchi",
     "type": "arm-image",
@@ -15,13 +12,15 @@
       "type": "shell",
       "inline": [
         "sed -i 's/^\\([^#]\\)/#\\1/g' /etc/ld.so.preload",
+        "dpkg-architecture",
         "apt-get -y update",
         "apt-get install -y ansible"
       ]
     },
     {
       "type":"ansible-local",
-      "playbook_file": "pwnagotchi.yml"
+      "playbook_file": "pwnagotchi.yml",
+      "command": "ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 PWN_VERSION={{user `pwn_version`}} PWN_HOSTNAME={{user `pwn_hostname`}} ansible-playbook"
     },
     {
       "type": "shell",
