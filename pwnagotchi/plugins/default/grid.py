@@ -62,8 +62,7 @@ def get_api_token(last_session, keys):
             'handshakes': last_session.handshakes,
             'peers': last_session.peers,
             'uname': subprocess.getoutput("uname -a"),
-            'brain': brain,
-            'version': pwnagotchi.version
+            'brain': brain
         }
     }
 
@@ -162,10 +161,12 @@ def on_internet_available(agent):
 
                     if net_id not in reported and not do_skip:
                         essid, bssid = parse_pcap(pcap_file)
-                        if bssid:
-                            if api_report_ap(agent.last_session, keys, token, essid, bssid):
-                                reported.append(net_id)
-                                REPORT.update(data={'reported': reported})
+
+                        if not any([_ in config['main']['plugins']['grid']['exclude'] for _ in [essid, bssid]]):
+                            if bssid:
+                                if api_report_ap(agent.last_session, keys, token, essid, bssid):
+                                    reported.append(net_id)
+                                    REPORT.update(data={'reported': reported})
             else:
                 logging.debug("grid: reporting disabled")
 
