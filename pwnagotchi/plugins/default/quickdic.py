@@ -8,7 +8,6 @@ __description__ = 'Run a quick dictionary scan against captured handshakes'
 Aircrack-ng needed, to install:
 > apt-get install aircrack-ng
 Upload wordlist files in .txt format to folder in config file (Default: /opt/wordlists/)
-Cracked handshakes stored in handshake folder as [essid].pcap.cracked 
 '''
 
 import logging
@@ -37,7 +36,6 @@ def on_handshake(agent, filename, access_point, client_station):
             key = re.search('\[(.*)\]', result2)
             pwd = str(key.group(1))
             set_text("Cracked password: "+pwd)
-            agent.set_excited()
             display.update(force=True)
 
 text_to_set = "";
@@ -48,5 +46,6 @@ def set_text(text):
 def on_ui_update(ui):
     global text_to_set
     if text_to_set:
+        ui.set('face', "(·ω·)")
         ui.set('status', text_to_set)
         text_to_set = ""
