@@ -34,7 +34,7 @@
         url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
-        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.5.2/pwngrid_linux_armv6l_v1.5.2.zip"
+        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.5.3/pwngrid_linux_armv6l_v1.5.3.zip"
       apt:
         hold:
           - firmware-atheros
@@ -502,7 +502,7 @@
         [Service]
         Type=simple
         PermissionsStartOnly=true
-        ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666
+        ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666 -wait
         Restart=always
         RestartSec=30
 
