@@ -132,12 +132,25 @@ def api_report_ap(last_session, keys, token, essid, bssid):
             return False
 
 
+def is_excluded(what):
+    for skip in OPTIONS['exclude']:
+        skip = skip.lower()
+        what = what.lower()
+        if skip in what or skip.replace(':', ':') in what:
+            return True
+    return False
+
+
 def on_internet_available(agent):
     global REPORT
 
     try:
+        logging.debug("internet available")
+
         config = agent.config()
         keys = agent.keypair()
+
+        logging.debug("checking pcaps")
 
         pcap_files = glob.glob(os.path.join(config['bettercap']['handshakes'], "*.pcap"))
         num_networks = len(pcap_files)
@@ -149,23 +162,24 @@ def on_internet_available(agent):
         if num_new > 0:
             if OPTIONS['report']:
                 logging.info("grid: %d new networks to report" % num_new)
+                logging.debug("OPTIONS: %s" % OPTIONS)
+                logging.debug("  exclude: %s" % OPTIONS['exclude'])
 
                 for pcap_file in pcap_files:
                     net_id = os.path.basename(pcap_file).replace('.pcap', '')
-                    do_skip = False
-                    for skip in OPTIONS['exclude']:
-                        skip = skip.lower()
-                        net = net_id.lower()
-                        if skip in net or skip.replace(':', '') in net:
-                            do_skip = True
-                            break
+                    if net_id not in reported:
+                        if is_excluded(net_id):
+                            logging.info("skipping %s due to exclusion filter" % pcap_file)
+                            continue
 
-                    if net_id not in reported and not do_skip:
                         essid, bssid = parse_pcap(pcap_file)
                         if bssid:
-                            if api_report_ap(agent.last_session, keys, token, essid, bssid):
-                                reported.append(net_id)
-                                REPORT.update(data={'reported': reported})
+                            if is_excluded(essid) or is_excluded(bssid):
+                                logging.debug("not reporting %s due to exclusion filter" % pcap_file)
+
+                            elif api_report_ap(agent.last_session, keys, token, essid, bssid):
+                                    reported.append(net_id)
+                                    REPORT.update(data={'reported': reported})
             else:
                 logging.debug("grid: reporting disabled")
 
