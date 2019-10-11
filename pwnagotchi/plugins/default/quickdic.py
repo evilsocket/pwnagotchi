@@ -8,6 +8,7 @@ __description__ = 'Run a quick dictionary scan against captured handshakes'
 Aircrack-ng needed, to install:
 > apt-get install aircrack-ng
 Upload wordlist files in .txt format to folder in config file (Default: /opt/wordlists/)
+Cracked handshakes stored in handshake folder as [essid].pcap.cracked 
 '''
 
 import logging
@@ -29,7 +30,7 @@ def on_handshake(agent, filename, access_point, client_station):
         logging.info("[quickdic] No handshake")
     else:
         logging.info("[quickdic] Handshake confirmed")
-        result2 = subprocess.run(('aircrack-ng -w '+OPTIONS['wordlist_folder']+'*.txt -l '+filename+'.cracked -q -b '+result+' '+filename+' | grep KEY'),shell=True,stdout=subprocess.PIPE)
+        result2 = subprocess.run(('aircrack-ng -w `echo '+OPTIONS['wordlist_folder']+'*.txt | sed \'s/\ /,/g\'` -l '+filename+'.cracked -q -b '+result+' '+filename+' | grep KEY'),shell=True,stdout=subprocess.PIPE)
         result2 = result2.stdout.decode('utf-8').strip()
         logging.info("[quickdic] "+result2)
         if result2 != "KEY NOT FOUND":
