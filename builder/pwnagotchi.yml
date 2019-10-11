@@ -464,18 +464,18 @@
         All the configuration options can be found on /etc/pwnagotchi/defaults.yml,
         but don't change this file because I will recreate it every time I'm restarted!
 
-        I'm managed by systemd, so here are some basic commands.
+        I'm managed by systemd. Here are some basic commands.
 
-        You can check my logs, to know what I'm doing, using
+        If you want to know what I'm doing, you can check my logs with the command
         journalctl -fu pwnagotchi
 
-        If you want to you if I'm running, you can use
+        If you want to know if I'm running, you can use
         systemctl status pwnagotchi
 
         You can restart me using
         systemctl restart pwnagotchi
 
-        But be aware you will go into MANUAL mode when restarted!
+        But be aware I will go into MANUAL mode when restarted!
         You can put me back into AUTO mode using
         touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi
 
