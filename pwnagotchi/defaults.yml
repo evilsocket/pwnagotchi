@@ -1,3 +1,9 @@
+# WARNING WARNING WARNING WARNING
+#
+# This file is recreated with default settings on every pwnagotchi restart,
+# use /etc/pwnagotchi/config.yml to configure this unit.
+#
+#
 # main algorithm configuration
 main:
     # currently implemented: en (default), de, el, fr, it, mk, nl, ru, se, pt-BR, es

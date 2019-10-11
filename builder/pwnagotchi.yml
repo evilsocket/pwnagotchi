@@ -443,7 +443,33 @@
   - name: configure motd
     copy:
       dest: /etc/motd
-      content: "(◕‿‿◕) {{pwnagotchi.hostname}} (pwnagotchi-{{pwnagotchi.version}})"
+      content: |
+        (◕‿‿◕) {{pwnagotchi.hostname}} (pwnagotchi-{{pwnagotchi.version}})
+
+        Hi! I'm a pwnagotchi, please take good care of me!
+        Here are some basic things you need to know to raise me properly!
+
+        If you want to change my configuration, use /etc/pwnagotchi/config.yml
+
+        All the configuration options can be found on /etc/pwnagotchi/defaults.yml,
+        but don't change this file because I will recreate it every time I'm restarted!
+
+        I'm managed by systemd, so here are some basic commands.
+
+        You can check my logs, to know what I'm doing, using
+        journactl -fu pwnagotchi
+
+        If you want to you if I'm running, you can use
+        systemctl status pwnagotchi
+
+        You can restart me using
+        systemctl restart pwnagotchi
+
+        But be aware you will go into MANUAL mode when restarted!
+        You can put me back into AUTO mode using
+        touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi
+
+        You learn more about me at https://pwnagotchi.ai/
 
   - name: clean apt cache
     apt:
