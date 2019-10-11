@@ -76,16 +76,18 @@ def grid_update_data(last_session):
         pass
 
     data = {
-        'duration': last_session.duration,
-        'epochs': last_session.epochs,
-        'train_epochs': last_session.train_epochs,
-        'avg_reward': last_session.avg_reward,
-        'min_reward': last_session.min_reward,
-        'max_reward': last_session.max_reward,
-        'deauthed': last_session.deauthed,
-        'associated': last_session.associated,
-        'handshakes': last_session.handshakes,
-        'peers': last_session.peers,
+        'session': {
+            'duration': last_session.duration,
+            'epochs': last_session.epochs,
+            'train_epochs': last_session.train_epochs,
+            'avg_reward': last_session.avg_reward,
+            'min_reward': last_session.min_reward,
+            'max_reward': last_session.max_reward,
+            'deauthed': last_session.deauthed,
+            'associated': last_session.associated,
+            'handshakes': last_session.handshakes,
+            'peers': last_session.peers,
+        },
         'uname': subprocess.getoutput("uname -a"),
         'brain': brain,
         'version': pwnagotchi.version
