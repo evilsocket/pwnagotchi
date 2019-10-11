@@ -54,7 +54,7 @@ def is_excluded(what):
     for skip in OPTIONS['exclude']:
         skip = skip.lower()
         what = what.lower()
-        if skip in what or skip.replace(':', ':') in what:
+        if skip in what or skip.replace(':', '') in what:
             return True
     return False
 
