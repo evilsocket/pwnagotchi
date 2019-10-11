@@ -12,10 +12,16 @@ import json
 import subprocess
 import pwnagotchi
 import pwnagotchi.utils as utils
+from pwnagotchi.ui.components import LabeledValue
+from pwnagotchi.ui.view import BLACK
+import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.utils import WifiInfo, extract_from_pcap
 
 OPTIONS = dict()
 REPORT = utils.StatusFile('/root/.api-report.json', data_format='json')
+
+UNREAD_MESSAGES = 0
+TOTAL_MESSAGES = 0
 
 
 def on_loaded():
@@ -59,12 +65,17 @@ def is_excluded(what):
     return False
 
 
-def grid_call(path, obj):
+def grid_call(path, obj=None):
     # pwngrid-peer is running on port 8666
     api_address = 'http://127.0.0.1:8666/api/v1%s' % path
-    r = requests.post(api_address, headers=None, json=obj)
+    if obj is None:
+        r = requests.get(api_address, headers=None)
+    else:
+        r = requests.post(api_address, headers=None, json=obj)
+
     if r.status_code != 200:
         raise Exception("(status %d) %s" % (r.status_code, r.text))
+    return r.json()
 
 
 def grid_update_data(last_session):
@@ -93,7 +104,7 @@ def grid_update_data(last_session):
         'version': pwnagotchi.version
     }
 
-    logging.debug("updating grid data:\n%s" % data)
+    logging.debug("updating grid data: %s" % data)
 
     grid_call("/data", data)
 
@@ -111,8 +122,24 @@ def grid_report_ap(essid, bssid):
     return False
 
 
+def grid_inbox():
+    return grid_call("/inbox")["messages"]
+
+
+def on_ui_update(ui):
+    new_value = ' %d (%d)' % (UNREAD_MESSAGES, TOTAL_MESSAGES)
+    if not ui.has_element('mailbox'):
+        logging.debug("add mailbox")
+        ui.add_element('mailbox',
+                       LabeledValue(color=BLACK, label='MSG', value=new_value,
+                                    position=(100, 0),
+                                    label_font=fonts.Bold,
+                                    text_font=fonts.Medium))
+    ui.set('mailbox', new_value)
+
+
 def on_internet_available(agent):
-    global REPORT
+    global REPORT, UNREAD_MESSAGES, TOTAL_MESSAGES
 
     logging.debug("internet available")
 
@@ -123,6 +150,14 @@ def on_internet_available(agent):
         return
 
     try:
+        logging.debug("checking mailbox ...")
+
+        messages = grid_inbox()
+        TOTAL_MESSAGES = len(messages)
+        UNREAD_MESSAGES = len([m for m in messages if m['seen_at'] is None])
+
+        logging.debug( " %d unread messages of %d total" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
+
         logging.debug("checking pcaps")
 
         pcap_files = glob.glob(os.path.join(agent.config()['bettercap']['handshakes'], "*.pcap"))

@@ -124,8 +124,14 @@ class View(object):
 
         ROOT = self
 
+    def has_element(self, key):
+        self._state.has_element(key)
+
     def add_element(self, key, elem):
         self._state.add_element(key, elem)
+
+    def remove_element(self, key):
+        self._state.remove_element(key)
 
     def width(self):
         return self._width
