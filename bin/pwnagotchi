@@ -78,8 +78,6 @@ if __name__ == '__main__':
                 agent.recon()
                 # get nearby access points grouped by channel
                 channels = agent.get_access_points_by_channel()
-                # check for free channels to use
-                agent.check_channels(channels)
                 # for each channel
                 for ch, aps in channels:
                     agent.set_channel(ch)

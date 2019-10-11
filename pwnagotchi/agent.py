@@ -160,23 +160,6 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._view.wait(t, sleeping)
         self._epoch.track(sleep=True, inc=t)
 
-    def check_channels(self, channels):
-        busy_channels = [ch for ch, aps in channels]
-        # if we're hopping and no filter is configured
-        if self._config['personality']['channels'] == [] and self._config['main']['filter'] is None:
-            # check if any of the non overlapping channels is free
-            for ch in self._epoch.non_overlapping_channels:
-                if ch not in busy_channels:
-                    self._epoch.non_overlapping_channels[ch] += 1
-                    logging.info("channel %d is free from %d epochs" % (ch, self._epoch.non_overlapping_channels[ch]))
-                elif self._epoch.non_overlapping_channels[ch] > 0:
-                    self._epoch.non_overlapping_channels[ch] -= 1
-            # report any channel that has been free for at least 3 epochs
-            for ch, num_epochs_free in self._epoch.non_overlapping_channels.items():
-                if num_epochs_free >= 3:
-                    logging.info("channel %d has been free for %d epochs" % (ch, num_epochs_free))
-                    self.set_free_channel(ch)
-
     def recon(self):
         recon_time = self._config['personality']['recon_time']
         max_inactive = self._config['personality']['max_inactive_scale']
