@@ -457,7 +457,7 @@
         I'm managed by systemd, so here are some basic commands.
 
         You can check my logs, to know what I'm doing, using
-        journactl -fu pwnagotchi
+        journalctl -fu pwnagotchi
 
         If you want to you if I'm running, you can use
         systemctl status pwnagotchi
