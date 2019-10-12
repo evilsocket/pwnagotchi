@@ -24,6 +24,8 @@ def setup_display_specifics(config):
     face_pos = (0, 0)
     name_pos = (0, 0)
     status_pos = (0, 0)
+    status_font = fonts.Medium
+    status_max_length = None
 
     if config['ui']['display']['type'] in ('inky', 'inkyphat'):
         fonts.setup(10, 8, 10, 28)
@@ -33,6 +35,8 @@ def setup_display_specifics(config):
         face_pos = (0, 37)
         name_pos = (5, 18)
         status_pos = (102, 18)
+        status_font = fonts.Small
+        status_max_length = 20
 
     elif config['ui']['display']['type'] in ('papirus', 'papi'):
         fonts.setup(10, 8, 10, 23)
@@ -42,6 +46,8 @@ def setup_display_specifics(config):
         face_pos = (0, int(height / 4))
         name_pos = (5, int(height * .15))
         status_pos = (int(width / 2) - 15, int(height * .15))
+        status_font = fonts.Medium
+        status_max_length = (width - status_pos[0]) // 6
 
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1',
                                              'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
@@ -53,6 +59,7 @@ def setup_display_specifics(config):
             face_pos = (0, 40)
             name_pos = (5, 20)
             status_pos = (125, 20)
+            status_font = fonts.Medium
         else:
             fonts.setup(10, 8, 10, 25)
 
@@ -61,8 +68,10 @@ def setup_display_specifics(config):
             face_pos = (0, int(height / 4))
             name_pos = (5, int(height * .15))
             status_pos = (int(width / 2) - 15, int(height * .15))
+            status_font = fonts.Medium
+        status_max_length = (width - status_pos[0]) // 6
 
-    return width, height, face_pos, name_pos, status_pos
+    return width, height, face_pos, name_pos, status_pos, status_font, status_max_length
 
 
 class View(object):
@@ -77,7 +86,7 @@ class View(object):
         self._voice = Voice(lang=config['main']['lang'])
 
         self._width, self._height, \
-        face_pos, name_pos, status_pos = setup_display_specifics(config)
+        face_pos, name_pos, status_pos, status_font, status_max_length = setup_display_specifics(config)
 
         self._state = State(state={
             'channel': LabeledValue(color=BLACK, label='CH', value='00', position=(0, 0), label_font=fonts.Bold,
@@ -108,10 +117,10 @@ class View(object):
             'status': Text(value=self._voice.default(),
                            position=status_pos,
                            color=BLACK,
-                           font=fonts.Medium,
+                           font=status_font,
                            wrap=True,
                            # the current maximum number of characters per line, assuming each character is 6 pixels wide
-                           max_length=(self._width - status_pos[0]) // 6),
+                           max_length=status_max_length),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK,
                                    position=(0, self._height - int(self._height * .12) + 1), label_font=fonts.Bold,

@@ -6,6 +6,7 @@ Bold = ImageFont.truetype("%s-Bold.ttf" % PATH, 10)
 BoldSmall = ImageFont.truetype("%s-Bold.ttf" % PATH, 8)
 BoldBig = ImageFont.truetype("%s-Bold.ttf" % PATH, 25)
 Medium = ImageFont.truetype("%s.ttf" % PATH, 10)
+Small = ImageFont.truetype("%s.ttf" % PATH, 9)
 Huge = ImageFont.truetype("%s-Bold.ttf" % PATH, 25)
 
 
