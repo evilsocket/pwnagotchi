@@ -28,6 +28,10 @@ class Voice:
             self._('AI ready.'),
             self._('The neural network is ready.')])
 
+    def on_keys_generation(self):
+        return random.choice([
+            self._('Generating keys, do not turn off ...')])
+
     def on_normal(self):
         return random.choice([
             '',

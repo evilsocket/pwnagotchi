@@ -213,6 +213,11 @@ class View(object):
             faces.SAD,
             faces.LONELY)
 
+    def on_keys_generation(self):
+        self.set('face', faces.AWAKE)
+        self.set('status', self._voice.on_keys_generation())
+        self.update()
+
     def on_normal(self):
         self.set('face', faces.AWAKE)
         self.set('status', self._voice.on_normal())

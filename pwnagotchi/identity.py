@@ -10,12 +10,13 @@ DefaultPath = "/etc/pwnagotchi/"
 
 
 class KeyPair(object):
-    def __init__(self, path=DefaultPath):
+    def __init__(self, path=DefaultPath, view=None):
         self.path = path
         self.priv_path = os.path.join(path, "id_rsa")
         self.priv_key = None
         self.pub_path = "%s.pub" % self.priv_path
         self.pub_key = None
+        self._view = view
 
         if not os.path.exists(self.path):
             os.makedirs(self.path)
@@ -23,6 +24,7 @@ class KeyPair(object):
         while True:
             # first time, generate new keys
             if not os.path.exists(self.priv_path) or not os.path.exists(self.pub_path):
+                self._view.on_keys_generation()
                 logging.info("generating %s ..." % self.priv_path)
                 os.system("/usr/bin/ssh-keygen -t rsa -m PEM -b 4096 -N '' -f '%s'" % self.priv_path)
 
@@ -45,6 +47,7 @@ class KeyPair(object):
                 self.fingerprint = hashlib.sha256(pem_ascii).hexdigest()
 
                 # no exception, keys loaded correctly.
+                self._view.on_normal()
                 return
 
             except Exception as e:
