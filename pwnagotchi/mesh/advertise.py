@@ -3,7 +3,7 @@ import json
 import _thread
 import threading
 import logging
-from scapy.all import Dot11, Dot11FCS, Dot11Elt, RadioTap, sendp, sniff
+from scapy.all import Dot11, Dot11Elt, RadioTap, sendp, sniff
 
 import pwnagotchi.ui.faces as faces
 
@@ -141,13 +141,7 @@ class Advertiser(object):
                dot11.addr3 != self._me.session_id
 
     def _on_packet(self, p):
-        # https://github.com/secdev/scapy/issues/1590
-        if p.haslayer(Dot11):
-            dot11 = p[Dot11]
-        elif p.haslayer(Dot11FCS):
-            dot11 = p[Dot11FCS]
-        else:
-            dot11 = None
+        dot11 = p.getlayer(Dot11)
 
         if self._is_broadcasted_advertisement(dot11):
             try:
