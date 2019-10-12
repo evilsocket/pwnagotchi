@@ -159,7 +159,9 @@ def on_internet_available(agent):
         TOTAL_MESSAGES = len(messages)
         UNREAD_MESSAGES = len([m for m in messages if m['seen_at'] is None])
 
-        logging.debug( " %d unread messages of %d total" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
+        if TOTAL_MESSAGES:
+            on_ui_update(agent.view())
+            logging.debug( " %d unread messages of %d total" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
 
         logging.debug("checking pcaps")
 
