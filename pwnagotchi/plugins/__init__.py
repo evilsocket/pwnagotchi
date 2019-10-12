@@ -18,7 +18,9 @@ def on(event_name, *args, **kwargs):
         if cb_name in plugin.__dict__:
             # print("calling %s %s(%s)" %(cb_name, args, kwargs))
             try:
-                plugin.__dict__[cb_name](*args, **kwargs)
+                ret_val = plugin.__dict__[cb_name](*args, **kwargs)
+                if ret_val is not None:
+                    return ret_val
             except Exception as e:
                 logging.error("error while running %s.%s : %s" % (plugin_name, cb_name, e))
 
