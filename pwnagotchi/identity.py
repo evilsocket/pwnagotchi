@@ -20,24 +20,41 @@ class KeyPair(object):
         if not os.path.exists(self.path):
             os.makedirs(self.path)
 
-        if not os.path.exists(self.priv_path) or not os.path.exists(self.pub_path):
-            logging.info("generating %s ..." % self.priv_path)
-            os.system("/usr/bin/ssh-keygen -t rsa -m PEM -b 4096 -N '' -f '%s'" % self.priv_path)
+        while True:
+            # first time, generate new keys
+            if not os.path.exists(self.priv_path) or not os.path.exists(self.pub_path):
+                logging.info("generating %s ..." % self.priv_path)
+                os.system("/usr/bin/ssh-keygen -t rsa -m PEM -b 4096 -N '' -f '%s'" % self.priv_path)
 
-        with open(self.priv_path) as fp:
-            self.priv_key = RSA.importKey(fp.read())
+            # load keys: they might be corrupted if the unit has been turned off during the generation, in this case
+            # the exception will remove the files and go back at the beginning of this loop.
+            try:
+                with open(self.priv_path) as fp:
+                    self.priv_key = RSA.importKey(fp.read())
 
-        with open(self.pub_path) as fp:
-            self.pub_key = RSA.importKey(fp.read())
-            self.pub_key_pem = self.pub_key.exportKey('PEM').decode("ascii")
-            # python is special
-            if 'RSA PUBLIC KEY' not in self.pub_key_pem:
-                self.pub_key_pem = self.pub_key_pem.replace('PUBLIC KEY', 'RSA PUBLIC KEY')
+                with open(self.pub_path) as fp:
+                    self.pub_key = RSA.importKey(fp.read())
+                    self.pub_key_pem = self.pub_key.exportKey('PEM').decode("ascii")
+                    # python is special
+                    if 'RSA PUBLIC KEY' not in self.pub_key_pem:
+                        self.pub_key_pem = self.pub_key_pem.replace('PUBLIC KEY', 'RSA PUBLIC KEY')
 
-        pem = self.pub_key_pem.encode("ascii")
+                pem_ascii = self.pub_key_pem.encode("ascii")
 
-        self.pub_key_pem_b64 = base64.b64encode(pem).decode("ascii")
-        self.fingerprint = hashlib.sha256(pem).hexdigest()
+                self.pub_key_pem_b64 = base64.b64encode(pem_ascii).decode("ascii")
+                self.fingerprint = hashlib.sha256(pem_ascii).hexdigest()
+
+                # no exception, keys loaded correctly.
+                return
+
+            except Exception as e:
+                # if we're here, loading the keys broke something ...
+                logging.exception("error loading keys, maybe corrupted, deleting and regenerating ...")
+                try:
+                    os.remove(self.priv_path)
+                    os.remove(self.pub_path)
+                except:
+                    pass
 
     def sign(self, message):
         hasher = SHA256.new(message.encode("ascii"))
