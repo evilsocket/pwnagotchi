@@ -128,11 +128,14 @@ def grid_inbox():
 
 def on_ui_update(ui):
     new_value = ' %d (%d)' % (UNREAD_MESSAGES, TOTAL_MESSAGES)
-    if not ui.has_element('mailbox'):
-        logging.debug("add mailbox")
+    if not ui.has_element('mailbox') and TOTAL_MESSAGES > 0:
+        if ui.is_inky():
+            pos=(80, 0)
+        else:
+            pos=(100,0)
         ui.add_element('mailbox',
                        LabeledValue(color=BLACK, label='MSG', value=new_value,
-                                    position=(100, 0),
+                                    position=pos,
                                     label_font=fonts.Bold,
                                     text_font=fonts.Medium))
     ui.set('mailbox', new_value)

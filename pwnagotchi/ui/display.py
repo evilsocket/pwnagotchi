@@ -118,30 +118,30 @@ class Display(View):
         else:
             logging.info("could not get ip of usb0, video server not starting")
 
-    def _is_inky(self):
+    def is_inky(self):
         return self._display_type in ('inkyphat', 'inky')
 
-    def _is_papirus(self):
+    def is_papirus(self):
         return self._display_type in ('papirus', 'papi')
 
-    def _is_waveshare_v1(self):
+    def is_waveshare_v1(self):
         return self._display_type in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1')
 
-    def _is_waveshare_v2(self):
+    def is_waveshare_v2(self):
         return self._display_type in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2')
 
-    def _is_waveshare(self):
-        return self._is_waveshare_v1() or self._is_waveshare_v2()
+    def is_waveshare_any(self):
+        return self.is_waveshare_v1() or self.is_waveshare_v2()
 
     def _init_display(self):
-        if self._is_inky():
+        if self.is_inky():
             logging.info("initializing inky display")
             from inky import InkyPHAT
             self._display = InkyPHAT(self._display_color)
             self._display.set_border(InkyPHAT.BLACK)
             self._render_cb = self._inky_render
 
-        elif self._is_papirus():
+        elif self.is_papirus():
             logging.info("initializing papirus display")
             from pwnagotchi.ui.papirus.epd import EPD
             os.environ['EPD_SIZE'] = '2.0'
@@ -149,7 +149,7 @@ class Display(View):
             self._display.clear()
             self._render_cb = self._papirus_render
 
-        elif self._is_waveshare_v1():
+        elif self.is_waveshare_v1():
             if self._display_color == 'black':
                 logging.info("initializing waveshare v1 display in monochromatic mode")
                 from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
@@ -167,7 +167,7 @@ class Display(View):
                 self._display.Clear()
                 self._render_cb = self._waveshare_bc_render
 
-        elif self._is_waveshare_v2():
+        elif self.is_waveshare_v2():
             logging.info("initializing waveshare v2 display")
             from pwnagotchi.ui.waveshare.v2.waveshare import EPD
             self._display = EPD()
@@ -186,11 +186,11 @@ class Display(View):
     def clear(self):
         if self._display is None:
             logging.error("no display object created")
-        elif self._is_inky():
+        elif self.is_inky():
             self._display.Clear()
-        elif self._is_papirus():
+        elif self.is_papirus():
             self._display.clear()
-        elif self._is_waveshare():
+        elif self.is_waveshare_any():
             self._display.Clear(WHITE)
         else:
             logging.critical("unknown display type %s" % self._display_type)
@@ -224,7 +224,7 @@ class Display(View):
         try:
             self._display.show()
         except:
-            print("")
+            logging.exception("error while rendering on inky")
 
     def _papirus_render(self):
         self._display.display(self._canvas)
@@ -232,9 +232,9 @@ class Display(View):
 
     def _waveshare_render(self):
         buf = self._display.getbuffer(self._canvas)
-        if self._is_waveshare_v1():
+        if self.is_waveshare_v1():
             self._display.display(buf)
-        elif self._is_waveshare_v2():
+        elif self.is_waveshare_v2():
             self._display.displayPartial(buf)
 
     def _waveshare_bc_render(self):

@@ -2,7 +2,7 @@ import _thread
 from threading import Lock
 import time
 import logging
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
 
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
@@ -17,6 +17,7 @@ WHITE = 0xff
 BLACK = 0x00
 ROOT = None
 
+
 def setup_display_specifics(config):
     width = 0
     height = 0
@@ -25,13 +26,13 @@ def setup_display_specifics(config):
     status_pos = (0, 0)
 
     if config['ui']['display']['type'] in ('inky', 'inkyphat'):
-        fonts.setup(10, 8, 10, 25)
+        fonts.setup(10, 8, 10, 28)
 
         width = 212
         height = 104
-        face_pos = (0, int(height / 4))
-        name_pos = (5, int(height * .15))
-        status_pos = (int(width / 2) - 15, int(height * .15))
+        face_pos = (0, 37)
+        name_pos = (5, 18)
+        status_pos = (102, 18)
 
     elif config['ui']['display']['type'] in ('papirus', 'papi'):
         fonts.setup(10, 8, 10, 23)
