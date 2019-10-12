@@ -39,6 +39,7 @@ def on_handshake(agent, filename, access_point, client_station):
             todetele = 1
 
     if todelete == 1:
+        subprocess.run(('rm '+filename),shell=True,stdout=subpocess.PIPE)
         set_text("uncrackable pcap")
         display.update(force=True)
 
