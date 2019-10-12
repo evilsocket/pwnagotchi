@@ -34,7 +34,7 @@
         url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
-        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.6.0/pwngrid_linux_armv6l_v1.6.0.zip"
+        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.6.3/pwngrid_linux_armv6l_v1.6.3.zip"
       apt:
         hold:
           - firmware-atheros
