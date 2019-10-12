@@ -13,6 +13,7 @@ import logging
 import subprocess
 import string
 import re
+import os
 
 OPTIONS = dict()
 
@@ -39,7 +40,7 @@ def on_handshake(agent, filename, access_point, client_station):
             todetele = 1
 
     if todelete == 1:
-        subprocess.run(('rm '+filename),shell=True,stdout=subpocess.PIPE)
+        os.remove(filename)
         set_text("uncrackable pcap")
         display.update(force=True)
 
