@@ -80,8 +80,6 @@ main:
         - ANOTHER_EXAMPLE_NETWORK
     # if not null, filter access points by this regular expression
     filter: null
-    # cryptographic key for identity
-    pubkey: /etc/ssh/ssh_host_rsa_key.pub
 
 ai:
     # if false, only the default 'personality' will be used
