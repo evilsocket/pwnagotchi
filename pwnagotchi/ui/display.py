@@ -1,5 +1,6 @@
 import _thread
 from threading import Lock
+from PIL import Image
 
 import shutil
 import logging
@@ -149,13 +150,22 @@ class Display(View):
             self._render_cb = self._papirus_render
 
         elif self._is_waveshare_v1():
-            logging.info("initializing waveshare v1 display")
-            from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
-            self._display = EPD()
-            self._display.init(self._display.lut_full_update)
-            self._display.Clear(0xFF)
-            self._display.init(self._display.lut_partial_update)
-            self._render_cb = self._waveshare_render
+            if self._display_color == 'black':
+                logging.info("initializing waveshare v1 display in monochromatic mode")
+                from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
+                self._display = EPD()
+                self._display.init(self._display.lut_full_update)
+                self._display.Clear(0xFF)
+                self._display.init(self._display.lut_partial_update)
+                self._render_cb = self._waveshare_render
+            
+            else:
+                logging.info("initializing waveshare v1 display 3-color mode")
+                from pwnagotchi.ui.waveshare.v1.epd2in13bc import EPD
+                self._display = EPD()
+                self._display.init()
+                self._display.Clear()
+                self._render_cb = self._waveshare_bc_render
 
         elif self._is_waveshare_v2():
             logging.info("initializing waveshare v2 display")
@@ -226,6 +236,16 @@ class Display(View):
             self._display.display(buf)
         elif self._is_waveshare_v2():
             self._display.displayPartial(buf)
+
+    def _waveshare_bc_render(self):
+        buf_black = self._display.getbuffer(self._canvas)
+        # emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
+        # buf_color = self._display.getbuffer(emptyImage)
+        # self._display.display(buf_black,buf_color)
+
+        # Custom display function that only handles black
+        # Was included in epd2in13bc.py 
+        self._display.displayBlack(buf_black)
 
     def image(self):
         img = None
