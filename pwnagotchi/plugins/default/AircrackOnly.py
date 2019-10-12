@@ -1,6 +1,6 @@
 __author__ = 'pwnagotchi [at] rossmarks [dot] uk'
 __version__ = '1.0.0'
-__name__ = 'cleancap'
+__name__ = 'AircrackOnly'
 __license__ = 'GPL3'
 __description__ = 'confirm pcap contains handshake/PMKID or delete it'
 
@@ -26,7 +26,7 @@ def on_handshake(agent, filename, access_point, client_station):
     result = subprocess.run(('/usr/bin/aircrack-ng '+ filename +' | grep "1 handshake" | awk \'{print $2}\''),shell=True, stdout=subprocess.PIPE)
     result = result.stdout.decode('utf-8').translate({ord(c) :None for c in string.whitespace})
     if result:
-        logging.info("[cleancap] contains handshake")
+        logging.info("[AircrackOnly] contains handshake")
     else:
         todetele = 1
 
@@ -34,7 +34,7 @@ def on_handshake(agent, filename, access_point, client_station):
         result = subprocess.run(('/usr/bin/aircrack-ng '+ filename +' | grep "PMKID" | awk \'{print $2}\''),shell=True, stdout=subprocess.PIPE)
         result = result.stdout.decode('utf-8').translate({ord(c) :None for c in string.whitespace})
         if result:
-            logging.info("[cleancap] contains PMKID")
+            logging.info("[AircrackOnly] contains PMKID")
         else:
             todetele = 1
 

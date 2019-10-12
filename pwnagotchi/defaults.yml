@@ -58,7 +58,7 @@ main:
       quickdic:
         enabled: false
         wordlist_folder: /opt/wordlists/
-      cleancap:
+      AircrackOnly:
         enabled: false
     # monitor interface to use
     iface: mon0
