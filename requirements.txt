@@ -13,3 +13,4 @@ inky==0.0.5
 smbus2==0.3.0
 Pillow==5.4.1
 spidev==3.4
+gast=0.2.2
