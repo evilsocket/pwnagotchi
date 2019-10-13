@@ -17,6 +17,11 @@ def name():
     return _name
 
 
+def uptime():
+    with open('/proc/uptime') as fp:
+        return int(fp.read().split('.')[0])
+
+
 def mem_usage():
     out = subprocess.getoutput("free -m")
     for line in out.split("\n"):

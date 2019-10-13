@@ -7,6 +7,7 @@ from datetime import datetime
 import logging
 import _thread
 
+import pwnagotchi
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
 from pwnagotchi.log import LastSession
@@ -241,9 +242,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         return None
 
     def _update_uptime(self, s):
-        secs = time.time() - self._started_at
+        secs = pwnagotchi.uptime()
         self._view.set('uptime', utils.secs_to_hhmmss(secs))
-        self._view.set('epoch', '%04d' % self._epoch.epoch)
+        # self._view.set('epoch', '%04d' % self._epoch.epoch)
 
     def _update_counters(self):
         tot_aps = len(self._access_points)
@@ -276,13 +277,10 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def _update_advertisement(self, s):
         run_handshakes = len(self._handshakes)
         tot_handshakes = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
-        started = s['started_at'].split('.')[0]
-        started = datetime.strptime(started, '%Y-%m-%dT%H:%M:%S')
-        started = time.mktime(started.timetuple())
-        self._advertiser.update({ \
+        self._advertiser.update({
             'pwnd_run': run_handshakes,
             'pwnd_tot': tot_handshakes,
-            'uptime': time.time() - started,
+            'uptime': pwnagotchi.uptime(),
             'epoch': self._epoch.epoch})
 
     def _update_peers(self):
