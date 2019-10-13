@@ -4,7 +4,7 @@ import logging
 import time
 import pwnagotchi.ui.view as view
 
-version = '1.0.0RC3'
+version = '1.0.0RC4'
 
 _name = None
 

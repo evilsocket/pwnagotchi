@@ -1,32 +1,28 @@
 import time
 import logging
 
-import pwnagotchi.mesh.wifi as wifi
 import pwnagotchi.ui.faces as faces
 
 
 class Peer(object):
-    def __init__(self, sid, channel, rssi, adv):
+    def __init__(self, obj):
         self.first_seen = time.time()
         self.last_seen = self.first_seen
-        self.session_id = sid
-        self.last_channel = channel
-        self.presence = [0] * wifi.NumChannels
-        self.adv = adv
-        self.rssi = rssi
-        self.presence[channel - 1] = 1
+        self.session_id = obj['session_id']
+        self.last_channel = obj['channel']
+        self.rssi = obj['rssi']
+        self.adv = obj['advertisement']
 
-    def update(self, sid, channel, rssi, adv):
-        if self.name() != adv['name']:
-            logging.info("peer %s changed name: %s -> %s" % (self.full_name(), self.name(), adv['name']))
+    def update(self, new):
+        if self.name() != new.name():
+            logging.info("peer %s changed name: %s -> %s" % (self.full_name(), self.name(), new.name()))
 
-        if self.session_id != sid:
-            logging.info("peer %s changed session id: %s -> %s" % (self.full_name(), self.session_id, sid))
+        if self.session_id != new.session_id:
+            logging.info("peer %s changed session id: %s -> %s" % (self.full_name(), self.session_id, new.session_id))
 
-        self.presence[channel - 1] += 1
-        self.adv = adv
-        self.rssi = rssi
-        self.session_id = sid
+        self.adv = new.adv
+        self.rssi = new.rssi
+        self.session_id = new.session_id
         self.last_seen = time.time()
 
     def inactive_for(self):
