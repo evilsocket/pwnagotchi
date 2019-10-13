@@ -76,7 +76,7 @@ class AsyncAdvertiser(object):
                 for ident in to_delete:
                     del self._peers[ident]
 
-                for ident, peer in new_peers:
+                for ident, peer in new_peers.items():
                     # check who's new
                     if ident not in self._peers:
                         self._peers[ident] = peer
