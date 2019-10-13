@@ -173,7 +173,7 @@ ui:
         color: 'black'
         video:
             enabled: true
-            address: '10.0.0.2'
+            address: '0.0.0.0'
             port: 8080
 
 

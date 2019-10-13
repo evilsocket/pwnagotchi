@@ -87,6 +87,6 @@ class AsyncAdvertiser(object):
                         self._peers[ident].update(peer)
 
             except Exception as e:
-                logging.error("error while polling pwngrid-peer: %s" % e)
+                logging.exception("error while polling pwngrid-peer")
 
             time.sleep(1)
