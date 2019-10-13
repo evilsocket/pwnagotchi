@@ -71,6 +71,7 @@ main:
         mac: ~ # mac of your bluetooth device
         ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
         netmask: 24
+        interval: 1 # check every x minutes for device
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
