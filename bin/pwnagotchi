@@ -5,7 +5,7 @@ if __name__ == '__main__':
     import logging
 
     import pwnagotchi
-    import pwnagtochi.grid as grid
+    import pwnagotchi.grid as grid
     import pwnagotchi.utils as utils
     import pwnagotchi.plugins as plugins
 
