@@ -3,7 +3,6 @@ import json
 import os
 import re
 import socket
-import subprocess
 from datetime import datetime
 import logging
 import _thread
@@ -259,8 +258,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         return None
 
     def _update_uptime(self, s):
-        p = subprocess.run(('cat /proc/uptime | awk \'{print $1}\''), shell=True, stdout=subprocess.PIPE)
-        secs = int(float(p.stdout.decode('utf8')))
+        p = open("/proc/uptime", 'r').read()
+        utime = p.strip().split()
+        secs = int(float(utime[0]))
         self._view.set('uptime', utils.secs_to_hhmmss(secs))
         self._view.set('epoch', '%04d' % self._epoch.epoch)
 
