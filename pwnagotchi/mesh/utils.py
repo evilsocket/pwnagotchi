@@ -1,5 +1,6 @@
 import _thread
 import logging
+import time
 
 import pwnagotchi
 import pwnagotchi.utils as utils
@@ -87,3 +88,5 @@ class AsyncAdvertiser(object):
 
             except Exception as e:
                 logging.error("error while polling pwngrid-peer: %s" % e)
+
+            time.sleep(1)
