@@ -27,6 +27,7 @@ main:
         files:
           - /root/brain.nn
           - /root/brain.json
+          - /root/.api-report.json
           - /root/handshakes/
           - /etc/pwnagotchi/
           - /etc/hostname
