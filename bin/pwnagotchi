@@ -2,10 +2,10 @@
 if __name__ == '__main__':
     import argparse
     import time
-    import os
     import logging
 
     import pwnagotchi
+    import pwnagtochi.grid as grid
     import pwnagotchi.utils as utils
     import pwnagotchi.plugins as plugins
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
             display.on_manual_mode(agent.last_session)
             time.sleep(1)
 
-            if Agent.is_connected():
+            if grid.is_connected():
                 plugins.on('internet_available', agent)
 
     else:
@@ -102,7 +102,7 @@ if __name__ == '__main__':
                 # affect ours ... neat ^_^
                 agent.next_epoch()
 
-                if Agent.is_connected():
+                if grid.is_connected():
                     plugins.on('internet_available', agent)
 
             except Exception as e:

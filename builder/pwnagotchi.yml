@@ -34,7 +34,7 @@
         url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
-        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.6.3/pwngrid_linux_armv6l_v1.6.3.zip"
+        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.7.1/pwngrid_linux_armv6l_1.7.1.zip"
       apt:
         hold:
           - firmware-atheros
@@ -497,12 +497,12 @@
         Description=pwngrid peer service.
         Documentation=https://pwnagotchi.ai
         Wants=network.target
-        After=network.target
+        After=bettercap.service
 
         [Service]
         Type=simple
         PermissionsStartOnly=true
-        ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666 -wait -log /var/log/pwngrid-peer.log
+        ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666 -wait -log /var/log/pwngrid-peer.log -iface mon0
         Restart=always
         RestartSec=30
 
