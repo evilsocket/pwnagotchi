@@ -136,9 +136,9 @@ class Display(View):
     def _init_display(self):
         if self.is_inky():
             logging.info("initializing inky display")
-            from inky import InkyPHAT
-            self._display = InkyPHAT(self._display_color)
-            self._display.set_border(InkyPHAT.BLACK)
+            from pwnagotchi.ui.inkyphat.inkyphatfast import InkyPHATFast
+            self._display = InkyPHATFast(self._display_color)
+            self._display.set_border(InkyPHATFast.BLACK)
             self._render_cb = self._inky_render
 
         elif self.is_papirus():
