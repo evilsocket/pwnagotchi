@@ -47,7 +47,7 @@ class KeyPair(object):
                 self.fingerprint = hashlib.sha256(pem_ascii).hexdigest()
 
                 # no exception, keys loaded correctly.
-                self._view.on_normal()
+                self._view.on_starting()
                 return
 
             except Exception as e:

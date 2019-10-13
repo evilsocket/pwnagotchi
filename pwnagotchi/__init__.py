@@ -4,7 +4,7 @@ import logging
 import time
 import pwnagotchi.ui.view as view
 
-version = '1.0.0RC2'
+version = '1.0.0RC4'
 
 _name = None
 
@@ -15,6 +15,11 @@ def name():
         with open('/etc/hostname', 'rt') as fp:
             _name = fp.read().strip()
     return _name
+
+
+def uptime():
+    with open('/proc/uptime') as fp:
+        return int(fp.read().split('.')[0])
 
 
 def mem_usage():

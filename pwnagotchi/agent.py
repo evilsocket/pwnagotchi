@@ -2,11 +2,10 @@ import time
 import json
 import os
 import re
-import socket
-from datetime import datetime
 import logging
 import _thread
 
+import pwnagotchi
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
 from pwnagotchi.log import LastSession
@@ -40,15 +39,6 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         if not os.path.exists(config['bettercap']['handshakes']):
             os.makedirs(config['bettercap']['handshakes'])
-
-    @staticmethod
-    def is_connected():
-        try:
-            socket.create_connection(("www.google.com", 80))
-            return True
-        except OSError:
-            pass
-        return False
 
     def config(self):
         return self._config
@@ -192,7 +182,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def set_access_points(self, aps):
         self._access_points = aps
         plugins.on('wifi_update', self, aps)
-        self._epoch.observe(aps, self._advertiser.peers() if self._advertiser is not None else ())
+        self._epoch.observe(aps, list(self._peers.values()))
         return self._access_points
 
     def get_access_points(self):
@@ -241,9 +231,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         return None
 
     def _update_uptime(self, s):
-        secs = time.time() - self._started_at
+        secs = pwnagotchi.uptime()
         self._view.set('uptime', utils.secs_to_hhmmss(secs))
-        self._view.set('epoch', '%04d' % self._epoch.epoch)
+        # self._view.set('epoch', '%04d' % self._epoch.epoch)
 
     def _update_counters(self):
         tot_aps = len(self._access_points)
@@ -273,22 +263,8 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         if new_shakes > 0:
             self._view.on_handshakes(new_shakes)
 
-    def _update_advertisement(self, s):
-        run_handshakes = len(self._handshakes)
-        tot_handshakes = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
-        started = s['started_at'].split('.')[0]
-        started = datetime.strptime(started, '%Y-%m-%dT%H:%M:%S')
-        started = time.mktime(started.timetuple())
-        self._advertiser.update({ \
-            'pwnd_run': run_handshakes,
-            'pwnd_tot': tot_handshakes,
-            'uptime': time.time() - started,
-            'epoch': self._epoch.epoch})
-
     def _update_peers(self):
-        peer = self._advertiser.closest_peer()
-        tot = self._advertiser.num_peers()
-        self._view.set_closest_peer(peer, tot)
+        self._view.set_closest_peer(self._closest_peer, len(self._peers))
 
     def _save_recovery_data(self):
         logging.warning("writing recovery data to %s ..." % RECOVERY_DATA_FILE)
@@ -333,10 +309,8 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             s = self.session()
             self._update_uptime(s)
 
-            if self._advertiser is not None:
-                self._update_advertisement(s)
-                self._update_peers()
-
+            self._update_advertisement(s)
+            self._update_peers()
             self._update_counters()
 
             try:

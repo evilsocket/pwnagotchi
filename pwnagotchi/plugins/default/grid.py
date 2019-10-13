@@ -6,11 +6,9 @@ __description__ = 'This plugin signals the unit cryptographic identity and list 
 
 import os
 import logging
-import requests
 import glob
-import json
-import subprocess
-import pwnagotchi
+
+import pwnagotchi.grid as grid
 import pwnagotchi.utils as utils
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
@@ -65,74 +63,13 @@ def is_excluded(what):
     return False
 
 
-def grid_call(path, obj=None):
-    # pwngrid-peer is running on port 8666
-    api_address = 'http://127.0.0.1:8666/api/v1%s' % path
-    if obj is None:
-        r = requests.get(api_address, headers=None)
-    else:
-        r = requests.post(api_address, headers=None, json=obj)
-
-    if r.status_code != 200:
-        raise Exception("(status %d) %s" % (r.status_code, r.text))
-    return r.json()
-
-
-def grid_update_data(last_session):
-    brain = {}
-    try:
-        with open('/root/brain.json') as fp:
-            brain = json.load(fp)
-    except:
-        pass
-
-    data = {
-        'session': {
-            'duration': last_session.duration,
-            'epochs': last_session.epochs,
-            'train_epochs': last_session.train_epochs,
-            'avg_reward': last_session.avg_reward,
-            'min_reward': last_session.min_reward,
-            'max_reward': last_session.max_reward,
-            'deauthed': last_session.deauthed,
-            'associated': last_session.associated,
-            'handshakes': last_session.handshakes,
-            'peers': last_session.peers,
-        },
-        'uname': subprocess.getoutput("uname -a"),
-        'brain': brain,
-        'version': pwnagotchi.version
-    }
-
-    logging.debug("updating grid data: %s" % data)
-
-    grid_call("/data", data)
-
-
-def grid_report_ap(essid, bssid):
-    try:
-        grid_call("/report/ap", {
-            'essid': essid,
-            'bssid': bssid,
-        })
-        return True
-    except Exception as e:
-        logging.exception("error while reporting ap %s(%s)" % (essid, bssid))
-
-    return False
-
-
-def grid_inbox():
-    return grid_call("/inbox")["messages"]
-
-
 def on_ui_update(ui):
     new_value = ' %d (%d)' % (UNREAD_MESSAGES, TOTAL_MESSAGES)
     if not ui.has_element('mailbox') and TOTAL_MESSAGES > 0:
         if ui.is_inky():
-            pos=(80, 0)
+            pos = (80, 0)
         else:
-            pos=(100,0)
+            pos = (100, 0)
         ui.add_element('mailbox',
                        LabeledValue(color=BLACK, label='MSG', value=new_value,
                                     position=pos,
@@ -141,13 +78,19 @@ def on_ui_update(ui):
     ui.set('mailbox', new_value)
 
 
+def set_reported(reported, net_id):
+    global REPORT
+    reported.append(net_id)
+    REPORT.update(data={'reported': reported})
+
+
 def on_internet_available(agent):
     global REPORT, UNREAD_MESSAGES, TOTAL_MESSAGES
 
     logging.debug("internet available")
 
     try:
-        grid_update_data(agent.last_session)
+        grid.update_data(agent.last_session)
     except Exception as e:
         logging.error("error connecting to the pwngrid-peer service: %s" % e)
         return
@@ -155,13 +98,13 @@ def on_internet_available(agent):
     try:
         logging.debug("checking mailbox ...")
 
-        messages = grid_inbox()
+        messages = grid.inbox()
         TOTAL_MESSAGES = len(messages)
         UNREAD_MESSAGES = len([m for m in messages if m['seen_at'] is None])
 
         if TOTAL_MESSAGES:
             on_ui_update(agent.view())
-            logging.debug( " %d unread messages of %d total" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
+            logging.debug(" %d unread messages of %d total" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
 
         logging.debug("checking pcaps")
 
@@ -181,17 +124,19 @@ def on_internet_available(agent):
                     net_id = os.path.basename(pcap_file).replace('.pcap', '')
                     if net_id not in reported:
                         if is_excluded(net_id):
-                            logging.info("skipping %s due to exclusion filter" % pcap_file)
+                            logging.debug("skipping %s due to exclusion filter" % pcap_file)
+                            set_reported(reported, net_id)
                             continue
 
                         essid, bssid = parse_pcap(pcap_file)
                         if bssid:
+                            add_as_reported = False
                             if is_excluded(essid) or is_excluded(bssid):
                                 logging.debug("not reporting %s due to exclusion filter" % pcap_file)
-
-                            elif grid_report_ap(essid, bssid):
-                                reported.append(net_id)
-                                REPORT.update(data={'reported': reported})
+                                set_reported(reported, net_id)
+                            else:
+                                if grid.report_ap(essid, bssid):
+                                    set_reported(reported, net_id)
                         else:
                             logging.warning("no bssid found?!")
             else:

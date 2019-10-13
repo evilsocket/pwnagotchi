@@ -129,10 +129,15 @@ class LastSession(object):
                 if m:
                     name, pubkey, rssi, sid, pwnd_tot, uptime = m[0]
                     if pubkey not in cache:
-                        self.last_peer = Peer(sid, 1, int(rssi),
-                                              {'name': name,
-                                               'identity': pubkey,
-                                               'pwnd_tot': int(pwnd_tot)})
+                        self.last_peer = Peer({
+                            'session_id': sid,
+                            'channel': 1,
+                            'rssi': int(rssi),
+                            'identity': pubkey,
+                            'advertisement':{
+                                'name': name,
+                                'pwnd_tot': int(pwnd_tot)
+                            }})
                         self.peers += 1
                         cache[pubkey] = self.last_peer
                     else:

@@ -27,6 +27,7 @@ main:
         files:
           - /root/brain.nn
           - /root/brain.json
+          - /root/.api-report.json
           - /root/handshakes/
           - /etc/pwnagotchi/
           - /etc/hostname
@@ -66,6 +67,12 @@ main:
         wordlist_folder: /opt/wordlists/
       AircrackOnly:
         enabled: false
+      bt-tether:
+        enabled: false # if you want to use this, set ui.display.video.address to 0.0.0.0
+        mac: ~ # mac of your bluetooth device
+        ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
+        netmask: 24
+        interval: 1 # check every x minutes for device
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -167,7 +174,7 @@ ui:
         color: 'black'
         video:
             enabled: true
-            address: '10.0.0.2'
+            address: '0.0.0.0'
             port: 8080
 
 
