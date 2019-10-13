@@ -9,6 +9,10 @@ import logging
 # Will be set with the options in config.yml config['main']['plugins'][__name__]
 OPTIONS = dict()
 
+# called when the plugin is loaded
+def on_loaded():
+    logging.warning("%s plugin loaded" % __name__)
+    
 # called when AP list is ready, before whitelist filtering has occured
 def on_unfiltered_ap_list(agent,aps):
     logging.info("Unfiltered AP list to follow")
