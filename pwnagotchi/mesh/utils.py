@@ -29,8 +29,6 @@ class AsyncAdvertiser(object):
         self._peers = {}
         self._closest_peer = None
 
-        _thread.start_new_thread(self._adv_poller, ())
-
     def _update_advertisement(self, s):
         self._advertisement['pwnd_run'] = len(self._handshakes)
         self._advertisement['pwnd_tot'] = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
@@ -40,6 +38,8 @@ class AsyncAdvertiser(object):
 
     def start_advertising(self):
         if self._config['personality']['advertise']:
+            _thread.start_new_thread(self._adv_poller, ())
+
             grid.set_advertisement_data(self._advertisement)
             grid.advertise(True)
             self._view.on_state_change('face', self._on_face_change)
