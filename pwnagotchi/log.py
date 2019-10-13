@@ -134,7 +134,10 @@ class LastSession(object):
                             'channel': 1,
                             'rssi': int(rssi),
                             'identity': pubkey,
-                            'advertisement':{'pwnd_tot': int(pwnd_tot)}})
+                            'advertisement':{
+                                'name': name,
+                                'pwnd_tot': int(pwnd_tot)
+                            }})
                         self.peers += 1
                         cache[pubkey] = self.last_peer
                     else:
