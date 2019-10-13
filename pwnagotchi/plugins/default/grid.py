@@ -78,6 +78,12 @@ def on_ui_update(ui):
     ui.set('mailbox', new_value)
 
 
+def set_reported(reported, net_id):
+    global REPORT
+    reported.append(net_id)
+    REPORT.update(data={'reported': reported})
+
+
 def on_internet_available(agent):
     global REPORT, UNREAD_MESSAGES, TOTAL_MESSAGES
 
@@ -118,17 +124,19 @@ def on_internet_available(agent):
                     net_id = os.path.basename(pcap_file).replace('.pcap', '')
                     if net_id not in reported:
                         if is_excluded(net_id):
-                            logging.info("skipping %s due to exclusion filter" % pcap_file)
+                            logging.debug("skipping %s due to exclusion filter" % pcap_file)
+                            set_reported(reported, net_id)
                             continue
 
                         essid, bssid = parse_pcap(pcap_file)
                         if bssid:
+                            add_as_reported = False
                             if is_excluded(essid) or is_excluded(bssid):
                                 logging.debug("not reporting %s due to exclusion filter" % pcap_file)
-
-                            elif grid.report_ap(essid, bssid):
-                                reported.append(net_id)
-                                REPORT.update(data={'reported': reported})
+                                set_reported(reported, net_id)
+                            else:
+                                if grid.report_ap(essid, bssid):
+                                    set_reported(reported, net_id)
                         else:
                             logging.warning("no bssid found?!")
             else:
