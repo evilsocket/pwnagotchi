@@ -190,6 +190,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         aps = []
         try:
             s = self.session()
+            plugins.on("unfiltered_ap_list", s['wifi']['aps'])
             for ap in s['wifi']['aps']:
                 if ap['hostname'] not in whitelist:
                     if self._filter_included(ap):
