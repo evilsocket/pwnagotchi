@@ -130,6 +130,9 @@ class Display(View):
     def is_waveshare_v2(self):
         return self._display_type in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2')
 
+    def is_oledhat(self):
+        return self._display_type in ('oledhat')
+
     def is_waveshare_any(self):
         return self.is_waveshare_v1() or self.is_waveshare_v2()
 
@@ -176,6 +179,14 @@ class Display(View):
             self._display.init(self._display.PART_UPDATE)
             self._render_cb = self._waveshare_render
 
+        elif self.is_oledhat():
+            logging.info("initializing oledhat display")
+            from pwnagotchi.ui.waveshare.oledhat.epd import EPD
+            self._display = EPD()
+            self._display.init()
+            self._display.Clear()
+            self._render_cb = self._oledhat_render
+
         else:
             logging.critical("unknown display type %s" % self._display_type)
 
@@ -192,6 +203,8 @@ class Display(View):
             self._display.clear()
         elif self.is_waveshare_any():
             self._display.Clear(WHITE)
+        elif self.is_oledhat():
+            self._display.clear()
         else:
             logging.critical("unknown display type %s" % self._display_type)
 
@@ -236,6 +249,9 @@ class Display(View):
             self._display.display(buf)
         elif self.is_waveshare_v2():
             self._display.displayPartial(buf)
+
+    def _oledhat_render(self):
+        self._display.display(self._canvas)
 
     def _waveshare_bc_render(self):
         buf_black = self._display.getbuffer(self._canvas)
