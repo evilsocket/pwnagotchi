@@ -240,7 +240,7 @@
       chdir: /tmp/caplets
       target: install
 
-  - name: Cownload and install bettercap ui
+  - name: Download and install bettercap ui
     unarchive:
       src: "{{ packages.bettercap.ui }}"
       dest: /usr/local/share/bettercap/
