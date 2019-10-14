@@ -37,7 +37,7 @@ def _upload_to_wpasec(path, timeout=30):
         payload = {'file': file_to_upload}
 
         try:
-            result = requests.post('https://wpa-sec.stanev.org/?submit',
+            result = requests.post('https://wpa-sec.stanev.org',
                     cookies=cookie,
                     files=payload,
                     timeout=timeout)
