@@ -192,19 +192,19 @@ msgstr ""
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"
-msgstr ""
+msgstr "heures"
 
 msgid "minutes"
-msgstr ""
+msgstr "minutes"
 
 msgid "seconds"
-msgstr ""
+msgstr "secondes"
 
 msgid "hour"
-msgstr ""
+msgstr "heure"
 
 msgid "minute"
-msgstr ""
+msgstr "minute"
 
 msgid "second"
-msgstr ""
+msgstr "seconde"
