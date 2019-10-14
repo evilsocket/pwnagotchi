@@ -42,7 +42,7 @@ def papirus(config, layout):
     layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
     layout['friend_name'] = (40, (layout['height'] * 0.88) - 13)
     layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
-    layout['mode'] = layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
+    layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
     layout['status'] = {
         'pos': (85, int(layout['height'] * .15)),
         'font': fonts.Medium,
@@ -52,26 +52,25 @@ def papirus(config, layout):
 
 
 def oledhat(config, layout):
-    fonts.setup(10, 8, 10, 23)
+    fonts.setup(8, 8, 8, 8)
 
-    layout['width'] = 200
-    layout['height'] = 96
-    layout['face'] = (0, int(layout['height'] / 4))
-    layout['name'] = (5, int(layout['height'] * .15))
+    layout['width'] = 128
+    layout['height'] = 64
+    layout['face'] = (0, 32)
+    layout['name'] = (0, 10)
     layout['channel'] = (0, 0)
     layout['aps'] = (25, 0)
-    layout['uptime'] = (layout['width'] - 65, 0)
-    layout['line1'] = [0, int(layout['height'] * .12), layout['width'], int(layout['height'] * .12)]
-    layout['line2'] = [0, layout['height'] - int(layout['height'] * .12), layout['width'],
-                       layout['height'] - int(layout['height'] * .12)]
+    layout['uptime'] = (70, 0)
+    layout['line1'] = [0, 9, 128, 9]
+    layout['line2'] = [0, 53, 128, 53]
     layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
     layout['friend_name'] = (40, (layout['height'] * 0.88) - 13)
-    layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
-    layout['mode'] = layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
+    layout['shakes'] = (0, 53)
+    layout['mode'] = (103, 10)
     layout['status'] = {
-        'pos': (85, int(layout['height'] * .15)),
-        'font': fonts.Medium,
-        'max': (layout['width'] - 100) // 6
+        'pos': (30, 18),
+        'font': fonts.Small,
+        'max': (20) // 6
     }
     return layout
 
@@ -93,7 +92,7 @@ def waveshare(config, layout):
         layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
         layout['friend_name'] = (40, (layout['height'] * 0.88) - 13)
         layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
-        layout['mode'] = layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
+        layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
 
     else:
         fonts.setup(10, 8, 10, 25)
@@ -112,7 +111,7 @@ def waveshare(config, layout):
         layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
         layout['friend_name'] = (40, (layout['height'] * 0.88) - 13)
         layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
-        layout['mode'] = layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
+        layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
 
     layout['status'] = {
         'pos': (125, 20),
