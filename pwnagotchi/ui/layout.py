@@ -44,9 +44,9 @@ def papirus(config, layout):
     layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
     layout['mode'] = layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
     layout['status'] = {
-        'pos': (int(layout['width'] / 2) - 15, int(layout['height'] * .15)),
+        'pos': (85, int(layout['height'] * .15)),
         'font': fonts.Medium,
-        'max': (layout['width'] - layout['status']['pos'][0]) // 6
+        'max': (layout['width'] - 100) // 6
     }
     return layout
 
@@ -69,9 +69,9 @@ def oledhat(config, layout):
     layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
     layout['mode'] = layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
     layout['status'] = {
-        'pos': (int(layout['width'] / 2) - 15, int(layout['height'] * .15)),
+        'pos': (85, int(layout['height'] * .15)),
         'font': fonts.Medium,
-        'max': (layout['width'] - layout['status']['pos'][0]) // 6
+        'max': (layout['width'] - 100) // 6
     }
     return layout
 
@@ -95,7 +95,6 @@ def waveshare(config, layout):
         layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
         layout['mode'] = layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
 
-
     else:
         fonts.setup(10, 8, 10, 25)
 
@@ -118,7 +117,7 @@ def waveshare(config, layout):
     layout['status'] = {
         'pos': (125, 20),
         'font': fonts.Medium,
-        'max': (layout['width'] - layout['status']['pos'][0]) // 6
+        'max': (layout['width'] - 125) // 6
     }
     return layout
 
