@@ -60,7 +60,7 @@ def oledhat(config, layout):
     layout['name'] = (0, 10)
     layout['channel'] = (0, 0)
     layout['aps'] = (25, 0)
-    layout['uptime'] = (70, 0)
+    layout['uptime'] = (65, 0)
     layout['line1'] = [0, 9, 128, 9]
     layout['line2'] = [0, 53, 128, 53]
     layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
@@ -70,7 +70,7 @@ def oledhat(config, layout):
     layout['status'] = {
         'pos': (30, 18),
         'font': fonts.Small,
-        'max': (20) // 6
+        'max': (110) // 6
     }
     return layout
 
