@@ -10,6 +10,8 @@ from PIL import Image,ImageDraw,ImageFont
 EPD_WIDTH       = 64
 EPD_HEIGHT      = 128
 
+disp = SH1106.SH1106()
+
 class EPD(object):
 
     def __init__(self):
@@ -19,7 +21,6 @@ class EPD(object):
         self.cs_pin = config.CS_PIN
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
-        disp = SH1106.SH1106()
 
     def init(self):
         disp.Init()
