@@ -85,7 +85,7 @@ def waveshare(config, layout):
         layout['face'] = (0, 40)
         layout['name'] = (5, 20)
         layout['channel'] = (0, 0)
-        layout['aps'] = (25, 0)
+        layout['aps'] = (28, 0)
         layout['uptime'] = (layout['width'] - 65, 0)
         layout['line1'] = [0, int(layout['height'] * .12), layout['width'], int(layout['height'] * .12)]
         layout['line2'] = [0, layout['height'] - int(layout['height'] * .12), layout['width'],
@@ -103,7 +103,7 @@ def waveshare(config, layout):
         layout['face'] = (0, int(layout['height'] / 4))
         layout['name'] = (5, int(layout['height'] * .15))
         layout['channel'] = (0, 0)
-        layout['aps'] = (25, 0)
+        layout['aps'] = (28, 0)
         layout['status'] = (int(layout['width'] / 2) - 15, int(layout['height'] * .15))
         layout['uptime'] = (layout['width'] - 65, 0)
         layout['line1'] = [0, int(layout['height'] * .12), layout['width'], int(layout['height'] * .12)]
