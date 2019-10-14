@@ -165,21 +165,35 @@ class BTNap:
         if not bt_dev:
             return None
 
+        try:
+            bt_dev.StartDiscovery()
+        except Exception:
+            # can fail with org.bluez.Error.NotReady / org.bluez.Error.Failed
+            # TODO: add loop?
+            pass
+
+        dev_remote = None
+
         # could be set to 0, so check if > -1
         while timeout > -1:
             try:
                 dev_remote = BTNap.find_device(self._mac, bt_dev)
                 logging.debug('Using remote device (addr: %s): %s',
                     BTNap.prop_get(dev_remote, 'Address'), dev_remote.object_path )
-                return dev_remote
+                break
             except BTError:
                 pass
 
             time.sleep(1)
             timeout -= 1
 
-        # Device not found :(
-        return None
+        try:
+            bt_dev.StopDiscovery()
+        except Exception:
+            # can fail with org.bluez.Error.NotReady / org.bluez.Error.Failed / org.bluez.Error.NotAuthorized
+            pass
+
+        return dev_remote
 
 
     def connect(self, reconnect=False):
@@ -189,19 +203,18 @@ class BTNap:
         return True if connected; False if failed
         """
 
-        # power up devices
-        bt_dev = self.power(True)
-        if not bt_dev:
-            return False
-
         # check if device is close
         dev_remote = self.wait_for_device()
 
         if not dev_remote:
             return False
 
-        #wait_iter = lambda: time.sleep(3600)
-        # signal.signal(signal.SIGTERM, lambda sig,frm: sys.exit(0))
+        try:
+            dev_remote.Pair()
+            logging.info('BT-TETHER: Successful paired with device ;)')
+        except Exception:
+            # can fail because of AlreadyExists etc.
+            pass
 
         try:
             dev_remote.ConnectProfile('nap')
@@ -347,6 +360,18 @@ class IfaceWrapper:
 
         return False
 
+    @staticmethod
+    def set_route(addr):
+        process = subprocess.Popen(f"ip route replace default via {addr}", shell=True, stdin=None,
+                                  stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
+        process.wait()
+
+        if process.returncode > 0:
+            return False
+
+        return True
+
+
 
 def on_loaded():
     """
@@ -355,7 +380,7 @@ def on_loaded():
     global READY
     global INTERVAL
 
-    for opt in ['mac', 'ip', 'netmask', 'interval']:
+    for opt in ['share_internet', 'mac', 'ip', 'netmask', 'interval']:
         if opt not in OPTIONS or (opt in OPTIONS and OPTIONS[opt] is None):
             logging.error("BT-TET: Pleace specify the %s in your config.yml.", opt)
             return
@@ -395,6 +420,16 @@ def on_ui_update(ui):
                     ui.set('bluetooth', 'ERR1')
                     logging.error("Could not set ip of bnep0 to %s", addr)
                     return
+
+                # change route if sharking
+                if OPTIONS['share_internet']:
+                    IfaceWrapper.set_route(".".join(OPTIONS['ip'].split('.')[:-1] + ['1'])) # im not proud about that
+                    # fix resolv.conf; dns over https ftw!
+                    with open('/etc/resolv.conf', 'r+') as resolv:
+                        nameserver = resolv.read()
+                        if 'nameserver 9.9.9.9' not in nameserver:
+                            resolv.seek(0)
+                            resolv.write(nameserver + 'nameserver 9.9.9.9\n')
 
                 ui.set('bluetooth', 'CON')
             else:
