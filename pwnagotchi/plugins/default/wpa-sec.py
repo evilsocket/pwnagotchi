@@ -1,5 +1,5 @@
 __author__ = '33197631+dadav@users.noreply.github.com'
-__version__ = '1.0.0'
+__version__ = '2.0.1'
 __name__ = 'wpa-sec'
 __license__ = 'GPL3'
 __description__ = 'This plugin automatically uploades handshakes to https://wpa-sec.stanev.org'
@@ -33,12 +33,12 @@ def _upload_to_wpasec(path, timeout=30):
     Uploads the file to wpa-sec.stanev.org
     """
     with open(path, 'rb') as file_to_upload:
-        headers = {'key': OPTIONS['api_key']}
+        cookie = {'key': OPTIONS['api_key']}
         payload = {'file': file_to_upload}
 
         try:
-            result = requests.post('https://wpa-sec.stanev.org/?submit',
-                    headers=headers,
+            result = requests.post('https://wpa-sec.stanev.org',
+                    cookies=cookie,
                     files=payload,
                     timeout=timeout)
             if ' already submitted' in result.text:
