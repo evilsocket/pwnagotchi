@@ -1,7 +1,7 @@
 PWN_HOSTNAME=pwnagotchi
 PWN_VERSION=master
 
-all: install image clean
+all: clean install image
 
 install:
 	curl https://releases.hashicorp.com/packer/1.3.5/packer_1.3.5_linux_amd64.zip -o /tmp/packer.zip

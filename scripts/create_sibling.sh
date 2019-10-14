@@ -4,6 +4,9 @@
 
 set -eu
 
+echo "THIS SCRIPT IS DEPRECATED, PLEASE REFER TO THE OFFICIAL DOCUMENTATION AT https://pwnagotchi.ai/contributing/#creating-an-image"
+exit 1
+
 REQUIREMENTS=( wget gunzip git dd e2fsck resize2fs parted losetup qemu-system-x86_64 )
 DEBREQUIREMENTS=( wget gzip git parted qemu-system-x86 qemu-user-static )
 REPO_DIR="$(dirname "$(dirname "$(realpath "$0")")")"
