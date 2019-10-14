@@ -37,7 +37,7 @@ if __name__ == '__main__':
     keypair = KeyPair(view=display)
     agent = Agent(view=display, config=config, keypair=keypair)
 
-    logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent._keypair.fingerprint, pwnagotchi.version))
+    logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent.fingerprint(), pwnagotchi.version))
 
     for _, plugin in plugins.loaded.items():
         logging.debug("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))

@@ -16,6 +16,7 @@ class KeyPair(object):
         self.priv_key = None
         self.pub_path = "%s.pub" % self.priv_path
         self.pub_key = None
+        self.fingerprint_path = os.path.join(path, "fingerprint")
         self._view = view
 
         if not os.path.exists(self.path):
@@ -45,6 +46,9 @@ class KeyPair(object):
 
                 self.pub_key_pem_b64 = base64.b64encode(pem_ascii).decode("ascii")
                 self.fingerprint = hashlib.sha256(pem_ascii).hexdigest()
+
+                with open(self.fingerprint_path, 'w+t') as fp:
+                    fp.write(self.fingerprint)
 
                 # no exception, keys loaded correctly.
                 self._view.on_starting()

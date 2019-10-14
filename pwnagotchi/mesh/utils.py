@@ -29,6 +29,9 @@ class AsyncAdvertiser(object):
         self._peers = {}
         self._closest_peer = None
 
+    def fingerprint(self):
+        return self._keypair.fingerprint
+
     def _update_advertisement(self, s):
         self._advertisement['pwnd_run'] = len(self._handshakes)
         self._advertisement['pwnd_tot'] = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
