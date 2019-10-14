@@ -10,134 +10,13 @@ from pwnagotchi.voice import Voice
 
 import pwnagotchi.ui.fonts as fonts
 import pwnagotchi.ui.faces as faces
+import pwnagotchi.ui.layout as layout
 from pwnagotchi.ui.components import *
 from pwnagotchi.ui.state import State
 
 WHITE = 0xff
 BLACK = 0x00
 ROOT = None
-
-
-def setup_display_specifics(config):
-    width = 0
-    height = 0
-    face_pos = (0, 0)
-    name_pos = (0, 0)
-    status_pos = (0, 0)
-    channel_pos = (0, 0)
-    aps_pos = (0, 0)
-    uptime_pos = (0, 0)
-    line1_pos = [(0, 0),(0, 0)]
-    line2_pos = (0, 0)
-    friend_face = (0, 0)
-    friend_name = (0, 0)
-    shakes_pos = (0, 0)
-    mode_pos = (0, 0)
-    status_font = fonts.Medium
-    status_max_length = None
-
-    if config['ui']['display']['type'] in ('inky', 'inkyphat'):
-        fonts.setup(10, 8, 10, 28)
-
-        width = 212
-        height = 104
-        face_pos = (0, 37)
-        name_pos = (5, 18)
-        channel_pos = (0, 0)
-        aps_pos = (25, 0)
-        status_pos = (102, 18)
-        uptime_pos = (width - 65, 0)
-        line1_pos = [0, int(height * .12), width, int(height * .12)]
-        line2_pos = [0, height - int(height * .12), width, height - int(height * .12)]
-        friend_face_pos = (0, (height * 0.88) - 15)
-        friend_name_pos = (40, (height * 0.88) - 13)
-        shakes_pos = (0, height - int(height * .12) + 1)
-        mode_pos = (width - 25, height - int(height * .12) + 1)
-        status_font = fonts.Small
-        status_max_length = 20
-
-    elif config['ui']['display']['type'] in ('papirus', 'papi'):
-        fonts.setup(10, 8, 10, 23)
-
-        width = 200
-        height = 96
-        face_pos = (0, int(height / 4))
-        name_pos = (5, int(height * .15))
-        channel_pos = (0, 0)
-        aps_pos = (25, 0)
-        status_pos = (int(width / 2) - 15, int(height * .15))
-        uptime_pos = (width - 65, 0)
-        line1_pos = [0, int(height * .12), width, int(height * .12)]
-        line2_pos = [0, height - int(height * .12), width, height - int(height * .12)]
-        friend_face_pos = (0, (height * 0.88) - 15)
-        friend_name_pos = (40, (height * 0.88) - 13)
-        shakes_pos = (0, height - int(height * .12) + 1)
-        mode_pos = mode_pos = (width - 25, height - int(height * .12) + 1)
-        status_font = fonts.Medium
-        status_max_length = (width - status_pos[0]) // 6
-
-    if config['ui']['display']['type'] in ('oledhat'):
-        fonts.setup(8, 8, 8, 8)
-
-        width = 128
-        height = 64
-        face_pos = (0, 32)
-        name_pos = (0, 10)
-        channel_pos = (0, 0)
-        aps_pos = (25, 0)
-        status_pos = (30, 18)
-        uptime_pos = (width - 58, 0)
-        line1_pos = [0, 9, width, 9]
-        line2_pos = [0, 53, width, 53]
-        friend_face_pos = (0, (height * 0.88) - 15)
-        friend_name_pos = (40, (height * 0.88) - 13)
-        shakes_pos = (0, 53)
-        mode_pos = (width - 25, 10 )
-        status_font = fonts.Small
-        status_max_length = 20
-
-    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1',
-                                             'ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
-        if config['ui']['display']['color'] == 'black':
-            fonts.setup(10, 9, 10, 35)
-
-            width = 250
-            height = 122
-            face_pos = (0, 40)
-            name_pos = (5, 20)
-            channel_pos = (0, 0)
-            aps_pos = (25, 0)
-            status_pos = (125, 20)
-            uptime_pos = (width - 65, 0)
-            line1_pos = [0, int(height * .12), width, int(height * .12)]
-            line2_pos = [0, height - int(height * .12), width, height - int(height * .12)]
-            friend_face_pos = (0, (height * 0.88) - 15)
-            friend_name_pos = (40, (height * 0.88) - 13)
-            shakes_pos = (0, height - int(height * .12) + 1)
-            mode_pos = mode_pos = (width - 25, height - int(height * .12) + 1)
-            status_font = fonts.Medium
-        else:
-            fonts.setup(10, 8, 10, 25)
-
-            width = 212
-            height = 104
-            face_pos = (0, int(height / 4))
-            name_pos = (5, int(height * .15))
-            channel_pos = (0, 0)
-            aps_pos = (25, 0)
-            status_pos = (int(width / 2) - 15, int(height * .15))
-            uptime_pos = (width - 65, 0)
-            line1_pos = [0, int(height * .12), width, int(height * .12)]
-            line2_pos = [0, height - int(height * .12), width, height - int(height * .12)]
-            friend_face_pos = (0, (height * 0.88) - 15)
-            friend_name_pos = (40, (height * 0.88) - 13)
-            shakes_pos = (0, height - int(height * .12) + 1)
-            mode_pos = mode_pos = (width - 25, height - int(height * .12) + 1)
-            status_font = fonts.Medium
-        status_max_length = (width - status_pos[0]) // 6
-
-    return width, height, face_pos, name_pos, channel_pos, aps_pos, status_pos, uptime_pos, line1_pos, line2_pos, friend_face_pos, friend_name_pos, shakes_pos, mode_pos, status_font, status_max_length
-
 
 class View(object):
     def __init__(self, config, state={}):
@@ -150,45 +29,43 @@ class View(object):
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
 
-        self._width, self._height, \
-        face_pos, name_pos, channel_pos, aps_pos, status_pos, uptime_pos, line1_pos, line2_pos, friend_face_pos, friend_name_pos, shakes_pos, mode_pos, status_font, status_max_length = setup_display_specifics(config)
+        pos = layout.for_display(config)
 
+        self._width = pos['width']
+        self._height = pos['height']
         self._state = State(state={
-            'channel': LabeledValue(color=BLACK, label='CH', value='00', position=channel_pos, label_font=fonts.Bold,
+            'channel': LabeledValue(color=BLACK, label='CH', value='00', position=pos['channel'], label_font=fonts.Bold,
                                     text_font=fonts.Medium),
-            'aps': LabeledValue(color=BLACK, label='APS', value='0 (00)', position=aps_pos, label_font=fonts.Bold,
+            'aps': LabeledValue(color=BLACK, label='APS', value='0 (00)', position=pos['aps'], label_font=fonts.Bold,
                                 text_font=fonts.Medium),
 
-            # 'epoch': LabeledValue(color=BLACK, label='E', value='0000', position=(145, 0), label_font=fonts.Bold,
-            #                      text_font=fonts.Medium),
-
-            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=uptime_pos,
+            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=pos['uptime'],
                                    label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
-            'line1': Line(line1_pos,color=BLACK),
-            'line2': Line(line2_pos,color=BLACK),
+            'line1': Line(pos['line1'],color=BLACK),
+            'line2': Line(pos['line2'],color=BLACK),
 
-            'face': Text(value=faces.SLEEP, position=face_pos, color=BLACK, font=fonts.Huge),
+            'face': Text(value=faces.SLEEP, position=pos['face'], color=BLACK, font=fonts.Huge),
 
-            'friend_face': Text(value=None, position=friend_face_pos, font=fonts.Bold, color=BLACK),
-            'friend_name': Text(value=None, position=friend_name_pos, font=fonts.BoldSmall,
+            'friend_face': Text(value=None, position=pos['friend_face'], font=fonts.Bold, color=BLACK),
+            'friend_name': Text(value=None, position=pos['friend_name'], font=fonts.BoldSmall,
                                 color=BLACK),
 
-            'name': Text(value='%s>' % 'pwnagotchi', position=name_pos, color=BLACK, font=fonts.Bold),
+            'name': Text(value='%s>' % 'pwnagotchi', position=pos['name'], color=BLACK, font=fonts.Bold),
 
             'status': Text(value=self._voice.default(),
-                           position=status_pos,
+                           position=pos['status']['pos'],
                            color=BLACK,
-                           font=status_font,
+                           font=pos['status']['font'],
                            wrap=True,
                            # the current maximum number of characters per line, assuming each character is 6 pixels wide
-                           max_length=status_max_length),
+                           max_length=pos['status']['max']),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK,
-                                   position=shakes_pos, label_font=fonts.Bold,
+                                   position=pos['shakes'], label_font=fonts.Bold,
                                    text_font=fonts.Medium),
-            'mode': Text(value='AUTO', position=mode_pos,
+            'mode': Text(value='AUTO', position=pos['mode'],
                          font=fonts.Bold, color=BLACK),
         })
 
