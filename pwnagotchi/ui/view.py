@@ -18,6 +18,7 @@ WHITE = 0xff
 BLACK = 0x00
 ROOT = None
 
+
 class View(object):
     def __init__(self, config, state={}):
         global ROOT
@@ -28,44 +29,44 @@ class View(object):
         self._frozen = False
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
-
-        pos = layout.for_display(config)
-
-        self._width = pos['width']
-        self._height = pos['height']
+        self._layout = layout.for_display(config)
+        self._width = self._layout['width']
+        self._height = self._layout['height']
         self._state = State(state={
-            'channel': LabeledValue(color=BLACK, label='CH', value='00', position=pos['channel'], label_font=fonts.Bold,
+            'channel': LabeledValue(color=BLACK, label='CH', value='00', position=self._layout['channel'],
+                                    label_font=fonts.Bold,
                                     text_font=fonts.Medium),
-            'aps': LabeledValue(color=BLACK, label='APS', value='0 (00)', position=pos['aps'], label_font=fonts.Bold,
+            'aps': LabeledValue(color=BLACK, label='APS', value='0 (00)', position=self._layout['aps'],
+                                label_font=fonts.Bold,
                                 text_font=fonts.Medium),
 
-            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=pos['uptime'],
+            'uptime': LabeledValue(color=BLACK, label='UP', value='00:00:00', position=self._layout['uptime'],
                                    label_font=fonts.Bold,
                                    text_font=fonts.Medium),
 
-            'line1': Line(pos['line1'],color=BLACK),
-            'line2': Line(pos['line2'],color=BLACK),
+            'line1': Line(self._layout['line1'], color=BLACK),
+            'line2': Line(self._layout['line2'], color=BLACK),
 
-            'face': Text(value=faces.SLEEP, position=pos['face'], color=BLACK, font=fonts.Huge),
+            'face': Text(value=faces.SLEEP, position=self._layout['face'], color=BLACK, font=fonts.Huge),
 
-            'friend_face': Text(value=None, position=pos['friend_face'], font=fonts.Bold, color=BLACK),
-            'friend_name': Text(value=None, position=pos['friend_name'], font=fonts.BoldSmall,
+            'friend_face': Text(value=None, position=self._layout['friend_face'], font=fonts.Bold, color=BLACK),
+            'friend_name': Text(value=None, position=self._layout['friend_name'], font=fonts.BoldSmall,
                                 color=BLACK),
 
-            'name': Text(value='%s>' % 'pwnagotchi', position=pos['name'], color=BLACK, font=fonts.Bold),
+            'name': Text(value='%s>' % 'pwnagotchi', position=self._layout['name'], color=BLACK, font=fonts.Bold),
 
             'status': Text(value=self._voice.default(),
-                           position=pos['status']['pos'],
+                           position=self._layout['status']['pos'],
                            color=BLACK,
-                           font=pos['status']['font'],
+                           font=self._layout['status']['font'],
                            wrap=True,
                            # the current maximum number of characters per line, assuming each character is 6 pixels wide
-                           max_length=pos['status']['max']),
+                           max_length=self._layout['status']['max']),
 
             'shakes': LabeledValue(label='PWND ', value='0 (00)', color=BLACK,
-                                   position=pos['shakes'], label_font=fonts.Bold,
+                                   position=self._layout['shakes'], label_font=fonts.Bold,
                                    text_font=fonts.Medium),
-            'mode': Text(value='AUTO', position=pos['mode'],
+            'mode': Text(value='AUTO', position=self._layout['mode'],
                          font=fonts.Bold, color=BLACK),
         })
 
