@@ -29,22 +29,21 @@ def papirus(config, layout):
 
     layout['width'] = 200
     layout['height'] = 96
-    layout['face'] = (0, int(layout['height'] / 4))
-    layout['name'] = (5, int(layout['height'] * .15))
+    layout['face'] = (0, 24)
+    layout['name'] = (5, 14)
     layout['channel'] = (0, 0)
     layout['aps'] = (25, 0)
-    layout['uptime'] = (layout['width'] - 65, 0)
-    layout['line1'] = [0, int(layout['height'] * .12), layout['width'], int(layout['height'] * .12)]
-    layout['line2'] = [0, layout['height'] - int(layout['height'] * .12), layout['width'],
-                       layout['height'] - int(layout['height'] * .12)]
-    layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
-    layout['friend_name'] = (40, (layout['height'] * 0.88) - 13)
-    layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
-    layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
+    layout['uptime'] = (135, 0)
+    layout['line1'] = [0, 11, 200, 11]
+    layout['line2'] = [0, 85, 200, 85]
+    layout['friend_face'] = (0, 69)
+    layout['friend_name'] = (40, 71)
+    layout['shakes'] = (0, 86)
+    layout['mode'] = (175, 86)
     layout['status'] = {
-        'pos': (85, int(layout['height'] * .15)),
+        'pos': (85, 14),
         'font': fonts.Medium,
-        'max': (layout['width'] - 100) // 6
+        'max': 16
     }
     return layout
 
