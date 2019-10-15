@@ -18,7 +18,7 @@ def on_ui_update(ui):
     global update_count
     update_count += 1
     if update_count == OPTIONS['refresh_interval']:
-        ui._init_display()
+        ui.init_display()
         ui.set('status', "Screen cleaned")
         logging.info("Screen refreshing")
         update_count = 0

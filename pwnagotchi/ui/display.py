@@ -1,13 +1,12 @@
 import _thread
 from threading import Lock
-from PIL import Image
 
 import shutil
 import logging
-import os
 import pwnagotchi, pwnagotchi.plugins as plugins
 
-from pwnagotchi.ui.view import WHITE, View
+import pwnagotchi.ui.hw as hw
+from pwnagotchi.ui.view import View
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -88,24 +87,15 @@ class VideoHandler(BaseHTTPRequestHandler):
 
 class Display(View):
     def __init__(self, config, state={}):
-        super(Display, self).__init__(config, state)
+        super(Display, self).__init__(config, hw.display_for(config), state)
         self._enabled = config['ui']['display']['enabled']
         self._rotation = config['ui']['display']['rotation']
         self._video_enabled = config['ui']['display']['video']['enabled']
         self._video_port = config['ui']['display']['video']['port']
         self._video_address = config['ui']['display']['video']['address']
-        self._display_type = config['ui']['display']['type']
-        self._display_color = config['ui']['display']['color']
-
-        self._render_cb = None
-        self._display = None
         self._httpd = None
 
-        if self._enabled:
-            self._init_display()
-        else:
-            self.on_render(self._on_view_rendered)
-            logging.warning("display module is disabled")
+        self.init_display()
 
         if self._video_enabled:
             _thread.start_new_thread(self._http_serve, ())
@@ -119,149 +109,33 @@ class Display(View):
             logging.info("could not get ip of usb0, video server not starting")
 
     def is_inky(self):
-        return self._display_type in ('inkyphat', 'inky')
+        return self._implementation.name == 'inky'
 
     def is_papirus(self):
-        return self._display_type in ('papirus', 'papi')
+        return self._implementation.name == 'papirus'
 
     def is_waveshare_v1(self):
-        return self._display_type in ('waveshare_1', 'ws_1', 'waveshare1', 'ws1')
+        return self._implementation.name == 'waveshare_1'
 
     def is_waveshare_v2(self):
-        return self._display_type in ('waveshare_2', 'ws_2', 'waveshare2', 'ws2')
+        return self._implementation.name == 'waveshare_2'
 
     def is_oledhat(self):
-        return self._display_type in ('oledhat')
+        return self._implementation.name == 'oledhat'
 
     def is_waveshare_any(self):
         return self.is_waveshare_v1() or self.is_waveshare_v2()
 
-    def _init_display(self):
-        if self.is_inky():
-            logging.info("initializing inky display")
-            from pwnagotchi.ui.inkyphat.inkyphatfast import InkyPHATFast
-            self._display = InkyPHATFast(self._display_color)
-            self._display.set_border(InkyPHATFast.BLACK)
-            self._render_cb = self._inky_render
-
-        elif self.is_papirus():
-            logging.info("initializing papirus display")
-            from pwnagotchi.ui.papirus.epd import EPD
-            os.environ['EPD_SIZE'] = '2.0'
-            self._display = EPD()
-            self._display.clear()
-            self._render_cb = self._papirus_render
-
-        elif self.is_waveshare_v1():
-            if self._display_color == 'black':
-                logging.info("initializing waveshare v1 display in monochromatic mode")
-                from pwnagotchi.ui.waveshare.v1.epd2in13 import EPD
-                self._display = EPD()
-                self._display.init(self._display.lut_full_update)
-                self._display.Clear(0xFF)
-                self._display.init(self._display.lut_partial_update)
-                self._render_cb = self._waveshare_render
-            
-            else:
-                logging.info("initializing waveshare v1 display 3-color mode")
-                from pwnagotchi.ui.waveshare.v1.epd2in13bc import EPD
-                self._display = EPD()
-                self._display.init()
-                self._display.Clear()
-                self._render_cb = self._waveshare_bc_render
-
-        elif self.is_waveshare_v2():
-            logging.info("initializing waveshare v2 display")
-            from pwnagotchi.ui.waveshare.v2.waveshare import EPD
-            self._display = EPD()
-            self._display.init(self._display.FULL_UPDATE)
-            self._display.Clear(WHITE)
-            self._display.init(self._display.PART_UPDATE)
-            self._render_cb = self._waveshare_render
-
-        elif self.is_oledhat():
-            logging.info("initializing oledhat display")
-            from pwnagotchi.ui.waveshare.oledhat.epd import EPD
-            self._display = EPD()
-            self._display.init()
-            self._display.Clear()
-            self._render_cb = self._oledhat_render
-
+    def init_display(self):
+        if self._enabled:
+            self._implementation.initialize()
+            plugins.on('display_setup', self._implementation)
         else:
-            logging.critical("unknown display type %s" % self._display_type)
-
-        plugins.on('display_setup', self._display)
-
+            logging.warning("display module is disabled")
         self.on_render(self._on_view_rendered)
 
     def clear(self):
-        if self._display is None:
-            logging.error("no display object created")
-        elif self.is_inky():
-            self._display.Clear()
-        elif self.is_papirus():
-            self._display.clear()
-        elif self.is_waveshare_any():
-            self._display.Clear(WHITE)
-        elif self.is_oledhat():
-            self._display.clear()
-        else:
-            logging.critical("unknown display type %s" % self._display_type)
-
-    def _inky_render(self):
-        if self._display_color != 'mono':
-            display_colors = 3
-        else:
-            display_colors = 2
-
-        img_buffer = self._canvas.convert('RGB').convert('P', palette=1, colors=display_colors)
-        if self._display_color == 'red':
-            img_buffer.putpalette([
-                255, 255, 255,  # index 0 is white
-                0, 0, 0,  # index 1 is black
-                255, 0, 0  # index 2 is red
-            ])
-        elif self._display_color == 'yellow':
-            img_buffer.putpalette([
-                255, 255, 255,  # index 0 is white
-                0, 0, 0,  # index 1 is black
-                255, 255, 0  # index 2 is yellow
-            ])
-        else:
-            img_buffer.putpalette([
-                255, 255, 255,  # index 0 is white
-                0, 0, 0  # index 1 is black
-            ])
-
-        self._display.set_image(img_buffer)
-        try:
-            self._display.show()
-        except:
-            logging.exception("error while rendering on inky")
-
-    def _papirus_render(self):
-        self._display.display(self._canvas)
-        self._display.partial_update()
-
-    def _waveshare_render(self):
-        buf = self._display.getbuffer(self._canvas)
-        if self.is_waveshare_v1():
-            self._display.display(buf)
-        elif self.is_waveshare_v2():
-            self._display.displayPartial(buf)
-
-    def _oledhat_render(self):
-        self._display.display(self._canvas)
-
-    def _waveshare_bc_render(self):
-        buf_black = self._display.getbuffer(self._canvas)
-        # emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
-        # buf_color = self._display.getbuffer(emptyImage)
-        # self._display.display(buf_black,buf_color)
-
-        # Custom display function that only handles black
-        # Was included in epd2in13bc.py 
-        self._display.displayBlack(buf_black)
+        self._implementation.clear()
 
     def image(self):
         img = None
@@ -271,8 +145,7 @@ class Display(View):
 
     def _on_view_rendered(self, img):
         VideoHandler.render(img)
-
         if self._enabled:
             self._canvas = (img if self._rotation == 0 else img.rotate(self._rotation))
-            if self._render_cb is not None:
-                self._render_cb()
+            if self._implementation is not None:
+                self._implementation.render(self._canvas)

@@ -10,7 +10,6 @@ from pwnagotchi.voice import Voice
 
 import pwnagotchi.ui.fonts as fonts
 import pwnagotchi.ui.faces as faces
-import pwnagotchi.ui.layout as layout
 from pwnagotchi.ui.components import *
 from pwnagotchi.ui.state import State
 
@@ -20,7 +19,7 @@ ROOT = None
 
 
 class View(object):
-    def __init__(self, config, state={}):
+    def __init__(self, config, impl, state=None):
         global ROOT
 
         self._render_cbs = []
@@ -29,7 +28,8 @@ class View(object):
         self._frozen = False
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
-        self._layout = layout.for_display(config)
+        self._implementation = impl
+        self._layout = impl.layout(config)
         self._width = self._layout['width']
         self._height = self._layout['height']
         self._state = State(state={
@@ -70,8 +70,9 @@ class View(object):
                          font=fonts.Bold, color=BLACK),
         })
 
-        for key, value in state.items():
-            self._state.set(key, value)
+        if state:
+            for key, value in state.items():
+                self._state.set(key, value)
 
         plugins.on('ui_setup', self)
 

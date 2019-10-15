@@ -56,6 +56,26 @@ def load_config(args):
             if user_config:
                 config = merge_config(user_config, config)
 
+    # the very first step is to normalize the display name so we don't need dozens of if/elif around
+    if config['ui']['display']['type'] in ('inky', 'inkyphat'):
+        config['ui']['display']['type'] = 'inky'
+
+    elif config['ui']['display']['type'] in ('papirus', 'papi'):
+        config['ui']['display']['type'] = 'papirus'
+
+    if config['ui']['display']['type'] in ('oledhat'):
+        config['ui']['display']['type'] = 'oledhat'
+
+    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1'):
+        config['ui']['display']['type'] = 'waveshare_1'
+
+    elif config['ui']['display']['type'] in ('ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
+        config['ui']['display']['type'] = 'waveshare_2'
+
+    else:
+        print("unsupported display type %s" % config['ui']['display']['type'])
+        exit(1)
+
     return config
 
 

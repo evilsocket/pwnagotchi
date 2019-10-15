@@ -1,7 +1,6 @@
 from . import config
 import RPi.GPIO as GPIO
 import time
-import numpy as np
 
 Device_SPI = config.Device_SPI
 Device_I2C = config.Device_I2C
@@ -121,9 +120,9 @@ class SH1106(object):
                 GPIO.output(self._dc, GPIO.HIGH);
             for i in range(0,self.width):#for(int i=0;i<self.width; i++)
                 if(self.Device == Device_SPI):
-                    config.spi_writebyte([~pBuf[i+self.width*page]]);
+                    config.spi_writebyte([~pBuf[i + self.width * page]]);
                 else :
-                    config.i2c_writebyte(0x40, ~pBuf[i+self.width*page])
+                    config.i2c_writebyte(0x40, ~pBuf[i + self.width * page])
 
 
 

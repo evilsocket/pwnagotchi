@@ -1,10 +1,5 @@
 from . import SH1106
-import time
 from . import config
-import traceback
-
-from PIL import Image,ImageDraw,ImageFont
-
 
 # Display resolution
 EPD_WIDTH       = 64

@@ -27,9 +27,7 @@
 # THE SOFTWARE.
 #
 
-import logging
 from . import epdconfig
-from PIL import Image
 import RPi.GPIO as GPIO
 # import numpy as np
 
