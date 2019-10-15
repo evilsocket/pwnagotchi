@@ -14,6 +14,9 @@ class Voice:
         translation.install()
         self._ = translation.gettext
 
+    def custom(self, s):
+        return s
+
     def default(self):
         return self._('ZzzzZZzzzzZzzz')
 
@@ -68,8 +71,8 @@ class Voice:
 
     def on_new_peer(self, peer):
         return random.choice([
-            self._('Hello {name}! Nice to meet you. {name}').format(name=peer.name()),
-            self._('Unit {name} is nearby! {name}').format(name=peer.name())])
+            self._('Hello {name}! Nice to meet you.').format(name=peer.name()),
+            self._('Unit {name} is nearby!').format(name=peer.name())])
 
     def on_lost_peer(self, peer):
         return random.choice([
