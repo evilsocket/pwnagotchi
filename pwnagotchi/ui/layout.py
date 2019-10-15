@@ -26,7 +26,6 @@ def inkyphat(config, layout):
 
 def papirus(config, layout):
     fonts.setup(10, 8, 10, 23)
-
     layout['width'] = 200
     layout['height'] = 96
     layout['face'] = (0, 24)
@@ -50,7 +49,6 @@ def papirus(config, layout):
 
 def oledhat(config, layout):
     fonts.setup(8, 8, 8, 8)
-
     layout['width'] = 128
     layout['height'] = 64
     layout['face'] = (0, 32)
@@ -60,14 +58,14 @@ def oledhat(config, layout):
     layout['uptime'] = (65, 0)
     layout['line1'] = [0, 9, 128, 9]
     layout['line2'] = [0, 53, 128, 53]
-    layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
-    layout['friend_name'] = (40, (layout['height'] * 0.88) - 13)
+    layout['friend_face'] = (0, 41)
+    layout['friend_name'] = (40, 43)
     layout['shakes'] = (0, 53)
     layout['mode'] = (103, 10)
     layout['status'] = {
         'pos': (30, 18),
         'font': fonts.Small,
-        'max': (110) // 6
+        'max': 18
     }
     return layout
 
