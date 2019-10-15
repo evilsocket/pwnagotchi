@@ -58,6 +58,7 @@
           - python3-mpi4py
           - python3-smbus
           - unzip
+          - zip
           - gawk
           - libopenmpi-dev
           - libatlas-base-dev
