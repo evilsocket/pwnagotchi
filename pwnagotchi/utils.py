@@ -76,6 +76,8 @@ def load_config(args):
         print("unsupported display type %s" % config['ui']['display']['type'])
         exit(1)
 
+    print("Effective Configuration:")
+    print(yaml.dump(config, default_flow_style=False))
     return config
 
 
