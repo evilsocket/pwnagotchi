@@ -379,7 +379,7 @@
     copy:
       dest: /etc/pwnagotchi/config.yml
       content: |
-        # Add your configuration overrides on this file any configuration changes done to defaults.yml will be lost!
+        # Add your configuration overrides on this file any configuration changes done to default.yml will be lost!
         # Example:
         #
         # ui:
@@ -461,7 +461,7 @@
 
         If you want to change my configuration, use /etc/pwnagotchi/config.yml
 
-        All the configuration options can be found on /etc/pwnagotchi/defaults.yml,
+        All the configuration options can be found on /etc/pwnagotchi/default.yml,
         but don't change this file because I will recreate it every time I'm restarted!
 
         I'm managed by systemd. Here are some basic commands.
