@@ -3,21 +3,19 @@ import pwnagotchi.ui.fonts as fonts
 
 def inkyphat(config, layout):
     fonts.setup(10, 8, 10, 28)
-
     layout['width'] = 212
     layout['height'] = 104
     layout['face'] = (0, 37)
     layout['name'] = (5, 18)
     layout['channel'] = (0, 0)
     layout['aps'] = (25, 0)
-    layout['uptime'] = (layout['width'] - 65, 0)
-    layout['line1'] = [0, int(layout['height'] * .12), layout['width'], int(layout['height'] * .12)]
-    layout['line2'] = [0, layout['height'] - int(layout['height'] * .12), layout['width'],
-                       layout['height'] - int(layout['height'] * .12)]
-    layout['friend_face'] = (0, (layout['height'] * 0.88) - 15)
-    layout['friend_name'] = (40, (layout['height'] * 0.88) - 13)
-    layout['shakes'] = (0, layout['height'] - int(layout['height'] * .12) + 1)
-    layout['mode'] = (layout['width'] - 25, layout['height'] - int(layout['height'] * .12) + 1)
+    layout['uptime'] = (147, 0)
+    layout['line1'] = [0, 12, 212, 12]
+    layout['line2'] = [0, 92, 212, 92]
+    layout['friend_face'] = (0, 76)
+    layout['friend_name'] = (40, 78)
+    layout['shakes'] = (0, 93)
+    layout['mode'] = (187, 93)
     layout['status'] = {
         'pos': (102, 18),
         'font': fonts.Small,
