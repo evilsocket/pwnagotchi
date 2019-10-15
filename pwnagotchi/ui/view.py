@@ -29,7 +29,7 @@ class View(object):
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
         self._implementation = impl
-        self._layout = impl.layout(config)
+        self._layout = impl.layout()
         self._width = self._layout['width']
         self._height = self._layout['height']
         self._state = State(state={
