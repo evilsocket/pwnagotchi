@@ -1,3 +1,4 @@
+import re
 import _thread
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Lock
@@ -5,6 +6,7 @@ import shutil
 import logging
 
 import pwnagotchi
+from pwnagotchi import plugins
 
 frame_path = '/root/pwnagotchi.png'
 frame_format = 'PNG'
@@ -159,6 +161,13 @@ class Handler(BaseHTTPRequestHandler):
 
         elif self.path.startswith('/ui'):
             self._image()
+        elif self.path.startswith('/plugins'):
+            plugin_from_path = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
+            if plugin_from_path:
+                plugin_name = plugin_from_path.groups()[0]
+                right_path = plugin_from_path.groups()[1] if len(plugin_from_path.groups()) == 2 else None
+                if plugin_name in plugins.loaded and hasattr(plugins.loaded[plugin_name], 'on_webhook'):
+                    plugins.loaded[plugin_name].on_webhook(self, right_path)
         else:
             self.send_response(404)
 
