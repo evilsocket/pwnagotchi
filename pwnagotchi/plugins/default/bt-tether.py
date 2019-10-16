@@ -447,43 +447,47 @@ def on_ui_update(ui):
         if bt.is_connected() and bt.is_paired():
             logging.debug('BT-TETHER: Already connected and paired')
             ui.set('bluetooth', 'CON')
-            return
-
-        logging.debug('BT-TETHER: Try to connect to mac')
-        if bt.connect():
-            logging.debug('BT-TETHER: Successfuly connected')
-            btnap_iface = IfaceWrapper('bnep0')
-
-            logging.debug('BT-TETHER: Check interface')
-            if btnap_iface.exists():
-                logging.debug('BT-TETHER: Interface found')
-                # check ip
-                addr = f"{OPTIONS['ip']}/{OPTIONS['netmask']}"
-
-                logging.debug('BT-TETHER: Try to set ADDR to interface')
-                if not btnap_iface.set_addr(addr):
-                    ui.set('bluetooth', 'ERR1')
-                    logging.error("Could not set ip of bnep0 to %s", addr)
-                    return
-                else:
-                    logging.debug('BT-TETHER: Set ADDR to interface')
-
-                # change route if sharking
-                if OPTIONS['share_internet']:
-                    logging.debug('BT-TETHER: Set routing and change resolv.conf')
-                    IfaceWrapper.set_route(".".join(OPTIONS['ip'].split('.')[:-1] + ['1'])) # im not proud about that
-                    # fix resolv.conf; dns over https ftw!
-                    with open('/etc/resolv.conf', 'r+') as resolv:
-                        nameserver = resolv.read()
-                        if 'nameserver 9.9.9.9' not in nameserver:
-                            resolv.seek(0)
-                            resolv.write(nameserver + 'nameserver 9.9.9.9\n')
-
-                ui.set('bluetooth', 'CON')
-            else:
-                ui.set('bluetooth', 'ERR2')
         else:
-            ui.set('bluetooth', 'NF')
+            logging.debug('BT-TETHER: Try to connect to mac')
+            if bt.connect():
+                logging.info('BT-TETHER: Successfuly connected')
+            else:
+                logging.error('BT-TETHER: Could not connect')
+                ui.set('bluetooth', 'NF')
+                return
+
+        btnap_iface = IfaceWrapper('bnep0')
+        logging.debug('BT-TETHER: Check interface')
+        if btnap_iface.exists():
+            logging.debug('BT-TETHER: Interface found')
+
+            # check ip
+            addr = f"{OPTIONS['ip']}/{OPTIONS['netmask']}"
+
+            logging.debug('BT-TETHER: Try to set ADDR to interface')
+            if not btnap_iface.set_addr(addr):
+                ui.set('bluetooth', 'ERR1')
+                logging.error("BT-TETHER: Could not set ip of bnep0 to %s", addr)
+                return
+            else:
+                logging.debug('BT-TETHER: Set ADDR to interface')
+
+            # change route if sharking
+            if OPTIONS['share_internet']:
+                logging.debug('BT-TETHER: Set routing and change resolv.conf')
+                IfaceWrapper.set_route(".".join(OPTIONS['ip'].split('.')[:-1] + ['1'])) # im not proud about that
+                # fix resolv.conf; dns over https ftw!
+                with open('/etc/resolv.conf', 'r+') as resolv:
+                    nameserver = resolv.read()
+                    if 'nameserver 9.9.9.9' not in nameserver:
+                        logging.info('BT-TETHER: Added nameserver')
+                        resolv.seek(0)
+                        resolv.write(nameserver + 'nameserver 9.9.9.9\n')
+
+            ui.set('bluetooth', 'CON')
+        else:
+            logging.error('BT-TETHER: bnep0 not found')
+            ui.set('bluetooth', 'ERR2')
 
 
 def on_ui_setup(ui):
