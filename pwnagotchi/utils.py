@@ -63,7 +63,7 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('papirus', 'papi'):
         config['ui']['display']['type'] = 'papirus'
 
-    if config['ui']['display']['type'] in ('oledhat'):
+    elif config['ui']['display']['type'] in ('oledhat'):
         config['ui']['display']['type'] = 'oledhat'
 
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1'):
