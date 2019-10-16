@@ -154,7 +154,40 @@ class BTNap:
 
         return None
 
-    def wait_for_device(self, timeout=30):
+    def is_connected(self):
+        """
+        Check if already connected
+        """
+        bt_dev = self.power(True)
+
+        if not bt_dev:
+            return False
+
+        try:
+            dev_remote = BTNap.find_device(self._mac, bt_dev)
+            return bool(BTNap.prop_get(dev_remote, 'Connected'))
+        except BTError:
+            pass
+        return False
+
+
+    def is_paired(self):
+        """
+        Check if already connected
+        """
+        bt_dev = self.power(True)
+
+        if not bt_dev:
+            return False
+
+        try:
+            dev_remote = BTNap.find_device(self._mac, bt_dev)
+            return bool(BTNap.prop_get(dev_remote, 'Paired'))
+        except BTError:
+            pass
+        return False
+
+    def wait_for_device(self, timeout=15):
         """
         Wait for device
 
@@ -409,20 +442,35 @@ def on_ui_update(ui):
         INTERVAL.update()
 
         bt = BTNap(OPTIONS['mac'])
+
+        logging.debug('BT-TETHER: Check if already connected and paired')
+        if bt.is_connected() and bt.is_paired():
+            logging.debug('BT-TETHER: Already connected and paired')
+            ui.set('bluetooth', 'CON')
+            return
+
+        logging.debug('BT-TETHER: Try to connect to mac')
         if bt.connect():
+            logging.debug('BT-TETHER: Successfuly connected')
             btnap_iface = IfaceWrapper('bnep0')
 
+            logging.debug('BT-TETHER: Check interface')
             if btnap_iface.exists():
+                logging.debug('BT-TETHER: Interface found')
                 # check ip
                 addr = f"{OPTIONS['ip']}/{OPTIONS['netmask']}"
 
+                logging.debug('BT-TETHER: Try to set ADDR to interface')
                 if not btnap_iface.set_addr(addr):
                     ui.set('bluetooth', 'ERR1')
                     logging.error("Could not set ip of bnep0 to %s", addr)
                     return
+                else:
+                    logging.debug('BT-TETHER: Set ADDR to interface')
 
                 # change route if sharking
                 if OPTIONS['share_internet']:
+                    logging.debug('BT-TETHER: Set routing and change resolv.conf')
                     IfaceWrapper.set_route(".".join(OPTIONS['ip'].split('.')[:-1] + ['1'])) # im not proud about that
                     # fix resolv.conf; dns over https ftw!
                     with open('/etc/resolv.conf', 'r+') as resolv:
