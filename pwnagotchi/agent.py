@@ -481,9 +481,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def _reboot(self):
         self.set_rebooting()
         self._save_recovery_data()
-        logging.warning("rebooting the system ...")
-        os.system("/usr/bin/sync")
-        os.system("/usr/sbin/shutdown -r now")
+        pwnagotchi.reboot()
 
     def next_epoch(self):
         was_stale = self.is_stale()

@@ -65,3 +65,9 @@ def shutdown():
         time.sleep(5)
     os.system("sync")
     os.system("halt")
+
+
+def reboot():
+    logging.warning("rebooting ...")
+    os.system("sync")
+    os.system("shutdown -r now")
