@@ -15,7 +15,7 @@
 
 from PIL import Image
 from PIL import ImageOps
-from pwnagotchi.ui.hw.libs.papirus import LM75B
+from pwnagotchi.ui.hw.libs.papirus.lm75b import LM75B
 import re
 import os
 import sys
