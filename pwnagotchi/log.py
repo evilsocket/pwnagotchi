@@ -2,6 +2,7 @@ import hashlib
 import time
 import re
 import os
+import logging
 from datetime import datetime
 
 from pwnagotchi.voice import Voice
@@ -87,61 +88,65 @@ class LastSession(object):
             parts = line.split(']')
             if len(parts) < 2:
                 continue
-            line_timestamp = parts[0].strip('[')
-            line = ']'.join(parts[1:])
-            stopped_at = self._parse_datetime(line_timestamp)
-            if started_at is None:
-                started_at = stopped_at
 
-            if LastSession.DEAUTH_TOKEN in line and line not in cache:
-                self.deauthed += 1
-                cache[line] = 1
+            try:
+                line_timestamp = parts[0].strip('[')
+                line = ']'.join(parts[1:])
+                stopped_at = self._parse_datetime(line_timestamp)
+                if started_at is None:
+                    started_at = stopped_at
 
-            elif LastSession.ASSOC_TOKEN in line and line not in cache:
-                self.associated += 1
-                cache[line] = 1
+                if LastSession.DEAUTH_TOKEN in line and line not in cache:
+                    self.deauthed += 1
+                    cache[line] = 1
 
-            elif LastSession.HANDSHAKE_TOKEN in line and line not in cache:
-                self.handshakes += 1
-                cache[line] = 1
+                elif LastSession.ASSOC_TOKEN in line and line not in cache:
+                    self.associated += 1
+                    cache[line] = 1
 
-            elif LastSession.TRAINING_TOKEN in line:
-                self.train_epochs += 1
+                elif LastSession.HANDSHAKE_TOKEN in line and line not in cache:
+                    self.handshakes += 1
+                    cache[line] = 1
 
-            elif LastSession.EPOCH_TOKEN in line:
-                self.epochs += 1
-                m = LastSession.EPOCH_PARSER.findall(line)
-                if m:
-                    epoch_num, epoch_data = m[0]
-                    m = LastSession.EPOCH_DATA_PARSER.findall(epoch_data)
-                    for key, value in m:
-                        if key == 'reward':
-                            reward = float(value)
-                            self.avg_reward += reward
-                            if reward < self.min_reward:
-                                self.min_reward = reward
+                elif LastSession.TRAINING_TOKEN in line:
+                    self.train_epochs += 1
 
-                            elif reward > self.max_reward:
-                                self.max_reward = reward
+                elif LastSession.EPOCH_TOKEN in line:
+                    self.epochs += 1
+                    m = LastSession.EPOCH_PARSER.findall(line)
+                    if m:
+                        epoch_num, epoch_data = m[0]
+                        m = LastSession.EPOCH_DATA_PARSER.findall(epoch_data)
+                        for key, value in m:
+                            if key == 'reward':
+                                reward = float(value)
+                                self.avg_reward += reward
+                                if reward < self.min_reward:
+                                    self.min_reward = reward
 
-            elif LastSession.PEER_TOKEN in line:
-                m = self._peer_parser.findall(line)
-                if m:
-                    name, pubkey, rssi, sid, pwnd_tot, uptime = m[0]
-                    if pubkey not in cache:
-                        self.last_peer = Peer({
-                            'session_id': sid,
-                            'channel': 1,
-                            'rssi': int(rssi),
-                            'identity': pubkey,
-                            'advertisement':{
-                                'name': name,
-                                'pwnd_tot': int(pwnd_tot)
-                            }})
-                        self.peers += 1
-                        cache[pubkey] = self.last_peer
-                    else:
-                        cache[pubkey].adv['pwnd_tot'] = pwnd_tot
+                                elif reward > self.max_reward:
+                                    self.max_reward = reward
+
+                elif LastSession.PEER_TOKEN in line:
+                    m = self._peer_parser.findall(line)
+                    if m:
+                        name, pubkey, rssi, sid, pwnd_tot, uptime = m[0]
+                        if pubkey not in cache:
+                            self.last_peer = Peer({
+                                'session_id': sid,
+                                'channel': 1,
+                                'rssi': int(rssi),
+                                'identity': pubkey,
+                                'advertisement':{
+                                    'name': name,
+                                    'pwnd_tot': int(pwnd_tot)
+                                }})
+                            self.peers += 1
+                            cache[pubkey] = self.last_peer
+                        else:
+                            cache[pubkey].adv['pwnd_tot'] = pwnd_tot
+            except Exception as e:
+                logging.error("error parsing line '%s': %s" % (line, e))
 
         if started_at is not None:
             self.duration = stopped_at - started_at
