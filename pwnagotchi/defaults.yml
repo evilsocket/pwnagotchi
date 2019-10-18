@@ -17,10 +17,6 @@ main:
         report: false # don't report pwned networks by default!
         exclude: # do not report the following networks (accepts both ESSIDs and BSSIDs)
           - YourHomeNetworkHere
-      auto-update:
-        enabled: false
-        system: false # set to true to also enable system updates via apt
-        interval: 1 # every day
       auto-backup:
         enabled: false
         interval: 1 # every day
