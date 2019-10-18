@@ -35,7 +35,8 @@ def load_config(args):
     if os.path.exists("/boot/config.yml"):
         # logging not configured here yet
         print("installing /boot/config.yml to %s ...", args.user_config)
-        os.rename("/boot/config.yml", args.user_config)
+        # https://stackoverflow.com/questions/42392600/oserror-errno-18-invalid-cross-device-link
+        shutil.move("/boot/config.yml", args.user_config)
 
     # if not config is found, copy the defaults
     if not os.path.exists(args.config):
