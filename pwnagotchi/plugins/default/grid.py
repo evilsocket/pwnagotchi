@@ -65,7 +65,7 @@ def is_excluded(what):
 
 def on_ui_update(ui):
     new_value = ' %d (%d)' % (UNREAD_MESSAGES, TOTAL_MESSAGES)
-    if not ui.has_element('mailbox') and TOTAL_MESSAGES > 0:
+    if not ui.has_element('mailbox') and UNREAD_MESSAGES > 0:
         if ui.is_inky():
             pos = (80, 0)
         else:
