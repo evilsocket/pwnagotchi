@@ -16,7 +16,7 @@ class Inky(DisplayImpl):
         self._layout['face'] = (0, 37)
         self._layout['name'] = (5, 18)
         self._layout['channel'] = (0, 0)
-        self._layout['aps'] = (25, 0)
+        self._layout['aps'] = (30, 0)
         self._layout['uptime'] = (147, 0)
         self._layout['line1'] = [0, 12, 212, 12]
         self._layout['line2'] = [0, 92, 212, 92]

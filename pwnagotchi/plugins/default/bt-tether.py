@@ -491,5 +491,5 @@ def on_ui_update(ui):
 
 
 def on_ui_setup(ui):
-    ui.add_element('bluetooth', LabeledValue(color=BLACK, label='BT', value='-', position=(ui.width() / 2 - 30, 0),
+    ui.add_element('bluetooth', LabeledValue(color=BLACK, label='BT', value='-', position=(ui.width() / 2 - 15, 0),
                                        label_font=fonts.Bold, text_font=fonts.Medium))
