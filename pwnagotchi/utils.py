@@ -31,11 +31,18 @@ def load_config(args):
     ref_defaults_file = os.path.join(os.path.dirname(pwnagotchi.__file__), 'defaults.yml')
     ref_defaults_data = None
 
-    if not os.path.exists(args.config):
+    # check for a config.yml file on /boot/
+    if os.path.exists("/boot/config.yml"):
         # logging not configured here yet
+        print("installing /boot/config.yml to %s ...", args.user_config)
+        os.rename("/boot/config.yml", args.user_config)
+
+    # if not config is found, copy the defaults
+    if not os.path.exists(args.config):
         print("copying %s to %s ..." % (ref_defaults_file, args.config))
         shutil.copy(ref_defaults_file, args.config)
     else:
+        # check if the user messed with the defaults
         with open(ref_defaults_file) as fp:
             ref_defaults_data = fp.read()
 
@@ -46,9 +53,11 @@ def load_config(args):
             print("!!! file in %s is different than release defaults, overwriting !!!" % args.config)
             shutil.copy(ref_defaults_file, args.config)
 
+    # load the defaults
     with open(args.config) as fp:
         config = yaml.safe_load(fp)
 
+    # load the user config
     if os.path.exists(args.user_config):
         with open(args.user_config) as fp:
             user_config = yaml.safe_load(fp)
@@ -131,6 +140,7 @@ def blink(times=1, delay=0.3):
         time.sleep(delay)
     led(True)
 
+
 class WifiInfo(Enum):
     """
     Fields you can extract from a pcap file
@@ -140,6 +150,7 @@ class WifiInfo(Enum):
     ENCRYPTION = 2
     CHANNEL = 3
     RSSI = 4
+
 
 class FieldNotFoundError(Exception):
     pass
@@ -172,7 +183,7 @@ def extract_from_pcap(path, fields):
                         if hasattr(packet[Dot11], 'addr3'):
                             results[field] = packet[Dot11].addr3
                             break
-                else: # magic
+                else:  # magic
                     raise FieldNotFoundError("Could not find field [BSSID]")
             except Exception:
                 raise FieldNotFoundError("Could not find field [BSSID]")
@@ -188,7 +199,7 @@ def extract_from_pcap(path, fields):
                     if packet.haslayer(Dot11Elt) and hasattr(packet[Dot11Elt], 'info'):
                         results[field] = packet[Dot11Elt].info.decode('utf-8')
                         break
-                else: # magic
+                else:  # magic
                     raise FieldNotFoundError("Could not find field [ESSID]")
             except Exception:
                 raise FieldNotFoundError("Could not find field [ESSID]")
@@ -202,9 +213,9 @@ def extract_from_pcap(path, fields):
                     if packet.haslayer(Dot11Beacon) and hasattr(packet[Dot11Beacon], 'network_stats'):
                         stats = packet[Dot11Beacon].network_stats()
                         if 'crypto' in stats:
-                            results[field] = stats['crypto'] # set with encryption types
+                            results[field] = stats['crypto']  # set with encryption types
                             break
-                else: # magic
+                else:  # magic
                     raise FieldNotFoundError("Could not find field [ENCRYPTION]")
             except Exception:
                 raise FieldNotFoundError("Could not find field [ENCRYPTION]")
