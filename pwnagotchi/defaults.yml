@@ -70,8 +70,9 @@ main:
         netmask: 24
         interval: 1 # check every x minutes for device
         share_internet: false
-      memtemp: # Display memory usage and cpu temperature on screen
-        enabled: false 
+      memtemp: # Display memory usage, cpu load and cpu temperature on screen
+        enabled: false
+        orientation: horizontal # horizontal/vertical
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
