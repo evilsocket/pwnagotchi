@@ -1,6 +1,7 @@
 from pwnagotchi.ui.hw.inky import Inky
 from pwnagotchi.ui.hw.papirus import Papirus
 from pwnagotchi.ui.hw.oledhat import OledHat
+from pwnagotchi.ui.hw.lcdhat import LcdHat
 from pwnagotchi.ui.hw.waveshare1 import WaveshareV1
 from pwnagotchi.ui.hw.waveshare2 import WaveshareV2
 
@@ -15,6 +16,10 @@ def display_for(config):
 
     if config['ui']['display']['type'] == 'oledhat':
         return OledHat(config)
+
+    if config['ui']['display']['type'] == 'lcdhat':
+        return LcdHat(config)
+
 
     elif config['ui']['display']['type'] == 'waveshare_1':
         return WaveshareV1(config)
