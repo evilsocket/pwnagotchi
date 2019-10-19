@@ -123,6 +123,10 @@ class Display(View):
     def is_oledhat(self):
         return self._implementation.name == 'oledhat'
 
+    def is_lcdhat(self):
+        return self._implementation.name == 'lcdhat'
+
+
     def is_waveshare_any(self):
         return self.is_waveshare_v1() or self.is_waveshare_v2()
 
