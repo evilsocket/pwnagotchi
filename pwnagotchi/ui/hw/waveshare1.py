@@ -38,7 +38,6 @@ class WaveshareV1(DisplayImpl):
             self._layout['name'] = (5, 15)
             self._layout['channel'] = (0, 0)
             self._layout['aps'] = (28, 0)
-            self._layout['status'] = (91, 15)
             self._layout['uptime'] = (147, 0)
             self._layout['line1'] = [0, 12, 212, 12]
             self._layout['line2'] = [0, 92, 212, 92]
@@ -47,9 +46,9 @@ class WaveshareV1(DisplayImpl):
             self._layout['shakes'] = (0, 93)
             self._layout['mode'] = (187, 93)
             self._layout['status'] = {
-                'pos': (125, 20),
+                'pos': (91, 15),
                 'font': fonts.Medium,
-                'max': 14
+                'max': 20
             }
         return self._layout
 
