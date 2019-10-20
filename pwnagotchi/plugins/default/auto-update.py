@@ -79,7 +79,6 @@ def install(display, update):
     os.system('wget -q "%s" -O "%s"' % (update['url'], target_path))
 
     logging.info("[update] extracting %s to %s ..." % (target_path, path))
-
     display.update(force=True, new_data={'status': 'Extracting %s ...' % name})
 
     os.system('unzip "%s" -d "%s"' % (target_path, path))
@@ -92,11 +91,10 @@ def install(display, update):
             return False
 
     else:
-        display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
-
         checksum = checksums[0]
 
         logging.info("[update] verifying %s for %s ..." % (checksum, source_path))
+        display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
 
         with open(checksum, 'rt') as fp:
             expected = fp.read().split('=')[1].strip().lower()
@@ -107,6 +105,7 @@ def install(display, update):
             logging.warning("[update] checksum mismatch for %s: expected=%s got=%s" % (source_path, expected, real))
             return False
 
+    logging.info("[update] installing %s ..." % name)
     display.update(force=True, new_data={'status': 'Installing %s ...' % name})
 
     if update['native']:
@@ -125,6 +124,7 @@ def install(display, update):
         os.system("service %s stop" % update['service'])
         os.system("cd %s && pip3 install ." % source_path)
 
+    logging.info("[update] restarting %s ..." % update['service'])
     os.system("service %s start" % update['service'])
 
     return True
@@ -153,7 +153,7 @@ def on_internet_available(agent):
                 (
                     'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
                     True, 'bettercap'),
-                ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True, 'pwndrid-peer'),
+                ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True, 'pwngrid-peer'),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
             ]
 
