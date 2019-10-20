@@ -202,5 +202,4 @@ def on_internet_available(agent):
         except Exception as e:
             logging.error("[update] %s" % e)
 
-        logging.debug("[update] setting status '%s'" % prev_status)
         display.update(force=True, new_data={'status': prev_status if prev_status is not None else ''})
