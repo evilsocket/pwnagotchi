@@ -1,11 +1,13 @@
 __author__ = 'evilsocket@gmail.com'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __name__ = 'grid'
 __license__ = 'GPL3'
-__description__ = 'This plugin signals the unit cryptographic identity and list of pwned networks and list of pwned networks to api.pwnagotchi.ai'
+__description__ = 'This plugin signals the unit cryptographic identity and list of pwned networks and list of pwned ' \
+                  'networks to api.pwnagotchi.ai '
 
 import os
 import logging
+import time
 import glob
 
 import pwnagotchi.grid as grid
@@ -136,6 +138,7 @@ def on_internet_available(agent):
                             else:
                                 if grid.report_ap(essid, bssid):
                                     set_reported(reported, net_id)
+                                time.sleep(1.5)
                         else:
                             logging.warning("no bssid found?!")
             else:
