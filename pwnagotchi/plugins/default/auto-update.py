@@ -36,13 +36,13 @@ def check(version, repo, native=True):
         'available': None,
         'url': None,
         'native': native,
+        'arch': platform.machine()
     }
 
     resp = requests.get("https://api.github.com/repos/%s/releases/latest" % repo)
     latest = resp.json()
-    info['available'] = latest_ver = latest['tag_name'].replace('v', ' ')
-    arch = platform.machine()
-    is_arm = arch.startswith('arm')
+    info['available'] = latest_ver = latest['tag_name'].replace('v', '')
+    is_arm = info['arch'].startswith('arm')
 
     if latest_ver != info['current']:
         if not native:
@@ -61,11 +61,12 @@ def check(version, repo, native=True):
 def install(display, update):
     name = update['repo'].split('/')[1]
 
-    display.set('status', 'Updating %s ...' % name)
+    display.set('status', 'Downloading %s ...' % name)
     display.update(force=True)
 
-    path = os.path.join("/tmp/updates/%s_%s" % (name, update['available']))
+    path = os.path.join("/tmp/updates/", name)
     if os.path.exists(path):
+        logging.debug("[update] deleting %s" % path)
         shutil.rmtree(path, ignore_errors=True, onerror=None)
 
     os.makedirs(path)
@@ -76,6 +77,15 @@ def install(display, update):
     logging.info("[update] downloading %s to %s ..." % (update['url'], target_path))
 
     os.system('wget -q "%s" -O "%s"' % (update['url'], target_path))
+
+    logging.info("[update] extracting %s to %s ..." % (target_path, path))
+
+    display.set('status', 'Extracting %s ...' % name)
+    display.update(force=True)
+
+    os.system('unzip "%s" -d "%s"' % (target_path, path))
+
+    logging.info("TODO")
 
 
 def on_internet_available(agent):
