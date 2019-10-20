@@ -52,29 +52,29 @@ def check(version, repo, native=True):
             # check if this release is compatible with arm6
             for asset in latest['assets']:
                 download_url = asset['browser_download_url']
-                if download_url.endswith('.zip') and (info['arch'] in download_url or (is_arm and 'armhf' in download_url)):
+                if download_url.endswith('.zip') and (
+                        info['arch'] in download_url or (is_arm and 'armhf' in download_url)):
                     info['url'] = download_url
                     break
 
     return info
 
 
-def install(display, update):
-    name = update['repo'].split('/')[1]
-
-    display.update(force=True, new_data={'status': 'Downloading %s ...' % name})
-
+def make_path_for(name):
     path = os.path.join("/tmp/updates/", name)
     if os.path.exists(path):
         logging.debug("[update] deleting %s" % path)
         shutil.rmtree(path, ignore_errors=True, onerror=None)
-
     os.makedirs(path)
+    return path
 
+
+def download_and_unzip(name, path, display, update):
     target = "%s_%s.zip" % (name, update['available'])
     target_path = os.path.join(path, target)
 
     logging.info("[update] downloading %s to %s ..." % (update['url'], target_path))
+    display.update(force=True, new_data={'status': 'Downloading %s ...' % name})
 
     os.system('wget -q "%s" -O "%s"' % (update['url'], target_path))
 
@@ -83,7 +83,10 @@ def install(display, update):
 
     os.system('unzip "%s" -d "%s"' % (target_path, path))
 
-    source_path = os.path.join(path, name)
+
+def verify(name, path, source_path, display, update):
+    display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
+
     checksums = glob.glob("%s/*.sha256" % path)
     if len(checksums) == 0:
         if update['native']:
@@ -94,7 +97,6 @@ def install(display, update):
         checksum = checksums[0]
 
         logging.info("[update] verifying %s for %s ..." % (checksum, source_path))
-        display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
 
         with open(checksum, 'rt') as fp:
             expected = fp.read().split('=')[1].strip().lower()
@@ -104,6 +106,20 @@ def install(display, update):
         if real != expected:
             logging.warning("[update] checksum mismatch for %s: expected=%s got=%s" % (source_path, expected, real))
             return False
+
+    return True
+
+
+def install(display, update):
+    name = update['repo'].split('/')[1]
+
+    path = make_path_for(name)
+
+    download_and_unzip(name, path, display, update)
+
+    source_path = os.path.join(path, name)
+    if not verify(name, path, source_path, update):
+        return False
 
     logging.info("[update] installing %s ..." % name)
     display.update(force=True, new_data={'status': 'Installing %s ...' % name})
@@ -148,8 +164,7 @@ def on_internet_available(agent):
 
             to_install = []
             to_check = [
-                (
-                    'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
+                ('bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
                     True, 'bettercap'),
                 ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True, 'pwngrid-peer'),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
