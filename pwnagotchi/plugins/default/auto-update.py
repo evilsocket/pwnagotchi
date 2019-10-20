@@ -82,7 +82,7 @@ def install(display, update):
 
     display.update(force=True, new_data={'status': 'Extracting %s ...' % name})
 
-    os.system('unzip "%s" -q -d "%s"' % (target_path, path))
+    os.system('unzip "%s" -d "%s"' % (target_path, path))
 
     source_path = os.path.join(path, name)
     checksums = glob.glob("%s/*.sha256" % path)
