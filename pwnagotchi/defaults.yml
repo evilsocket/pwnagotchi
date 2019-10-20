@@ -188,7 +188,7 @@ ui:
     display:
         enabled: true
         rotation: 180
-        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat
+        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, waveshare27inch
         type: 'waveshare_2'
         # Possible options red/yellow/black (black used for monocromatic displays)
         color: 'black'
