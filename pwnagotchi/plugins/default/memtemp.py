@@ -24,12 +24,10 @@ __name__ = 'memtemp'
 __license__ = 'GPL3'
 __description__ = 'A plugin that will display memory/cpu usage and temperature'
 
-
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
 import pwnagotchi.ui.fonts as fonts
 import pwnagotchi
-import subprocess
 import logging
 
 OPTIONS = dict()
@@ -42,22 +40,25 @@ def on_loaded():
 def mem_usage():
     return int(pwnagotchi.mem_usage() * 100)
 
+
 def cpu_load():
     return int(pwnagotchi.cpu_load() * 100)
 
 
-
 def on_ui_setup(ui):
     if OPTIONS['orientation'] == "horizontal":
-        ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value='mem cpu temp\n - -  -', position=(ui.width() / 2 + 30, ui.height() /2 + 15),
-                                        label_font=fonts.Small, text_font=fonts.Small))
+        ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value='mem cpu temp\n - -  -',
+                                               position=(ui.width() / 2 + 30, ui.height() / 2 + 15),
+                                               label_font=fonts.Small, text_font=fonts.Small))
     elif OPTIONS['orientation'] == "vertical":
-        ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value=' mem:-\n cpu:-\ntemp:-', position=(ui.width() / 2 + 55, ui.height() /2),
-                                        label_font=fonts.Small, text_font=fonts.Small))
+        ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value=' mem:-\n cpu:-\ntemp:-',
+                                               position=(ui.width() / 2 + 55, ui.height() / 2),
+                                               label_font=fonts.Small, text_font=fonts.Small))
+
 
 def on_ui_update(ui):
     if OPTIONS['orientation'] == "horizontal":
         ui.set('memtemp', " mem cpu temp\n %s%% %s%%  %sc" % (mem_usage(), cpu_load(), pwnagotchi.temperature()))
-    
+
     elif OPTIONS['orientation'] == "vertical":
         ui.set('memtemp', " mem:%s%%\n cpu:%s%%\ntemp:%sc" % (mem_usage(), cpu_load(), pwnagotchi.temperature()))
