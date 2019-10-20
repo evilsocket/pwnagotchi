@@ -4,6 +4,7 @@ from pwnagotchi.ui.hw.oledhat import OledHat
 from pwnagotchi.ui.hw.lcdhat import LcdHat
 from pwnagotchi.ui.hw.waveshare1 import WaveshareV1
 from pwnagotchi.ui.hw.waveshare2 import WaveshareV2
+from pwnagotchi.ui.hw.waveshare27inch import Waveshare27inch
 
 
 def display_for(config):
@@ -26,3 +27,6 @@ def display_for(config):
 
     elif config['ui']['display']['type'] == 'waveshare_2':
         return WaveshareV2(config)
+
+    elif config['ui']['display']['type'] == 'waveshare27inch':
+        return Waveshare27inch(config)
