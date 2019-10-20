@@ -143,4 +143,4 @@ def on_internet_available(agent):
                 logging.debug("grid: reporting disabled")
 
     except Exception as e:
-        logging.exception("grid api error")
+        logging.error("grid api: %s" % e)
