@@ -167,30 +167,33 @@ class LastSession(object):
         self.duration_human = ', '.join(self.duration_human)
         self.avg_reward /= (self.epochs if self.epochs else 1)
 
-    def parse(self):
-        logging.debug("parsing last session logs ...")
+    def parse(self, skip=False):
+        if skip:
+            logging.debug("skipping parsing of the last session logs ...")
+        else:
+            logging.debug("parsing last session logs ...")
 
-        lines = []
+            lines = []
 
-        if os.path.exists(self.path):
-            with FileReadBackwards(self.path, encoding="utf-8") as fp:
-                for line in fp:
-                    line = line.strip()
-                    if line != "" and line[0] != '[':
-                        continue
-                    lines.append(line)
-                    if LastSession.START_TOKEN in line:
-                        break
-            lines.reverse()
+            if os.path.exists(self.path):
+                with FileReadBackwards(self.path, encoding="utf-8") as fp:
+                    for line in fp:
+                        line = line.strip()
+                        if line != "" and line[0] != '[':
+                            continue
+                        lines.append(line)
+                        if LastSession.START_TOKEN in line:
+                            break
+                lines.reverse()
 
-        if len(lines) == 0:
-            lines.append("Initial Session");
+            if len(lines) == 0:
+                lines.append("Initial Session");
 
-        self.last_session = lines
-        self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()
-        self.last_saved_session_id = self._get_last_saved_session_id()
+            self.last_session = lines
+            self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()
+            self.last_saved_session_id = self._get_last_saved_session_id()
 
-        self._parse_stats()
+            self._parse_stats()
         self.parsed = True
 
     def is_new(self):
