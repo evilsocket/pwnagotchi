@@ -73,13 +73,30 @@ SHUTDOWN = """<html>
 
 
 class Handler(BaseHTTPRequestHandler):
+    AllowedOrigin = '*'
+
     # suppress internal logging
     def log_message(self, format, *args):
         return
 
+    def _send_cors_headers(self):
+        # misc security
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-XSS-Protection", "1; mode=block")
+        self.send_header("Referrer-Policy", "same-origin")
+        # cors
+        self.send_header("Access-Control-Allow-Origin", Handler.AllowedOrigin)
+        self.send_header('Access-Control-Allow-Credentials', 'true')
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers",
+                         "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+        self.send_header("Vary", "Origin")
+
     # just render some html in a 200 response
     def _html(self, html):
         self.send_response(200)
+        self._send_cors_headers()
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         try:
@@ -98,10 +115,11 @@ class Handler(BaseHTTPRequestHandler):
 
     # serve the PNG file with the display image
     def _image(self):
-        global frame_path, frame_ctype
+        global frame_lock, frame_path, frame_ctype
 
         with frame_lock:
             self.send_response(200)
+            self._send_cors_headers()
             self.send_header('Content-type', frame_ctype)
             self.end_headers()
             try:
@@ -110,13 +128,32 @@ class Handler(BaseHTTPRequestHandler):
             except:
                 pass
 
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self._send_cors_headers()
+        self.end_headers()
+
+    # check the Origin header vs CORS
+    def _is_allowed(self):
+        origin = self.headers.get('origin')
+        if origin == "":
+            logging.warning("request with no Origin header from %s" % self.address_string())
+            return False
+
+        if Handler.AllowedOrigin != '*':
+            if origin != Handler.AllowedOrigin and not origin.starts_with(Handler.AllowedOrigin):
+                logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
+                return False
+
+        return True
+
     # main entry point of the http server
     def do_GET(self):
-        global frame_lock
+        if not self._is_allowed():
+            return
 
         if self.path == '/':
             self._index()
-
         elif self.path.startswith('/shutdown'):
             self._shutdown()
 
@@ -132,6 +169,12 @@ class Server(object):
         self._port = config['video']['port']
         self._address = config['video']['address']
         self._httpd = None
+
+        if 'origin' in config['video'] and config['video']['origin'] != '*':
+            Handler.AllowedOrigin = config['video']['origin']
+        else:
+            logging.warning("THE WEB UI IS RUNNING WITH ALLOWED ORIGIN SET TO *, READ WHY YOU SHOULD CHANGE IT HERE \
+            https://developer.mozilla.org/it/docs/Web/HTTP/CORS")
 
         if self._enabled:
             _thread.start_new_thread(self._http_serve, ())

@@ -175,6 +175,7 @@ ui:
         video:
             enabled: true
             address: '0.0.0.0'
+            origin: '*'
             port: 8080
 
 
