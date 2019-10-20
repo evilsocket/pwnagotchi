@@ -9,6 +9,7 @@ import subprocess
 import requests
 import platform
 import shutil
+import glob
 
 import pwnagotchi
 import os
@@ -85,7 +86,32 @@ def install(display, update):
 
     os.system('unzip "%s" -d "%s"' % (target_path, path))
 
-    logging.info("TODO")
+    checksums = glob.glob("%s/*.sha256")
+    if len(checksums) == 0:
+        if update['native']:
+            logging.warning("native update without SHA256 checksum file")
+
+    else:
+        binary_path = os.path.join(path, name)
+        checksum = checksums[0]
+
+        logging.info("[update] verifying %s for %s ..." % (checksum, binary_path))
+
+        with open(checksums) as fp:
+            expected = fp.read().strip().lower()
+
+        real = subprocess.getoutput('sha256sum "%s"' % binary_path).split(' ')[0].strip().lower()
+
+        if real != expected:
+            logging.warning("[update] checksum mismatch for %s: expected=%s got=%s" % (binary_path, expected, real))
+            return
+
+    if update['native']:
+        dest_path = subprocess.getoutput("which %s" % name)
+        logging.info("[update] installing %s to %s ... TODO" % (binary_path, dest_path))
+
+    else:
+        logging.info("[update] installing %s ... TODO" % binary_path)
 
 
 def on_internet_available(agent):
