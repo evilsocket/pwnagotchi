@@ -82,7 +82,7 @@ def install(display, update):
 
     display.update(force=True, new_data={'status': 'Extracting %s ...' % name})
 
-    os.system('unzip "%s" -d "%s"' % (target_path, path))
+    os.system('unzip "%s" -q -d "%s"' % (target_path, path))
 
     source_path = os.path.join(path, name)
     checksums = glob.glob("%s/*.sha256" % path)
@@ -120,6 +120,9 @@ def install(display, update):
         logging.info("[update] service %s start" % update['service'])
 
     else:
+        if not os.path.exists(source_path):
+            source_path = "%s-%s" % (source_path, update['available'])
+
         logging.info("[update] cd %s && pip3 install ." % source_path)
 
     return True
