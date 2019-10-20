@@ -84,6 +84,7 @@ def install(display, update):
 
     os.system('unzip "%s" -d "%s"' % (target_path, path))
 
+    source_path = os.path.join(path, name)
     checksums = glob.glob("%s/*.sha256")
     if len(checksums) == 0:
         if update['native']:
@@ -92,28 +93,27 @@ def install(display, update):
     else:
         display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
 
-        binary_path = os.path.join(path, name)
         checksum = checksums[0]
 
-        logging.info("[update] verifying %s for %s ..." % (checksum, binary_path))
+        logging.info("[update] verifying %s for %s ..." % (checksum, source_path))
 
         with open(checksums) as fp:
             expected = fp.read().strip().lower()
 
-        real = subprocess.getoutput('sha256sum "%s"' % binary_path).split(' ')[0].strip().lower()
+        real = subprocess.getoutput('sha256sum "%s"' % source_path).split(' ')[0].strip().lower()
 
         if real != expected:
-            logging.warning("[update] checksum mismatch for %s: expected=%s got=%s" % (binary_path, expected, real))
+            logging.warning("[update] checksum mismatch for %s: expected=%s got=%s" % (source_path, expected, real))
             return
 
     display.update(force=True, new_data={'status': 'Installing %s ...' % name})
 
     if update['native']:
         dest_path = subprocess.getoutput("which %s" % name)
-        logging.info("[update] installing %s to %s ... TODO" % (binary_path, dest_path))
+        logging.info("[update] installing %s to %s ... TODO" % (source_path, dest_path))
 
     else:
-        logging.info("[update] installing %s ... TODO" % binary_path)
+        logging.info("[update] installing %s ... TODO" % source_path)
 
 
 def on_internet_available(agent):
