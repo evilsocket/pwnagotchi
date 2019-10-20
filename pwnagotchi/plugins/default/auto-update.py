@@ -82,7 +82,7 @@ def on_internet_available(agent):
                 if info['url'] is not None:
                     to_install.append(info)
 
-            if len(to_install) > 0 & & OPTIONS['install']:
+            if len(to_install) > 0 and OPTIONS['install']:
                 logging.info("[update] TODO: install %d updates" % len(to_install))
 
             logging.info("[update] done")
