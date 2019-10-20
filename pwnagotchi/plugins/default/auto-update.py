@@ -4,15 +4,16 @@ __name__ = 'auto-update'
 __license__ = 'GPL3'
 __description__ = 'This plugin checks when updates are available and applies them when internet is available.'
 
+import os
 import logging
 import subprocess
 import requests
 import platform
 import shutil
 import glob
+import pkg_resources
 
 import pwnagotchi
-import os
 from pwnagotchi.utils import StatusFile
 
 OPTIONS = dict()
@@ -45,7 +46,10 @@ def check(version, repo, native=True):
     info['available'] = latest_ver = latest['tag_name'].replace('v', '')
     is_arm = info['arch'].startswith('arm')
 
-    if latest_ver != info['current']:
+    local = pkg_resources.parse_version(info['current'])
+    remote = pkg_resources.parse_requirements(latest_ver)
+
+    if remote > local:
         if not native:
             info['url'] = "https://github.com/%s/archive/%s.zip" % (repo, latest['tag_name'])
         else:
@@ -165,7 +169,7 @@ def on_internet_available(agent):
             to_install = []
             to_check = [
                 ('bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
-                    True, 'bettercap'),
+                 True, 'bettercap'),
                 ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True, 'pwngrid-peer'),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
             ]
