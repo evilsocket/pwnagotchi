@@ -48,8 +48,8 @@ def check(version, repo, native=True):
             for asset in latest['assets']:
                 download_url = asset['browser_download_url']
                 if download_url.endswith('.zip') and (arch in download_url or is_arm and 'armhf' in download_url):
-                    logging.info("found new update: %s" % download_url)
                     info['url'] = download_url
+                    break
 
     return info
 
@@ -84,6 +84,7 @@ def on_internet_available(agent):
             for repo, local_version, is_native in to_check:
                 info = check(local_version, repo, is_native)
                 if info['url'] is not None:
+                    logging.warning("new update for %s is available: %s" % (repo, info['url']))
                     to_install.append(info)
 
             if len(to_install) > 0 and OPTIONS['install']:
