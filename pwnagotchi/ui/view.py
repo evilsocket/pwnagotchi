@@ -22,6 +22,9 @@ class View(object):
     def __init__(self, config, impl, state=None):
         global ROOT
 
+        # setup faces from the configuration in case the user customized them
+        faces.load_from_config(config['ui']['faces'])
+
         self._render_cbs = []
         self._config = config
         self._canvas = None

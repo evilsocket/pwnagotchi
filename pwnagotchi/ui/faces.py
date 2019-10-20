@@ -16,3 +16,8 @@ SAD = '(╥☁╥ )'
 FRIEND = '(♥‿‿♥)'
 BROKEN = '(☓‿‿☓)'
 DEBUG = '(#__#)'
+
+
+def load_from_config(config):
+    for face_name, face_value in config.items():
+        globals()[face_name.upper()] = face_value
