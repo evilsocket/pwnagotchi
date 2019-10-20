@@ -64,7 +64,9 @@ if __name__ == '__main__':
                     agent.last_session.max_reward))
 
         while True:
-            display.on_manual_mode(agent.last_session)
+            if not args.skip_session:
+                display.on_manual_mode(agent.last_session)
+
             time.sleep(1)
 
             if grid.is_connected():
