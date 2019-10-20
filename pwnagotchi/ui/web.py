@@ -71,6 +71,7 @@ SHUTDOWN = """<html>
   </body>
 </html>"""
 
+
 class Handler(BaseHTTPRequestHandler):
     # suppress internal logging
     def log_message(self, format, *args):
