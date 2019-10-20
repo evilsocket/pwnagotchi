@@ -41,13 +41,15 @@ def check(version, repo, native=True):
     is_arm = arch.startswith('arm')
 
     if latest_ver != info['current']:
-        # check if this release is compatible with arm6
-        for asset in latest['assets']:
-            download_url = asset['browser_download_url']
-            if download_url.endswith('.zip') and (
-                    native is False or arch in download_url or is_arm and 'armhf' in download_url):
-                logging.info("found new update: %s" % download_url)
-                info['url'] = download_url
+        if not native:
+            info['url'] = latest['zipball_url']
+        else:
+            # check if this release is compatible with arm6
+            for asset in latest['assets']:
+                download_url = asset['browser_download_url']
+                if download_url.endswith('.zip') and (arch in download_url or is_arm and 'armhf' in download_url):
+                    logging.info("found new update: %s" % download_url)
+                    info['url'] = download_url
 
     return info
 
@@ -73,7 +75,8 @@ def on_internet_available(agent):
 
             to_install = []
             to_check = [
-                ('bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''), True),
+                (
+                'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''), True),
                 ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False)
             ]
