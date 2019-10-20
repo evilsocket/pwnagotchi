@@ -99,7 +99,7 @@ def install(display, update):
         logging.info("[update] verifying %s for %s ..." % (checksum, source_path))
 
         with open(checksum, 'rt') as fp:
-            expected = fp.read().strip().lower()
+            expected = fp.read().split('=')[1].strip().lower()
 
         real = subprocess.getoutput('sha256sum "%s"' % source_path).split(' ')[0].strip().lower()
 
