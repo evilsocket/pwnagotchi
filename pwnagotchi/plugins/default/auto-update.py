@@ -85,7 +85,7 @@ def install(display, update):
     os.system('unzip "%s" -d "%s"' % (target_path, path))
 
     source_path = os.path.join(path, name)
-    checksums = glob.glob("%s/*.sha256")
+    checksums = glob.glob("%s/*.sha256" % path)
     if len(checksums) == 0:
         if update['native']:
             logging.warning("native update without SHA256 checksum file")
