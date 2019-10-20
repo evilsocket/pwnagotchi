@@ -3,6 +3,7 @@ if __name__ == '__main__':
     import argparse
     import time
     import logging
+    import signal
 
     import pwnagotchi
     import pwnagotchi.grid as grid
@@ -12,6 +13,7 @@ if __name__ == '__main__':
     from pwnagotchi.identity import KeyPair
     from pwnagotchi.agent import Agent
     from pwnagotchi.ui.display import Display
+    from pwnagotchi.config import SharedConfig
 
     parser = argparse.ArgumentParser()
 
@@ -31,7 +33,19 @@ if __name__ == '__main__':
                         help="Enable debug logs.")
 
     args = parser.parse_args()
-    config = utils.load_config(args)
+    config = SharedConfig.load_from_args(args)
+
+    def usr1_handler(*unused):
+        """
+        Reload the config
+        """
+        logging.info('Received USR1 singal. Reloading config ...')
+        SharedConfig.load_from_args(args)
+        logging.info('Reloading plugins ...')
+        plugins.load(config)
+
+    signal.signal(signal.SIGUSR1, usr1_handler)
+
     utils.setup_logging(args, config)
 
     plugins.load(config)
