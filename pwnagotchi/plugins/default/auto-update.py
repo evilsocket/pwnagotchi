@@ -115,15 +115,17 @@ def install(display, update):
             logging.warning("[update] can't find path for %s" % name)
             return False
 
-        logging.info("[update] service %s stop" % update['service'])
-        logging.info("[update] mv %s %s" % (source_path, dest_path))
-        logging.info("[update] service %s start" % update['service'])
+        os.system("service %s stop" % update['service'])
+        os.system("mv %s %s" % (source_path, dest_path))
 
     else:
         if not os.path.exists(source_path):
             source_path = "%s-%s" % (source_path, update['available'])
 
-        logging.info("[update] cd %s && pip3 install ." % source_path)
+        os.system("service %s stop" % update['service'])
+        os.system("cd %s && pip3 install ." % source_path)
+
+    os.system("service %s start" % update['service'])
 
     return True
 
@@ -178,7 +180,8 @@ def on_internet_available(agent):
             STATUS.update()
 
             if num_installed > 0:
-                logging.info("[update] pwnagotchi.reboot()")
+                display.update(force=True, new_data={'status': 'Rebooting ...'})
+                pwnagotchi.reboot()
 
         except Exception as e:
             logging.error("[update] %s" % e)
