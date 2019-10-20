@@ -62,8 +62,7 @@ def check(version, repo, native=True):
 def install(display, update):
     name = update['repo'].split('/')[1]
 
-    display.set('status', 'Downloading %s ...' % name)
-    display.update(force=True)
+    display.update(force=True, new_data={'status': 'Downloading %s ...' % name})
 
     path = os.path.join("/tmp/updates/", name)
     if os.path.exists(path):
@@ -81,8 +80,7 @@ def install(display, update):
 
     logging.info("[update] extracting %s to %s ..." % (target_path, path))
 
-    display.set('status', 'Extracting %s ...' % name)
-    display.update(force=True)
+    display.update(force=True, new_data={'status': 'Extracting %s ...' % name})
 
     os.system('unzip "%s" -d "%s"' % (target_path, path))
 
@@ -92,6 +90,8 @@ def install(display, update):
             logging.warning("native update without SHA256 checksum file")
 
     else:
+        display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
+
         binary_path = os.path.join(path, name)
         checksum = checksums[0]
 
@@ -105,6 +105,8 @@ def install(display, update):
         if real != expected:
             logging.warning("[update] checksum mismatch for %s: expected=%s got=%s" % (binary_path, expected, real))
             return
+
+    display.update(force=True, new_data={'status': 'Installing %s ...' % name})
 
     if update['native']:
         dest_path = subprocess.getoutput("which %s" % name)
@@ -130,8 +132,7 @@ def on_internet_available(agent):
         prev_status = display.get('status')
 
         try:
-            display.set('status', 'Checking for updates ...')
-            display.update(force=True)
+            display.update(force=True, new_data={'status': 'Checking for updates ...'})
 
             to_install = []
             to_check = [
@@ -164,5 +165,4 @@ def on_internet_available(agent):
             logging.error("[update] %s" % e)
 
         logging.debug("[update] setting status '%s'" % prev_status)
-        display.set('status', prev_status if prev_status is not None else '')
-        display.update(force=True)
+        display.update(force=True, new_data={'status': prev_status if prev_status is not None else ''})
