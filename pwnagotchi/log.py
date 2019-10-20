@@ -168,6 +168,8 @@ class LastSession(object):
         self.avg_reward /= (self.epochs if self.epochs else 1)
 
     def parse(self):
+        logging.debug("parsing last session logs ...")
+
         lines = []
 
         if os.path.exists(self.path):
