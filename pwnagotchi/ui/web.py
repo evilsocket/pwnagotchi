@@ -141,7 +141,7 @@ class Handler(BaseHTTPRequestHandler):
             return False
 
         if Handler.AllowedOrigin != '*':
-            if origin != Handler.AllowedOrigin and not origin.starts_with(Handler.AllowedOrigin):
+            if origin != Handler.AllowedOrigin:
                 logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
                 return False
 
