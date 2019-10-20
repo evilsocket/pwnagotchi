@@ -73,13 +73,12 @@ def on_internet_available(agent):
 
             to_install = []
             to_check = [
-                (
-                'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''), True),
+                ('bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''), True),
                 ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False)
             ]
 
-            for repo, local_version, is_native in to_check.items():
+            for repo, local_version, is_native in to_check:
                 info = check(local_version, repo, is_native)
                 if info['url'] is not None:
                     to_install.append(info)

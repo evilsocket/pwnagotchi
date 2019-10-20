@@ -173,8 +173,8 @@ class Server(object):
         if 'origin' in config['video'] and config['video']['origin'] != '*':
             Handler.AllowedOrigin = config['video']['origin']
         else:
-            logging.warning("THE WEB UI IS RUNNING WITH ALLOWED ORIGIN SET TO *, READ WHY YOU SHOULD CHANGE IT HERE \
-            https://developer.mozilla.org/it/docs/Web/HTTP/CORS")
+            logging.warning("THE WEB UI IS RUNNING WITH ALLOWED ORIGIN SET TO *, READ WHY YOU SHOULD CHANGE IT HERE " +
+                            "https://developer.mozilla.org/it/docs/Web/HTTP/CORS")
 
         if self._enabled:
             _thread.start_new_thread(self._http_serve, ())
