@@ -47,8 +47,7 @@ def check(version, repo, native=True):
     is_arm = info['arch'].startswith('arm')
 
     local = pkg_resources.parse_version(info['current'])
-    remote = pkg_resources.parse_requirements(latest_ver)
-
+    remote = pkg_resources.parse_version(latest_ver)
     if remote > local:
         if not native:
             info['url'] = "https://github.com/%s/archive/%s.zip" % (repo, latest['tag_name'])
