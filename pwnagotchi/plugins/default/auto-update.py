@@ -118,7 +118,7 @@ def install(display, update):
     download_and_unzip(name, path, display, update)
 
     source_path = os.path.join(path, name)
-    if not verify(name, path, source_path, update):
+    if not verify(name, path, source_path, display, update):
         return False
 
     logging.info("[update] installing %s ..." % name)
