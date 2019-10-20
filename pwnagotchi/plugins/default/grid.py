@@ -130,7 +130,6 @@ def on_internet_available(agent):
 
                         essid, bssid = parse_pcap(pcap_file)
                         if bssid:
-                            add_as_reported = False
                             if is_excluded(essid) or is_excluded(bssid):
                                 logging.debug("not reporting %s due to exclusion filter" % pcap_file)
                                 set_reported(reported, net_id)
