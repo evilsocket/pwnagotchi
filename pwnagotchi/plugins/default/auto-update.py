@@ -71,7 +71,7 @@ def on_internet_available(agent):
 
         try:
             display.set('status', 'Checking for updates ...')
-            display.update()
+            display.update(force=True)
 
             to_install = []
             to_check = [
@@ -87,8 +87,12 @@ def on_internet_available(agent):
                     logging.warning("new update for %s is available: %s" % (repo, info['url']))
                     to_install.append(info)
 
-            if len(to_install) > 0 and OPTIONS['install']:
-                logging.info("[update] TODO: install %d updates" % len(to_install))
+            num_updates = len(to_install)
+            if num_updates > 0:
+                if OPTIONS['install']:
+                    logging.info("[update] TODO: install %d updates" % len(to_install))
+                else:
+                    prev_status = '%d new update%c available!' % (num_updates, 's' if num_updates > 1 else '')
 
             logging.info("[update] done")
 
@@ -98,4 +102,4 @@ def on_internet_available(agent):
             logging.error("[update] %s" % e)
 
         display.set('status', prev_status if prev_status is not None else '')
-        display.update()
+        display.update(force=True)
