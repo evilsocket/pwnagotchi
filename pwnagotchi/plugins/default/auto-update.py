@@ -42,7 +42,7 @@ def check(version, repo, native=True):
 
     if latest_ver != info['current']:
         if not native:
-            info['url'] = latest['zipball_url']
+            info['url'] = "https://github.com/%s/archive/%s.zip" % (repo, latest['tag_name'])
         else:
             # check if this release is compatible with arm6
             for asset in latest['assets']:
@@ -101,5 +101,6 @@ def on_internet_available(agent):
         except Exception as e:
             logging.error("[update] %s" % e)
 
+        logging.debug("[update] setting status '%s'" % prev_status)
         display.set('status', prev_status if prev_status is not None else '')
         display.update(force=True)
