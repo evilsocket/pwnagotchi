@@ -138,7 +138,7 @@ class View(object):
 
     def on_manual_mode(self, last_session):
         self.set('mode', 'MANU')
-        self.set('face', faces.SAD if last_session.handshakes == 0 else faces.HAPPY)
+        self.set('face', faces.SAD if (last_session.epochs > 3 and last_session.handshakes == 0) else faces.HAPPY)
         self.set('status', self._voice.on_last_session_data(last_session))
         self.set('epoch', "%04d" % last_session.epochs)
         self.set('uptime', last_session.duration)
