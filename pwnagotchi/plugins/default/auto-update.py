@@ -114,18 +114,16 @@ def install(display, update):
             logging.warning("[update] can't find path for %s" % name)
             return False
 
+        logging.info("[update] stopping %s ..." % update['service'])
         os.system("service %s stop" % update['service'])
         os.system("mv %s %s" % (source_path, dest_path))
-
+        logging.info("[update] restarting %s ..." % update['service'])
+        os.system("service %s start" % update['service'])
     else:
         if not os.path.exists(source_path):
             source_path = "%s-%s" % (source_path, update['available'])
 
-        os.system("service %s stop" % update['service'])
         os.system("cd %s && pip3 install ." % source_path)
-
-    logging.info("[update] restarting %s ..." % update['service'])
-    os.system("service %s start" % update['service'])
 
     return True
 
