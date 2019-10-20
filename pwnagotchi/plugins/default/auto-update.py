@@ -55,6 +55,8 @@ def check(version, repo, native=True):
 def on_internet_available(agent):
     global STATUS
 
+    logging.debug("[update] internet connectivity is available (ready %s)" % READY)
+
     if READY:
         if STATUS.newer_then_hours(OPTIONS['interval']):
             logging.debug("[update] last check happened less than %d hours ago" % OPTIONS['interval'])
