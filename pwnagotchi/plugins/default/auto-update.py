@@ -6,6 +6,10 @@ __description__ = 'This plugin checks when updates are available and applies the
 
 import logging
 import subprocess
+import requests
+import platform
+
+import pwnagotchi
 from pwnagotchi.utils import StatusFile
 
 OPTIONS = dict()
@@ -22,9 +26,30 @@ def on_loaded():
     logging.info("[update] plugin loaded.")
 
 
-def run(cmd):
-    return subprocess.Popen(cmd, shell=True, stdin=None, stdout=open("/dev/null", "w"), stderr=None,
-                            executable="/bin/bash")
+def check(version, repo, native=True):
+    logging.debug("checking remote version for %s, local is %s" % (repo, version))
+    info = {
+        'current': version,
+        'available': None,
+        'url': None
+    }
+
+    resp = requests.get("https://api.github.com/repos/%s/releases/latest" % repo)
+    latest = resp.json()
+    latest_ver = latest['tag_name'].replace('v', ' ')
+    arch = platform.machine()
+    is_arm = arch.startswith('arm')
+
+    if latest_ver != info['current']:
+        # check if this release is compatible with arm6
+        for asset in latest['assets']:
+            download_url = asset['browser_download_url']
+            if download_url.endswith('.zip') and (
+                    native is False or arch in download_url or is_arm and 'armhf' in download_url):
+                logging.info("found new update: %s" % download_url)
+                info['url'] = download_url
+
+    return info
 
 
 def on_internet_available(agent):
@@ -35,7 +60,7 @@ def on_internet_available(agent):
             logging.debug("[update] last check happened less than %d hours ago" % OPTIONS['interval'])
             return
 
-        logging.debug("[update] start")
+        logging.info("[update] checking for updates ...")
 
         display = agent.view()
         prev_status = display.get('status')
@@ -44,17 +69,21 @@ def on_internet_available(agent):
             display.set('status', 'Checking for updates ...')
             display.update()
 
-            """
-            logging.info("auto-update: updating pwnagotchi ...")
-            run('pip3 install --upgrade --upgrade-strategy only-if-needed pwnagotchi').wait()
+            to_install = []
+            to_check = [
+                (
+                'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''), True),
+                ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True),
+                ('evilsocket/pwnagotchi', pwnagotchi.version, False)
+            ]
 
-            if OPTIONS['system']:
-                logging.info("auto-update: updating packages index ...")
-                run('apt update -y').wait()
+            for repo, local_version, is_native in to_check.items():
+                info = check(local_version, repo, is_native)
+                if info['url'] is not None:
+                    to_install.append(info)
 
-                logging.info("auto-update: updating packages ...")
-                run('apt upgrade -y').wait()
-            """
+            if len(to_install) > 0 & & OPTIONS['install']:
+                logging.info("[update] TODO: install %d updates" % len(to_install))
 
             logging.info("[update] done")
 
