@@ -123,6 +123,9 @@ class View(object):
     def set(self, key, value):
         self._state.set(key, value)
 
+    def get(self, key):
+        return self._state.get(key)
+
     def on_starting(self):
         self.set('status', self._voice.on_starting())
         self.set('face', faces.AWAKE)
