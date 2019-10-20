@@ -136,7 +136,7 @@ class Handler(BaseHTTPRequestHandler):
     # check the Origin header vs CORS
     def _is_allowed(self):
         origin = self.headers.get('origin')
-        if origin == "":
+        if not origin:
             logging.warning("request with no Origin header from %s" % self.address_string())
             return False
 
