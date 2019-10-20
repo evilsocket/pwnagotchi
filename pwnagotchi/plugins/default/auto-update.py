@@ -74,18 +74,18 @@ def download_and_unzip(name, path, display, update):
     target_path = os.path.join(path, target)
 
     logging.info("[update] downloading %s to %s ..." % (update['url'], target_path))
-    display.update(force=True, new_data={'status': 'Downloading %s ...' % name})
+    display.update(force=True, new_data={'status': 'Downloading %s %s ...' % (name, update['available'])})
 
     os.system('wget -q "%s" -O "%s"' % (update['url'], target_path))
 
     logging.info("[update] extracting %s to %s ..." % (target_path, path))
-    display.update(force=True, new_data={'status': 'Extracting %s ...' % name})
+    display.update(force=True, new_data={'status': 'Extracting %s %s ...' % (name, update['available'])})
 
     os.system('unzip "%s" -d "%s"' % (target_path, path))
 
 
 def verify(name, path, source_path, display, update):
-    display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
+    display.update(force=True, new_data={'status': 'Verifying %s %s ...' % (name, update['available'])})
 
     checksums = glob.glob("%s/*.sha256" % path)
     if len(checksums) == 0:
@@ -122,7 +122,7 @@ def install(display, update):
         return False
 
     logging.info("[update] installing %s ..." % name)
-    display.update(force=True, new_data={'status': 'Installing %s ...' % name})
+    display.update(force=True, new_data={'status': 'Installing %s %s ...' % (name, update['available'])})
 
     if update['native']:
         dest_path = subprocess.getoutput("which %s" % name)
