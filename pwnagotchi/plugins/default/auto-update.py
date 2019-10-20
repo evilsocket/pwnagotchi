@@ -111,6 +111,10 @@ def install(display, update):
 
     if update['native']:
         dest_path = subprocess.getoutput("which %s" % name)
+        if dest_path == "":
+            logging.warning("[update] can't find path for %s" % name)
+            return
+
         logging.info("[update] installing %s to %s ... TODO" % (source_path, dest_path))
 
     else:
