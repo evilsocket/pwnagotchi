@@ -183,6 +183,21 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(404)
 
 
+    def do_POST(self):
+        if not self._is_allowed():
+            return
+
+        if self.path.startswith('/plugins'):
+            plugin_from_path = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
+            if plugin_from_path:
+                plugin_name = plugin_from_path.groups()[0]
+                right_path = plugin_from_path.groups()[1] if len(plugin_from_path.groups()) == 2 else None
+                if plugin_name in plugins.loaded and hasattr(plugins.loaded[plugin_name], 'on_webhook'):
+                    plugins.loaded[plugin_name].on_webhook(self, right_path)
+            else:
+                self.send_response(404)
+
+
 class Server(object):
     def __init__(self, config):
         self._enabled = config['video']['enabled']

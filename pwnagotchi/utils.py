@@ -5,109 +5,58 @@ import glob
 import os
 import time
 import subprocess
-import yaml
 import json
-import shutil
-
-import pwnagotchi
-
-
-# https://stackoverflow.com/questions/823196/yaml-merge-in-python
-def merge_config(user, default):
-    if isinstance(user, dict) and isinstance(default, dict):
-        for k, v in default.items():
-            if k not in user:
-                user[k] = v
-            else:
-                user[k] = merge_config(user[k], v)
-    return user
+from threading import Lock
+from contextlib import contextmanager
 
 
-def load_config(args):
-    default_config_path = os.path.dirname(args.config)
-    if not os.path.exists(default_config_path):
-        os.makedirs(default_config_path)
+class RWLock:
+    """
+    Allows reading from multiple thread, but restricts writing to one thread.
+    see https://gist.github.com/tylerneylon/a7ff6017b7a1f9a506cf75aa23eacfd6
+    """
 
-    ref_defaults_file = os.path.join(os.path.dirname(pwnagotchi.__file__), 'defaults.yml')
-    ref_defaults_data = None
+    def __init__(self):
+        self.write_lock = Lock()
+        self.read_lock = Lock()
+        self.read_lock_cnt = 0
 
-    # check for a config.yml file on /boot/
-    if os.path.exists("/boot/config.yml"):
-        # logging not configured here yet
-        print("installing /boot/config.yml to %s ...", args.user_config)
-        # https://stackoverflow.com/questions/42392600/oserror-errno-18-invalid-cross-device-link
-        shutil.move("/boot/config.yml", args.user_config)
+    def read_acquire(self):
+        self.read_lock.acquire()
+        self.read_lock_cnt += 1
+        if self.read_lock_cnt == 1:
+            self.write_lock.acquire()
+        self.read_lock.release()
 
-    # check for an entire pwnagotchi folder on /boot/
-    if os.path.isdir('/boot/pwnagotchi'):
-        print("installing /boot/pwnagotchi to /etc/pwnagotchi ...")
-        shutil.rmtree('/etc/pwnagotchi', ignore_errors=True)
-        shutil.move('/boot/pwnagotchi', '/etc/')
+    def read_release(self):
+        assert self.read_lock_cnt > 0
+        self.read_lock.acquire()
+        self.read_lock_cnt -= 1
+        if self.read_lock_cnt == 0:
+            self.write_lock.release()
+        self.read_lock.release()
 
-    # if not config is found, copy the defaults
-    if not os.path.exists(args.config):
-        print("copying %s to %s ..." % (ref_defaults_file, args.config))
-        shutil.copy(ref_defaults_file, args.config)
-    else:
-        # check if the user messed with the defaults
-        with open(ref_defaults_file) as fp:
-            ref_defaults_data = fp.read()
+    @contextmanager
+    def read(self):
+        try:
+            self.read_acquire()
+            yield
+        finally:
+            self.read_release()
 
-        with open(args.config) as fp:
-            defaults_data = fp.read()
+    def write_acquire(self):
+        self.write_lock.acquire()
 
-        if ref_defaults_data != defaults_data:
-            print("!!! file in %s is different than release defaults, overwriting !!!" % args.config)
-            shutil.copy(ref_defaults_file, args.config)
+    def write_release(self):
+        self.write_lock.release()
 
-    # load the defaults
-    with open(args.config) as fp:
-        config = yaml.safe_load(fp)
-
-    # load the user config
-    if os.path.exists(args.user_config):
-        with open(args.user_config) as fp:
-            user_config = yaml.safe_load(fp)
-            # if the file is empty, safe_load will return None and merge_config will boom.
-            if user_config:
-                config = merge_config(user_config, config)
-
-    # the very first step is to normalize the display name so we don't need dozens of if/elif around
-    if config['ui']['display']['type'] in ('inky', 'inkyphat'):
-        config['ui']['display']['type'] = 'inky'
-
-    elif config['ui']['display']['type'] in ('papirus', 'papi'):
-        config['ui']['display']['type'] = 'papirus'
-
-    elif config['ui']['display']['type'] in ('oledhat',):
-        config['ui']['display']['type'] = 'oledhat'
-
-    elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1'):
-        config['ui']['display']['type'] = 'waveshare_1'
-
-    elif config['ui']['display']['type'] in ('ws_2', 'ws2', 'waveshare_2', 'waveshare2'):
-        config['ui']['display']['type'] = 'waveshare_2'
-
-    elif config['ui']['display']['type'] in ('ws_27inch', 'ws27inch', 'waveshare_27inch', 'waveshare27inch'):
-        config['ui']['display']['type'] = 'waveshare27inch'
-
-    elif config['ui']['display']['type'] in ('lcdhat',):
-        config['ui']['display']['type'] = 'lcdhat'
-
-    elif config['ui']['display']['type'] in ('dfrobot', 'df'):
-        config['ui']['display']['type'] = 'dfrobot'
-
-    elif config['ui']['display']['type'] in ('ws_154inch', 'ws154inch', 'waveshare_154inch', 'waveshare154inch'):
-        config['ui']['display']['type'] = 'waveshare154inch'
-
-    elif config['ui']['display']['type'] in ('ws_213d', 'ws213d', 'waveshare_213d', 'waveshare213d'):
-        config['ui']['display']['type'] = 'waveshare213d'
-
-    else:
-        print("unsupported display type %s" % config['ui']['display']['type'])
-        exit(1)
-
-    return config
+    @contextmanager
+    def write(self):
+        try:
+            self.write_acquire()
+            yield
+        finally:
+            self.write_release()
 
 
 def setup_logging(args, config):
@@ -130,6 +79,17 @@ def setup_logging(args, config):
     requests_log = logging.getLogger("requests")
     requests_log.addHandler(logging.NullHandler())
     requests_log.propagate = False
+
+
+# https://stackoverflow.com/questions/823196/yaml-merge-in-python
+def deep_merge(to_merge, default):
+    if isinstance(to_merge, dict) and isinstance(default, dict):
+        for k, v in default.items():
+            if k not in to_merge:
+                to_merge[k] = v
+            else:
+                to_merge[k] = deep_merge(to_merge[k], v)
+    return to_merge
 
 
 def secs_to_hhmmss(secs):
