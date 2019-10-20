@@ -71,10 +71,11 @@ def install(display, update):
     os.makedirs(path)
 
     target = "%s_%s.zip" % (name, update['available'])
+    target_path = os.path.join(path, target)
 
-    logging.info("[update] downloading %s to %s ..." % (update['url'], target))
+    logging.info("[update] downloading %s to %s ..." % (update['url'], target_path))
 
-    os.system("wget '%s' -O '%s'" % (update['url'], target))
+    os.system('wget -q "%s" -O "%s"' % (update['url'], target_path))
 
 
 def on_internet_available(agent):
