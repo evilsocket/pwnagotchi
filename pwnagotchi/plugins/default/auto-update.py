@@ -89,7 +89,7 @@ def install(display, update):
     if len(checksums) == 0:
         if update['native']:
             logging.warning("[update] native update without SHA256 checksum file")
-            return
+            return False
 
     else:
         display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
@@ -105,7 +105,7 @@ def install(display, update):
 
         if real != expected:
             logging.warning("[update] checksum mismatch for %s: expected=%s got=%s" % (source_path, expected, real))
-            return
+            return False
 
     display.update(force=True, new_data={'status': 'Installing %s ...' % name})
 
@@ -113,12 +113,16 @@ def install(display, update):
         dest_path = subprocess.getoutput("which %s" % name)
         if dest_path == "":
             logging.warning("[update] can't find path for %s" % name)
-            return
+            return False
 
-        logging.info("[update] installing %s to %s ... TODO" % (source_path, dest_path))
+        logging.info("[update] service %s stop" % update['service'])
+        logging.info("[update] mv %s %s" % (source_path, dest_path))
+        logging.info("[update] service %s start" % update['service'])
 
     else:
-        logging.info("[update] installing %s ... TODO" % source_path)
+        logging.info("[update] cd %s && pip3 install ." % source_path)
+
+    return True
 
 
 def on_internet_available(agent):
@@ -143,28 +147,35 @@ def on_internet_available(agent):
             to_check = [
                 (
                     'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
-                    True),
-                ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True),
-                ('evilsocket/pwnagotchi', pwnagotchi.version, False)
+                    True, 'bettercap'),
+                ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True, 'pwndrid-peer'),
+                ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
             ]
 
-            for repo, local_version, is_native in to_check:
+            for repo, local_version, is_native, svc_name in to_check:
                 info = check(local_version, repo, is_native)
                 if info['url'] is not None:
                     logging.warning("update for %s available: %s" % (repo, info['url']))
+                    info['service'] = svc_name
                     to_install.append(info)
 
             num_updates = len(to_install)
+            num_installed = 0
+
             if num_updates > 0:
                 if OPTIONS['install']:
                     for update in to_install:
-                        install(display, update)
+                        if install(display, update):
+                            num_installed += 1
                 else:
                     prev_status = '%d new update%c available!' % (num_updates, 's' if num_updates > 1 else '')
 
             logging.info("[update] done")
 
             STATUS.update()
+
+            if num_installed > 0:
+                logging.info("[update] pwnagotchi.reboot()")
 
         except Exception as e:
             logging.error("[update] %s" % e)
