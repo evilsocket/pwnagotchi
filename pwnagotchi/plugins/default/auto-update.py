@@ -88,7 +88,8 @@ def install(display, update):
     checksums = glob.glob("%s/*.sha256" % path)
     if len(checksums) == 0:
         if update['native']:
-            logging.warning("native update without SHA256 checksum file")
+            logging.warning("[update] native update without SHA256 checksum file")
+            return
 
     else:
         display.update(force=True, new_data={'status': 'Verifying %s ...' % name})
@@ -97,7 +98,7 @@ def install(display, update):
 
         logging.info("[update] verifying %s for %s ..." % (checksum, source_path))
 
-        with open(checksums) as fp:
+        with open(checksums, 'rt') as fp:
             expected = fp.read().strip().lower()
 
         real = subprocess.getoutput('sha256sum "%s"' % source_path).split(' ')[0].strip().lower()
