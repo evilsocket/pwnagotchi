@@ -8,8 +8,10 @@ import logging
 import subprocess
 import requests
 import platform
+import shutil
 
 import pwnagotchi
+import os
 from pwnagotchi.utils import StatusFile
 
 OPTIONS = dict()
@@ -29,14 +31,16 @@ def on_loaded():
 def check(version, repo, native=True):
     logging.debug("checking remote version for %s, local is %s" % (repo, version))
     info = {
+        'repo': repo,
         'current': version,
         'available': None,
-        'url': None
+        'url': None,
+        'native': native,
     }
 
     resp = requests.get("https://api.github.com/repos/%s/releases/latest" % repo)
     latest = resp.json()
-    latest_ver = latest['tag_name'].replace('v', ' ')
+    info['available'] = latest_ver = latest['tag_name'].replace('v', ' ')
     arch = platform.machine()
     is_arm = arch.startswith('arm')
 
@@ -52,6 +56,25 @@ def check(version, repo, native=True):
                     break
 
     return info
+
+
+def install(display, update):
+    name = update['repo'].split('/')[1]
+
+    display.set('status', 'Updating %s ...' % name)
+    display.update(force=True)
+
+    path = os.path.join("/tmp/updates/%s_%s" % (name, update['available']))
+    if os.path.exists(path):
+        shutil.rmtree(path, ignore_errors=True, onerror=None)
+
+    os.makedirs(path)
+
+    target = "%s_%s.zip" % (name, update['available'])
+
+    logging.info("[update] downloading %s to %s ..." % (update['url'], target))
+
+    os.system("wget '%s' -O '%s'" % (update['url'], target))
 
 
 def on_internet_available(agent):
@@ -76,7 +99,8 @@ def on_internet_available(agent):
             to_install = []
             to_check = [
                 (
-                'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''), True),
+                    'bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
+                    True),
                 ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False)
             ]
@@ -84,13 +108,14 @@ def on_internet_available(agent):
             for repo, local_version, is_native in to_check:
                 info = check(local_version, repo, is_native)
                 if info['url'] is not None:
-                    logging.warning("new update for %s is available: %s" % (repo, info['url']))
+                    logging.warning("update for %s available: %s" % (repo, info['url']))
                     to_install.append(info)
 
             num_updates = len(to_install)
             if num_updates > 0:
                 if OPTIONS['install']:
-                    logging.info("[update] TODO: install %d updates" % len(to_install))
+                    for update in to_install:
+                        install(display, update)
                 else:
                     prev_status = '%d new update%c available!' % (num_updates, 's' if num_updates > 1 else '')
 
