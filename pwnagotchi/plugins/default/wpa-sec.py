@@ -25,19 +25,23 @@ def on_loaded():
         logging.error("WPA_SEC: API-KEY isn't set. Can't upload to wpa-sec.stanev.org")
         return
 
+    if 'api_url' not in OPTIONS or ('api_url' in OPTIONS and OPTIONS['api_url'] is None):
+        logging.error("WPA_SEC: API-URL isn't set. Can't upload, no endpoint configured.")
+        return
+        
     READY = True
 
 
 def _upload_to_wpasec(path, timeout=30):
     """
-    Uploads the file to wpa-sec.stanev.org
+    Uploads the file to https://wpa-sec.stanev.org, or another endpoint. 
     """
     with open(path, 'rb') as file_to_upload:
         cookie = {'key': OPTIONS['api_key']}
         payload = {'file': file_to_upload}
 
         try:
-            result = requests.post('https://wpa-sec.stanev.org',
+            result = requests.post(OPTIONS['api_url'],
                     cookies=cookie,
                     files=payload,
                     timeout=timeout)
