@@ -497,7 +497,6 @@
         Description=pwngrid peer service.
         Documentation=https://pwnagotchi.ai
         Wants=network.target
-        After=bettercap.service
 
         [Service]
         Type=simple
@@ -519,7 +518,7 @@
         Description=bettercap api.rest service.
         Documentation=https://bettercap.org
         Wants=network.target
-        After=network.target
+        After=pwngrid.service
 
         [Service]
         Type=simple
