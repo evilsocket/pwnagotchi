@@ -13,8 +13,8 @@ class Waveshare27inch(DisplayImpl):
         fonts.setup(10, 9, 10, 35)
         self._layout['width'] = 264
         self._layout['height'] = 176
-        self._layout['face'] = (0, 54)
-        self._layout['name'] = (5, 34)
+        self._layout['face'] = (66, 27)
+        self._layout['name'] = (5, 73)
         self._layout['channel'] = (0, 0)
         self._layout['aps'] = (28, 0)
         self._layout['uptime'] = (199, 0)
@@ -25,9 +25,9 @@ class Waveshare27inch(DisplayImpl):
         self._layout['shakes'] = (0, 163)
         self._layout['mode'] = (239, 163)
         self._layout['status'] = {
-            'pos': (139, 34),
+            'pos': (38, 93),
             'font': fonts.Medium,
-            'max': 20
+            'max': 40
         }
         return self._layout
 
