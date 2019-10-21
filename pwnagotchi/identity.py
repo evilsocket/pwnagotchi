@@ -27,7 +27,7 @@ class KeyPair(object):
             if not os.path.exists(self.priv_path) or not os.path.exists(self.pub_path):
                 self._view.on_keys_generation()
                 logging.info("generating %s ..." % self.priv_path)
-                os.system("/usr/bin/ssh-keygen -t rsa -m PEM -b 4096 -N '' -f '%s'" % self.priv_path)
+                os.system("pwngrid -generate -keys '%s'" % self.path)
 
             # load keys: they might be corrupted if the unit has been turned off during the generation, in this case
             # the exception will remove the files and go back at the beginning of this loop.
