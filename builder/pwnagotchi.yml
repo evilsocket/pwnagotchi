@@ -114,6 +114,13 @@
       state: present
     when: hostname.changed
 
+  - name: disable sap plugin for bluetooth.service
+    lineinfile:
+      dest: /lib/systemd/system/bluetooth.service
+      regexp: '^ExecStart=/usr/lib/bluetooth/bluetoothd$'
+      line: 'ExecStart=/usr/lib/bluetooth/bluetoothd --noplugin=sap'
+      state: present
+
   - name: Add re4son-kernel repo key
     apt_key:
       url: https://re4son-kernel.com/keys/http/archive-key.asc
