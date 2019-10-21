@@ -135,8 +135,18 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         self.start_advertising()
 
+    def _wait_bettercap(self):
+        while True:
+            try:
+                s = self.session()
+                return
+            except:
+                logging.info("waiting for bettercap API to be available ...")
+                time.sleep(1)
+
     def start(self):
         self.start_ai()
+        self._wait_bettercap()
         self.setup_events()
         self.set_starting()
         self.start_monitor_mode()
