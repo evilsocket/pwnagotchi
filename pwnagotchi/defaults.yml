@@ -58,6 +58,7 @@ main:
         wpa-sec:
             enabled: false
             api_key: ~
+            api_url: "https://wpa-sec.stanev.org"
         wigle:
             enabled: false
             api_key: ~
