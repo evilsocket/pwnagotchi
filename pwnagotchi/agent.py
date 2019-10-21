@@ -307,14 +307,15 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             time.sleep(1)
 
             new_shakes = 0
-            s = self.session()
-            self._update_uptime(s)
-
-            self._update_advertisement(s)
-            self._update_peers()
-            self._update_counters()
 
             try:
+                s = self.session()
+                self._update_uptime(s)
+
+                self._update_advertisement(s)
+                self._update_peers()
+                self._update_counters()
+
                 for h in [e for e in self.events() if e['tag'] == 'wifi.client.handshake']:
                     filename = h['data']['file']
                     sta_mac = h['data']['station']
@@ -340,7 +341,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                             plugins.on('handshake', self, filename, ap, sta)
 
             except Exception as e:
-                logging.exception("error")
+                logging.error("error: %s" % e)
 
             finally:
                 self._update_handshakes(new_shakes)
