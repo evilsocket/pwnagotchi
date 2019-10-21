@@ -32,13 +32,9 @@ main:
                 - /root/.api-report.json
                 - /root/handshakes/
                 - /etc/pwnagotchi/
-                - /etc/hostname
-                - /etc/hosts
-                - /etc/motd
                 - /var/log/pwnagotchi.log
             commands:
-                - 'tar czf /tmp/backup.tar.gz {files}'
-                - 'scp /tmp/backup.tar.gz pwnagotchi@10.0.0.1:/home/pwnagotchi/backups/backup-$(date +%s).tar.gz'
+                - 'tar czf /root/pwnagotchi-backup.tar.gz {files}'
         net-pos:
             enabled: false
             api_key: 'test'
