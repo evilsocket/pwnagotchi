@@ -110,7 +110,7 @@
     lineinfile:
       dest: /etc/hosts
       regexp: '^127\.0\.1\.1[ \t]+raspberrypi'
-      line: '127.0.1.1\t{{pwnagotchi.hostname}}'
+      line: "127.0.1.1\t{{pwnagotchi.hostname}}"
       state: present
     when: hostname.changed
 
