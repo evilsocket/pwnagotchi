@@ -329,12 +329,12 @@
           # if override file exists, go into auto mode
           if [ -f /root/.pwnagotchi-auto ]; then
             rm /root/.pwnagotchi-auto
-            /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto
+            /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
           else
-            /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual
+            /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual -iface mon0
           fi
         else
-          /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto
+          /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
         fi
 
   - name: create monstart script
