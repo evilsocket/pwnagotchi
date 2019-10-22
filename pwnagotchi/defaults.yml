@@ -202,7 +202,7 @@ ui:
             port: 8080
             # command to be executed when a new png frame is available
             # for instance, to use with framebuffer based displays:
-            # on_frame: 'fbi -a -d /dev/fb1 -T 1 /root/pwnagotchi.png'
+            # on_frame: 'fbi --noverbose -a -d /dev/fb1 -T 1 /root/pwnagotchi.png > /dev/null 2>&1'
             on_frame: ''
 
 
