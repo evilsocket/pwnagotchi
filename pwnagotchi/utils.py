@@ -76,6 +76,9 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('oledhat'):
         config['ui']['display']['type'] = 'oledhat'
 
+    elif config['ui']['display']['type'] in ('spotpear24lcd'):
+        config['ui']['display']['type'] = 'spotpear24lcd'
+
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1'):
         config['ui']['display']['type'] = 'waveshare_1'
 
