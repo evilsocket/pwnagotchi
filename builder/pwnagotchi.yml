@@ -324,6 +324,7 @@
         #!/usr/bin/env bash
         # blink 10 times to signal ready state
         /usr/bin/bootblink 10 &
+        /usr/bin/monstart
         if ifconfig | grep usb0 | grep RUNNING; then
           # if override file exists, go into auto mode
           if [ -f /root/.pwnagotchi-auto ]; then
@@ -543,9 +544,7 @@
         [Service]
         Type=simple
         PermissionsStartOnly=true
-        ExecStartPre=/usr/bin/monstart
         ExecStart=/usr/bin/bettercap-launcher
-        ExecStopPost=/usr/bin/monstop
         Restart=always
         RestartSec=30
 
