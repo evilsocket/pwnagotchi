@@ -108,7 +108,10 @@ def setup_logging(args, config):
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
     root.addHandler(console_handler)
-
+    # https://stackoverflow.com/questions/24344045/how-can-i-completely-remove-any-logging-from-requests-module-in-python?noredirect=1&lq=1
+    requests_log = logging.getLogger("requests")
+    requests_log.addHandler(logging.NullHandler())
+    requests_log.propagate = False
 
 def secs_to_hhmmss(secs):
     mins, secs = divmod(secs, 60)
