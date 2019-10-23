@@ -57,10 +57,12 @@ class AsyncAdvertiser(object):
         return sum(peer.encounters for _, peer in self._peers.items())
 
     def _on_new_peer(self, peer):
+        logging.info("new peer %s detected (%d encounters)" % (peer.full_name(), peer.encounters))
         self._view.on_new_peer(peer)
         plugins.on('peer_detected', self, peer)
 
     def _on_lost_peer(self, peer):
+        logging.info("lost peer %s" % peer.full_name())
         self._view.on_lost_peer(peer)
         plugins.on('peer_lost', self, peer)
 
@@ -102,4 +104,4 @@ class AsyncAdvertiser(object):
                 logging.warning("error while polling pwngrid-peer: %s" % e)
                 logging.debug(e, exc_info=True)
 
-            time.sleep(1)
+            time.sleep(3)

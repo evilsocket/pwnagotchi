@@ -53,20 +53,20 @@ class Peer(object):
     def first_encounter(self):
         return self.encounters == 1
 
-    def days_since_first_met(self):
-        return (datetime.datetime.now() - self.first_met).days
-
     def face(self):
         return self.adv.get('face', faces.FRIEND)
 
     def name(self):
-        return self.adv.get('name')
+        return self.adv.get('name', '???')
 
     def identity(self):
-        return self.adv.get('identity')
+        return self.adv.get('identity', '???')
+
+    def full_name(self):
+        return "%s@%s" % (self.name(), self.identity())
 
     def version(self):
-        return self.adv.get('version')
+        return self.adv.get('version', '1.0.0a')
 
     def pwnd_run(self):
         return int(self.adv.get('pwnd_run', 0))
