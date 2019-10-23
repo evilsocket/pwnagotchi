@@ -89,6 +89,8 @@ main:
             gpios:
             - 20: 'sudo touch /root/.pwnagotchi-auto && sudo systemctl restart pwnagotchi'
             - 21: 'shutdown -h now'
+        webcfg:
+            enabled: false
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
