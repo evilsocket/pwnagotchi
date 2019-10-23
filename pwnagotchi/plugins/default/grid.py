@@ -66,18 +66,8 @@ def is_excluded(what):
 
 
 def on_ui_update(ui):
-    new_value = ' %d (%d)' % (UNREAD_MESSAGES, TOTAL_MESSAGES)
-    if not ui.has_element('mailbox') and UNREAD_MESSAGES > 0:
-        if ui.is_inky():
-            pos = (80, 0)
-        else:
-            pos = (100, 0)
-        ui.add_element('mailbox',
-                       LabeledValue(color=BLACK, label='MSG', value=new_value,
-                                    position=pos,
-                                    label_font=fonts.Bold,
-                                    text_font=fonts.Medium))
-    ui.set('mailbox', new_value)
+    if UNREAD_MESSAGES > 0:
+        ui.on_unread_messages(UNREAD_MESSAGES, TOTAL_MESSAGES)
 
 
 def set_reported(reported, net_id):

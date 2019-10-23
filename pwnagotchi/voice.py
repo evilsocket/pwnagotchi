@@ -129,6 +129,10 @@ class Voice:
         s = 's' if new_shakes > 1 else ''
         return self._('Cool, we got {num} new handshake{plural}!').format(num=new_shakes, plural=s)
 
+    def on_unread_messages(self, count, total):
+        s = 's' if count > 1 else ''
+        return self._('You have {count} new message{plural}!').format(num=count, plural=s)
+
     def on_rebooting(self):
         return self._("Ops, something went wrong ... Rebooting ...")
 

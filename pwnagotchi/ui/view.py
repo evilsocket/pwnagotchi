@@ -300,6 +300,11 @@ class View(object):
         self.set('status', self._voice.on_handshakes(new_shakes))
         self.update()
 
+    def on_unread_messages(self, count, total):
+        self.set('face', faces.EXCITED)
+        self.set('status', self._voice.on_unread_messages(count, total))
+        self.update()
+
     def on_rebooting(self):
         self.set('face', faces.BROKEN)
         self.set('status', self._voice.on_rebooting())
