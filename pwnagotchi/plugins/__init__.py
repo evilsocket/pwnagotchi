@@ -21,6 +21,7 @@ def on(event_name, *args, **kwargs):
                 plugin.__dict__[cb_name](*args, **kwargs)
             except Exception as e:
                 logging.error("error while running %s.%s : %s" % (plugin_name, cb_name, e))
+                logging.error(e, exc_info=True)
 
 
 def load_from_file(filename):
@@ -47,7 +48,8 @@ def load_from_path(path, enabled=()):
 
 
 def load(config):
-    enabled = [name for name, options in config['main']['plugins'].items() if 'enabled' in options and options['enabled']]
+    enabled = [name for name, options in config['main']['plugins'].items() if
+               'enabled' in options and options['enabled']]
     custom_path = config['main']['custom_plugins'] if 'custom_plugins' in config['main'] else None
     # load default plugins
     loaded = load_from_path(default_path, enabled=enabled)

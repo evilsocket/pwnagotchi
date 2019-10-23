@@ -136,7 +136,7 @@ class Voice:
 
     def on_unread_messages(self, count, total):
         s = 's' if count > 1 else ''
-        return self._('You have {count} new message{plural}!').format(num=count, plural=s)
+        return self._('You have {count} new message{plural}!').format(count=count, plural=s)
 
     def on_rebooting(self):
         return self._("Ops, something went wrong ... Rebooting ...")
