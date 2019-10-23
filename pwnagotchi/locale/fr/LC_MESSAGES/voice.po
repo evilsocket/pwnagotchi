@@ -41,7 +41,7 @@ msgstr "Génération des clés, ne pas éteindre..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "Hey, le channel {channel} est libre! Ton point d'accès va te remercier."
+msgstr "Hey, le canal {channel} est libre! Ton point d'accès va te remercier."
 
 msgid "I'm bored ..."
 msgstr "Je m'ennuie..."
