@@ -67,6 +67,7 @@ def is_excluded(what):
 
 def on_ui_update(ui):
     if UNREAD_MESSAGES > 0:
+        logging.debug("[grid] unread:%d total:%d" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
         ui.on_unread_messages(UNREAD_MESSAGES, TOTAL_MESSAGES)
 
 

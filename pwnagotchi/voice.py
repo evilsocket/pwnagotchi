@@ -70,9 +70,12 @@ class Voice:
             self._('My crime is that of curiosity ...')])
 
     def on_new_peer(self, peer):
-        return random.choice([
-            self._('Hello {name}! Nice to meet you.').format(name=peer.name()),
-            self._('Unit {name} is nearby!').format(name=peer.name())])
+        if peer.first_encounter():
+            return random.choice([
+                self._('Hello {name}! Nice to meet you.').format(name=peer.name())])
+        else:
+            return random.choice([
+                self._('Unit {name} is nearby!').format(name=peer.name())])
 
     def on_lost_peer(self, peer):
         return random.choice([
