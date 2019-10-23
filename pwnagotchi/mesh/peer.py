@@ -13,9 +13,18 @@ class Peer(object):
     def __init__(self, obj):
         now = time.time()
         just_met = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-        self.first_met = parse_rfc3339(obj.get('met_at', just_met))
-        self.first_seen = parse_rfc3339(obj.get('detected_at', just_met))
-        self.prev_seen = parse_rfc3339(obj.get('prev_seen_at', just_met))
+
+        try:
+            self.first_met = parse_rfc3339(obj.get('met_at', just_met))
+            self.first_seen = parse_rfc3339(obj.get('detected_at', just_met))
+            self.prev_seen = parse_rfc3339(obj.get('prev_seen_at', just_met))
+        except Exception as e:
+            logging.warning("error while parsing peer timestamps: %s" % e)
+            logging.debug(e, exc_info=True)
+            self.first_met = just_met
+            self.first_seen = just_met
+            self.prev_seen = just_met
+
         self.last_seen = now  # should be seen_at
         self.encounters = obj.get('encounters', 0)
         self.session_id = obj.get('session_id', '')
