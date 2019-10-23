@@ -53,6 +53,9 @@ class AsyncAdvertiser(object):
         self._advertisement['face'] = new
         grid.set_advertisement_data(self._advertisement)
 
+    def cumulative_encounters(self):
+        return sum(peer.encounters for _, peer in self._peers.items())
+
     def _on_new_peer(self, peer):
         self._view.on_new_peer(peer)
         plugins.on('peer_detected', self, peer)

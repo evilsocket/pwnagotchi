@@ -85,6 +85,11 @@ class Voice:
             self._('{name} missed!').format(name=who),
             self._('Missed!')])
 
+    def on_grateful(self):
+        return random.choice([
+            self._('Good friends are a blessing!'),
+            self._('I love my friends!')])
+
     def on_lonely(self):
         return random.choice([
             self._('Nobody wants to play with me ...'),

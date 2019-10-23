@@ -161,6 +161,9 @@ personality:
     bored_num_epochs: 15
     # number of inactive epochs that triggers the sad state
     sad_num_epochs: 25
+    # number of encounters (times met on a channel) with another unit before considering it a friend and bond
+    # also used for cumulative bonding score of nearby units
+    bond_encounters_factor: 5000
 
 # ui configuration
 ui:
@@ -176,6 +179,7 @@ ui:
         cool: '(⌐■_■)'
         happy: '(•‿‿•)'
         excited: '(ᵔ◡◡ᵔ)'
+        grateful: '(^‿‿^)'
         motivated: '(☼‿‿☼)'
         demotivated: '(≖__≖)'
         smart: '(✜‿‿✜)'

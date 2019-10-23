@@ -290,6 +290,11 @@ class View(object):
         self.set('status', self._voice.on_miss(who))
         self.update()
 
+    def on_grateful(self):
+        self.set('face', faces.GRATEFUL)
+        self.set('status', self._voice.on_grateful())
+        self.update()
+
     def on_lonely(self):
         self.set('face', faces.LONELY)
         self.set('status', self._voice.on_lonely())
