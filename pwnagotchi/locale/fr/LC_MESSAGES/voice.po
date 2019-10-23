@@ -65,27 +65,27 @@ msgid "I'm sad"
 msgstr "Je suis triste"
 
 msgid "I'm living the life!"
-msgstr "Je vis la vie!"
+msgstr "Je vis la vie !"
 
 msgid "I pwn therefore I am."
 msgstr "Je pwn donc je suis."
 
 msgid "So many networks!!!"
-msgstr "Tellement de réseaux!!!"
+msgstr "Tellement de réseaux !!!"
 
 msgid "I'm having so much fun!"
-msgstr "Je m'amuse tellement!"
+msgstr "Je m'amuse tellement !"
 
 msgid "My crime is that of curiosity ..."
 msgstr "Mon crime, c'est la curiosité..."
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
-msgstr "Bonjour {name}! Ravi de te rencontrer."
+msgstr "Bonjour {name} ! Ravi de te rencontrer."
 
 #, python-brace-format
 msgid "Unit {name} is nearby!"
-msgstr "L'unité {name} est proche!"
+msgstr "L'unité {name} est proche !"
 
 #, python-brace-format
 msgid "Uhm ... goodbye {name}"
@@ -101,10 +101,10 @@ msgstr "Oups... {name} est parti."
 
 #, python-brace-format
 msgid "{name} missed!"
-msgstr "{name} raté!"
+msgstr "{name} raté !"
 
 msgid "Missed!"
-msgstr "Raté!"
+msgstr "Raté !"
 
 msgid "Nobody wants to play with me ..."
 msgstr "Personne ne veut jouer avec moi..."
@@ -113,7 +113,7 @@ msgid "I feel so alone ..."
 msgstr "Je me sens si seul..."
 
 msgid "Where's everybody?!"
-msgstr "Où est tout le monde?!"
+msgstr "Où est tout le monde ?!"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
@@ -142,7 +142,7 @@ msgstr "Regarde autour ({secs}s)"
 
 #, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr "Hey {what}, soyons amis!"
+msgstr "Hey {what}, soyons amis !"
 
 #, python-brace-format
 msgid "Associating to {what}"
@@ -154,7 +154,7 @@ msgstr ""
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "Je viens de décider que {mac} n'a pas besoin de WiFi!"
+msgstr "Je viens de décider que {mac} n'a pas besoin de WiFi !"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
@@ -162,15 +162,15 @@ msgstr "Désauthentification de {mac}"
 
 #, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr "Je kick et je bannis {mac}!"
+msgstr "Je kick et je bannis {mac} !"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "Cool, on a {num} nouveaux handshake{plural}!"
+msgstr "Cool, on a {num} nouveaux handshake{plural} !"
 
 #, python-brace-format
 msgid "You have {count} new message{plural}!"
-msgstr "Tu as {num} nouveaux message{plural}!"
+msgstr "Tu as {num} nouveaux message{plural} !"
 
 msgid "Ops, something went wrong ... Rebooting ..."
 msgstr "Oups, quelque chose s'est mal passé... Redémarrage..."
@@ -200,8 +200,8 @@ msgid ""
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
-"J'ai pwn durant {duration} et kick {deauthed} clients! J'ai aussi rencontré "
-"{associated} nouveaux amis et dévoré {handshakes} handshakes! #pwnagotchi "
+"J'ai pwn durant {duration} et kick {deauthed} clients ! J'ai aussi rencontré "
+"{associated} nouveaux amis et dévoré {handshakes} handshakes ! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"
