@@ -18,7 +18,7 @@ import os
 OPTIONS = dict()
 
 def on_loaded():
-    logging.info("cleancap plugin loaded")
+    logging.info("aircrackonly plugin loaded")
 
 def on_handshake(agent, filename, access_point, client_station):
     display = agent._view
