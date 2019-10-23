@@ -100,5 +100,6 @@ class AsyncAdvertiser(object):
 
             except Exception as e:
                 logging.warning("error while polling pwngrid-peer: %s" % e)
+                logging.debug(e, exc_info=True)
 
             time.sleep(1)

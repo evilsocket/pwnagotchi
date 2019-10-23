@@ -12,7 +12,7 @@ def parse_rfc3339(dt):
 class Peer(object):
     def __init__(self, obj):
         now = time.time()
-        just_met = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        just_met = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
         self.first_met = parse_rfc3339(obj.get('met_at', just_met))
         self.first_seen = parse_rfc3339(obj.get('detected_at', just_met))
         self.prev_seen = parse_rfc3339(obj.get('prev_seen_at', just_met))
