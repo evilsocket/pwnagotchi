@@ -150,7 +150,7 @@ msgstr "Association à {what}"
 
 #, python-brace-format
 msgid "Yo {what}!"
-msgstr ""
+msgstr "Yo {what} !"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
