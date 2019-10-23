@@ -304,7 +304,7 @@
         # blink 10 times to signal ready state
         /usr/bin/bootblink 10 &
         # start a detached screen session with bettercap
-        if ifconfig | grep usb0 | grep RUNNING; then
+        if [[ ifconfig | grep usb0 | grep RUNNING ]] || [[ $(cat /sys/class/net/eth0/carrier) ]]; then
           # if override file exists, go into auto mode
           if [ -f /root/.pwnagotchi-auto ]; then
             rm /root/.pwnagotchi-auto
@@ -322,13 +322,10 @@
       mode: 0755
       content: |
         #!/usr/bin/env bash
-        # blink 10 times to signal ready state
-        /usr/bin/bootblink 10 &
         /usr/bin/monstart
-        if ifconfig | grep usb0 | grep RUNNING; then
+        if [[ ifconfig | grep usb0 | grep RUNNING ]] || [[ $(cat /sys/class/net/eth0/carrier) ]]; then
           # if override file exists, go into auto mode
           if [ -f /root/.pwnagotchi-auto ]; then
-            rm /root/.pwnagotchi-auto
             /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
           else
             /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual -iface mon0
