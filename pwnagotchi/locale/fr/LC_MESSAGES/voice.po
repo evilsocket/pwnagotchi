@@ -3,12 +3,12 @@
 # This file is distributed under the same license as the pwnagotchi package.
 # FIRST AUTHOR <7271496+quantumsheep@users.noreply.github.com>, 2019.
 #
-#, fuzzy
+#,
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-05 14:10+0200\n"
+"POT-Creation-Date: 2019-10-23 18:37+0200\n"
 "PO-Revision-Date: 2019-10-03 10:34+0200\n"
 "Last-Translator: quantumsheep <7271496+quantumsheep@users.noreply.github."
 "com>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "ZzzzZZzzzzZzzz"
-msgstr ""
+msgstr "ZzzzZZzzzzZzzz"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
 msgstr "Bonjour, je suis Pwnagotchi! Démarrage ..."
@@ -35,6 +35,9 @@ msgstr "L'IA est prête."
 
 msgid "The neural network is ready."
 msgstr "Le réseau neuronal est prêt."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "Génération des clés, ne pas éteindre..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
@@ -77,12 +80,12 @@ msgid "My crime is that of curiosity ..."
 msgstr "Mon crime, c'est la curiosité ..."
 
 #, python-brace-format
-msgid "Hello {name}! Nice to meet you. {name}"
-msgstr "Bonjour {name}! Ravi de te rencontrer. {name}"
+msgid "Hello {name}! Nice to meet you."
+msgstr "Bonjour {name}! Ravi de te rencontrer."
 
 #, python-brace-format
-msgid "Unit {name} is nearby! {name}"
-msgstr "L'unité {name} est proche! {name}"
+msgid "Unit {name} is nearby!"
+msgstr "L'unité {name} est proche!"
 
 #, python-brace-format
 msgid "Uhm ... goodbye {name}"
@@ -123,6 +126,12 @@ msgstr ""
 msgid "ZzzZzzz ({secs}s)"
 msgstr ""
 
+msgid "Good night."
+msgstr "Bonne nuit."
+
+msgid "Zzz"
+msgstr "Zzz"
+
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
 msgstr "Attends pendant {secs}s ..."
@@ -158,6 +167,10 @@ msgstr "Je kick et je bannis {mac}!"
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Cool, on a {num} nouveaux handshake{plural}!"
+
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "Tu as {num} nouveaux message{plural}!"
 
 msgid "Ops, something went wrong ... Rebooting ..."
 msgstr "Oups, quelque chose s'est mal passé ... Redémarrage ..."
