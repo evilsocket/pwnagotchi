@@ -35,7 +35,7 @@ msgid "The neural network is ready."
 msgstr "Das neurale Netz ist bereit."
 
 msgid "Generating keys, do not turn off ..."
-msgstr ""
+msgstr "Generiere Keys, nicht ausschalten ..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
@@ -105,10 +105,10 @@ msgid "Missed!"
 msgstr "Verpasst!"
 
 msgid "Good friends are a blessing!"
-msgstr ""
+msgstr "Gute Freunde sind ein Segen!"
 
 msgid "I love my friends!"
-msgstr ""
+msgstr "Ich liebe meine Freunde!"
 
 msgid "Nobody wants to play with me ..."
 msgstr "Niemand will mit mir spielen ..."
