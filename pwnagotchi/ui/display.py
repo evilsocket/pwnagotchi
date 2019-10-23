@@ -1,7 +1,8 @@
 import os
 import logging
-import pwnagotchi.plugins as plugins
+import threading
 
+import pwnagotchi.plugins as plugins
 import pwnagotchi.ui.hw as hw
 import pwnagotchi.ui.web as web
 from pwnagotchi.ui.view import View
@@ -17,6 +18,14 @@ class Display(View):
         self._webui = web.Server(config)
 
         self.init_display()
+
+        self._canvas_next_event = threading.Event()
+        self._canvas_next = None
+        self._render_thread_instance = threading.Thread(
+            target=self._render_thread,
+            daemon=True
+        )
+        self._render_thread_instance.start()
 
     def is_inky(self):
         return self._implementation.name == 'inky'
@@ -59,6 +68,14 @@ class Display(View):
             img = self._canvas if self._rotation == 0 else self._canvas.rotate(-self._rotation)
         return img
 
+    def _render_thread(self):
+        """Used for non-blocking screen updating."""
+
+        while True:
+            self._canvas_next_event.wait()
+            self._canvas_next_event.clear()
+            self._implementation.render(self._canvas_next)
+
     def _on_view_rendered(self, img):
         web.update_frame(img)
         try:
@@ -70,4 +87,5 @@ class Display(View):
         if self._enabled:
             self._canvas = (img if self._rotation == 0 else img.rotate(self._rotation))
             if self._implementation is not None:
-                self._implementation.render(self._canvas)
+                self._canvas_next = self._canvas
+                self._canvas_next_event.set()
