@@ -284,11 +284,12 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
 
         self.run('events.clear')
 
-        logging.debug("event polling started ...")
         while True:
             time.sleep(1)
 
             new_shakes = 0
+
+            logging.debug("polling events ...")
 
             try:
                 s = self.session()

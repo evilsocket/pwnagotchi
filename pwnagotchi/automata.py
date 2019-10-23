@@ -89,6 +89,8 @@ class Automata(object):
         return self._epoch.any_activity
 
     def next_epoch(self):
+        logging.debug("agent.next_epoch()")
+
         was_stale = self.is_stale()
         did_miss = self._epoch.num_missed
 
