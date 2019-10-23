@@ -86,7 +86,7 @@ class AsyncAdvertiser(object):
                         to_delete.append(ident)
 
                 for ident in to_delete:
-                    self._on_lost_peer(peer)
+                    self._on_lost_peer(self._peers[ident])
                     del self._peers[ident]
 
                 for ident, peer in new_peers.items():
