@@ -10,6 +10,7 @@ FILES_TO_BACKUP=(
   /root/brain.json
   /root/.api-report.json
   /root/handshakes
+  /root/peers
   /etc/pwnagotchi/
   /var/log/pwnagotchi.log
 )

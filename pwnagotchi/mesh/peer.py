@@ -1,17 +1,27 @@
 import time
 import logging
+import datetime
 
 import pwnagotchi.ui.faces as faces
 
 
+def parse_rfc3339(dt):
+    return datetime.datetime.strptime(dt.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+
+
 class Peer(object):
     def __init__(self, obj):
-        self.first_seen = time.time()
-        self.last_seen = self.first_seen
-        self.session_id = obj['session_id']
-        self.last_channel = obj['channel']
-        self.rssi = obj['rssi']
-        self.adv = obj['advertisement']
+        now = time.time()
+        just_met = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        self.first_met = parse_rfc3339(obj.get('met_at', just_met))
+        self.first_seen = parse_rfc3339(obj.get('detected_at', just_met))
+        self.prev_seen = parse_rfc3339(obj.get('prev_seen_at', just_met))
+        self.last_seen = now  # should be seen_at
+        self.encounters = obj.get('encounters', 0)
+        self.session_id = obj.get('session_id', '')
+        self.last_channel = obj.get('channel', 1)
+        self.rssi = obj.get('rssi', 0)
+        self.adv = obj.get('advertisement', {})
 
     def update(self, new):
         if self.name() != new.name():
@@ -24,36 +34,42 @@ class Peer(object):
         self.rssi = new.rssi
         self.session_id = new.session_id
         self.last_seen = time.time()
+        self.prev_seen = new.prev_seen
+        self.first_met = new.first_met
+        self.encounters = new.encounters
 
     def inactive_for(self):
         return time.time() - self.last_seen
 
-    def _adv_field(self, name, default='???'):
-        return self.adv[name] if name in self.adv else default
+    def first_encounter(self):
+        return self.encounters == 1
+
+    def days_since_first_met(self):
+        return (datetime.datetime.now() - self.first_met).days
 
     def face(self):
-        return self._adv_field('face', default=faces.FRIEND)
+        return self.adv.get('face', faces.FRIEND)
 
     def name(self):
-        return self._adv_field('name')
+        return self.adv.get('name')
 
     def identity(self):
-        return self._adv_field('identity')
+        return self.adv.get('identity')
 
     def version(self):
-        return self._adv_field('version')
+        return self.adv.get('version')
 
     def pwnd_run(self):
-        return int(self._adv_field('pwnd_run', default=0))
+        return int(self.adv.get('pwnd_run', 0))
 
     def pwnd_total(self):
-        return int(self._adv_field('pwnd_tot', default=0))
+        return int(self.adv.get('pwnd_tot', 0))
 
     def uptime(self):
-        return self._adv_field('uptime', default=0)
+        return self.adv.get('uptime', 0)
 
     def epoch(self):
-        return self._adv_field('epoch', default=0)
+        return self.adv.get('epoch', 0)
 
     def full_name(self):
         return '%s@%s' % (self.name(), self.identity())
