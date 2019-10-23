@@ -22,13 +22,13 @@ msgid "ZzzzZZzzzzZzzz"
 msgstr "ZzzzZZzzzzZzzz"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "Bonjour, je suis Pwnagotchi! Démarrage..."
+msgstr "Bonjour, je suis Pwnagotchi ! Démarrage..."
 
 msgid "New day, new hunt, new pwns!"
 msgstr "Nouveau jour, nouvelle chasse, nouveaux pwns !"
 
 msgid "Hack the Planet!"
-msgstr "Hack la planète!"
+msgstr "Hack la planète !"
 
 msgid "AI ready."
 msgstr "L'IA est prête."
@@ -47,10 +47,10 @@ msgid "I'm bored ..."
 msgstr "Je m'ennuie..."
 
 msgid "Let's go for a walk!"
-msgstr "Allons faire un tour!"
+msgstr "Allons faire un tour !"
 
 msgid "This is the best day of my life!"
-msgstr "C'est le meilleur jour de ma vie!"
+msgstr "C'est le meilleur jour de ma vie !"
 
 msgid "Shitty day :/"
 msgstr "Journée de merde :/"
