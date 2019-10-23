@@ -109,7 +109,7 @@ class Automata(object):
         # after X times being active, the status is set to happy / excited
         elif self._epoch.active_for >= self._config['personality']['excited_num_epochs']:
             self.set_excited()
-        elif self._has_support_network_for(1.0):
+        elif self._epoch.active_for >= 5 and self._has_support_network_for(1.0):
             self.set_grateful()
 
         plugins.on('epoch', self, self._epoch.epoch - 1, self._epoch.data())
