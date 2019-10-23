@@ -2,13 +2,13 @@ import time
 import json
 import os
 import re
-import socket
-from datetime import datetime
 import logging
 import _thread
 
+import pwnagotchi
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
+from pwnagotchi.log import LastSession
 from pwnagotchi.bettercap import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
 from pwnagotchi.ai.train import AsyncTrainer
@@ -17,13 +17,13 @@ RECOVERY_DATA_FILE = '/root/.pwnagotchi-recovery'
 
 
 class Agent(Client, AsyncAdvertiser, AsyncTrainer):
-    def __init__(self, view, config):
+    def __init__(self, view, config, keypair):
         Client.__init__(self, config['bettercap']['hostname'],
                         config['bettercap']['scheme'],
                         config['bettercap']['port'],
                         config['bettercap']['username'],
                         config['bettercap']['password'])
-        AsyncAdvertiser.__init__(self, config, view)
+        AsyncAdvertiser.__init__(self, config, view, keypair)
         AsyncTrainer.__init__(self, config)
 
         self._started_at = time.time()
@@ -35,18 +35,16 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._last_pwnd = None
         self._history = {}
         self._handshakes = {}
+        self.last_session = LastSession(self._config)
 
-    @staticmethod
-    def is_connected():
-        try:
-            socket.create_connection(("www.google.com", 80))
-            return True
-        except OSError:
-            pass
-        return False
+        if not os.path.exists(config['bettercap']['handshakes']):
+            os.makedirs(config['bettercap']['handshakes'])
 
     def config(self):
         return self._config
+
+    def view(self):
+        return self._view
 
     def supported_channels(self):
         return self._supported_channels
@@ -137,8 +135,18 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         self.start_advertising()
 
+    def _wait_bettercap(self):
+        while True:
+            try:
+                s = self.session()
+                return
+            except:
+                logging.info("waiting for bettercap API to be available ...")
+                time.sleep(1)
+
     def start(self):
         self.start_ai()
+        self._wait_bettercap()
         self.setup_events()
         self.set_starting()
         self.start_monitor_mode()
@@ -151,23 +159,6 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         plugins.on('sleep' if sleeping else 'wait', self, t)
         self._view.wait(t, sleeping)
         self._epoch.track(sleep=True, inc=t)
-
-    def check_channels(self, channels):
-        busy_channels = [ch for ch, aps in channels]
-        # if we're hopping and no filter is configured
-        if self._config['personality']['channels'] == [] and self._config['main']['filter'] is None:
-            # check if any of the non overlapping channels is free
-            for ch in self._epoch.non_overlapping_channels:
-                if ch not in busy_channels:
-                    self._epoch.non_overlapping_channels[ch] += 1
-                    logging.info("channel %d is free from %d epochs" % (ch, self._epoch.non_overlapping_channels[ch]))
-                elif self._epoch.non_overlapping_channels[ch] > 0:
-                    self._epoch.non_overlapping_channels[ch] -= 1
-            # report any channel that has been free for at least 3 epochs
-            for ch, num_epochs_free in self._epoch.non_overlapping_channels.items():
-                if num_epochs_free >= 3:
-                    logging.info("channel %d has been free for %d epochs" % (ch, num_epochs_free))
-                    self.set_free_channel(ch)
 
     def recon(self):
         recon_time = self._config['personality']['recon_time']
@@ -201,7 +192,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def set_access_points(self, aps):
         self._access_points = aps
         plugins.on('wifi_update', self, aps)
-        self._epoch.observe(aps, self._advertiser.peers() if self._advertiser is not None else ())
+        self._epoch.observe(aps, list(self._peers.values()))
         return self._access_points
 
     def get_access_points(self):
@@ -209,6 +200,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         aps = []
         try:
             s = self.session()
+            plugins.on("unfiltered_ap_list", self, s['wifi']['aps'])
             for ap in s['wifi']['aps']:
                 if ap['hostname'] not in whitelist:
                     if self._filter_included(ap):
@@ -250,9 +242,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         return None
 
     def _update_uptime(self, s):
-        secs = time.time() - self._started_at
+        secs = pwnagotchi.uptime()
         self._view.set('uptime', utils.secs_to_hhmmss(secs))
-        self._view.set('epoch', '%04d' % self._epoch.epoch)
+        # self._view.set('epoch', '%04d' % self._epoch.epoch)
 
     def _update_counters(self):
         tot_aps = len(self._access_points)
@@ -282,21 +274,8 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         if new_shakes > 0:
             self._view.on_handshakes(new_shakes)
 
-    def _update_advertisement(self, s):
-        run_handshakes = len(self._handshakes)
-        tot_handshakes = utils.total_unique_handshakes(self._config['bettercap']['handshakes'])
-        started = s['started_at'].split('.')[0]
-        started = datetime.strptime(started, '%Y-%m-%dT%H:%M:%S')
-        started = time.mktime(started.timetuple())
-        self._advertiser.update({ \
-            'pwnd_run': run_handshakes,
-            'pwnd_tot': tot_handshakes,
-            'uptime': time.time() - started,
-            'epoch': self._epoch.epoch})
-
     def _update_peers(self):
-        peer = self._advertiser.closest_peer()
-        self._view.set_closest_peer(peer)
+        self._view.set_closest_peer(self._closest_peer, len(self._peers))
 
     def _save_recovery_data(self):
         logging.warning("writing recovery data to %s ..." % RECOVERY_DATA_FILE)
@@ -338,16 +317,15 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             time.sleep(1)
 
             new_shakes = 0
-            s = self.session()
-            self._update_uptime(s)
-
-            if self._advertiser is not None:
-                self._update_advertisement(s)
-                self._update_peers()
-
-            self._update_counters()
 
             try:
+                s = self.session()
+                self._update_uptime(s)
+
+                self._update_advertisement(s)
+                self._update_peers()
+                self._update_counters()
+
                 for h in [e for e in self.events() if e['tag'] == 'wifi.client.handshake']:
                     filename = h['data']['file']
                     sta_mac = h['data']['station']
@@ -373,7 +351,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
                             plugins.on('handshake', self, filename, ap, sta)
 
             except Exception as e:
-                logging.exception("error")
+                logging.error("error: %s" % e)
 
             finally:
                 self._update_handshakes(new_shakes)
@@ -514,9 +492,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def _reboot(self):
         self.set_rebooting()
         self._save_recovery_data()
-        logging.warning("rebooting the system ...")
-        os.system("/usr/bin/sync")
-        os.system("/usr/sbin/shutdown -r now")
+        pwnagotchi.reboot()
 
     def next_epoch(self):
         was_stale = self.is_stale()

@@ -8,27 +8,26 @@ import logging
 import json
 import os
 
-device = '/dev/ttyUSB0'
-speed = 19200
 running = False
+OPTIONS = dict()
 
 
 def on_loaded():
-    logging.info("gps plugin loaded for %s" % device)
+    logging.info("gps plugin loaded for %s" % OPTIONS['device'])
 
 
 def on_ready(agent):
     global running
 
-    if os.path.exists(device):
-        logging.info("enabling gps bettercap's module for %s" % device)
+    if os.path.exists(OPTIONS['device']):
+        logging.info("enabling gps bettercap's module for %s" % OPTIONS['device'])
         try:
             agent.run('gps off')
         except:
             pass
 
-        agent.run('set gps.device %s' % device)
-        agent.run('set gps.speed %d' % speed)
+        agent.run('set gps.device %s' % OPTIONS['device'])
+        agent.run('set gps.speed %d' % OPTIONS['speed'])
         agent.run('gps on')
         running = True
     else:

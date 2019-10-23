@@ -4,18 +4,14 @@
 UNIT_HOSTNAME=${1:-10.0.0.2}
 # output backup zip file
 OUTPUT=${2:-pwnagotchi-backup.zip}
-# temporary folder
-TEMP_BACKUP_FOLDER=/tmp/pwnagotchi_backup
 # what to backup
 FILES_TO_BACKUP=(
   /root/brain.nn
   /root/brain.json
-  /root/custom.yaml
+  /root/.api-report.json
   /root/handshakes
-  /etc/ssh
-  /etc/hostname
-  /etc/hosts
-  /etc/motd
+  /root/peers
+  /etc/pwnagotchi/
   /var/log/pwnagotchi.log
 )
 
@@ -26,17 +22,24 @@ ping -c 1 $UNIT_HOSTNAME >/dev/null || {
 
 echo "@ backing up $UNIT_HOSTNAME to $OUTPUT ..."
 
-rm -rf "$TEMP_BACKUP_FOLDER"
+ssh pi@$UNIT_HOSTNAME "sudo rm -rf /tmp/backup && sudo rm -rf /tmp/backup.zip" > /dev/null
 
 for file in "${FILES_TO_BACKUP[@]}"; do
   dir=$(dirname $file)
-  echo "  $file -> $TEMP_BACKUP_FOLDER$dir/"
-  mkdir -p "$TEMP_BACKUP_FOLDER/$dir"
-  scp -Cr root@$UNIT_HOSTNAME:$file "$TEMP_BACKUP_FOLDER$dir/"
+
+  echo "@ copying $file to /tmp/backup$dir"
+
+  ssh pi@$UNIT_HOSTNAME "mkdir -p /tmp/backup$dir" > /dev/null
+  ssh pi@$UNIT_HOSTNAME "sudo cp -r $file /tmp/backup$dir" > /dev/null
 done
 
-ZIPFILE="$PWD/$OUTPUT"
-pushd $PWD
-cd "$TEMP_BACKUP_FOLDER"
-zip -r -9 -q "$ZIPFILE" .
-popd
+echo "@ pulling from $UNIT_HOSTNAME ..."
+
+rm -rf /tmp/backup
+scp -rC pi@$UNIT_HOSTNAME:/tmp/backup /tmp/
+
+echo "@ compressing ..."
+
+zip -r -9 -q $OUTPUT /tmp/backup
+rm -rf /tmp/backup
+

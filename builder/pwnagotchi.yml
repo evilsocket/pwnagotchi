@@ -5,17 +5,23 @@
   vars:
     pwnagotchi:
       hostname: "{{ lookup('env', 'PWN_HOSTNAME') | default('pwnagotchi', true) }}"
-      version: "{{ lookup('env', 'PWN_VERSION') | default('master', true) }} "
+      version: "{{ lookup('env', 'PWN_VERSION') | default('master', true) }}"
     system:
       boot_options:
         - "dtoverlay=dwc2"
-        - "dtparam=spi=on"
         - "dtoverlay=spi1-3cs"
-        - "dtoverlay=pi3-disable-bt"
-        - "dtparam=audio=off"
+        - "dtparam=spi=on"
+        - "dtparam=i2c_arm=on"
+        - "dtparam=i2c1=on"
+      modules:
+        - "i2c-dev"
     services:
       enable:
         - dphys-swapfile.service
+        - pwnagotchi.service
+        - bettercap.service
+        - pwngrid-peer.service
+        - epd-fuse.service
       disable:
         - apt-daily.timer
         - apt-daily.service
@@ -26,24 +32,18 @@
         - triggerhappy.service
         - ifup@wlan0.service
     packages:
-      pip:
-        install:
-          - inky
-          - smbus2
-          - absl-py>=0.1.6
-          - enum34
-          - gast==0.2.2
-          - google_pasta
-          - opt_einsum
-          - scapy
-          - gym
-          - keras_applications>=1.0.6
-          - keras_preprocessing>=1.0.5
-          - stable-baselines
-          - file_read_backwards
-          - tensorflow_estimator>=1.14.0,<1.15.0
-          - tensorboard>=1.13.0,<1.14.0
+      bettercap:
+        url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
+        ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
+      pwngrid:
+        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.9.0/pwngrid_linux_armhf_v1.9.0.zip"
       apt:
+        hold:
+          - firmware-atheros
+          - firmware-brcm80211
+          - firmware-libertas
+          - firmware-misc-nonfree
+          - firmware-realtek
         remove:
           - rasberrypi-net-mods
           - dhcpcd5
@@ -57,6 +57,8 @@
           - git
           - build-essential
           - python3-pip
+          - python3-mpi4py
+          - python3-smbus
           - unzip
           - gawk
           - libopenmpi-dev
@@ -65,6 +67,7 @@
           - libqtgui4
           - libqt4-test
           - libopenjp2-7
+          - libtiff5
           - tcpdump
           - lsof
           - libilmbase23
@@ -76,6 +79,7 @@
           - libpcap-dev
           - libusb-1.0-0-dev
           - libnetfilter-queue-dev
+          - libopenmpi3
           - dphys-swapfile
           - kalipi-kernel
           - kalipi-bootloader
@@ -88,49 +92,33 @@
           - fonts-dejavu
           - fonts-dejavu-core
           - fonts-dejavu-extra
-          - python3-crypto
-          - python3-requests
-          - python3-yaml
-          - python3-smbus
-          - python3-inkyphat
-          - python3-numpy
           - python3-pil
-          - python3-tweepy
-          - python3-opencv
-          - python3-termcolor
-          - python3-astor
-          - python3-backports.weakref
-          - python3-h5py
-          - python3-six
-          - python3-protobuf
-          - python3-wrapt
-          - python3-wheel
-          - python3-mock
-          - python3-scipy
-          - python3-cloudpickle
-
-    bettercap:
-      query: "assets[?contains(name, 'armv6l')].browser_download_url"
+          - python3-smbus
+          - libfuse-dev
+          - bc
+          - fonts-freefont-ttf
+          - fbi
 
   tasks:
-
-  - name: selected hostname
-    debug:
-      msg: "{{ pwnagotchi.hostname }}"
-
-  - name: build version
-    debug:
-      msg: "{{ pwnagotchi.version }}"
-
   - name: change hostname
     hostname:
       name: "{{pwnagotchi.hostname}}"
+    when: lookup('file', '/etc/hostname') == "raspberrypi"
+    register: hostname
 
   - name: add hostname to /etc/hosts
     lineinfile:
       dest: /etc/hosts
-      regexp: '^127\.0\.0\.1[ \t]+localhost'
-      line: '127.0.0.1 localhost {{pwnagotchi.hostname}} {{pwnagotchi.hostname}}.local'
+      regexp: '^127\.0\.1\.1[ \t]+raspberrypi'
+      line: "127.0.1.1\t{{pwnagotchi.hostname}}"
+      state: present
+    when: hostname.changed
+
+  - name: disable sap plugin for bluetooth.service
+    lineinfile:
+      dest: /lib/systemd/system/bluetooth.service
+      regexp: '^ExecStart=/usr/lib/bluetooth/bluetoothd$'
+      line: 'ExecStart=/usr/lib/bluetooth/bluetoothd --noplugin=sap'
       state: present
 
   - name: Add re4son-kernel repo key
@@ -142,6 +130,12 @@
     apt_repository:
       repo: deb http://http.re4son-kernel.com/re4son/ kali-pi main
       state: present
+
+  - name: add firmware packages to hold
+    dpkg_selections:
+      name: "{{ item }}"
+      selection: hold
+    with_items: "{{ packages.apt.hold }}"
 
   - name: update apt package cache
     apt:
@@ -167,30 +161,98 @@
       path: /etc/dphys-swapfile
       content: "CONF_SWAPSIZE=1024"
 
+  - name: clone papirus repository
+    git:
+      repo: https://github.com/repaper/gratis.git
+      dest: /usr/local/src/gratis
+    register: gratisgit
+
+  - name: build papirus service
+    make:
+      chdir: /usr/local/src/gratis
+      target: rpi
+      params:
+        EPD_IO: epd_io.h
+        PANEL_VERSION: 'V231_G2'
+    when: gratisgit.changed
+
+  - name: install papirus service
+    make:
+      chdir: /usr/local/src/gratis
+      target: rpi-install
+      params:
+        EPD_IO: epd_io.h
+        PANEL_VERSION: 'V231_G2'
+    when: gratisgit.changed
+
+  - name: configure papirus display size
+    lineinfile:
+      dest: /etc/default/epd-fuse
+      regexp: "#EPD_SIZE=2.0"
+      line: "EPD_SIZE=2.0"
+
+  - name: collect python pip package list
+    command: "pip3 list"
+    register: pip_output
+
+  - name: set python pip package facts
+    set_fact:
+      pip_packages: >
+        {{ pip_packages | default({}) | combine( { item.split()[0]: item.split()[1] } ) }}
+    with_items: "{{ pip_output.stdout_lines }}"
+
   - name: acquire python3 pip target
     command: "python3 -c 'import sys;print(sys.path.pop())'"
     register: pip_target
 
-  - name: install pip packages
-    pip:
-      name: "{{packages.pip.install}}"
-      extra_args: "--no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --prefer-binary --no-cache-dir --platform=armv6l --target={{ pip_target.stdout }}"
+  - name: clone pwnagotchi repository
+    git:
+      repo: https://github.com/evilsocket/pwnagotchi.git
+      dest: /usr/local/src/pwnagotchi
+    register: pwnagotchigit
 
-  - name: install grpcio
-    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.hostedpi.com/simple/grpcio/grpcio-1.24.1-cp37-cp37m-linux_armv6l.whl"
+  - name: fetch pwnagotchi version
+    set_fact:
+      pwnagotchi_version: "{{ lookup('file', '/usr/local/src/pwnagotchi/pwnagotchi/__init__.py') | replace('\n', ' ') | regex_replace('.*version.*=.*''([0-9]+\\.[0-9]+\\.[0-9]+[A-Za-z0-9]*)''.*', '\\1') }}"
+
+  - name: pwnagotchi version found
+    debug:
+      msg: "{{ pwnagotchi_version }}"
+
+  - name: build pwnagotchi wheel
+    command: "python3 setup.py sdist bdist_wheel"
+    args:
+      chdir: /usr/local/src/pwnagotchi
+    when: (pwnagotchigit.changed) or (pip_packages['pwnagotchi'] is undefined) or (pip_packages['pwnagotchi'] != pwnagotchi.version)
+
+  - name: install opencv-python
+    pip:
+      name: "https://www.piwheels.hostedpi.com/simple/opencv-python/opencv_python-3.4.3.18-cp37-cp37m-linux_armv6l.whl"
+      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
+    when: (pip_packages['opencv-python'] is undefined) or (pip_packages['opencv-python'] != '3.4.3.18')
 
   - name: install tensorflow
-    command: "pip3 install --no-deps --extra-index-url=https://www.piwheels.hostedpi.com/simple/ --no-cache-dir --prefer-binary --platform=armv6l --only-binary=:all: --target={{ pip_target.stdout }} https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
+    pip:
+      name: "https://www.piwheels.hostedpi.com/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
+      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
+    when: (pip_packages['tensorflow'] is undefined) or (pip_packages['tensorflow'] != '1.13.1')
 
-  - name: fetch bettercap release information
-    uri:
-      url: https://api.github.com/repos/bettercap/bettercap/releases/latest
-      return_content: yes
-    register: bettercap_release
+  - name: install pwnagotchi wheel and dependencies
+    pip:
+      name: "{{ lookup('fileglob', '/usr/local/src/pwnagotchi/dist/pwnagotchi*.whl') }}"
+      extra_args: "--no-cache-dir"
+    when: (pwnagotchigit.changed) or (pip_packages['pwnagotchi'] is undefined) or (pip_packages['pwnagotchi'] != pwnagotchi.version)
+
+  - name: download and install pwngrid
+    unarchive:
+      src: "{{ packages.pwngrid.url }}"
+      dest: /usr/bin
+      remote_src: yes
+      mode: 0755
 
   - name: download and install bettercap
     unarchive:
-      src: "{{ bettercap_release.content | from_json | json_query(bettercap.query) | first }}"
+      src: "{{ packages.bettercap.url }}"
       dest: /usr/bin
       remote_src: yes
       exclude:
@@ -202,47 +264,20 @@
     git:
       repo: https://github.com/bettercap/caplets.git
       dest: /tmp/caplets
+    register: capletsgit
 
   - name: install bettercap caplets
     make:
       chdir: /tmp/caplets
       target: install
+    when: capletsgit.changed
 
-  - name: clone pwnagotchi repository
-    git:
-      repo: https://github.com/evilsocket/pwnagotchi.git
-      dest: /tmp/pwnagotchi
-
-  - name: copy pwnagotchi files to final destination
-    copy:
-      src: /tmp/pwnagotchi/sdcard/rootfs/root/pwnagotchi/
-      dest: /root/pwnagotchi/
-      mode: preserve
-
-  - name: remove pwnagotchi files from temporary repository
-    file:
-      path: /tmp/pwnagotchi
-      state: absent
-
-  - name: create cpuusage script
-    copy:
-      dest: /usr/bin/cpuusage
+  - name: download and install bettercap ui
+    unarchive:
+      src: "{{ packages.bettercap.ui }}"
+      dest: /usr/local/share/bettercap/
+      remote_src: yes
       mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        while true
-        do
-          top -b -n1 | awk '/Cpu\(s\)/ { printf("%d %", $2 + $4 + 0.5) }'
-          sleep 3
-        done
-
-  - name: create memusage script
-    copy:
-      dest: /usr/bin/memusage
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        free -m | awk '/Mem/ { printf( "%d %", $3 / $2 * 100 + 0.5 ) }'
 
   - name: create bootblink script
     copy:
@@ -269,10 +304,34 @@
         # blink 10 times to signal ready state
         /usr/bin/bootblink 10 &
         # start a detached screen session with bettercap
-        if ifconfig | grep usb0 | grep RUNNING; then
-          /usr/bin/pwnagotchi --manual
+        if [[ ifconfig | grep usb0 | grep RUNNING ]] || [[ $(cat /sys/class/net/eth0/carrier) ]]; then
+          # if override file exists, go into auto mode
+          if [ -f /root/.pwnagotchi-auto ]; then
+            rm /root/.pwnagotchi-auto
+            /usr/local/bin/pwnagotchi
+          else
+            /usr/local/bin/pwnagotchi --manual
+          fi
         else
-          /usr/bin/pwnagotchi
+          /usr/local/bin/pwnagotchi
+        fi
+
+  - name: create bettercap-launcher script
+    copy:
+      dest: /usr/bin/bettercap-launcher
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        /usr/bin/monstart
+        if [[ ifconfig | grep usb0 | grep RUNNING ]] || [[ $(cat /sys/class/net/eth0/carrier) ]]; then
+          # if override file exists, go into auto mode
+          if [ -f /root/.pwnagotchi-auto ]; then
+            /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
+          else
+            /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual -iface mon0
+          fi
+        else
+          /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
         fi
 
   - name: create monstart script
@@ -291,7 +350,23 @@
         #!/usr/bin/env bash
         ifconfig mon0 down && iw dev mon0 del
 
-  - name: configure rc.local
+  - name: create hdmion script
+    copy:
+      dest: /usr/bin/hdmion
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        sudo /opt/vc/bin/tvservice -p
+
+  - name: create hdmioff script
+    copy:
+      dest: /usr/bin/hdmioff
+      mode: 0755
+      content: |
+        #!/usr/bin/env bash
+        sudo /opt/vc/bin/tvservice -o
+
+  - name: add HDMI powersave to rc.local
     blockinfile:
       path: /etc/rc.local
       insertbefore: "exit 0"
@@ -299,36 +374,49 @@
         if ! /opt/vc/bin/tvservice -s | grep HDMI; then
           /opt/vc/bin/tvservice -o
         fi
-        /root/pwnagotchi/scripts/startup.sh &
+
+  - name: create /etc/pwnagotchi folder
+    file:
+      path: /etc/pwnagotchi
+      state: directory
+
+  - name: check if user configuration exists
+    stat:
+      path: /etc/pwnagotchi/config.yml
+    register: user_config
 
   - name: create /etc/pwnagotchi/config.yml
-    blockinfile:
-      path: /etc/pwnagotchi/config.yml
-      create: yes
-      block: |
-        # put here your custom configuration overrides
+    copy:
+      dest: /etc/pwnagotchi/config.yml
+      content: |
+        # Add your configuration overrides on this file any configuration changes done to default.yml will be lost!
+        # Example:
+        #
+        # ui:
+        #   display:
+        #     type: 'inkyphat'
+        #     color: 'black'
+        #
+    when: not user_config.stat.exists
 
   - name: configure lo interface
-    blockinfile:
-      path: /etc/network/interfaces.d/lo-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/lo-cfg
+      content: |
         auto lo
         iface lo inet loopback
 
   - name: configure wlan interface
-    blockinfile:
-      path: /etc/network/interfaces.d/wlan0-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/wlan0-cfg
+      content: |
         allow-hotplug wlan0
         iface wlan0 inet static
 
   - name: configure usb interface
-    blockinfile:
-      path: /etc/network/interfaces.d/usb0-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/usb0-cfg
+      content: |
         allow-hotplug usb0
         iface usb0 inet static
           address 10.0.0.2
@@ -338,10 +426,9 @@
           gateway 10.0.0.1
 
   - name: configure eth0 interface (pi2/3/4)
-    blockinfile:
-      path: /etc/network/interfaces.d/eth0-cfg
-      create: yes
-      block: |
+    copy:
+      dest: /etc/network/interfaces.d/eth0-cfg
+      content: |
         allow-hotplug eth0
         iface eth0 inet dhcp
 
@@ -355,8 +442,14 @@
       dest: /boot/config.txt
       insertafter: EOF
       line: '{{ item }}'
-    with_items:
-      - "{{system.boot_options}}"
+    with_items: "{{system.boot_options}}"
+
+  - name: adjust /etc/modules
+    lineinfile:
+      dest: /etc/modules
+      insertafter: EOF
+      line: '{{ item }}'
+    with_items: "{{system.modules}}"
 
   - name: change root partition
     replace:
@@ -374,17 +467,37 @@
       regexp: '(.*)$'
       line: '\1 modules-load=dwc2,g_ether'
 
-  - name: configure ssh
-    lineinfile:
-      dest: /etc/ssh/sshd_config
-      backup: no
-      regexp: '#?PermitRootLogin (.*)$'
-      line: 'PermitRootLogin yes'
-
   - name: configure motd
     copy:
       dest: /etc/motd
-      content: "(◕‿‿◕) {{pwnagotchi.hostname}} (pwnagotchi-{{pwnagotchi.version}})"
+      content: |
+        (◕‿‿◕) {{pwnagotchi.hostname}} (pwnagotchi-{{pwnagotchi.version}})
+
+        Hi! I'm a pwnagotchi, please take good care of me!
+        Here are some basic things you need to know to raise me properly!
+
+        If you want to change my configuration, use /etc/pwnagotchi/config.yml
+
+        All the configuration options can be found on /etc/pwnagotchi/default.yml,
+        but don't change this file because I will recreate it every time I'm restarted!
+
+        I'm managed by systemd. Here are some basic commands.
+
+        If you want to know what I'm doing, you can check my logs with the command
+        journalctl -fu pwnagotchi
+
+        If you want to know if I'm running, you can use
+        systemctl status pwnagotchi
+
+        You can restart me using
+        systemctl restart pwnagotchi
+
+        But be aware I will go into MANUAL mode when restarted!
+        You can put me back into AUTO mode using
+        touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi
+
+        You learn more about me at https://pwnagotchi.ai/
+    when: hostname.changed
 
   - name: clean apt cache
     apt:
@@ -394,17 +507,84 @@
     apt:
       autoremove: yes
 
+  - name: add pwngrid-peer service to systemd
+    copy:
+      dest: /etc/systemd/system/pwngrid-peer.service
+      content: |
+        [Unit]
+        Description=pwngrid peer service.
+        Documentation=https://pwnagotchi.ai
+        Wants=network.target
+
+        [Service]
+        Type=simple
+        PermissionsStartOnly=true
+        ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666 -client-token /root/.api-enrollment.json -wait -log /var/log/pwngrid-peer.log -iface mon0
+        Restart=always
+        RestartSec=30
+
+        [Install]
+        WantedBy=multi-user.target
+    notify:
+      - reload systemd services
+
+  - name: add bettercap service to systemd
+    copy:
+      dest: /etc/systemd/system/bettercap.service
+      content: |
+        [Unit]
+        Description=bettercap api.rest service.
+        Documentation=https://bettercap.org
+        Wants=network.target
+        After=pwngrid.service
+
+        [Service]
+        Type=simple
+        PermissionsStartOnly=true
+        ExecStart=/usr/bin/bettercap-launcher
+        Restart=always
+        RestartSec=30
+
+        [Install]
+        WantedBy=multi-user.target
+    notify:
+      - reload systemd services
+
+  - name: add pwnagotchi service to systemd
+    copy:
+      dest: /etc/systemd/system/pwnagotchi.service
+      content: |
+        [Unit]
+        Description=pwnagotchi Deep Reinforcement Learning instrumenting bettercap for WiFI pwning.
+        Documentation=https://pwnagotchi.ai
+        Wants=network.target
+        After=bettercap.service
+
+        [Service]
+        Type=simple
+        PermissionsStartOnly=true
+        ExecStart=/usr/bin/pwnagotchi-launcher
+        Restart=always
+        RestartSec=30
+
+        [Install]
+        WantedBy=multi-user.target
+    notify:
+      - reload systemd services
+
   - name: enable services
     systemd:
-      name: "{{services.enable}}"
+      name: "{{ item }}"
       state: started
       enabled: yes
+    with_items: "{{ services.enable }}"
 
   - name: disable unecessary services
     systemd:
-      name: "{{services.disable}}"
+      name: "{{ item }}"
       state: stopped
       enabled: no
+    with_items: "{{ services.disable }}"
 
   - name: remove ssh keys
     file:
@@ -412,3 +592,8 @@
       path: "{{item}}"
     with_fileglob:
       - "/etc/ssh/ssh_host*_key*"
+
+  handlers:
+  - name: reload systemd services
+    systemd:
+      daemon_reload: yes

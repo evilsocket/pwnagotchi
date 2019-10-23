@@ -14,13 +14,25 @@ import pwnagotchi.ui.fonts as fonts
 # Will be set with the options in config.yml config['main']['plugins'][__name__]
 OPTIONS = dict()
 
+# called when <host>:<port>/plugins/<pluginname> is opened
+def on_webhook(response, path):
+    res = "<html><body><a>Hook triggered</a></body></html>"
+    response.send_response(200)
+    response.send_header('Content-type', 'text/html')
+    response.end_headers()
+
+    try:
+        response.wfile.write(bytes(res, "utf-8"))
+    except Exception as ex:
+        logging.error(ex)
+
 # called when the plugin is loaded
 def on_loaded():
     logging.warning("WARNING: plugin %s should be disabled!" % __name__)
 
 
 # called in manual mode when there's internet connectivity
-def on_internet_available(ui, config, log):
+def on_internet_available(agent):
     pass
 
 

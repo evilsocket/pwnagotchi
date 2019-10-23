@@ -29,10 +29,10 @@ msgid "New day, new hunt, new pwns!"
 msgstr "Новый день, новая охота, новые взломы!"
 
 msgid "Hack the Planet!"
-msgstr "Взломаем всю планету!"
+msgstr "Хак зе планет!"
 
 msgid "AI ready."
-msgstr "Искусственный интеллект готов."
+msgstr "AI готов."
 
 msgid "The neural network is ready."
 msgstr "Нейронная сеть готова."
@@ -48,7 +48,7 @@ msgid "Let's go for a walk!"
 msgstr "Пойдем прогуляемся!"
 
 msgid "This is the best day of my life!"
-msgstr "Это лучший день в моей жизни!"
+msgstr "Лучший день в моей жизни!"
 
 msgid "Shitty day :/"
 msgstr "Дерьмовый день :/"
@@ -63,19 +63,19 @@ msgid "I'm sad"
 msgstr "Мне грустно"
 
 msgid "I'm living the life!"
-msgstr "Я живу своей жизнью!"
+msgstr "Угараю по полной!"
 
 msgid "I pwn therefore I am."
 msgstr "Я взламываю, поэтому я существую."
 
 msgid "So many networks!!!"
-msgstr "Так, много сетей!!!"
+msgstr "Так много сетей!!!"
 
 msgid "I'm having so much fun!"
 msgstr "Мне так весело!"
 
 msgid "My crime is that of curiosity ..."
-msgstr "Моё преступление - это любопытство …"
+msgstr "Моe преступление - это любопытство …"
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you. {name}"
@@ -105,7 +105,7 @@ msgid "Missed!"
 msgstr "Промахнулся!"
 
 msgid "Nobody wants to play with me ..."
-msgstr "Никто не хочет играть со мной …"
+msgstr "Никто не хочет со мной играть ..."
 
 msgid "I feel so alone ..."
 msgstr "Мне так одиноко …"

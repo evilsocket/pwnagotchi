@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-05 14:10+0200\n"
+"POT-Creation-Date: 2019-10-21 10:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,6 +33,9 @@ msgid "AI ready."
 msgstr ""
 
 msgid "The neural network is ready."
+msgstr ""
+
+msgid "Generating keys, do not turn off ..."
 msgstr ""
 
 #, python-brace-format
@@ -76,11 +79,11 @@ msgid "My crime is that of curiosity ..."
 msgstr ""
 
 #, python-brace-format
-msgid "Hello {name}! Nice to meet you. {name}"
+msgid "Hello {name}! Nice to meet you."
 msgstr ""
 
 #, python-brace-format
-msgid "Unit {name} is nearby! {name}"
+msgid "Unit {name} is nearby!"
 msgstr ""
 
 #, python-brace-format
@@ -120,6 +123,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
+msgstr ""
+
+msgid "Good night."
+msgstr ""
+
+msgid "Zzz"
 msgstr ""
 
 #, python-brace-format

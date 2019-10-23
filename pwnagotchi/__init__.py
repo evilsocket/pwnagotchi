@@ -1,6 +1,10 @@
 import subprocess
+import os
+import logging
+import time
+import pwnagotchi.ui.view as view
 
-version = '1.0.0plz4'
+version = '1.1.0b'
 
 _name = None
 
@@ -11,6 +15,11 @@ def name():
         with open('/etc/hostname', 'rt') as fp:
             _name = fp.read().strip()
     return _name
+
+
+def uptime():
+    with open('/proc/uptime') as fp:
+        return int(fp.read().split('.')[0])
 
 
 def mem_usage():
@@ -46,3 +55,19 @@ def temperature(celsius=True):
         temp = int(fp.read().strip())
     c = int(temp / 1000)
     return c if celsius else ((c * (9 / 5)) + 32)
+
+
+def shutdown():
+    logging.warning("shutting down ...")
+    if view.ROOT:
+        view.ROOT.on_shutdown()
+        # give it some time to refresh the ui
+        time.sleep(5)
+    os.system("sync")
+    os.system("halt")
+
+
+def reboot():
+    logging.warning("rebooting ...")
+    os.system("sync")
+    os.system("shutdown -r now")

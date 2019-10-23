@@ -12,6 +12,13 @@ class State(object):
         self._state[key] = elem
         self._changes[key] = True
 
+    def has_element(self, key):
+        return key in self._state
+
+    def remove_element(self, key):
+        del self._state[key]
+        self._changes[key] = True
+
     def add_listener(self, key, cb):
         with self._lock:
             self._listeners[key] = cb
