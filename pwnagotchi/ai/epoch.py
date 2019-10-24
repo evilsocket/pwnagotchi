@@ -83,12 +83,13 @@ class Epoch(object):
         bond_unit_scale = self.config['personality']['bond_encounters_factor']
 
         self.num_peers = len(peers)
+        num_peers = self.num_peers + 1e-10  # avoid division by 0
+
         self.tot_bond_factor = sum((peer.encounters for peer in peers)) / bond_unit_scale
-        self.avg_bond_factor = self.tot_bond_factor / self.num_peers
+        self.avg_bond_factor = self.tot_bond_factor / num_peers
 
         num_aps = len(aps) + 1e-10
         num_sta = sum(len(ap['clients']) for ap in aps) + 1e-10
-        num_peers = self.num_peers + 1e-10  # avoid division by 0
         aps_per_chan = [0.0] * wifi.NumChannels
         sta_per_chan = [0.0] * wifi.NumChannels
         peers_per_chan = [0.0] * wifi.NumChannels
