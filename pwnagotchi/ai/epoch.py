@@ -39,6 +39,10 @@ class Epoch(object):
         self.num_slept = 0
         # number of peers seen during this epoch
         self.num_peers = 0
+        # cumulative bond factor
+        self.tot_bond_factor = 0.0  # cum_bond_factor sounded really bad ...
+        # average bond factor
+        self.avg_bond_factor = 0.0
         # any activity at all during this epoch?
         self.any_activity = False
         # when the current epoch started
@@ -76,7 +80,11 @@ class Epoch(object):
         else:
             self.blind_for = 0
 
+        bond_unit_scale = self.config['personality']['bond_encounters_factor']
+
         self.num_peers = len(peers)
+        self.tot_bond_factor = sum((peer.encounters for peer in peers)) / bond_unit_scale
+        self.avg_bond_factor = self.tot_bond_factor / self.num_peers
 
         num_aps = len(aps) + 1e-10
         num_sta = sum(len(ap['clients']) for ap in aps) + 1e-10
@@ -166,6 +174,8 @@ class Epoch(object):
             'missed_interactions': self.num_missed,
             'num_hops': self.num_hops,
             'num_peers': self.num_peers,
+            'tot_bond': self.tot_bond_factor,
+            'avg_bond': self.avg_bond_factor,
             'num_deauths': self.num_deauths,
             'num_associations': self.num_assocs,
             'num_handshakes': self.num_shakes,
@@ -177,8 +187,9 @@ class Epoch(object):
         self._epoch_data['reward'] = self._reward(self.epoch + 1, self._epoch_data)
         self._epoch_data_ready.set()
 
-        logging.info("[epoch %d] duration=%s slept_for=%s blind=%d inactive=%d active=%d peers=%d hops=%d missed=%d "
-                     "deauths=%d assocs=%d handshakes=%d cpu=%d%% mem=%d%% temperature=%dC reward=%s" % (
+        logging.info("[epoch %d] duration=%s slept_for=%s blind=%d inactive=%d active=%d peers=%d tot_bond=%.2f "
+                     "avg_bond=%.2f hops=%d missed=%d deauths=%d assocs=%d handshakes=%d cpu=%d%% mem=%d%% "
+                     "temperature=%dC reward=%s" % (
                          self.epoch,
                          utils.secs_to_hhmmss(self.epoch_duration),
                          utils.secs_to_hhmmss(self.num_slept),
@@ -186,6 +197,8 @@ class Epoch(object):
                          self.inactive_for,
                          self.active_for,
                          self.num_peers,
+                         self.tot_bond_factor,
+                         self.avg_bond_factor,
                          self.num_hops,
                          self.num_missed,
                          self.num_deauths,
@@ -201,6 +214,8 @@ class Epoch(object):
         self.did_deauth = False
         self.num_deauths = 0
         self.num_peers = 0
+        self.tot_bond_factor = 0.0
+        self.avg_bond_factor = 0.0
         self.did_associate = False
         self.num_assocs = 0
         self.num_missed = 0
