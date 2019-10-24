@@ -67,6 +67,9 @@ class AsyncAdvertiser(object):
         plugins.on('peer_lost', self, peer)
 
     def _adv_poller(self):
+        # give the system a few seconds to start the first time so that any expressions
+        # due to nearby units will be rendered properly
+        time.sleep(20)
         while True:
             try:
                 logging.debug("polling pwngrid-peer for peers ...")
