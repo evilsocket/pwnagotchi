@@ -208,7 +208,7 @@ class View(object):
         if peer.first_encounter():
             face = random.choice((faces.AWAKE, faces.COOL))
         # a good friend, positive expression
-        elif peer.is_good_friend():
+        elif peer.is_good_friend(self._config):
             face = random.choice((faces.MOTIVATED, faces.FRIEND, faces.HAPPY))
         # normal friend, neutral-positive
         else:
