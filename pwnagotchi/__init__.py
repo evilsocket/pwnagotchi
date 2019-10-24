@@ -73,7 +73,7 @@ def mem_usage():
             if line.startswith("Cached:"):
                 kb_main_cached = int(line.split()[1])
         kb_mem_used = kb_mem_total - kb_mem_free - kb_main_cached - kb_main_buffers
-        return round(kb_mem_used/kb_mem_total,2)
+        return round(kb_mem_used/kb_mem_total,1)
 
     return 0
 
