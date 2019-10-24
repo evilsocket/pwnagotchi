@@ -65,16 +65,62 @@ def is_excluded(what):
     return False
 
 
-def on_ui_update(ui):
-    if UNREAD_MESSAGES > 0:
-        logging.debug("[grid] unread:%d total:%d" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
-        ui.on_unread_messages(UNREAD_MESSAGES, TOTAL_MESSAGES)
-
-
 def set_reported(reported, net_id):
     global REPORT
     reported.append(net_id)
     REPORT.update(data={'reported': reported})
+
+
+def check_inbox(agent):
+    global REPORT, UNREAD_MESSAGES, TOTAL_MESSAGES
+
+    logging.debug("checking mailbox ...")
+
+    messages = grid.inbox()
+    TOTAL_MESSAGES = len(messages)
+    UNREAD_MESSAGES = len([m for m in messages if m['seen_at'] is None])
+
+    if UNREAD_MESSAGES:
+        logging.debug("[grid] unread:%d total:%d" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
+        agent.view().on_unread_messages(UNREAD_MESSAGES, TOTAL_MESSAGES)
+
+
+def check_handshakes(agent):
+    logging.debug("checking pcaps")
+
+    pcap_files = glob.glob(os.path.join(agent.config()['bettercap']['handshakes'], "*.pcap"))
+    num_networks = len(pcap_files)
+    reported = REPORT.data_field_or('reported', default=[])
+    num_reported = len(reported)
+    num_new = num_networks - num_reported
+
+    if num_new > 0:
+        if OPTIONS['report']:
+            logging.info("grid: %d new networks to report" % num_new)
+            logging.debug("OPTIONS: %s" % OPTIONS)
+            logging.debug("  exclude: %s" % OPTIONS['exclude'])
+
+            for pcap_file in pcap_files:
+                net_id = os.path.basename(pcap_file).replace('.pcap', '')
+                if net_id not in reported:
+                    if is_excluded(net_id):
+                        logging.debug("skipping %s due to exclusion filter" % pcap_file)
+                        set_reported(reported, net_id)
+                        continue
+
+                    essid, bssid = parse_pcap(pcap_file)
+                    if bssid:
+                        if is_excluded(essid) or is_excluded(bssid):
+                            logging.debug("not reporting %s due to exclusion filter" % pcap_file)
+                            set_reported(reported, net_id)
+                        else:
+                            if grid.report_ap(essid, bssid):
+                                set_reported(reported, net_id)
+                            time.sleep(1.5)
+                    else:
+                        logging.warning("no bssid found?!")
+        else:
+            logging.debug("grid: reporting disabled")
 
 
 def on_internet_available(agent):
@@ -86,54 +132,17 @@ def on_internet_available(agent):
         grid.update_data(agent.last_session)
     except Exception as e:
         logging.error("error connecting to the pwngrid-peer service: %s" % e)
+        logging.debug(e, exc_info=True)
         return
 
     try:
-        logging.debug("checking mailbox ...")
-
-        messages = grid.inbox()
-        TOTAL_MESSAGES = len(messages)
-        UNREAD_MESSAGES = len([m for m in messages if m['seen_at'] is None])
-
-        if TOTAL_MESSAGES:
-            on_ui_update(agent.view())
-            logging.debug(" %d unread messages of %d total" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
-
-        logging.debug("checking pcaps")
-
-        pcap_files = glob.glob(os.path.join(agent.config()['bettercap']['handshakes'], "*.pcap"))
-        num_networks = len(pcap_files)
-        reported = REPORT.data_field_or('reported', default=[])
-        num_reported = len(reported)
-        num_new = num_networks - num_reported
-
-        if num_new > 0:
-            if OPTIONS['report']:
-                logging.info("grid: %d new networks to report" % num_new)
-                logging.debug("OPTIONS: %s" % OPTIONS)
-                logging.debug("  exclude: %s" % OPTIONS['exclude'])
-
-                for pcap_file in pcap_files:
-                    net_id = os.path.basename(pcap_file).replace('.pcap', '')
-                    if net_id not in reported:
-                        if is_excluded(net_id):
-                            logging.debug("skipping %s due to exclusion filter" % pcap_file)
-                            set_reported(reported, net_id)
-                            continue
-
-                        essid, bssid = parse_pcap(pcap_file)
-                        if bssid:
-                            if is_excluded(essid) or is_excluded(bssid):
-                                logging.debug("not reporting %s due to exclusion filter" % pcap_file)
-                                set_reported(reported, net_id)
-                            else:
-                                if grid.report_ap(essid, bssid):
-                                    set_reported(reported, net_id)
-                                time.sleep(1.5)
-                        else:
-                            logging.warning("no bssid found?!")
-            else:
-                logging.debug("grid: reporting disabled")
-
+        check_inbox(agent)
     except Exception as e:
-        logging.error("grid api: %s" % e)
+        logging.error("[grid] error while checking inbox: %s" % e)
+        logging.debug(e, exc_info=True)
+
+    try:
+        check_handshakes(agent)
+    except Exception as e:
+        logging.error("[grid] error while checking pcaps: %s" % e)
+        logging.debug(e, exc_info=True)
