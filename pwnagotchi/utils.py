@@ -89,8 +89,6 @@ def load_config(args):
         print("unsupported display type %s" % config['ui']['display']['type'])
         exit(1)
 
-    print("Effective Configuration:")
-    print(yaml.dump(config, default_flow_style=False))
     return config
 
 
@@ -114,6 +112,7 @@ def setup_logging(args, config):
     requests_log = logging.getLogger("requests")
     requests_log.addHandler(logging.NullHandler())
     requests_log.propagate = False
+
 
 def secs_to_hhmmss(secs):
     mins, secs = divmod(secs, 60)
@@ -272,7 +271,7 @@ class StatusFile(object):
         return self._updated is not None and ((datetime.now() - self._updated).seconds / 60) < minutes
 
     def newer_then_hours(self, hours):
-        return self._updated is not None and ((datetime.now() - self._updated).seconds / (60*60)) < hours
+        return self._updated is not None and ((datetime.now() - self._updated).seconds / (60 * 60)) < hours
 
     def newer_then_days(self, days):
         return self._updated is not None and (datetime.now() - self._updated).days < days

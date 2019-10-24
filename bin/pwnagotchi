@@ -3,6 +3,7 @@ if __name__ == '__main__':
     import argparse
     import time
     import logging
+    import yaml
 
     import pwnagotchi
     import pwnagotchi.grid as grid
@@ -33,6 +34,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config = utils.load_config(args)
     utils.setup_logging(args, config)
+
+    logging.debug("effective configuration:\n\n%s\n\n" % yaml.dump(config, default_flow_style=False))
 
     plugins.load(config)
 
