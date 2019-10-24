@@ -55,6 +55,9 @@ class Peer(object):
     def first_encounter(self):
         return self.encounters == 1
 
+    def is_good_friend(self, config):
+        return self.encounters >= config['personality']['bond_encounters_factor']
+
     def face(self):
         return self.adv.get('face', faces.FRIEND)
 

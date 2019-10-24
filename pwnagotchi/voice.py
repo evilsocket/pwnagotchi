@@ -75,6 +75,8 @@ class Voice:
                 self._('Hello {name}! Nice to meet you.').format(name=peer.name())])
         else:
             return random.choice([
+                self._('Yo {name}! Sup?').format(name=peer.name()),
+                self._('Hey {name} how are you doing?').format(name=peer.name()),
                 self._('Unit {name} is nearby!').format(name=peer.name())])
 
     def on_lost_peer(self, peer):

@@ -202,9 +202,10 @@ class View(object):
         self.update()
 
     def on_new_peer(self, peer):
-        self.set('face', faces.FRIEND)
+        self.set('face', faces.FRIEND if peer.is_good_friend(self._config) else faces.EXCITED)
         self.set('status', self._voice.on_new_peer(peer))
         self.update()
+        time.sleep(3)
 
     def on_lost_peer(self, peer):
         self.set('face', faces.LONELY)
