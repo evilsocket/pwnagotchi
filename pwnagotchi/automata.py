@@ -45,9 +45,11 @@ class Automata(object):
 
     def set_lonely(self):
         if not self._has_support_network_for(1.0):
+            logging.info("unit is lonely")
             self._view.on_lonely()
             plugins.on('lonely', self)
         else:
+            logging.info("unit is grateful instead of lonely")
             self.set_grateful()
 
     def set_bored(self):
@@ -57,6 +59,7 @@ class Automata(object):
             self._view.on_bored()
             plugins.on('bored', self)
         else:
+            logging.info("unit is grateful instead of bored")
             self.set_grateful()
 
     def set_sad(self):
@@ -66,6 +69,7 @@ class Automata(object):
             self._view.on_sad()
             plugins.on('sad', self)
         else:
+            logging.info("unit is grateful instead of sad")
             self.set_grateful()
 
     def set_excited(self):
@@ -109,7 +113,7 @@ class Automata(object):
         # after X times being active, the status is set to happy / excited
         elif self._epoch.active_for >= self._config['personality']['excited_num_epochs']:
             self.set_excited()
-        elif self._epoch.active_for >= 5 and self._has_support_network_for(1.0):
+        elif self._epoch.active_for >= 5 and self._has_support_network_for(5.0):
             self.set_grateful()
 
         plugins.on('epoch', self, self._epoch.epoch - 1, self._epoch.data())
