@@ -63,7 +63,7 @@ def _transform_wigle_entry(gps_data, pcap_data):
     dummy.write("WigleWifi-1.4,appRelease=20190201,model=Kismet,release=2019.02.01.{},device=kismet,display=kismet,board=kismet,brand=kismet\n")
     dummy.write("MAC,SSID,AuthMode,FirstSeen,Channel,RSSI,CurrentLatitude,CurrentLongitude,AltitudeMeters,AccuracyMeters,Type")
 
-    writer = csv.writer(dummy, delimiter=",", quoting=csv.QUOTE_NONE)
+    writer = csv.writer(dummy, delimiter=",", quoting=csv.QUOTE_NONE, escapechar="\\")
     writer.writerow([
         pcap_data[WifiInfo.BSSID],
         pcap_data[WifiInfo.ESSID],
