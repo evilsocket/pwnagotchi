@@ -310,6 +310,7 @@ class View(object):
         self.set('face', faces.EXCITED)
         self.set('status', self._voice.on_unread_messages(count, total))
         self.update()
+        time.sleep(5.0)
 
     def on_rebooting(self):
         self.set('face', faces.BROKEN)
