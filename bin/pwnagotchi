@@ -37,6 +37,8 @@ if __name__ == '__main__':
 
     logging.debug("effective configuration:\n\n%s\n\n" % yaml.dump(config, default_flow_style=False))
 
+    pwnagotchi.set_name(config['main']['name'])
+
     plugins.load(config)
 
     display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})

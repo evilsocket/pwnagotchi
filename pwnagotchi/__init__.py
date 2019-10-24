@@ -9,6 +9,37 @@ version = '1.1.0b'
 _name = None
 
 
+def set_name(new_name):
+    if new_name is None:
+        return
+
+    new_name = new_name.strip()
+    if new_name == '':
+        return
+
+    current = name()
+    if new_name != current:
+        global _name
+
+        logging.info("setting unit hostname '%s' -> '%s'" % (current, new_name))
+        with open('/etc/hostname', 'wt') as fp:
+            fp.write(new_name)
+
+        with open('/etc/hosts', 'rt') as fp:
+            prev = fp.read()
+            logging.debug("old hosts:\n%s\n" % prev)
+
+        with open('/etc/hosts', 'wt') as fp:
+            patched = prev.replace(current, new_name, -1)
+            logging.debug("new hosts:\n%s\n" % patched)
+            fp.write(patched)
+
+        _name = new_name
+        logging.info("restarting avahi ...")
+        os.system("service avahi-daemon restart")
+        logging.info("hostname set")
+
+
 def name():
     global _name
     if _name is None:
