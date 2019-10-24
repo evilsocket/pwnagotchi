@@ -6,7 +6,7 @@
 #
 # main algorithm configuration
 main:
-    # if set this will set the hostname of the unit
+    # if set this will set the hostname of the unit. min length is 2, max length 25, only a-zA-Z0-9- allowed
     name: ''
     # currently implemented: en (default), de, el, fr, it, mk, nl, ru, se, pt-BR, es, pt
     lang: en

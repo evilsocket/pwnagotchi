@@ -2,6 +2,7 @@ import subprocess
 import os
 import logging
 import time
+import re
 import pwnagotchi.ui.view as view
 
 version = '1.1.0b'
@@ -15,6 +16,10 @@ def set_name(new_name):
 
     new_name = new_name.strip()
     if new_name == '':
+        return
+
+    if not re.match(r'^[a-zA-Z0-9\-]{2,25}$', new_name):
+        logging.warning("name '%s' is invalid: min length is 2, max length 25, only a-zA-Z0-9- allowed", new_name)
         return
 
     current = name()
