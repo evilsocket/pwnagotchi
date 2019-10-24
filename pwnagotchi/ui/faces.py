@@ -1,5 +1,7 @@
 LOOK_R = '( ⚆_⚆)'
 LOOK_L = '(☉_☉ )'
+LOOK_R_HAPPY = '( ◕‿◕)'
+LOOK_L_HAPPY = '(◕‿◕ )'
 SLEEP = '(⇀‿‿↼)'
 SLEEP2 = '(≖‿‿≖)'
 AWAKE = '(◕‿‿◕)'

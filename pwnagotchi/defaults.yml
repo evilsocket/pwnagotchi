@@ -171,6 +171,8 @@ ui:
     faces:
         look_r: '( ⚆_⚆)'
         look_l: '(☉_☉ )'
+        look_r_happy: '( ◕‿◕)'
+        look_l_happy: '(◕‿◕ )'
         sleep: '(⇀‿‿↼)'
         sleep2: '(≖‿‿≖)'
         awake: '(◕‿‿◕)'

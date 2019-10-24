@@ -32,6 +32,9 @@ class Automata(object):
     def set_ready(self):
         plugins.on('ready', self)
 
+    def in_good_mood(self):
+        return self._has_support_network_for(1.0)
+
     def _has_support_network_for(self, factor):
         bond_factor = self._config['personality']['bond_encounters_factor']
         total_encounters = sum(peer.encounters for _, peer in self._peers.items())

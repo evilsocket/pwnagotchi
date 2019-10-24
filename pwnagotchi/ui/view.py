@@ -26,6 +26,7 @@ class View(object):
         # setup faces from the configuration in case the user customized them
         faces.load_from_config(config['ui']['faces'])
 
+        self._agent = None
         self._render_cbs = []
         self._config = config
         self._canvas = None
@@ -88,6 +89,9 @@ class View(object):
             self._ignore_changes = ('uptime', 'name')
 
         ROOT = self
+
+    def set_agent(self, agent):
+        self._agent = agent
 
     def has_element(self, key):
         self._state.has_element(key)
@@ -248,10 +252,11 @@ class View(object):
                         self.set('status', self._voice.on_awakening())
                 else:
                     self.set('status', self._voice.on_waiting(int(secs)))
+                    good_mood = self._agent.in_good_mood()
                     if step % 2 == 0:
-                        self.set('face', faces.LOOK_R)
+                        self.set('face', faces.LOOK_R_HAPPY if good_mood else faces.LOOK_R)
                     else:
-                        self.set('face', faces.LOOK_L)
+                        self.set('face', faces.LOOK_L_HAPPY if good_mood else faces.LOOK_L)
 
             time.sleep(part)
             secs -= part
