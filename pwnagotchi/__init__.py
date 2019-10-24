@@ -58,20 +58,24 @@ def uptime():
     with open('/proc/uptime') as fp:
         return int(fp.read().split('.')[0])
 
-
 def mem_usage():
-    out = subprocess.getoutput("free -m")
-    for line in out.split("\n"):
-        line = line.strip()
-        if line.startswith("Mem:"):
-            parts = list(map(int, line.split()[1:]))
-            tot = parts[0]
-            used = parts[1]
-            free = parts[2]
-            return used / tot
+    with open('/proc/meminfo') as fp:
+        for line in fp:
+            line = line.strip()
+            if line.startswith("MemTotal:"):
+                kb_mem_total = int(line.split()[1])
+            if line.startswith("MemFree:"):
+                kb_mem_free = int(line.split()[1])
+            if line.startswith("MemAvailable:"):
+                kb_mem_available = int(line.split()[1])
+            if line.startswith("Buffers:"):
+                kb_main_buffers = int(line.split()[1])
+            if line.startswith("Cached:"):
+                kb_main_cached = int(line.split()[1])
+        kb_mem_used = kb_mem_total - kb_mem_free - kb_main_cached - kb_main_buffers
+        return round(kb_mem_used/kb_mem_total,2)
 
     return 0
-
 
 def cpu_load():
     with open('/proc/stat', 'rt') as fp:
