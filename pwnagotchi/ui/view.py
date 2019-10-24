@@ -2,6 +2,7 @@ import _thread
 from threading import Lock
 import time
 import logging
+import random
 from PIL import ImageDraw
 
 import pwnagotchi.utils as utils
@@ -202,7 +203,18 @@ class View(object):
         self.update()
 
     def on_new_peer(self, peer):
-        self.set('face', faces.FRIEND if peer.is_good_friend(self._config) else faces.EXCITED)
+        face = ''
+        # first time they met, neutral mood
+        if peer.first_encounter():
+            face = random.choice((faces.AWAKE, faces.COOL))
+        # a good friend, positive expression
+        elif peer.is_good_friend():
+            face = random.choice((faces.MOTIVATED, faces.FRIEND, faces.HAPPY))
+        # normal friend, neutral-positive
+        else:
+            face = random.choice((faces.EXCITED, faces.HAPPY))
+
+        self.set('face', face)
         self.set('status', self._voice.on_new_peer(peer))
         self.update()
         time.sleep(3)
