@@ -147,6 +147,7 @@ class View(object):
         self.set('shakes', '%d (%s)' % (last_session.handshakes, \
                                         utils.total_unique_handshakes(self._config['bettercap']['handshakes'])))
         self.set_closest_peer(last_session.last_peer, last_session.peers)
+        self.update()
 
     def is_normal(self):
         return self._state.get('face') not in (
