@@ -6,6 +6,8 @@ import pwnagotchi.ui.faces as faces
 
 
 def parse_rfc3339(dt):
+    if dt == "0001-01-01T00:00:00Z":
+        return datetime.datetime.now()
     return datetime.datetime.strptime(dt.split('.')[0], "%Y-%m-%dT%H:%M:%S")
 
 
