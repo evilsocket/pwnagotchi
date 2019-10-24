@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-09 17:42+0200\n"
+"POT-Creation-Date: 2019-10-23 20:56+0200\n"
 "PO-Revision-Date: 2019-09-29 14:00+0200\n"
 "Last-Translator: dadav <33197631+dadav@users.noreply.github.com>\n"
 "Language-Team: DE <33197631+dadav@users.noreply.github.com>\n"
@@ -33,6 +33,9 @@ msgstr "KI bereit."
 
 msgid "The neural network is ready."
 msgstr "Das neurale Netz ist bereit."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "Generiere Keys, nicht ausschalten ..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
@@ -75,11 +78,11 @@ msgid "My crime is that of curiosity ..."
 msgstr "Mein Verbrechen ist das der Neugier ..."
 
 #, python-brace-format
-msgid "Hello {name}! Nice to meet you. {name}"
+msgid "Hello {name}! Nice to meet you."
 msgstr "Hallo {name}, nett Dich kennenzulernen."
 
 #, python-brace-format
-msgid "Unit {name} is nearby! {name}"
+msgid "Unit {name} is nearby!"
 msgstr "Gerät {name} ist in der nähe!!"
 
 #, python-brace-format
@@ -100,6 +103,12 @@ msgstr "{name} verpasst!"
 
 msgid "Missed!"
 msgstr "Verpasst!"
+
+msgid "Good friends are a blessing!"
+msgstr "Gute Freunde sind ein Segen!"
+
+msgid "I love my friends!"
+msgstr "Ich liebe meine Freunde!"
 
 msgid "Nobody wants to play with me ..."
 msgstr "Niemand will mit mir spielen ..."
@@ -161,6 +170,10 @@ msgstr "Kicke {mac}!"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Cool, wir haben {num} neue Handshake{plural}!"
+
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
 msgstr "Cool, wir haben {num} neue Handshake{plural}!"
 
 msgid "Ops, something went wrong ... Rebooting ..."

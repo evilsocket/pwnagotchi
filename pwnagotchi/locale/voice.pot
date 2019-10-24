@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 18:37+0200\n"
+"POT-Creation-Date: 2019-10-23 20:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,6 +103,12 @@ msgid "{name} missed!"
 msgstr ""
 
 msgid "Missed!"
+msgstr ""
+
+msgid "Good friends are a blessing!"
+msgstr ""
+
+msgid "I love my friends!"
 msgstr ""
 
 msgid "Nobody wants to play with me ..."
