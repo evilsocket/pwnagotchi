@@ -34,6 +34,7 @@ def set_name(new_name):
             logging.debug("new hosts:\n%s\n" % patched)
             fp.write(patched)
 
+        os.system("hostname '%s'" % new_name)
         _name = new_name
         logging.info("restarting avahi ...")
         os.system("service avahi-daemon restart")
