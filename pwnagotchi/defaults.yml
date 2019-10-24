@@ -163,7 +163,7 @@ personality:
     sad_num_epochs: 25
     # number of encounters (times met on a channel) with another unit before considering it a friend and bond
     # also used for cumulative bonding score of nearby units
-    bond_encounters_factor: 5000
+    bond_encounters_factor: 20000
 
 # ui configuration
 ui:
