@@ -141,9 +141,14 @@ class BTNap:
         """
         Set power of devices to on/off
         """
+        logging.debug("BT-TETHER: Changing bluetooth device to %s", str(on))
 
-        devs = list(BTNap.find_adapter())
-        devs = dict((BTNap.prop_get(dev, 'Address'), dev) for dev in devs)
+        try:
+            devs = list(BTNap.find_adapter())
+            devs = dict((BTNap.prop_get(dev, 'Address'), dev) for dev in devs)
+        except BTError as bt_err:
+            logging.error(bt_err)
+            return None
 
         for dev_addr, dev in devs.items():
             BTNap.prop_set(dev, 'Powered', on)
@@ -158,34 +163,41 @@ class BTNap:
         """
         Check if already connected
         """
+        logging.debug("BT-TETHER: Checking if device is connected.")
+
         bt_dev = self.power(True)
 
         if not bt_dev:
-            return False
+            logging.debug("BT-TETHER: No bluetooth device found.")
+            return None, False
 
         try:
             dev_remote = BTNap.find_device(self._mac, bt_dev)
-            return bool(BTNap.prop_get(dev_remote, 'Connected'))
+            return dev_remote, bool(BTNap.prop_get(dev_remote, 'Connected'))
         except BTError:
-            pass
-        return False
+            logging.debug("BT-TETHER: Device is not connected.")
+        return None, False
 
 
     def is_paired(self):
         """
         Check if already connected
         """
+        logging.debug("BT-TETHER: Checking if device is paired")
+
         bt_dev = self.power(True)
 
         if not bt_dev:
+            logging.debug("BT-TETHER: No bluetooth device found.")
             return False
 
         try:
             dev_remote = BTNap.find_device(self._mac, bt_dev)
             return bool(BTNap.prop_get(dev_remote, 'Paired'))
         except BTError:
-            pass
+            logging.debug("BT-TETHER: Device is not paired.")
         return False
+
 
     def wait_for_device(self, timeout=15):
         """
@@ -193,17 +205,20 @@ class BTNap:
 
         returns device if found None if not
         """
+        logging.debug("BT-TETHER: Waiting for device")
+
         bt_dev = self.power(True)
 
         if not bt_dev:
+            logging.debug("BT-TETHER: No bluetooth device found.")
             return None
 
         try:
+            logging.debug("BT-TETHER: Starting discovery ...")
             bt_dev.StartDiscovery()
-        except Exception:
-            # can fail with org.bluez.Error.NotReady / org.bluez.Error.Failed
-            # TODO: add loop?
-            pass
+        except Exception as bt_ex:
+            logging.error(bt_ex)
+            raise bt_ex
 
         dev_remote = None
 
@@ -211,73 +226,65 @@ class BTNap:
         while timeout > -1:
             try:
                 dev_remote = BTNap.find_device(self._mac, bt_dev)
-                logging.debug('Using remote device (addr: %s): %s',
+                logging.debug("BT-TETHER: Using remote device (addr: %s): %s",
                     BTNap.prop_get(dev_remote, 'Address'), dev_remote.object_path )
                 break
             except BTError:
-                pass
+                logging.debug("BT-TETHER: Not found yet ...")
 
             time.sleep(1)
             timeout -= 1
 
         try:
+            logging.debug("BT-TETHER: Stoping Discovery ...")
             bt_dev.StopDiscovery()
-        except Exception:
-            # can fail with org.bluez.Error.NotReady / org.bluez.Error.Failed / org.bluez.Error.NotAuthorized
-            pass
+        except Exception as bt_ex:
+            logging.error(bt_ex)
+            raise bt_ex
 
         return dev_remote
 
-
-    def connect(self, reconnect=False):
-        """
-        Connect to device
-
-        return True if connected; False if failed
-        """
-
-        # check if device is close
-        dev_remote = self.wait_for_device()
-
-        if not dev_remote:
-            return False
-
+    @staticmethod
+    def pair(device):
+        logging.debug('BT-TETHER: Trying to pair ...')
         try:
-            dev_remote.Pair()
+            device.Pair()
             logging.info('BT-TETHER: Successful paired with device ;)')
-            time.sleep(10) # wait for bnep0
-        except Exception:
-            # can fail because of AlreadyExists etc.
-            pass
-
-        try:
-            dev_remote.ConnectProfile('nap')
-        except Exception:
-            pass
-
-        net = dbus.Interface(dev_remote, 'org.bluez.Network1')
-
-        try:
-            net.Connect('nap')
+            return True
         except dbus.exceptions.DBusException as err:
-            if err.get_dbus_name() != 'org.bluez.Error.Failed':
-                raise
+            if err.get_dbus_name() == 'org.bluez.Error.AlreadyExists':
+                logging.debug('BT-TETHER: Already paired ...')
+                return True
+        except Exception:
+            pass
+        return False
+
+
+    @staticmethod
+    def nap(device):
+        logging.debug('BT-TETHER: Trying to nap ...')
+
+        try:
+            logging.debug('BT-TETHER: Connecting to profile ...')
+            device.ConnectProfile('nap')
+        except Exception: # raises exception, but still works
+            pass
+
+        net = dbus.Interface(device, 'org.bluez.Network1')
+
+        try:
+            logging.debug('BT-TETHER: Connecting to nap network ...')
+            net.Connect('nap')
+            return True
+        except dbus.exceptions.DBusException as err:
+            if err.get_dbus_name() == 'org.bluez.Error.AlreadyConnected':
+                return True
 
             connected = BTNap.prop_get(net, 'Connected')
-
             if not connected:
                 return False
-
-            if reconnect:
-                net.Disconnect()
-                return self.connect(reconnect=False)
-
             return True
 
-
-#################################################
-#################################################
-#################################################
 
 class SystemdUnitWrapper:
     """
@@ -445,20 +452,51 @@ def on_ui_update(ui):
         bt = BTNap(OPTIONS['mac'])
 
         logging.debug('BT-TETHER: Check if already connected and paired')
-        if bt.is_connected() and bt.is_paired():
-            logging.debug('BT-TETHER: Already connected and paired')
-            ui.set('bluetooth', 'CON')
-        else:
-            logging.debug('BT-TETHER: Try to connect to mac')
-            if bt.connect():
-                logging.info('BT-TETHER: Successfuly connected')
-            else:
-                logging.error('BT-TETHER: Could not connect')
+        dev_remote, connected = bt.is_connected()
+
+        if connected:
+            logging.debug('BT-TETHER: Already connected.')
+            ui.set('bluetooth', 'C')
+            return
+
+        try:
+            logging.info('BT-TETHER: Search device ...')
+            dev_remote = bt.wait_for_device()
+            if dev_remote is None:
+                logging.info('BT-TETHER: Could not find device.')
                 ui.set('bluetooth', 'NF')
                 return
+        except Exception as bt_ex:
+            logging.error(bt_ex)
+            ui.set('bluetooth', 'NF')
+            return
+
+        paired = bt.is_paired()
+        if not paired:
+            if BTNap.pair(dev_remote):
+                logging.info('BT-TETHER: Paired with device.')
+            else:
+                logging.info('BT-TETHER: Pairing failed ...')
+                ui.set('bluetooth', 'PE')
+                return
+        else:
+            logging.debug('BT-TETHER: Already paired.')
+
 
         btnap_iface = IfaceWrapper('bnep0')
         logging.debug('BT-TETHER: Check interface')
+        if not btnap_iface.exists():
+            # connected and paired but not napping
+            logging.debug('BT-TETHER: Try to connect to nap ...')
+            if BTNap.nap(dev_remote):
+                logging.info('BT-TETHER: Napping!')
+                ui.set('bluetooth', 'C')
+                time.sleep(5)
+            else:
+                logging.info('BT-TETHER: Napping failed ...')
+                ui.set('bluetooth', 'NF')
+                return
+
         if btnap_iface.exists():
             logging.debug('BT-TETHER: Interface found')
 
@@ -467,11 +505,11 @@ def on_ui_update(ui):
 
             logging.debug('BT-TETHER: Try to set ADDR to interface')
             if not btnap_iface.set_addr(addr):
-                ui.set('bluetooth', 'ERR1')
+                ui.set('bluetooth', 'AE')
                 logging.error("BT-TETHER: Could not set ip of bnep0 to %s", addr)
                 return
-            else:
-                logging.debug('BT-TETHER: Set ADDR to interface')
+
+            logging.debug('BT-TETHER: Set ADDR to interface')
 
             # change route if sharking
             if OPTIONS['share_internet']:
@@ -485,10 +523,10 @@ def on_ui_update(ui):
                         resolv.seek(0)
                         resolv.write(nameserver + 'nameserver 9.9.9.9\n')
 
-            ui.set('bluetooth', 'CON')
+            ui.set('bluetooth', 'C')
         else:
             logging.error('BT-TETHER: bnep0 not found')
-            ui.set('bluetooth', 'ERR2')
+            ui.set('bluetooth', 'BE')
 
 
 def on_ui_setup(ui):
