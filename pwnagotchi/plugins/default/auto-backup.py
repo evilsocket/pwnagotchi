@@ -39,8 +39,11 @@ def on_internet_available(agent):
     if READY:
         if STATUS.newer_then_days(OPTIONS['interval']):
             return
-
-        files_to_backup = " ".join(OPTIONS['files'])
+        
+        # Only backup existing files to prevent errors
+        existing_files = list(filter(lambda f: os.path.exists(f), OPTIONS['files']))
+        files_to_backup = " ".join(existing_files)
+        
         try:
             display = agent.view()
 
