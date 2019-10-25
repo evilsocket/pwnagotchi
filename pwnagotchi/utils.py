@@ -36,13 +36,15 @@ def load_config(args):
         # logging not configured here yet
         print("installing /boot/config.yml to %s ...", args.user_config)
         # https://stackoverflow.com/questions/42392600/oserror-errno-18-invalid-cross-device-link
-        shutil.rmtree('/etc/pwnagotchi', ignore_errors=True)
-        shutil.move('/boot/pwnagotchi', '/etc/', args.user_config)
+        shutil.move("/boot/config.yml", args.user_config)
 
+    # check for an entire pwnagotchi folder on /boot/
     if os.path.isdir('/boot/pwnagotchi'):
         print("installing /boot/pwnagotchi to /etc/pwnagotchi ...")
+        shutil.rmtree('/etc/pwnagotchi', ignore_errors=True)
+        shutil.move('/boot/pwnagotchi', '/etc/')
 
-    # if no config is found, copy the defaults
+    # if not config is found, copy the defaults
     if not os.path.exists(args.config):
         print("copying %s to %s ..." % (ref_defaults_file, args.config))
         shutil.copy(ref_defaults_file, args.config)
