@@ -52,7 +52,7 @@ INDEX = """<html>
         <img src="/ui" id="ui" style="width:100%%"/>
         <br/>
         <hr/>
-        <form action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
+        <form method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
             <input type="submit" class="block" value="Shutdown"/>
         </form>
     </div>
@@ -149,24 +149,31 @@ class Handler(BaseHTTPRequestHandler):
 
         return True
 
-    # main entry point of the http server
+    def do_POST(self):
+        if not self._is_allowed():
+            return
+        if self.path.startswith('/shutdown'):
+            self._shutdown()
+        else:
+            self.send_response(404)
+
     def do_GET(self):
         if not self._is_allowed():
             return
 
         if self.path == '/':
             self._index()
-        elif self.path.startswith('/shutdown'):
-            self._shutdown()
 
         elif self.path.startswith('/ui'):
             self._image()
+
         elif self.path.startswith('/plugins'):
             plugin_from_path = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
             if plugin_from_path:
                 plugin_name = plugin_from_path.groups()[0]
                 right_path = plugin_from_path.groups()[1] if len(plugin_from_path.groups()) == 2 else None
                 plugins.one(plugin_name, 'webhook', right_path)
+
         else:
             self.send_response(404)
 
