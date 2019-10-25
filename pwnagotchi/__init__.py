@@ -4,6 +4,7 @@ import logging
 import time
 import re
 import pwnagotchi.ui.view as view
+import pwnagotchi
 
 version = '1.1.0b'
 
@@ -40,10 +41,7 @@ def set_name(new_name):
             fp.write(patched)
 
         os.system("hostname '%s'" % new_name)
-        _name = new_name
-        logging.info("restarting avahi ...")
-        os.system("service avahi-daemon restart")
-        logging.info("hostname set")
+        pwnagotchi.reboot()
 
 
 def name():
@@ -57,6 +55,7 @@ def name():
 def uptime():
     with open('/proc/uptime') as fp:
         return int(fp.read().split('.')[0])
+
 
 def mem_usage():
     with open('/proc/meminfo') as fp:
@@ -73,9 +72,10 @@ def mem_usage():
             if line.startswith("Cached:"):
                 kb_main_cached = int(line.split()[1])
         kb_mem_used = kb_mem_total - kb_mem_free - kb_main_cached - kb_main_buffers
-        return round(kb_mem_used/kb_mem_total,1)
+        return round(kb_mem_used / kb_mem_total, 1)
 
     return 0
+
 
 def cpu_load():
     with open('/proc/stat', 'rt') as fp:
