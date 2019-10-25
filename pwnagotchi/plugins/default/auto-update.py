@@ -176,7 +176,8 @@ def on_internet_available(agent):
             for repo, local_version, is_native, svc_name in to_check:
                 info = check(local_version, repo, is_native)
                 if info['url'] is not None:
-                    logging.warning("update for %s available: %s" % (repo, info['url']))
+                    logging.warning(
+                        "update for %s available (local version is '%s'): %s" % (repo, info['current'], info['url']))
                     info['service'] = svc_name
                     to_install.append(info)
 
