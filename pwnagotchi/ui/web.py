@@ -168,10 +168,11 @@ class Handler(BaseHTTPRequestHandler):
             self._image()
 
         elif self.path.startswith('/plugins'):
-            plugin_from_path = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
-            if plugin_from_path:
-                plugin_name = plugin_from_path.groups()[0]
-                right_path = plugin_from_path.groups()[1] if len(plugin_from_path.groups()) == 2 else None
+            matches = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
+            if matches:
+                groups = matches.groups()
+                plugin_name = groups[0]
+                right_path = groups[1] if len(groups) == 2 else None
                 plugins.one(plugin_name, 'webhook', right_path)
 
         else:
