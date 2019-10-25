@@ -16,7 +16,19 @@ def on(event_name, *args, **kwargs):
     cb_name = 'on_%s' % event_name
     for plugin_name, plugin in loaded.items():
         if cb_name in plugin.__dict__:
-            # print("calling %s %s(%s)" %(cb_name, args, kwargs))
+            try:
+                plugin.__dict__[cb_name](*args, **kwargs)
+            except Exception as e:
+                logging.error("error while running %s.%s : %s" % (plugin_name, cb_name, e))
+                logging.error(e, exc_info=True)
+
+
+def one(plugin_name, event_name, *args, **kwargs):
+    global loaded
+    if plugin_name in loaded:
+        plugin = loaded[plugin_name]
+        cb_name = 'on_%s' % event_name
+        if cb_name in plugin.__dict__:
             try:
                 plugin.__dict__[cb_name](*args, **kwargs)
             except Exception as e:

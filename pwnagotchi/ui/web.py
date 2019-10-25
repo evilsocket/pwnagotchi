@@ -166,8 +166,7 @@ class Handler(BaseHTTPRequestHandler):
             if plugin_from_path:
                 plugin_name = plugin_from_path.groups()[0]
                 right_path = plugin_from_path.groups()[1] if len(plugin_from_path.groups()) == 2 else None
-                if plugin_name in plugins.loaded and hasattr(plugins.loaded[plugin_name], 'on_webhook'):
-                    plugins.loaded[plugin_name].on_webhook(self, right_path)
+                plugins.one(plugin_name, 'webhook', right_path)
         else:
             self.send_response(404)
 
