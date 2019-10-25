@@ -130,11 +130,6 @@ class Handler(BaseHTTPRequestHandler):
             except:
                 pass
 
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self._send_cors_headers()
-        self.end_headers()
-
     # check the Origin header vs CORS
     def _is_allowed(self):
         origin = self.headers.get('origin')
@@ -148,6 +143,11 @@ class Handler(BaseHTTPRequestHandler):
                 return False
 
         return True
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self._send_cors_headers()
+        self.end_headers()
 
     def do_POST(self):
         if not self._is_allowed():
