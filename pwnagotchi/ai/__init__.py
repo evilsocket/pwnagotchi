@@ -16,6 +16,8 @@ def load(config, agent, epoch, from_disk=True):
         return False
 
     try:
+        begin = time.time()
+
         logging.info("[ai] bootstrapping dependencies ...")
 
         start = time.time()
@@ -53,8 +55,11 @@ def load(config, agent, epoch, from_disk=True):
             for key, value in config['params'].items():
                 logging.info("      %s: %s" % (key, value))
 
+        logging.debug("[ai] total loading time is %.2fs" % (time.time() - begin))
+
         return a2c
     except Exception as e:
         logging.exception("error while starting AI")
 
+    logging.warning("[ai] AI not loaded!")
     return False
