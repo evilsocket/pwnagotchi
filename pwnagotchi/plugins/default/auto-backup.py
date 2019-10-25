@@ -57,9 +57,10 @@ def on_internet_available(agent):
                     raise OSError(f"Command failed (rc: {process.returncode})")
 
             logging.info("AUTO-BACKUP: backup done")
+            display.set('status', 'Backup done!')
+            display.update()
             STATUS.update()
         except OSError as os_e:
             logging.info(f"AUTO-BACKUP: Error: {os_e}")
-
-        display.set('status', 'Backup done!')
-        display.update()
+            display.set('status', 'Backup failed!')
+            display.update()
