@@ -35,8 +35,6 @@ if __name__ == '__main__':
     config = utils.load_config(args)
     utils.setup_logging(args, config)
 
-    logging.debug("effective configuration:\n\n%s\n\n" % yaml.dump(config, default_flow_style=False))
-
     pwnagotchi.set_name(config['main']['name'])
 
     plugins.load(config)
@@ -46,6 +44,8 @@ if __name__ == '__main__':
     agent = Agent(view=display, config=config, keypair=keypair)
 
     logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent.fingerprint(), pwnagotchi.version))
+
+    logging.debug("effective configuration:\n\n%s\n\n" % yaml.dump(config, default_flow_style=False))
 
     for _, plugin in plugins.loaded.items():
         logging.debug("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))

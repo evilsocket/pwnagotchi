@@ -43,7 +43,7 @@ def load(config, agent, epoch, from_disk=True):
 
         start = time.time()
         a2c = A2C(MlpLstmPolicy, env, **config['params'])
-        logging.debug("[ai] A2C crated in %.2fs" % (time.time() - start))
+        logging.debug("[ai] A2C created in %.2fs" % (time.time() - start))
 
         if from_disk and os.path.exists(config['path']):
             logging.info("[ai] loading %s ..." % config['path'])
