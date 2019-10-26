@@ -94,6 +94,9 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('lcdhat',):
         config['ui']['display']['type'] = 'lcdhat'
 
+    elif config['ui']['display']['type'] in ('dfrobot', 'df'):
+        config['ui']['display']['type'] = 'dfrobot'
+
     else:
         print("unsupported display type %s" % config['ui']['display']['type'])
         exit(1)

@@ -2,6 +2,7 @@ from pwnagotchi.ui.hw.inky import Inky
 from pwnagotchi.ui.hw.papirus import Papirus
 from pwnagotchi.ui.hw.oledhat import OledHat
 from pwnagotchi.ui.hw.lcdhat import LcdHat
+from pwnagotchi.ui.hw.dfrobot import DFRobot
 from pwnagotchi.ui.hw.waveshare1 import WaveshareV1
 from pwnagotchi.ui.hw.waveshare2 import WaveshareV2
 from pwnagotchi.ui.hw.waveshare27inch import Waveshare27inch
@@ -21,6 +22,8 @@ def display_for(config):
     if config['ui']['display']['type'] == 'lcdhat':
         return LcdHat(config)
 
+    if config['ui']['display']['type'] == 'dfrobot':
+        return DFRobot(config)
 
     elif config['ui']['display']['type'] == 'waveshare_1':
         return WaveshareV1(config)

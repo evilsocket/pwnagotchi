@@ -48,6 +48,9 @@ class Display(View):
     def is_lcdhat(self):
         return self._implementation.name == 'lcdhat'
 
+    def is_dfrobot(self):
+        return self._implementation.name == 'dfrobot'   
+
     def is_waveshare_any(self):
         return self.is_waveshare_v1() or self.is_waveshare_v2()
 
