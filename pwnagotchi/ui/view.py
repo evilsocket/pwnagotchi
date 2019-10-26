@@ -216,7 +216,7 @@ class View(object):
             face = random.choice((faces.MOTIVATED, faces.FRIEND, faces.HAPPY))
         # normal friend, neutral-positive
         else:
-            face = random.choice((faces.EXCITED, faces.HAPPY))
+            face = random.choice((faces.EXCITED, faces.HAPPY, faces.SMART))
 
         self.set('face', face)
         self.set('status', self._voice.on_new_peer(peer))
