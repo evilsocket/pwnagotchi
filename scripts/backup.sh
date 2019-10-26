@@ -33,6 +33,8 @@ for file in "${FILES_TO_BACKUP[@]}"; do
   ssh pi@$UNIT_HOSTNAME "sudo cp -r $file /tmp/backup$dir" > /dev/null
 done
 
+ssh pi@$UNIT_HOSTNAME "sudo chown pi:pi -R /tmp/backup" > /dev/null
+
 echo "@ pulling from $UNIT_HOSTNAME ..."
 
 rm -rf /tmp/backup
