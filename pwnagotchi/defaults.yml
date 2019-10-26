@@ -53,14 +53,14 @@ main:
             access_token_secret: aaa
         onlinehashcrack:
             enabled: false
-            email: ~
+            email: null
         wpa-sec:
             enabled: false
-            api_key: ~
+            api_key: null
             api_url: "https://wpa-sec.stanev.org"
         wigle:
             enabled: false
-            api_key: ~
+            api_key: null
         screen_refresh:
             enabled: false
             refresh_interval: 50
@@ -71,11 +71,23 @@ main:
             enabled: false
         bt-tether:
             enabled: false # if you want to use this, set ui.display.video.address to 0.0.0.0
-            mac: ~ # mac of your bluetooth device
-            ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
-            netmask: 24
-            interval: 1 # check every x minutes for device
-            share_internet: false
+            devices:
+              android-phone:
+                mac: null # mac of your bluetooth device
+                ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
+                netmask: 24
+                interval: 1 # check every x minutes for device
+                share_internet: false
+                max_tries: 0 # 0 = infinity; >0 = max number trying to find a device
+                priority: 10 # higher priority wins
+              my-iphone:
+                mac: null # mac of your bluetooth device
+                ip: '172.20.10.2' # ip from which your pwnagotchi should be reachable
+                netmask: 24
+                interval: 1 # check every x minutes for device
+                share_internet: false
+                max_tries: 0 # 0 = infinity; >0 = max number trying to find a device
+                priority: 5 # higher priority wins (this would loose against the android)
         memtemp: # Display memory usage, cpu load and cpu temperature on screen
             enabled: false
             orientation: horizontal # horizontal/vertical

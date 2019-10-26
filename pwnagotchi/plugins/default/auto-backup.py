@@ -1,21 +1,27 @@
+"""
+Auto-Backup plugin
+"""
+import logging
+import os
+import subprocess
+from pwnagotchi.utils import StatusFile
+from pwnagotchi.plugins import loaded
+
+# Meta informations
 __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '1.0.0'
 __name__ = 'auto-backup'
 __license__ = 'GPL3'
 __description__ = 'This plugin backups files when internet is available.'
 
-from pwnagotchi.utils import StatusFile
-import logging
-import os
-import subprocess
-
+# Variables
 OPTIONS = dict()
-READY = False
-STATUS = StatusFile('/root/.auto-backup')
+PLUGIN = loaded[os.path.basename(__file__).replace(".py","")]
 
 
 def on_loaded():
-    global READY
+    PLUGIN.ready = False
+    PLUGIN.status = StatusFile('/root/.auto-backup')
 
     if 'files' not in OPTIONS or ('files' in OPTIONS and OPTIONS['files'] is None):
         logging.error("AUTO-BACKUP: No files to backup.")
@@ -29,21 +35,19 @@ def on_loaded():
         logging.error("AUTO-BACKUP: No commands given.")
         return
 
-    READY = True
+    PLUGIN.ready = True
     logging.info("AUTO-BACKUP: Successfully loaded.")
 
 
 def on_internet_available(agent):
-    global STATUS
-
-    if READY:
-        if STATUS.newer_then_days(OPTIONS['interval']):
+    if PLUGIN.ready:
+        if PLUGIN.status.newer_then_days(OPTIONS['interval']):
             return
-        
+
         # Only backup existing files to prevent errors
         existing_files = list(filter(lambda f: os.path.exists(f), OPTIONS['files']))
         files_to_backup = " ".join(existing_files)
-        
+
         try:
             display = agent.view()
 
@@ -62,8 +66,8 @@ def on_internet_available(agent):
             logging.info("AUTO-BACKUP: backup done")
             display.set('status', 'Backup done!')
             display.update()
-            STATUS.update()
+            PLUGIN.status.update()
         except OSError as os_e:
-            logging.info(f"AUTO-BACKUP: Error: {os_e}")
+            logging.info("AUTO-BACKUP: %s", os_e)
             display.set('status', 'Backup failed!')
             display.update()

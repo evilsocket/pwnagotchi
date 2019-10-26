@@ -1,3 +1,4 @@
+"""
 # memtemp shows memory infos and cpu temperature
 #
 # mem usage, cpu load, cpu temp
@@ -17,18 +18,21 @@
 # - Added horizontal and vertical orientation
 #
 ###############################################################
+"""
 
+import logging
+import pwnagotchi
+from pwnagotchi.ui.components import LabeledValue
+from pwnagotchi.ui.view import BLACK
+from pwnagotchi.ui import fonts
+
+# Meta informations
 __author__ = 'https://github.com/xenDE'
 __version__ = '1.0.1'
 __name__ = 'memtemp'
 __license__ = 'GPL3'
 __description__ = 'A plugin that will display memory/cpu usage and temperature'
 
-from pwnagotchi.ui.components import LabeledValue
-from pwnagotchi.ui.view import BLACK
-import pwnagotchi.ui.fonts as fonts
-import pwnagotchi
-import logging
 
 OPTIONS = dict()
 

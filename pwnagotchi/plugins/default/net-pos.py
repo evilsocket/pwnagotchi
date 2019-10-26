@@ -1,3 +1,18 @@
+"""
+Saves a json file with the access points with more signal
+                     whenever a handshake is captured.
+                     When internet is available the files are converted in geo locations
+                     using Mozilla LocationService
+"""
+
+import os
+import logging
+import json
+import requests
+from pwnagotchi.utils import StatusFile
+from pwnagotchi.plugins import loaded
+
+# Meta informations
 __author__ = 'zenzen san'
 __version__ = '2.0.0'
 __name__ = 'net-pos'
@@ -7,27 +22,22 @@ __description__ = """Saves a json file with the access points with more signal
                      When internet is available the files are converted in geo locations
                      using Mozilla LocationService """
 
-import logging
-import json
-import os
-import requests
-from pwnagotchi.utils import StatusFile
 
 MOZILLA_API_URL = 'https://location.services.mozilla.com/v1/geolocate?key={api}'
-REPORT = StatusFile('/root/.net_pos_saved', data_format='json')
-SKIP = list()
-READY = False
 OPTIONS = dict()
+PLUGIN = loaded[os.path.basename(__file__).replace(".py","")]
 
 
 def on_loaded():
-    global READY
+    PLUGIN.report = StatusFile('/root/.net_pos_saved', data_format='json')
+    PLUGIN.skip = list()
+    PLUGIN.ready = False
 
     if 'api_key' not in OPTIONS or ('api_key' in OPTIONS and OPTIONS['api_key'] is None):
         logging.error("NET-POS: api_key isn't set. Can't use mozilla's api.")
         return
 
-    READY = True
+    PLUGIN.ready = True
 
     logging.info("net-pos plugin loaded.")
 
@@ -45,20 +55,18 @@ def _append_saved(path):
             saved_file.write(x + "\n")
 
 def on_internet_available(agent):
-    global SKIP
-    global REPORT
+    if PLUGIN.ready:
 
-    if READY:
         config = agent.config()
         display = agent.view()
-        reported = REPORT.data_field_or('reported', default=list())
+        reported = PLUGIN.report.data_field_or('reported', default=list())
         handshake_dir = config['bettercap']['handshakes']
 
         all_files = os.listdir(handshake_dir)
         all_np_files = [os.path.join(handshake_dir, filename)
                      for filename in all_files
                      if filename.endswith('.net-pos.json')]
-        new_np_files = set(all_np_files) - set(reported) - set(SKIP)
+        new_np_files = set(all_np_files) - set(reported) - set(PLUGIN.skip)
 
         if new_np_files:
             logging.info("NET-POS: Found %d new net-pos files. Fetching positions ...", len(new_np_files))
@@ -70,29 +78,29 @@ def on_internet_available(agent):
                 if os.path.exists(geo_file):
                     # got already the position
                     reported.append(np_file)
-                    REPORT.update(data={'reported': reported})
+                    PLUGIN.report.update(data={'reported': reported})
                     continue
 
                 try:
                     geo_data = _get_geo_data(np_file) # returns json obj
                 except requests.exceptions.RequestException as req_e:
                     logging.error("NET-POS: %s", req_e)
-                    SKIP += np_file
+                    PLUGIN.skip.append(np_file)
                     continue
                 except json.JSONDecodeError as js_e:
                     logging.error("NET-POS: %s", js_e)
-                    SKIP += np_file
+                    PLUGIN.skip.append(np_file)
                     continue
                 except OSError as os_e:
                     logging.error("NET-POS: %s", os_e)
-                    SKIP += np_file
+                    PLUGIN.skip.append(np_file)
                     continue
 
                 with open(geo_file, 'w+t') as sf:
                     json.dump(geo_data, sf)
 
                 reported.append(np_file)
-                REPORT.update(data={'reported': reported})
+                PLUGIN.report.update(data={'reported': reported})
 
                 display.set('status', f"Fetching positions ({idx+1}/{len(new_np_files)})")
                 display.update(force=True)

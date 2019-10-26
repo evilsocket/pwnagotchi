@@ -1,8 +1,6 @@
-__author__ = '33197631+dadav@users.noreply.github.com'
-__version__ = '2.0.0'
-__name__ = 'wigle'
-__license__ = 'GPL3'
-__description__ = 'This plugin automatically uploads collected wifis to wigle.net'
+"""
+This plugin automatically uploades collected wifis to wigle.net
+"""
 
 import os
 import logging
@@ -12,24 +10,32 @@ import csv
 from datetime import datetime
 import requests
 from pwnagotchi.utils import WifiInfo, FieldNotFoundError, extract_from_pcap, StatusFile
+from pwnagotchi.plugins import loaded
 
-READY = False
-REPORT = StatusFile('/root/.wigle_uploads', data_format='json')
-SKIP = list()
+__author__ = '33197631+dadav@users.noreply.github.com'
+__version__ = '2.0.1'
+__name__ = 'wigle'
+__license__ = 'GPL3'
+__description__ = 'This plugin automatically uploades collected wifis to wigle.net'
+
+
 OPTIONS = dict()
+PLUGIN = loaded[os.path.basename(__file__).replace(".py", "")]
 
 
 def on_loaded():
     """
     Gets called when the plugin gets loaded
     """
-    global READY
+    PLUGIN.ready = False
+    PLUGIN.skip = list()
+    PLUGIN.report = StatusFile('/root/.wigle_uploads', data_format='json')
 
     if 'api_key' not in OPTIONS or ('api_key' in OPTIONS and OPTIONS['api_key'] is None):
         logging.error("WIGLE: api_key isn't set. Can't upload to wigle.net")
         return
 
-    READY = True
+    PLUGIN.ready = True
 
 
 def _extract_gps_data(path):
@@ -114,20 +120,18 @@ def on_internet_available(agent):
     """
     Called in manual mode when there's internet connectivity
     """
-    global REPORT
-    global SKIP
 
-    if READY:
+    if PLUGIN.ready:
         config = agent.config()
         display = agent.view()
-        reported = REPORT.data_field_or('reported', default=list())
+        reported = PLUGIN.report.data_field_or('reported', default=list())
 
         handshake_dir = config['bettercap']['handshakes']
         all_files = os.listdir(handshake_dir)
         all_gps_files = [os.path.join(handshake_dir, filename)
                      for filename in all_files
                      if filename.endswith('.gps.json')]
-        new_gps_files = set(all_gps_files) - set(reported) - set(SKIP)
+        new_gps_files = set(all_gps_files) - set(reported) - set(PLUGIN.skip)
 
         if new_gps_files:
             logging.info("WIGLE: Internet connectivity detected. Uploading new handshakes to wigle.net")
@@ -140,23 +144,23 @@ def on_internet_available(agent):
 
                 if not os.path.exists(pcap_filename):
                     logging.error("WIGLE: Can't find pcap for %s", gps_file)
-                    SKIP.append(gps_file)
+                    PLUGIN.skip.append(gps_file)
                     continue
 
                 try:
                     gps_data = _extract_gps_data(gps_file)
                 except OSError as os_err:
                     logging.error("WIGLE: %s", os_err)
-                    SKIP.append(gps_file)
+                    PLUGIN.skip.append(gps_file)
                     continue
                 except json.JSONDecodeError as json_err:
                     logging.error("WIGLE: %s", json_err)
-                    SKIP.append(gps_file)
+                    PLUGIN.skip.append(gps_file)
                     continue
 
                 if gps_data['Latitude'] == 0 and gps_data['Longitude'] == 0:
                     logging.warning("WIGLE: Not enough gps-information for %s. Trying again next time.", gps_file)
-                    SKIP.append(gps_file)
+                    PLUGIN.skip.append(gps_file)
                     continue
 
 
@@ -168,11 +172,11 @@ def on_internet_available(agent):
                                                                   WifiInfo.RSSI])
                 except FieldNotFoundError:
                     logging.error("WIGLE: Could not extract all information. Skip %s", gps_file)
-                    SKIP.append(gps_file)
+                    PLUGIN.skip.append(gps_file)
                     continue
                 except Scapy_Exception as sc_e:
                     logging.error("WIGLE: %s", sc_e)
-                    SKIP.append(gps_file)
+                    PLUGIN.skip.append(gps_file)
                     continue
 
                 new_entry = _transform_wigle_entry(gps_data, pcap_data)
@@ -185,11 +189,11 @@ def on_internet_available(agent):
                 try:
                     _send_to_wigle(csv_entries, OPTIONS['api_key'])
                     reported += no_err_entries
-                    REPORT.update(data={'reported': reported})
+                    PLUGIN.report.update(data={'reported': reported})
                     logging.info("WIGLE: Successfully uploaded %d files", len(no_err_entries))
                 except requests.exceptions.RequestException as re_e:
-                    SKIP += no_err_entries
+                    PLUGIN.skip += no_err_entries
                     logging.error("WIGLE: Got an exception while uploading %s", re_e)
                 except OSError as os_e:
-                    SKIP += no_err_entries
+                    PLUGIN.skip += no_err_entries
                     logging.error("WIGLE: Got the following error: %s", os_e)

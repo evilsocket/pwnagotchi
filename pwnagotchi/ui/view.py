@@ -354,7 +354,7 @@ class View(object):
                 return
 
             changes = self._state.changes(ignore=self._ignore_changes)
-            if force or len(changes):
+            if force or changes:
                 self._canvas = Image.new('1', (self._width, self._height), WHITE)
                 drawer = ImageDraw.Draw(self._canvas)
 

@@ -1,23 +1,33 @@
-# Based on UPS Lite v1.1 from https://github.com/xenDE
-#
-# functions for get UPS status - needs enable "i2c" in raspi-config
-#
-# https://github.com/linshuqin329/UPS-Lite
-#
-# For Raspberry Pi Zero Ups Power Expansion Board with Integrated Serial Port S3U4
-# https://www.ebay.de/itm/For-Raspberry-Pi-Zero-Ups-Power-Expansion-Board-with-Integrated-Serial-Port-S3U4/323873804310
-# https://www.aliexpress.com/item/32888533624.html
+"""
+Based on UPS Lite v1.1 from https://github.com/xenDE
+
+funtions for get UPS status - needs enable "i2c" in raspi-config
+
+https://github.com/linshuqin329/UPS-Lite
+
+For Raspberry Pi Zero Ups Power Expansion Board with Integrated Serial Port S3U4
+https://www.ebay.de/itm/For-Raspberry-Pi-Zero-Ups-Power-Expansion-Board-with-Integrated-Serial-Port-S3U4/323873804310
+https://www.aliexpress.com/item/32888533624.html
+"""
+
+import os
+import struct
+import logging
+from pwnagotchi.ui.components import LabeledValue
+from pwnagotchi.ui.view import BLACK
+from pwnagotchi.ui import fonts
+from pwnagotchi.plugins import loaded
+
+# Meta-Informations
 __author__ = 'evilsocket@gmail.com'
 __version__ = '1.0.0'
 __name__ = 'ups_lite'
 __license__ = 'GPL3'
 __description__ = 'A plugin that will add a voltage indicator for the UPS Lite v1.1'
 
-import struct
-
-from pwnagotchi.ui.components import LabeledValue
-from pwnagotchi.ui.view import BLACK
-import pwnagotchi.ui.fonts as fonts
+# Variables
+OPTIONS = dict()
+PLUGIN = loaded[os.path.basename(__file__).replace(".py","")]
 
 
 # TODO: add enable switch in config.yml an cleanup all to the best place
@@ -34,7 +44,8 @@ class UPS:
             read = self._bus.read_word_data(address, 2)
             swapped = struct.unpack("<H", struct.pack(">H", read))[0]
             return swapped * 1.25 / 1000 / 16
-        except:
+        except Exception as smbus_err:
+            logging.error(smbus_err)
             return 0.0
 
     def capacity(self):
@@ -43,16 +54,13 @@ class UPS:
             read = self._bus.read_word_data(address, 4)
             swapped = struct.unpack("<H", struct.pack(">H", read))[0]
             return swapped / 256
-        except:
+        except Exception as smbus_err:
+            logging.error(smbus_err)
             return 0.0
 
 
-ups = None
-
-
 def on_loaded():
-    global ups
-    ups = UPS()
+    PLUGIN.ups = UPS()
 
 
 def on_ui_setup(ui):
@@ -61,4 +69,4 @@ def on_ui_setup(ui):
 
 
 def on_ui_update(ui):
-    ui.set('ups', "%4.2fV/%2i%%" % (ups.voltage(), ups.capacity()))
+    ui.set('ups', "%4.2fV/%2i%%" % (PLUGIN.ups.voltage(), PLUGIN.ups.capacity()))

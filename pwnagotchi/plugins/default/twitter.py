@@ -1,11 +1,16 @@
+"""
+This plugin creates tweets about the recent activity of pwnagotchi
+"""
+
+import logging
+from pwnagotchi.voice import Voice
+
 __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '1.0.0'
 __name__ = 'twitter'
 __license__ = 'GPL3'
 __description__ = 'This plugin creates tweets about the recent activity of pwnagotchi'
 
-import logging
-from pwnagotchi.voice import Voice
 
 OPTIONS = dict()
 
@@ -45,6 +50,6 @@ def on_internet_available(agent):
             api.update_with_media(filename=picture, status=tweet)
             last_session.save_session_id()
 
-            logging.info("tweeted: %s" % tweet)
-        except Exception as e:
-            logging.exception("error while tweeting")
+            logging.info("tweeted: %s", tweet)
+        except Exception as twitter_ex:
+            logging.exception(twitter_ex)
