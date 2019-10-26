@@ -10,7 +10,7 @@ import requests
 from pwnagotchi.utils import StatusFile
 
 READY = False
-REPORT = StatusFile('/root/.ohc_uploads', data_format='json')
+REPORT = StatusFile('/etc/pwnagotchi/ohc_uploads.json', data_format='json')
 SKIP = list()
 OPTIONS = dict()
 

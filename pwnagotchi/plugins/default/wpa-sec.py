@@ -10,7 +10,7 @@ import requests
 from pwnagotchi.utils import StatusFile
 
 READY = False
-REPORT = StatusFile('/root/.wpa_sec_uploads', data_format='json')
+REPORT = StatusFile('/etc/pwnagotchi/wpa_sec_uploads.json', data_format='json')
 OPTIONS = dict()
 SKIP = list()
 
@@ -28,13 +28,13 @@ def on_loaded():
     if 'api_url' not in OPTIONS or ('api_url' in OPTIONS and OPTIONS['api_url'] is None):
         logging.error("WPA_SEC: API-URL isn't set. Can't upload, no endpoint configured.")
         return
-        
+
     READY = True
 
 
 def _upload_to_wpasec(path, timeout=30):
     """
-    Uploads the file to https://wpa-sec.stanev.org, or another endpoint. 
+    Uploads the file to https://wpa-sec.stanev.org, or another endpoint.
     """
     with open(path, 'rb') as file_to_upload:
         cookie = {'key': OPTIONS['api_key']}

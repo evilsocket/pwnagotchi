@@ -14,7 +14,7 @@ import requests
 from pwnagotchi.utils import WifiInfo, FieldNotFoundError, extract_from_pcap, StatusFile
 
 READY = False
-REPORT = StatusFile('/root/.wigle_uploads', data_format='json')
+REPORT = StatusFile('/etc/pwnagotchi/wigle_uploads.json', data_format='json')
 SKIP = list()
 OPTIONS = dict()
 
