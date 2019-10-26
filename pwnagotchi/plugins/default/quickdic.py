@@ -30,7 +30,7 @@ def on_handshake(agent, filename, access_point, client_station):
         logging.info("[quickdic] No handshake")
     else:
         logging.info("[quickdic] Handshake confirmed")
-        result2 = subprocess.run(('aircrack-ng -w `echo '+OPTIONS['wordlist_folder']+'*.txt | sed \'s/\ /,/g\'` -l '+filename+'.cracked -q -b '+result+' '+filename+' | grep KEY'),shell=True,stdout=subprocess.PIPE)
+        result2 = subprocess.run(('aircrack-ng -w `find '+OPTIONS['wordlist_folder']+' -name \'*.txt\' | tr -s $\'\n\' \',\' | rev | cut -c2- | rev` -l '+filename+'.cracked -q -b '+result+' '+filename+' | grep KEY'),shell=True,stdout=subprocess.PIPE)
         result2 = result2.stdout.decode('utf-8').strip()
         logging.info("[quickdic] "+result2)
         if result2 != "KEY NOT FOUND":
