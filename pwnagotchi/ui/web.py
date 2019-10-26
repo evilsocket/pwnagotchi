@@ -75,7 +75,7 @@ SHUTDOWN = """<html>
 
 
 class Handler(BaseHTTPRequestHandler):
-    AllowedOrigin = '*'
+    AllowedOrigin = None  # CORS headers are not sent
 
     # suppress internal logging
     def log_message(self, format, *args):
@@ -88,12 +88,13 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-XSS-Protection", "1; mode=block")
         self.send_header("Referrer-Policy", "same-origin")
         # cors
-        self.send_header("Access-Control-Allow-Origin", Handler.AllowedOrigin)
-        self.send_header('Access-Control-Allow-Credentials', 'true')
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers",
-                         "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-        self.send_header("Vary", "Origin")
+        if Handler.AllowedOrigin:
+            self.send_header("Access-Control-Allow-Origin", Handler.AllowedOrigin)
+            self.send_header('Access-Control-Allow-Credentials', 'true')
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers",
+                            "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+            self.send_header("Vary", "Origin")
 
     # just render some html in a 200 response
     def _html(self, html):
@@ -132,15 +133,18 @@ class Handler(BaseHTTPRequestHandler):
 
     # check the Origin header vs CORS
     def _is_allowed(self):
+        if not Handler.AllowedOrigin or Handler.AllowedOrigin == '*':
+            return True
+
+        # TODO: FIX doesn't work with GET requests same-origin
         origin = self.headers.get('origin')
-        if not origin and Handler.AllowedOrigin != '*':
+        if not origin:
             logging.warning("request with no Origin header from %s" % self.address_string())
             return False
 
-        if Handler.AllowedOrigin != '*':
-            if origin != Handler.AllowedOrigin:
-                logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
-                return False
+        if origin != Handler.AllowedOrigin:
+            logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
+            return False
 
         return True
 
@@ -186,11 +190,8 @@ class Server(object):
         self._address = config['video']['address']
         self._httpd = None
 
-        if 'origin' in config['video'] and config['video']['origin'] != '*':
+        if 'origin' in config['video']:
             Handler.AllowedOrigin = config['video']['origin']
-        else:
-            logging.warning("THE WEB UI IS RUNNING WITH ALLOWED ORIGIN SET TO *, READ WHY YOU SHOULD CHANGE IT HERE " +
-                            "https://developer.mozilla.org/it/docs/Web/HTTP/CORS")
 
         if self._enabled:
             _thread.start_new_thread(self._http_serve, ())
