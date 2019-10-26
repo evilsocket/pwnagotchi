@@ -24,7 +24,7 @@ msgid "Hi, I'm Pwnagotchi! Starting ..."
 msgstr "Здравей, аз съм Pwnagotchi! Стартиране ..."
 
 msgid "New day, new hunt, new pwns!"
-msgstr "Нов ден, нов лов, нови жертви!"
+msgstr "Нов ден, нов лов, нови pwns!"
 
 msgid "Hack the Planet!"
 msgstr "Хакни планетата!"
@@ -67,7 +67,7 @@ msgid "I'm living the life!"
 msgstr "Живота ми е фантастичен!"
 
 msgid "I pwn therefore I am."
-msgstr "Аз живея за да хаквам."
+msgstr "Аз живея за да pwn-вам."
 
 msgid "So many networks!!!"
 msgstr "Толкова много мрежи!!!"
