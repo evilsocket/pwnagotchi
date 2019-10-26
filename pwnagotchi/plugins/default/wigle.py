@@ -155,7 +155,7 @@ def on_internet_available(agent):
                     continue
 
                 if gps_data['Latitude'] == 0 and gps_data['Longitude'] == 0:
-                    logging.warning("WIGLE: Not enough gps-informations for %s. Trying again next time.", gps_file)
+                    logging.warning("WIGLE: Not enough gps-information for %s. Trying again next time.", gps_file)
                     SKIP.append(gps_file)
                     continue
 
@@ -167,7 +167,7 @@ def on_internet_available(agent):
                                                                   WifiInfo.CHANNEL,
                                                                   WifiInfo.RSSI])
                 except FieldNotFoundError:
-                    logging.error("WIGLE: Could not extract all informations. Skip %s", gps_file)
+                    logging.error("WIGLE: Could not extract all information. Skip %s", gps_file)
                     SKIP.append(gps_file)
                     continue
                 except Scapy_Exception as sc_e:
