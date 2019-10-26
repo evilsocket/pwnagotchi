@@ -79,6 +79,10 @@ main:
         memtemp: # Display memory usage, cpu load and cpu temperature on screen
             enabled: false
             orientation: horizontal # horizontal/vertical
+        pawgps:
+            enabled: false
+            #The IP Address of your phone with Paw Server running, default (option is empty) is 192.168.44.1
+            ip: ''
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
