@@ -30,6 +30,9 @@ STYLE = """
     cursor: pointer;
     text-align: center;
 }
+img {
+    image-rendering: pixelated;
+}
 """
 
 SCRIPT = """
