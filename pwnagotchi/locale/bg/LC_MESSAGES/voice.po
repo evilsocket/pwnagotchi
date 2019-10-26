@@ -92,134 +92,135 @@ msgstr "Ами ... довиждане {name}"
 
 #, python-brace-format
 msgid "{name} is gone ..."
-msgstr ""
+msgstr "{name} изчезна ..."
 
 #, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr ""
+msgstr "Упс ... {name} изчезна."
 
 #, python-brace-format
 msgid "{name} missed!"
-msgstr ""
+msgstr "{name} загубен!"
 
 msgid "Missed!"
-msgstr ""
+msgstr "Загубен!"
 
 msgid "Good friends are a blessing!"
-msgstr ""
+msgstr "Добрите приятели са благословия!"
 
 msgid "I love my friends!"
-msgstr ""
+msgstr "Обичам приятелите си!"
 
 msgid "Nobody wants to play with me ..."
-msgstr ""
+msgstr "Никой не иска да си играе с мен ..."
 
 msgid "I feel so alone ..."
-msgstr ""
+msgstr "Чувствам се толкова самотен ..."
 
 msgid "Where's everybody?!"
-msgstr ""
+msgstr "Къде са всички?!"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr ""
+msgstr "Заспивам за {secs} секунди ..."
 
 msgid "Zzzzz"
-msgstr ""
+msgstr "Zzzzz"
 
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
-msgstr ""
+msgstr "ZzzZzzz ({secs}s)"
 
 msgid "Good night."
-msgstr ""
+msgstr "Лека нощ."
 
 msgid "Zzz"
-msgstr ""
+msgstr "Zzz"
 
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr ""
+msgstr "Чакам {secs} секунди ..."
 
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr ""
+msgstr "Оглеждам се ({secs}секунди)"
 
 #, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr ""
+msgstr "Хей {what} нека станем приятели!"
 
 #, python-brace-format
 msgid "Associating to {what}"
-msgstr ""
+msgstr "Свръзване с {what}"
 
 #, python-brace-format
 msgid "Yo {what}!"
-msgstr ""
+msgstr "Ей {what}!"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr ""
+msgstr "Реших, че {mac} не се нуждае от WiFi!"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
-msgstr ""
+msgstr "Неудостоверяване на {mac}"
 
 #, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr ""
+msgstr "Ритам и прогонвам {mac}!"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr ""
+msgstr "Супер, имаме {num} нови handshake{plural}!"
 
 #, python-brace-format
 msgid "You have {count} new message{plural}!"
-msgstr ""
+msgstr "Имате {count} нови съобщения!"
 
 msgid "Ops, something went wrong ... Rebooting ..."
-msgstr ""
+msgstr "Упс, нещо се обърка ... Рестартиране ..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr ""
+msgstr "Отхвърлих {num} станции\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr ""
+msgstr "Направих {num} нови приятели\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr ""
+msgstr "Имам {num} handshakes\n"
 
 msgid "Met 1 peer"
-msgstr ""
+msgstr "Срещнах 1 връстник"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr ""
+msgstr "Срещнах {num} връстници"
 
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
-msgstr ""
+msgstr "Аз pwn-вах за {duration} и отхвърлих {deauthed} clients! Също така срещнах {associated} нови приятели и изядох {handshakes} handshakes! #pwnagotchi 
+#pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"
-msgstr ""
+msgstr "часове"
 
 msgid "minutes"
-msgstr ""
+msgstr "минути"
 
 msgid "seconds"
-msgstr ""
+msgstr "секунди"
 
 msgid "hour"
-msgstr ""
+msgstr "час"
 
 msgid "minute"
-msgstr ""
+msgstr "минута"
 
 msgid "second"
-msgstr ""
+msgstr "секунда"
