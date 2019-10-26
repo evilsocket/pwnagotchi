@@ -204,8 +204,8 @@ msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
-msgstr "Аз pwn-вах за {duration} и отхвърлих {deauthed} clients! Също така срещнах {associated} нови приятели и изядох {handshakes} handshakes! #pwnagotchi 
-#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr "Аз pwn-вах за {duration} и отхвърлих {deauthed} clients! Също така срещнах {associated} нови приятели и изядох {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"
 msgstr "часове"
