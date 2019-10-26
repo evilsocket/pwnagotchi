@@ -12,7 +12,6 @@ Aircrack-ng needed, to install:
 import logging
 import subprocess
 import string
-import re
 import os
 
 OPTIONS = dict()

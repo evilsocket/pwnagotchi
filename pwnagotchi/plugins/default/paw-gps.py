@@ -10,7 +10,6 @@ https://raw.githubusercontent.com/systemik/pwnagotchi-bt-tether/master/GPS-via-P
 '''
 
 import logging
-import json
 import requests
 
 OPTIONS = dict()
