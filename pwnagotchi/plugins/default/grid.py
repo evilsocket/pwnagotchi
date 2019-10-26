@@ -11,14 +11,10 @@ import time
 import glob
 
 import pwnagotchi.grid as grid
-import pwnagotchi.utils as utils
-from pwnagotchi.ui.components import LabeledValue
-from pwnagotchi.ui.view import BLACK
-import pwnagotchi.ui.fonts as fonts
-from pwnagotchi.utils import WifiInfo, extract_from_pcap
+from pwnagotchi.utils import StatusFile, WifiInfo, extract_from_pcap
 
 OPTIONS = dict()
-REPORT = utils.StatusFile('/root/.api-report.json', data_format='json')
+REPORT = StatusFile('/root/.api-report.json', data_format='json')
 
 UNREAD_MESSAGES = 0
 TOTAL_MESSAGES = 0
