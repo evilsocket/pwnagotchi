@@ -79,7 +79,7 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('papirus', 'papi'):
         config['ui']['display']['type'] = 'papirus'
 
-    elif config['ui']['display']['type'] in ('oledhat'):
+    elif config['ui']['display']['type'] in ('oledhat',):
         config['ui']['display']['type'] = 'oledhat'
 
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1'):
@@ -91,9 +91,9 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('ws_27inch', 'ws27inch', 'waveshare_27inch', 'waveshare27inch'):
         config['ui']['display']['type'] = 'waveshare27inch'
 
-    elif config['ui']['display']['type'] in ('lcdhat'):
+    elif config['ui']['display']['type'] in ('lcdhat',):
         config['ui']['display']['type'] = 'lcdhat'
-        
+
     else:
         print("unsupported display type %s" % config['ui']['display']['type'])
         exit(1)
