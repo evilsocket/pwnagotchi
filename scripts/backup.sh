@@ -6,12 +6,13 @@ UNIT_HOSTNAME=${1:-10.0.0.2}
 OUTPUT=${2:-pwnagotchi-backup.zip}
 # what to backup
 FILES_TO_BACKUP=(
-  /root/brain.nn
-  /root/brain.json
-  /root/.api-report.json
-  /root/handshakes
-  /root/peers
   /etc/pwnagotchi/
+  /opt/wordlists/
+  /root/.api-report.json
+  /root/brain.json
+  /root/brain.nn
+  /root/handshakes/
+  /root/peers/
   /var/log/pwnagotchi.log
 )
 

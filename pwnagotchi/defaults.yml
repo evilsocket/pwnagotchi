@@ -29,12 +29,13 @@ main:
             enabled: false
             interval: 1 # every day
             files:
+                - /etc/pwnagotchi/
+                - /opt/wordlists/
                 - /root/brain.nn
                 - /root/brain.json
                 - /root/.api-report.json
                 - /root/handshakes/
                 - /root/peers/
-                - /etc/pwnagotchi/
                 - /var/log/pwnagotchi.log
             commands:
                 - 'tar czf /root/pwnagotchi-backup.tar.gz {files}'
