@@ -1,9 +1,9 @@
-# pwnagotchi.
+# pwnagotchi voice data.
 # Copyright (C) 2019
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR Georgi Koemdzhiev <koemdjiev@gmail.com>, 2019.
+# This file is distributed under the same license as the pwnagotchi package.
+# FIRST AUTHOR <https://github.com/georgikoemdzhiev>, 2019.
 #
-#, fuzzy
+#,
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
