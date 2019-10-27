@@ -67,7 +67,7 @@ class WaveshareV1(DisplayImpl):
             from pwnagotchi.ui.hw.libs.waveshare.v1.epd2in13bcFAST import EPD
             self._display = EPD()
             self._display.init()
-            self._display.Clear(0xFF)
+            self._display.Clear()
         else:
             logging.info("initializing waveshare v1 display 3-color mode")
             from pwnagotchi.ui.hw.libs.waveshare.v1.epd2in13bc import EPD
