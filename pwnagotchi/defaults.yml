@@ -204,7 +204,7 @@ ui:
     display:
         enabled: true
         rotation: 180
-        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, lcdhat, waveshare27inch, dfrobot/df
+        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, lcdhat, waveshare154inch, waveshare27inch, dfrobot/df
         type: 'waveshare_2'
         # Possible options red/yellow/black (black used for monocromatic displays)
         # Waveshare tri-color 2.13in display can be over-driven with color set as 'fastAndFurious'
