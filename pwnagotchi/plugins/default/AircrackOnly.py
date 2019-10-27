@@ -28,7 +28,7 @@ def on_handshake(agent, filename, access_point, client_station):
     if result:
         logging.info("[AircrackOnly] contains handshake")
     else:
-        todetele = 1
+        todelete = 1
 
     if todelete == 0:
         result = subprocess.run(('/usr/bin/aircrack-ng '+ filename +' | grep "PMKID" | awk \'{print $2}\''),shell=True, stdout=subprocess.PIPE)
@@ -36,7 +36,7 @@ def on_handshake(agent, filename, access_point, client_station):
         if result:
             logging.info("[AircrackOnly] contains PMKID")
         else:
-            todetele = 1
+            todelete = 1
 
     if todelete == 1:
         os.remove(filename)
