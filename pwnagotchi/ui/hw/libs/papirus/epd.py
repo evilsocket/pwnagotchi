@@ -47,7 +47,7 @@ to use:
   image = Image.new('1', epd.size, 0)
   # draw on image
   epd.clear()         # clear the panel
-  epd.display(image)  # tranfer image data
+  epd.display(image)  # transfer image data
   epd.update()        # refresh the panel image - not needed if auto=true
 """
 
