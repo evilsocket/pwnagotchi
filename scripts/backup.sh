@@ -46,6 +46,6 @@ scp -rC "${USERNAME}@${UNIT_HOSTNAME}":/tmp/backup /tmp/
 
 echo "@ compressing ..."
 
-zip -r -9 -q $"OUTPUT" /tmp/backup
+zip -r -9 -q "$OUTPUT" /tmp/backup
 rm -rf /tmp/backup
 
