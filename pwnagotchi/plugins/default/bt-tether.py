@@ -236,7 +236,7 @@ class BTNap:
             timeout -= 1
 
         try:
-            logging.debug("BT-TETHER: Stoping Discovery ...")
+            logging.debug("BT-TETHER: Stopping Discovery ...")
             bt_dev.StopDiscovery()
         except Exception as bt_ex:
             logging.error(bt_ex)
