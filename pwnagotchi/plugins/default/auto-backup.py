@@ -30,7 +30,7 @@ def on_loaded():
         return
 
     READY = True
-    logging.info("AUTO-BACKUP: Successfuly loaded.")
+    logging.info("AUTO-BACKUP: Successfully loaded.")
 
 
 def on_internet_available(agent):

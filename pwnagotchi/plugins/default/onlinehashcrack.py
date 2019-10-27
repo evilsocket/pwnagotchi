@@ -74,7 +74,7 @@ def on_internet_available(agent):
                     _upload_to_ohc(handshake)
                     reported.append(handshake)
                     REPORT.update(data={'reported': reported})
-                    logging.info(f"OHC: Successfuly uploaded {handshake}")
+                    logging.info(f"OHC: Successfully uploaded {handshake}")
                 except requests.exceptions.RequestException as req_e:
                     SKIP.append(handshake)
                     logging.error("OHC: %s", req_e)

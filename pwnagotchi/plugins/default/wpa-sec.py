@@ -77,7 +77,7 @@ def on_internet_available(agent):
                     _upload_to_wpasec(handshake)
                     reported.append(handshake)
                     REPORT.update(data={'reported': reported})
-                    logging.info("WPA_SEC: Successfuly uploaded %s", handshake)
+                    logging.info("WPA_SEC: Successfully uploaded %s", handshake)
                 except requests.exceptions.RequestException as req_e:
                     SKIP.append(handshake)
                     logging.error("WPA_SEC: %s", req_e)
