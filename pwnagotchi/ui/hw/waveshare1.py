@@ -60,7 +60,14 @@ class WaveshareV1(DisplayImpl):
             self._display.init(self._display.lut_full_update)
             self._display.Clear(0xFF)
             self._display.init(self._display.lut_partial_update)
-
+        elif self.config['color'] == 'fastAndFurious':
+            logging.info("initializing waveshare v1 3-color display in FAST MODE")
+            logging.info("THIS MAY BE POTENTIALLY DANGEROUS. NO WARRANTY IS PROVIDED")
+            logging.info("USE THIS DISPLAY IN THIS MODE AT YOUR OWN RISK")
+            from pwnagotchi.ui.hw.libs.waveshare.v1.epd2in13bcFAST import EPD
+            self._display = EPD()
+            self._display.init()
+            self._display.Clear(0xFF)
         else:
             logging.info("initializing waveshare v1 display 3-color mode")
             from pwnagotchi.ui.hw.libs.waveshare.v1.epd2in13bc import EPD
@@ -72,13 +79,11 @@ class WaveshareV1(DisplayImpl):
         if self.config['color'] == 'black':
             buf = self._display.getbuffer(canvas)
             self._display.display(buf)
+        elif self.config['color'] == 'fastAndFurious':
+            buf_black = self._display.getbuffer(canvas)
+            self._display.DisplayPartial(buf_black)
         else:
             buf_black = self._display.getbuffer(canvas)
-            # emptyImage = Image.new('1', (self._display.height, self._display.width), 255)
-            # buf_color = self._display.getbuffer(emptyImage)
-            # self._display.display(buf_black,buf_color)
-            # Custom display function that only handles black
-            # Was included in epd2in13bc.py
             self._display.displayBlack(buf_black)
 
     def clear(self):
