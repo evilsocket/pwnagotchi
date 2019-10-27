@@ -16,7 +16,7 @@ CFG = SharedConfig.get_instance()
 INDEX = """
 <html>
     <head>
-        <meta name="viewport" content="width=device-width; user-scalable=0;" />
+        <meta name="viewport" content="width=device-width, user-scalable=0" />
         <title>
             webcfg
         </title>
@@ -343,11 +343,30 @@ INDEX = """
                 // value
                 td = document.createElement("td");
                 td.setAttribute("data-label", "Value");
-                input = document.createElement("input");
-                input.type = "text";
-                input.value = json[key];
-                td.appendChild(input);
-                tr.appendChild(td);
+                if(typeof(json[key])==='boolean'){
+                    input = document.createElement("select");
+                    input.setAttribute("id", "boolSelect");
+                    tvalue = document.createElement("option");
+                    tvalue.setAttribute("value", "true");
+                    ttext = document.createTextNode("True")
+                    tvalue.appendChild(ttext);
+                    fvalue = document.createElement("option");
+                    fvalue.setAttribute("value", "false");
+                    ftext = document.createTextNode("False");
+                    fvalue.appendChild(ftext);
+                    input.appendChild(tvalue);
+                    input.appendChild(fvalue);
+                    input.value = json[key];
+                    document.body.appendChild(input);
+                    td.appendChild(input);
+                    tr.appendChild(td);
+                } else {
+                    input = document.createElement("input");
+                    input.type = typeof(json[key]);
+                    input.value = json[key];
+                    td.appendChild(input);
+                    tr.appendChild(td);
+                }
             });
 
             return table;
@@ -374,9 +393,13 @@ INDEX = """
                 if (td.length == 3) {
                     // td[0] = del button
                     key = td[1].textContent || td[1].innerText;
-                    input = td[2].getElementsByTagName("input");
-                    if (input) {
-                        json[key] = toNumberMaybe(input[0].value); // hack hack hack
+                    var input = td[2].getElementsByTagName("input");
+                    var select = td[2].getElementsByTagName("select");
+                    if (input && input != undefined && input.length > 0 ) {
+                        json[key] = toNumberMaybe(input[0].value);
+                    } else if(select && select != undefined && select.length > 0) {
+                        var myValue = select[0].options[select[0].selectedIndex].value;
+                        json[key] = myValue === 'true';
                     }
                 }
             }
