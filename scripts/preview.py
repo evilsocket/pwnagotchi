@@ -9,7 +9,7 @@ sys.path.insert(0,
                              '../'))
 
 import pwnagotchi.ui.faces as faces
-from pwnagotchi.ui.display import Display, VideoHandler
+from pwnagotchi.ui.display import Display
 from PIL import Image
 
 
@@ -49,6 +49,10 @@ class DummyPeer:
     @staticmethod
     def pwnd_total():
         return 100
+
+    @staticmethod
+    def first_encounter():
+        return 1
 
     @staticmethod
     def face():
@@ -108,6 +112,29 @@ def main():
                 enabled: true
                 address: "0.0.0.0"
                 port: 8080
+
+        faces:
+            look_r: '( ⚆_⚆)'
+            look_l: '(☉_☉ )'
+            look_r_happy: '( ◕‿◕)'
+            look_l_happy: '(◕‿◕ )'
+            sleep: '(⇀‿‿↼)'
+            sleep2: '(≖‿‿≖)'
+            awake: '(◕‿‿◕)'
+            bored: '(-__-)'
+            intense: '(°▃▃°)'
+            cool: '(⌐■_■)'
+            happy: '(•‿‿•)'
+            excited: '(ᵔ◡◡ᵔ)'
+            grateful: '(^‿‿^)'
+            motivated: '(☼‿‿☼)'
+            demotivated: '(≖__≖)'
+            smart: '(✜‿‿✜)'
+            lonely: '(ب__ب)'
+            sad: '(╥☁╥ )'
+            friend: '(♥‿‿♥)'
+            broken: '(☓‿‿☓)'
+            debug: '(#__#)'                
     '''
 
     list_of_displays = list()
