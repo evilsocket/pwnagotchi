@@ -86,7 +86,7 @@ INDEX = """
                 position: -webkit-sticky;
                 position: sticky;
                 bottom: 0px;
-                width: 100%;
+                width: 50%;
                 background-color: #4CAF50;
                 border: none;
                 color: white;
@@ -95,8 +95,25 @@ INDEX = """
                 text-decoration: none;
                 display: inline-block;
                 font-size: 16px;
-                margin: 4px 2px;
                 cursor: pointer;
+                float: left;
+            }
+            
+            #btnSave {
+                position: -webkit-sticky;
+                position: sticky;
+                bottom: 0px;
+                width: 50%;
+                background-color: #0061b0;
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                cursor: pointer;
+                float: right;
             }
 
             #divTop {
@@ -160,6 +177,7 @@ INDEX = """
         </div>
         <div id="content"></div>
         <button id="btnSend" type="button" onclick="sendConfig()">Apply</button>
+        <button id="btnSave" type="button" onclick="saveConfig()">Save</button>
     </body>
     <script type="text/javascript">
         function addOption() {
