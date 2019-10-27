@@ -1,6 +1,6 @@
 # Based on UPS Lite v1.1 from https://github.com/xenDE
 #
-# funtions for get UPS status - needs enable "i2c" in raspi-config
+# functions for get UPS status - needs enable "i2c" in raspi-config
 #
 # https://github.com/linshuqin329/UPS-Lite
 #
