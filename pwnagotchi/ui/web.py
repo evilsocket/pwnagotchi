@@ -4,6 +4,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Lock
 import shutil
 import logging
+import secrets
+import http.cookies
+from urllib.parse import parse_qs
+import json
 
 import pwnagotchi
 from pwnagotchi import plugins
@@ -12,6 +16,15 @@ frame_path = '/root/pwnagotchi.png'
 frame_format = 'PNG'
 frame_ctype = 'image/png'
 frame_lock = Lock()
+
+
+CSRF_TOKEN_COOKIE_NAME = 'CSRF-TOKEN'
+CSRF_TOKEN_HEADER_NAME = 'X-CSRF-TOKEN'
+CSRF_TOKEN_DATA_NAME = 'CSRF-TOKEN'
+
+
+def gen_csrf_token():
+    return secrets.token_urlsafe()
 
 
 def update_frame(img):
@@ -38,13 +51,13 @@ window.onload = function() {
     function updateImage() {
         image.src = image.src.split("?")[0] + "?" + new Date().getTime();
     }
-    setInterval(updateImage, %d);
+    setInterval(updateImage, %(image_update_interval)d);
 }
 """
 
 INDEX = """<html>
   <head>
-      <title>%s</title>
+      <title>%(title)s</title>
       <style>""" + STYLE + """</style>
   </head>
   <body>
@@ -53,6 +66,7 @@ INDEX = """<html>
         <br/>
         <hr/>
         <form method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
+            %(csrf_input)s
             <input type="submit" class="block" value="Shutdown"/>
         </form>
     </div>
@@ -63,7 +77,7 @@ INDEX = """<html>
 
 SHUTDOWN = """<html>
   <head>
-      <title>%s</title>
+      <title>%(title)s</title>
       <style>""" + STYLE + """</style>
   </head>
   <body>
@@ -76,6 +90,12 @@ SHUTDOWN = """<html>
 
 class Handler(BaseHTTPRequestHandler):
     AllowedOrigin = None  # CORS headers are not sent
+
+    def __init__(self, request, client_address, server):
+        # if cookie is not set yet, but we need to add csrf token to html
+        self._next_csrf_token = None
+
+        super().__init__(request, client_address, server)
 
     # suppress internal logging
     def log_message(self, format, *args):
@@ -96,10 +116,58 @@ class Handler(BaseHTTPRequestHandler):
                             "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
             self.send_header("Vary", "Origin")
 
+    def _get_csrf_cookie(self, gen_if_not_set=True):
+        parsed_cookies = http.cookies.SimpleCookie()
+        parsed_cookies.load(self.headers.get('Cookie', ''))
+
+        csrf_token_cookie = parsed_cookies.get(CSRF_TOKEN_COOKIE_NAME)
+
+        if csrf_token_cookie:
+            return csrf_token_cookie.value
+
+        if gen_if_not_set:
+            self._next_csrf_token = self._next_csrf_token or gen_csrf_token()
+            return self._next_csrf_token
+
+    def _get_csrf_token_header(self):
+        return self.headers.get(CSRF_TOKEN_HEADER_NAME)
+
+    def _set_csrf_token(self):
+        csrf_token_cookie = self._get_csrf_cookie(gen_if_not_set=False)
+
+        if csrf_token_cookie:
+            return
+
+        self._next_csrf_token = self._next_csrf_token or gen_csrf_token()
+
+        self.send_header(
+            "Set-Cookie",
+            f"{CSRF_TOKEN_COOKIE_NAME}={self._next_csrf_token}; Max-Age={60 * 60 * 24 * 365}; SameSite=Lax"
+        )
+
+    def _get_csrf_token_html_data(self):
+        csrf_token = self._get_csrf_cookie()
+
+        return {
+            'csrf_input': f'<input type="hidden" name="{CSRF_TOKEN_DATA_NAME}" value="{csrf_token}"/>',
+            'csrf_token_name': CSRF_TOKEN_DATA_NAME,
+            'csrf_token': csrf_token
+        }
+
+    def _check_csrf_token(self, csrf_token=None):
+        csrf_token_cookie = self._get_csrf_cookie(gen_if_not_set=False)
+        csrf_token = csrf_token or self._get_csrf_token_header()
+
+        if not csrf_token_cookie or not csrf_token:
+            return False
+
+        return secrets.compare_digest(csrf_token_cookie, csrf_token)
+
     # just render some html in a 200 response
     def _html(self, html):
         self.send_response(200)
         self._send_cors_headers()
+        self._set_csrf_token()
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         try:
@@ -109,11 +177,17 @@ class Handler(BaseHTTPRequestHandler):
 
     # serve the main html page
     def _index(self):
-        self._html(INDEX % (pwnagotchi.name(), 1000))
+        self._html(INDEX % {
+            'title': pwnagotchi.name(),
+            'image_update_interval': 1000,
+            **self._get_csrf_token_html_data()
+        })
 
     # serve a message and shuts down the unit
     def _shutdown(self):
-        self._html(SHUTDOWN % pwnagotchi.name())
+        self._html(SHUTDOWN % {
+            'title': pwnagotchi.name()
+        })
         pwnagotchi.shutdown()
 
     # serve the PNG file with the display image
@@ -136,14 +210,14 @@ class Handler(BaseHTTPRequestHandler):
         if not Handler.AllowedOrigin or Handler.AllowedOrigin == '*':
             return True
 
-        # TODO: FIX doesn't work with GET requests same-origin
+        # TODO: FIX should check Referer header if Origin is not present
         origin = self.headers.get('origin')
         if not origin:
-            logging.warning("request with no Origin header from %s" % self.address_string())
+            logging.warning(f"request with no Origin header from {self.address_string()}")
             return False
 
         if origin != Handler.AllowedOrigin:
-            logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
+            logging.warning(f"request with blocked Origin from {self.address_string()}: {origin}")
             return False
 
         return True
@@ -155,7 +229,31 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         if not self._is_allowed():
+            self.send_error(403, 'Invalid Origin')
             return
+
+        content_type = self.headers.get('Content-Type')
+        content_len = int(self.headers.get('Content-Length'))
+        body = self.rfile.read(content_len)
+
+        if content_type == 'application/x-www-form-urlencoded':
+            parsed_data = {
+                # ignore repeated params, use only the latest
+                key.decode('UTF-8'): values[-1].decode('UTF-8')
+                for key, values in parse_qs(body, keep_blank_values=True).items()
+            }
+        elif content_type == 'application/json':
+            parsed_data = json.loads(body)
+        else:
+            parsed_data = None
+
+        csrf_token = (
+            parsed_data.get(CSRF_TOKEN_DATA_NAME) if isinstance(parsed_data, dict) else None
+        )
+        if not self._check_csrf_token(csrf_token):
+            self.send_error(403, 'Invalid CSRF token')
+            return
+
         if self.path.startswith('/shutdown'):
             self._shutdown()
         else:
@@ -163,6 +261,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if not self._is_allowed():
+            self.send_error(403, 'Invalid Origin')
             return
 
         if self.path == '/':
@@ -199,7 +298,7 @@ class Server(object):
     def _http_serve(self):
         if self._address is not None:
             self._httpd = HTTPServer((self._address, self._port), Handler)
-            logging.info("web ui available at http://%s:%d/" % (self._address, self._port))
+            logging.info(f"web ui available at http://{self._address}:{self._port}/")
             self._httpd.serve_forever()
         else:
             logging.info("could not get ip of usb0, video server not starting")
