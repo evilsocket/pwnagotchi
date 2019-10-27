@@ -207,6 +207,8 @@ ui:
         # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, lcdhat, waveshare27inch
         type: 'waveshare_2'
         # Possible options red/yellow/black (black used for monocromatic displays)
+        # Waveshare tri-color 2.13in display can be over-driven with color set as 'fastAndFurious'
+        # THIS IS POTENTIALLY DANGEROUS. DO NOT USE UNLESS YOU UNDERSTAND THAT IT COULD KILL YOUR DISPLAY
         color: 'black'
         video:
             enabled: true
