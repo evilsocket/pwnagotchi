@@ -371,7 +371,7 @@
       path: /etc/rc.local
       insertbefore: "exit 0"
       block: |
-        if ! /opt/vc/bin/tvservice -s | grep HDMI; then
+        if ! /opt/vc/bin/tvservice -s | egrep 'HDMI|DVI'; then
           /opt/vc/bin/tvservice -o
         fi
 
