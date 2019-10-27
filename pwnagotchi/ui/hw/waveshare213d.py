@@ -38,7 +38,6 @@ class Waveshare213d(DisplayImpl):
             self._layout['name'] = (5, 15)
             self._layout['channel'] = (0, 0)
             self._layout['aps'] = (28, 0)
-            self._layout['status'] = (91, 15)
             self._layout['uptime'] = (147, 0)
             self._layout['line1'] = [0, 12, 212, 12]
             self._layout['line2'] = [0, 92, 212, 92]
@@ -47,23 +46,45 @@ class Waveshare213d(DisplayImpl):
             self._layout['shakes'] = (0, 93)
             self._layout['mode'] = (187, 93)
             self._layout['status'] = {
-                'pos': (125, 20),
+                'pos': (91, 15),
                 'font': fonts.Medium,
-                'max': 14
+                'max': 20
             }
         return self._layout
 
     def initialize(self):
-        logging.info("initializing waveshare 213d display")
-        from pwnagotchi.ui.hw.libs.waveshare.v213d.epd2in13d import EPD
-        self._display = EPD()
-        self._display.init(self._display.FULL_UPDATE)
-        self._display.Clear(0xff)
-        self._display.init(self._display.PART_UPDATE)
+        if self.config['color'] == 'black':
+            logging.info("initializing waveshare v1 display in monochromatic mode")
+            from pwnagotchi.ui.hw.libs.waveshare.v1.epd2in13 import EPD
+            self._display = EPD()
+            self._display.init(self._display.lut_full_update)
+            self._display.Clear(0xFF)
+            self._display.init(self._display.lut_partial_update)
+        elif self.config['color'] == 'fastAndFurious':
+            logging.info("initializing waveshare v1 3-color display in FAST MODE")
+            logging.info("THIS MAY BE POTENTIALLY DANGEROUS. NO WARRANTY IS PROVIDED")
+            logging.info("USE THIS DISPLAY IN THIS MODE AT YOUR OWN RISK")
+            from pwnagotchi.ui.hw.libs.waveshare.v1.epd2in13bcFAST import EPD
+            self._display = EPD()
+            self._display.init()
+            self._display.Clear()
+        else:
+            logging.info("initializing waveshare v1 display 3-color mode")
+            from pwnagotchi.ui.hw.libs.waveshare.v1.epd2in13bc import EPD
+            self._display = EPD()
+            self._display.init()
+            self._display.Clear()
 
     def render(self, canvas):
-        buf = self._display.getbuffer(canvas)
-        self._display.displayPartial(buf)
+        if self.config['color'] == 'black':
+            buf = self._display.getbuffer(canvas)
+            self._display.display(buf)
+        elif self.config['color'] == 'fastAndFurious':
+            buf_black = self._display.getbuffer(canvas)
+            self._display.DisplayPartial(buf_black)
+        else:
+            buf_black = self._display.getbuffer(canvas)
+            self._display.displayBlack(buf_black)
 
     def clear(self):
         self._display.Clear(0xff)
