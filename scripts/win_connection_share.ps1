@@ -51,10 +51,10 @@ Param (
 Function Create-HNetObjects {
     <#
     .SYNOPSIS
-        A helper function that does the heavy lifiting with NetCfg.HNetShare
+        A helper function that does the heavy lifting with NetCfg.HNetShare
     
     .DESCRIPTION
-        A helper function that does the heavy lifiting with NetCfg.HNetShare. This returns a PSObject containing the `INetSharingConfigurationForINetConnection` info of 2 Adapters.
+        A helper function that does the heavy lifting with NetCfg.HNetShare. This returns a PSObject containing the `INetSharingConfigurationForINetConnection` info of 2 Adapters.
     
     .PARAMETER InternetAdaptor
         The output of Get-NetAdaptor filtered down to the 'main' uplink interface.
