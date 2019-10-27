@@ -173,7 +173,7 @@ to use:
 
         # attempt grayscale conversion, and then to single bit
         # better to do this before calling this if the image is to
-        # be dispayed several times
+        # be displayed several times
         if image.mode != "1":
             image = ImageOps.grayscale(image).convert("1", dither=Image.FLOYDSTEINBERG)
 

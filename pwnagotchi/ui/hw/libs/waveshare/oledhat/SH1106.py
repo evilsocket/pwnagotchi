@@ -34,7 +34,7 @@ class SH1106(object):
     def Init(self):
         if (config.module_init() != 0):
             return -1
-        """Initialize dispaly"""
+        """Initialize display"""
         self.reset()
         self.command(0xAE);#--turn off oled panel
         self.command(0x02);#---set low column address
