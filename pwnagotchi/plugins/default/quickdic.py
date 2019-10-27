@@ -8,7 +8,7 @@ __description__ = 'Run a quick dictionary scan against captured handshakes'
 Aircrack-ng needed, to install:
 > apt-get install aircrack-ng
 Upload wordlist files in .txt format to folder in config file (Default: /opt/wordlists/)
-Cracked handshakes stored in handshake folder as [essid].pcap.cracked 
+Cracked handshakes stored in handshake folder as [essid].pcap.cracked
 '''
 
 import logging
@@ -16,13 +16,22 @@ import subprocess
 import string
 import re
 
+import pwnagotchi.ui.faces as faces
+
 OPTIONS = dict()
+FACES_LOADED = False
 
 def on_loaded():
     logging.info("Quick dictionary check plugin loaded")
 
 def on_handshake(agent, filename, access_point, client_station):
-    display = agent._view
+    global FACES_LOADED
+
+    display = agent.view()
+    if not FACES_LOADED:
+        config = agent.config()
+        faces.load_from_config(config['ui']['faces'])
+        FACES_LOADED = True
 
     result = subprocess.run(('/usr/bin/aircrack-ng '+ filename +' | grep "1 handshake" | awk \'{print $2}\''),shell=True, stdout=subprocess.PIPE)
     result = result.stdout.decode('utf-8').translate({ord(c) :None for c in string.whitespace})
@@ -36,17 +45,7 @@ def on_handshake(agent, filename, access_point, client_station):
         if result2 != "KEY NOT FOUND":
             key = re.search('\[(.*)\]', result2)
             pwd = str(key.group(1))
-            set_text("Cracked password: "+pwd)
+
+            display.set('face', faces.COOL)
+            display.set("Cracked password: "+pwd)
             display.update(force=True)
-
-text_to_set = "";
-def set_text(text):
-    global text_to_set
-    text_to_set = text
-
-def on_ui_update(ui):
-    global text_to_set
-    if text_to_set:
-        ui.set('face', "(·ω·)")
-        ui.set('status', text_to_set)
-        text_to_set = ""

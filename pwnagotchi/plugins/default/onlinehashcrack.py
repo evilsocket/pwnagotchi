@@ -8,6 +8,7 @@ import os
 import logging
 import requests
 from pwnagotchi.utils import StatusFile
+import pwnagotchi.ui.faces as faces
 
 READY = False
 REPORT = StatusFile('/root/.ohc_uploads', data_format='json')
@@ -58,6 +59,7 @@ def on_internet_available(agent):
         display = agent.view()
         config = agent.config()
         reported = REPORT.data_field_or('reported', default=list())
+        faces.load_from_config(config['ui']['faces'])
 
         handshake_dir = config['bettercap']['handshakes']
         handshake_filenames = os.listdir(handshake_dir)
@@ -68,6 +70,7 @@ def on_internet_available(agent):
             logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onelinehashcrack.com")
 
             for idx, handshake in enumerate(handshake_new):
+                display.set('face', faces.MOTIVATED)
                 display.set('status', f"Uploading handshake to onlinehashcrack.com ({idx + 1}/{len(handshake_new)})")
                 display.update(force=True)
                 try:

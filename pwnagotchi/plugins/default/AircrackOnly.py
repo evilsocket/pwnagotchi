@@ -14,13 +14,23 @@ import subprocess
 import string
 import os
 
+import pwnagotchi.ui.faces as faces
+
 OPTIONS = dict()
+FACES_LOADED = False
 
 def on_loaded():
     logging.info("aircrackonly plugin loaded")
 
 def on_handshake(agent, filename, access_point, client_station):
-    display = agent._view
+    global FACES_LOADED
+
+    display = agent.view()
+    if not FACES_LOADED:
+        config = agent.config()
+        faces.load_from_config(config['ui']['faces'])
+        FACES_LOADED = True
+
     todelete = 0
 
     result = subprocess.run(('/usr/bin/aircrack-ng '+ filename +' | grep "1 handshake" | awk \'{print $2}\''),shell=True, stdout=subprocess.PIPE)
@@ -40,17 +50,6 @@ def on_handshake(agent, filename, access_point, client_station):
 
     if todelete == 1:
         os.remove(filename)
-        set_text("Removed an uncrackable pcap")
+        display.set('face', faces.SAD)
+        display.set('status', "Removed an uncrackable pcap")
         display.update(force=True)
-
-text_to_set = "";
-def set_text(text):
-    global text_to_set
-    text_to_set = text
-
-def on_ui_update(ui):
-    global text_to_set
-    if text_to_set:
-        ui.set('face', "(>.<)")
-        ui.set('status', text_to_set)
-        text_to_set = ""

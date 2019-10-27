@@ -12,6 +12,7 @@ import json
 import os
 import requests
 from pwnagotchi.utils import StatusFile
+import pwnagotchi.ui.faces as faces
 
 MOZILLA_API_URL = 'https://location.services.mozilla.com/v1/geolocate?key={api}'
 REPORT = StatusFile('/root/.net_pos_saved', data_format='json')
@@ -53,6 +54,7 @@ def on_internet_available(agent):
         display = agent.view()
         reported = REPORT.data_field_or('reported', default=list())
         handshake_dir = config['bettercap']['handshakes']
+        faces.load_from_config(config['ui']['faces'])
 
         all_files = os.listdir(handshake_dir)
         all_np_files = [os.path.join(handshake_dir, filename)
@@ -62,6 +64,7 @@ def on_internet_available(agent):
 
         if new_np_files:
             logging.info("NET-POS: Found %d new net-pos files. Fetching positions ...", len(new_np_files))
+            display.set('face', faces.MOTIVATED)
             display.set('status', f"Found {len(new_np_files)} new net-pos files. Fetching positions ...")
             display.update(force=True)
             for idx, np_file in enumerate(new_np_files):
@@ -94,6 +97,7 @@ def on_internet_available(agent):
                 reported.append(np_file)
                 REPORT.update(data={'reported': reported})
 
+                display.set('face', faces.MOTIVATED)
                 display.set('status', f"Fetching positions ({idx+1}/{len(new_np_files)})")
                 display.update(force=True)
 

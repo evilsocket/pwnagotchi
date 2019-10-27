@@ -12,6 +12,7 @@ import csv
 from datetime import datetime
 import requests
 from pwnagotchi.utils import WifiInfo, FieldNotFoundError, extract_from_pcap, StatusFile
+import pwnagotchi.ui.faces as faces
 
 READY = False
 REPORT = StatusFile('/root/.wigle_uploads', data_format='json')
@@ -121,6 +122,7 @@ def on_internet_available(agent):
         config = agent.config()
         display = agent.view()
         reported = REPORT.data_field_or('reported', default=list())
+        faces.load_from_config(config['ui']['faces'])
 
         handshake_dir = config['bettercap']['handshakes']
         all_files = os.listdir(handshake_dir)
@@ -180,6 +182,7 @@ def on_internet_available(agent):
                 no_err_entries.append(gps_file)
 
             if csv_entries:
+                display.set('face', faces.MOTIVATED)
                 display.set('status', "Uploading gps-data to wigle.net ...")
                 display.update(force=True)
                 try:

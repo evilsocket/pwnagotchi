@@ -4,10 +4,12 @@ __name__ = 'auto-backup'
 __license__ = 'GPL3'
 __description__ = 'This plugin backups files when internet is available.'
 
-from pwnagotchi.utils import StatusFile
 import logging
 import os
 import subprocess
+
+from pwnagotchi.utils import StatusFile
+import pwnagotchi.ui.faces as faces
 
 OPTIONS = dict()
 READY = False
@@ -37,17 +39,22 @@ def on_internet_available(agent):
     global STATUS
 
     if READY:
+
         if STATUS.newer_then_days(OPTIONS['interval']):
             return
-        
+
+        config = agent.config()
+        faces.load_from_config(config['ui']['faces'])
+
         # Only backup existing files to prevent errors
         existing_files = list(filter(lambda f: os.path.exists(f), OPTIONS['files']))
         files_to_backup = " ".join(existing_files)
-        
+
         try:
             display = agent.view()
 
             logging.info("AUTO-BACKUP: Backing up ...")
+            display.set('face', faces.EXCITED)
             display.set('status', 'Backing up ...')
             display.update()
 
@@ -60,10 +67,12 @@ def on_internet_available(agent):
                     raise OSError(f"Command failed (rc: {process.returncode})")
 
             logging.info("AUTO-BACKUP: backup done")
+            display.set('face', faces.FRIEND)
             display.set('status', 'Backup done!')
             display.update()
             STATUS.update()
         except OSError as os_e:
             logging.info(f"AUTO-BACKUP: Error: {os_e}")
+            display.set('face', faces.BROKEN)
             display.set('status', 'Backup failed!')
             display.update()

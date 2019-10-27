@@ -5,6 +5,7 @@ __license__ = 'GPL3'
 __description__ = 'This plugin checks when updates are available and applies them when internet is available.'
 
 import os
+import random
 import logging
 import subprocess
 import requests
@@ -15,6 +16,7 @@ import pkg_resources
 
 import pwnagotchi
 from pwnagotchi.utils import StatusFile
+import pwnagotchi.ui.faces as faces
 
 OPTIONS = dict()
 READY = False
@@ -77,18 +79,36 @@ def download_and_unzip(name, path, display, update):
     target_path = os.path.join(path, target)
 
     logging.info("[update] downloading %s to %s ..." % (update['url'], target_path))
-    display.update(force=True, new_data={'status': 'Downloading %s %s ...' % (name, update['available'])})
+    display.update(
+        force=True,
+        new_data={
+            'status': 'Downloading %s %s ...' % (name, update['available']),
+            'face': faces.MOTIVATED
+        }
+    )
 
     os.system('wget -q "%s" -O "%s"' % (update['url'], target_path))
 
     logging.info("[update] extracting %s to %s ..." % (target_path, path))
-    display.update(force=True, new_data={'status': 'Extracting %s %s ...' % (name, update['available'])})
+    display.update(
+        force=True,
+        new_data={
+            'status': 'Extracting %s %s ...' % (name, update['available']),
+            'face': faces.EXCITED
+        }
+    )
 
     os.system('unzip "%s" -d "%s"' % (target_path, path))
 
 
 def verify(name, path, source_path, display, update):
-    display.update(force=True, new_data={'status': 'Verifying %s %s ...' % (name, update['available'])})
+    display.update(
+        force=True,
+        new_data={
+            'status': 'Verifying %s %s ...' % (name, update['available']),
+            'face': faces.SMART
+        }
+    )
 
     checksums = glob.glob("%s/*.sha256" % path)
     if len(checksums) == 0:
@@ -125,7 +145,13 @@ def install(display, update):
         return False
 
     logging.info("[update] installing %s ..." % name)
-    display.update(force=True, new_data={'status': 'Installing %s %s ...' % (name, update['available'])})
+    display.update(
+        force=True,
+        new_data={
+            'status': 'Installing %s %s ...' % (name, update['available']),
+            'face': faces.INTENSE
+        }
+    )
 
     if update['native']:
         dest_path = subprocess.getoutput("which %s" % name)
@@ -150,6 +176,9 @@ def install(display, update):
 def on_internet_available(agent):
     global STATUS
 
+    config = agent.config()
+    faces.load_from_config(config['ui']['faces'])
+
     logging.debug("[update] internet connectivity is available (ready %s)" % READY)
 
     if READY:
@@ -161,9 +190,16 @@ def on_internet_available(agent):
 
         display = agent.view()
         prev_status = display.get('status')
+        prev_face = display.get('face')
 
         try:
-            display.update(force=True, new_data={'status': 'Checking for updates ...'})
+            display.update(
+                force=True,
+                new_data={
+                    'status': 'Checking for updates ...',
+                    'face': random.choice(faces.LOOK_L, faces.LOOK_R)
+                }
+            )
 
             to_install = []
             to_check = [
@@ -191,16 +227,29 @@ def on_internet_available(agent):
                             num_installed += 1
                 else:
                     prev_status = '%d new update%c available!' % (num_updates, 's' if num_updates > 1 else '')
+                    prev_face = faces.MOTIVATED
 
             logging.info("[update] done")
 
             STATUS.update()
 
             if num_installed > 0:
-                display.update(force=True, new_data={'status': 'Rebooting ...'})
+                display.update(
+                    force=True,
+                    new_data={
+                        'status': 'Installed! Rebooting ...',
+                        'face': faces.FRIEND
+                    }
+                )
                 pwnagotchi.reboot()
 
         except Exception as e:
             logging.error("[update] %s" % e)
 
-        display.update(force=True, new_data={'status': prev_status if prev_status is not None else ''})
+        display.update(
+            force=True,
+            new_data={
+                'status': prev_status if prev_status is not None else '',
+                'face': prev_face if prev_face is not None else faces.AWAKE
+            }
+        )

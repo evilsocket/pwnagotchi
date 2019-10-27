@@ -6,6 +6,7 @@ __description__ = 'This plugin creates tweets about the recent activity of pwnag
 
 import logging
 from pwnagotchi.voice import Voice
+import pwnagotchi.ui.faces as faces
 
 OPTIONS = dict()
 
@@ -18,6 +19,7 @@ def on_internet_available(agent):
     config = agent.config()
     display = agent.view()
     last_session = agent.last_session
+    faces.load_from_config(config['ui']['faces'])
 
     if last_session.is_new() and last_session.handshakes > 0:
         try:
@@ -33,6 +35,7 @@ def on_internet_available(agent):
         display.on_manual_mode(last_session)
         display.update(force=True)
         display.image().save(picture, 'png')
+        display.set('face', faces.EXCITED)
         display.set('status', 'Tweeting...')
         display.update(force=True)
 

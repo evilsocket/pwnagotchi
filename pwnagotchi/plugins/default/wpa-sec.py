@@ -8,6 +8,7 @@ import os
 import logging
 import requests
 from pwnagotchi.utils import StatusFile
+import pwnagotchi.ui.faces as faces
 
 READY = False
 REPORT = StatusFile('/root/.wpa_sec_uploads', data_format='json')
@@ -28,13 +29,13 @@ def on_loaded():
     if 'api_url' not in OPTIONS or ('api_url' in OPTIONS and OPTIONS['api_url'] is None):
         logging.error("WPA_SEC: API-URL isn't set. Can't upload, no endpoint configured.")
         return
-        
+
     READY = True
 
 
 def _upload_to_wpasec(path, timeout=30):
     """
-    Uploads the file to https://wpa-sec.stanev.org, or another endpoint. 
+    Uploads the file to https://wpa-sec.stanev.org, or another endpoint.
     """
     with open(path, 'rb') as file_to_upload:
         cookie = {'key': OPTIONS['api_key']}
@@ -61,6 +62,7 @@ def on_internet_available(agent):
         config = agent.config()
         display = agent.view()
         reported = REPORT.data_field_or('reported', default=list())
+        faces.load_from_config(config['ui']['faces'])
 
         handshake_dir = config['bettercap']['handshakes']
         handshake_filenames = os.listdir(handshake_dir)
@@ -71,6 +73,7 @@ def on_internet_available(agent):
             logging.info("WPA_SEC: Internet connectivity detected. Uploading new handshakes to wpa-sec.stanev.org")
 
             for idx, handshake in enumerate(handshake_new):
+                display.set('face', faces.MOTIVATED)
                 display.set('status', f"Uploading handshake to wpa-sec.stanev.org ({idx + 1}/{len(handshake_new)})")
                 display.update(force=True)
                 try:
