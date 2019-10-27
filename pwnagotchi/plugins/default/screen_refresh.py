@@ -1,4 +1,4 @@
-__author__ = 'pwnagotcchi [at] rossmarks [dot] uk'
+__author__ = 'pwnagotchi [at] rossmarks [dot] uk'
 __version__ = '1.0.0'
 __name__ = 'screen_refresh'
 __license__ = 'GPL3'
