@@ -2,7 +2,7 @@ __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '2.0.0'
 __name__ = 'wigle'
 __license__ = 'GPL3'
-__description__ = 'This plugin automatically uploades collected wifis to wigle.net'
+__description__ = 'This plugin automatically uploads collected wifis to wigle.net'
 
 import os
 import logging

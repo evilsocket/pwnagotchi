@@ -2,7 +2,7 @@ __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '2.0.1'
 __name__ = 'wpa-sec'
 __license__ = 'GPL3'
-__description__ = 'This plugin automatically uploades handshakes to https://wpa-sec.stanev.org'
+__description__ = 'This plugin automatically uploads handshakes to https://wpa-sec.stanev.org'
 
 import os
 import logging

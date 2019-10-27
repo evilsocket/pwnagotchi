@@ -2,7 +2,7 @@ __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '2.0.0'
 __name__ = 'onlinehashcrack'
 __license__ = 'GPL3'
-__description__ = 'This plugin automatically uploades handshakes to https://onlinehashcrack.com'
+__description__ = 'This plugin automatically uploads handshakes to https://onlinehashcrack.com'
 
 import os
 import logging
