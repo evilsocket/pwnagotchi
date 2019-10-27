@@ -2,7 +2,7 @@ __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '2.0.0'
 __name__ = 'onlinehashcrack'
 __license__ = 'GPL3'
-__description__ = 'This plugin automatically uploades handshakes to https://onlinehashcrack.com'
+__description__ = 'This plugin automatically uploads handshakes to https://onlinehashcrack.com'
 
 import os
 import logging
@@ -74,7 +74,7 @@ def on_internet_available(agent):
                     _upload_to_ohc(handshake)
                     reported.append(handshake)
                     REPORT.update(data={'reported': reported})
-                    logging.info(f"OHC: Successfuly uploaded {handshake}")
+                    logging.info(f"OHC: Successfully uploaded {handshake}")
                 except requests.exceptions.RequestException as req_e:
                     SKIP.append(handshake)
                     logging.error("OHC: %s", req_e)

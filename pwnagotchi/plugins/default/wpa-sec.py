@@ -2,7 +2,7 @@ __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '2.0.1'
 __name__ = 'wpa-sec'
 __license__ = 'GPL3'
-__description__ = 'This plugin automatically uploades handshakes to https://wpa-sec.stanev.org'
+__description__ = 'This plugin automatically uploads handshakes to https://wpa-sec.stanev.org'
 
 import os
 import logging
@@ -77,7 +77,7 @@ def on_internet_available(agent):
                     _upload_to_wpasec(handshake)
                     reported.append(handshake)
                     REPORT.update(data={'reported': reported})
-                    logging.info("WPA_SEC: Successfuly uploaded %s", handshake)
+                    logging.info("WPA_SEC: Successfully uploaded %s", handshake)
                 except requests.exceptions.RequestException as req_e:
                     SKIP.append(handshake)
                     logging.error("WPA_SEC: %s", req_e)

@@ -2,7 +2,7 @@ __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '1.0.0'
 __name__ = 'auto-backup'
 __license__ = 'GPL3'
-__description__ = 'This plugin backups files when internet is availaible.'
+__description__ = 'This plugin backups files when internet is available.'
 
 from pwnagotchi.utils import StatusFile
 import logging
@@ -30,7 +30,7 @@ def on_loaded():
         return
 
     READY = True
-    logging.info("AUTO-BACKUP: Successfuly loaded.")
+    logging.info("AUTO-BACKUP: Successfully loaded.")
 
 
 def on_internet_available(agent):

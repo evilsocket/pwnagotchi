@@ -236,7 +236,7 @@ class BTNap:
             timeout -= 1
 
         try:
-            logging.debug("BT-TETHER: Stoping Discovery ...")
+            logging.debug("BT-TETHER: Stopping Discovery ...")
             bt_dev.StopDiscovery()
         except Exception as bt_ex:
             logging.error(bt_ex)
@@ -423,7 +423,7 @@ def on_loaded():
 
     for opt in ['share_internet', 'mac', 'ip', 'netmask', 'interval']:
         if opt not in OPTIONS or (opt in OPTIONS and OPTIONS[opt] is None):
-            logging.error("BT-TET: Pleace specify the %s in your config.yml.", opt)
+            logging.error("BT-TET: Please specify the %s in your config.yml.", opt)
             return
 
     # ensure bluetooth is running

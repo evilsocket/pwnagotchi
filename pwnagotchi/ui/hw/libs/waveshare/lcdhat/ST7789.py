@@ -35,7 +35,7 @@ class ST7789(object):
         self._spi.writebytes([val])
 
     def Init(self):
-        """Initialize dispaly"""
+        """Initialize display"""
         self.reset()
 
         self.command(0x36)

@@ -2,7 +2,7 @@ __author__ = '33197631+dadav@users.noreply.github.com'
 __version__ = '2.0.0'
 __name__ = 'wigle'
 __license__ = 'GPL3'
-__description__ = 'This plugin automatically uploades collected wifis to wigle.net'
+__description__ = 'This plugin automatically uploads collected wifis to wigle.net'
 
 import os
 import logging
@@ -186,7 +186,7 @@ def on_internet_available(agent):
                     _send_to_wigle(csv_entries, OPTIONS['api_key'])
                     reported += no_err_entries
                     REPORT.update(data={'reported': reported})
-                    logging.info("WIGLE: Successfuly uploaded %d files", len(no_err_entries))
+                    logging.info("WIGLE: Successfully uploaded %d files", len(no_err_entries))
                 except requests.exceptions.RequestException as re_e:
                     SKIP += no_err_entries
                     logging.error("WIGLE: Got an exception while uploading %s", re_e)

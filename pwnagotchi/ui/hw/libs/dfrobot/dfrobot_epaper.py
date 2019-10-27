@@ -10,7 +10,7 @@ try:
   from .spi import SPI
   from .gpio import GPIO
 except:
-  print("unknow platform")
+  print("unknown platform")
   exit()
 
 CONFIG_IL0376F = {

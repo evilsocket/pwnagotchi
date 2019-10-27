@@ -238,7 +238,7 @@ class View(object):
         part = secs / 10.0
 
         for step in range(0, 10):
-            # if we weren't in a normal state before goin
+            # if we weren't in a normal state before going
             # to sleep, keep that face and status on for
             # a while, otherwise the sleep animation will
             # always override any minor state change before it
