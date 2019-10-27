@@ -177,7 +177,7 @@ class Handler(BaseHTTPRequestHandler):
                 groups = matches.groups()
                 plugin_name = groups[0]
                 right_path = groups[1] if len(groups) == 2 else None
-                plugins.one(plugin_name, 'webhook', right_path)
+                plugins.one(plugin_name, 'webhook', self, right_path)
 
         else:
             self.send_response(404)
