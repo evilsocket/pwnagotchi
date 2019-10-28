@@ -33,15 +33,25 @@ class Inky(DisplayImpl):
 
     def initialize(self):
         logging.info("initializing inky display")
-        from pwnagotchi.ui.hw.libs.inkyphat.inkyphatfast import InkyPHATFast
-        self._display = InkyPHATFast(self.config['color'])
-        self._display.set_border(InkyPHATFast.BLACK)
+
+        if self.config['color'] == 'fastAndFurious':
+            logging.info("Initializing Inky in 2-color FAST MODE")
+            logging.info("THIS MAY BE POTENTIALLY DANGEROUS. NO WARRANTY IS PROVIDED")
+            logging.info("USE THIS DISPLAY IN THIS MODE AT YOUR OWN RISK")
+
+            from pwnagotchi.ui.hw.libs.inkyphat.inkyphatfast import InkyPHATFast
+            self._display = InkyPHATFast('black')
+            self._display.set_border(InkyPHATFast.BLACK)
+        else:
+            from inky import InkyPHAT
+            self._display = InkyPHAT(self.config['color'])
+            self._display.set_border(InkyPHAT.BLACK)
 
     def render(self, canvas):
-        if self.config['color'] != 'mono':
-            display_colors = 3
-        else:
+        if self.config['color'] == 'black' or self.config['color'] == 'fastAndFurious':
             display_colors = 2
+        else:
+            display_colors = 3
 
         img_buffer = canvas.convert('RGB').convert('P', palette=1, colors=display_colors)
         if self.config['color'] == 'red':
