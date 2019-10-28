@@ -34,5 +34,5 @@ def on_loaded():
     command = i[gpio]
     GPIOs[gpio] = command
     GPIO.setup(gpio, GPIO.IN, GPIO.PUD_UP)
-    GPIO.add_event_detect(gpio, GPIO.FALLING, callback=runCommand, bouncetime=300)
+    GPIO.add_event_detect(gpio, GPIO.FALLING, callback=runCommand, bouncetime=250)
     logging.info("Added command: %s to GPIO #%d", command, gpio)
