@@ -17,7 +17,7 @@ FILES_TO_BACKUP=(
   /etc/pwnagotchi/
   /var/log/pwnagotchi.log
   /home/pi/.bashrc
-  /etc/network/interfaced.d/usb0
+  /etc/network/interfaced.d/usb0-cfg
   /etc/hostname
   /etc/hosts
 
