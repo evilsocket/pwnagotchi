@@ -6,6 +6,7 @@ __description__ = 'This plugin allows the user to make runtime changes.'
 
 import logging
 import json
+import yaml
 from pwnagotchi.config import SharedConfig
 import pwnagotchi.plugins as plugins
 
@@ -98,7 +99,7 @@ INDEX = """
                 cursor: pointer;
                 float: left;
             }
-            
+
             #btnSave {
                 position: -webkit-sticky;
                 position: sticky;
@@ -217,6 +218,23 @@ INDEX = """
             if (table) {
                 var json = tableToJson(table);
                 sendJSON("webcfg/update-config", json, function(response) {
+                    if (response) {
+                        if (response.status == "200") {
+                            alert("Config got updated");
+                        } else {
+                            alert("Error while updating the config (err-code: " + response.status + ")");
+                        }
+                    }
+                });
+            }
+        }
+
+        function saveConfig(){
+            // get table
+            var table = document.getElementById("tableOptions");
+            if (table) {
+                var json = tableToJson(table);
+                sendJSON("webcfg/save-config", json, function(response) {
                     if (response) {
                         if (response.status == "200") {
                             alert("Config got updated");
@@ -474,6 +492,27 @@ def on_webhook(response, path):
             plugins.load(CFG)
             response.send_response(200)
             res = "success"
+    elif path == "/save-config":
+        # receive new configuration and save to disk
+        try:
+            content_len = int(response.headers.get('content-length'))
+            post_body = response.rfile.read(content_len)
+            data = json.loads(post_body)
+        except Exception as json_ex:
+            logging.error(json_ex)
+            response.send_response(500)
+            res = "config error"
+        else:
+            # will clean the current config and use the new one
+            try:
+                with open('/etc/pwnagotchi/config.yml', 'w') as config_file:
+                    yaml.dump(data, config_file, default_flow_style=False)
+                response.send_response(200)
+                res = "success"
+            except yaml.YAMLError as yaml_ex:
+                logging.error(yaml_ex)
+                response.send_response(500)
+                res = "config error"
     else:
         response.send_response(500)
 
