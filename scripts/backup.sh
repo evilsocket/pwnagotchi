@@ -19,6 +19,11 @@ FILES_TO_BACKUP=(
   /home/pi/.bashrc
 )
 
+if ! type "zip" >/dev/null 2>&1; then
+  echo "This script requires zip, please resolve and try again"
+  exit 1
+fi
+
 ping -c 1 "${UNIT_HOSTNAME}" >/dev/null || {
   echo "@ unit ${UNIT_HOSTNAME} can't be reached, make sure it's connected and a static IP assigned to the USB interface."
   exit 1
