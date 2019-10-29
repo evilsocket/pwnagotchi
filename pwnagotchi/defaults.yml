@@ -45,6 +45,8 @@ main:
             enabled: false
             speed: 19200
             device: /dev/ttyUSB0
+        phone_gps: # Requires working bt-tether and a GPS sharing app on the phone side. Supports Android, iPhone and any other device that can share GPS data.
+            enabled: false
         twitter:
             enabled: false
             consumer_key: aaa
