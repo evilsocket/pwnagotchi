@@ -30,11 +30,14 @@ def start():
     global running
 
     logging.info("enabling bettercap's gps module for %s" % dev)
+<<<<<<< HEAD
     try:
         a.run('gps off')
     except:
         pass
         
+=======
+>>>>>>> 90b5f2c0b18868efa5cb2d51dd9ee9e72d36e735
     a.run('set gps.device %s' % dev)
     a.run('gps on')
     running = True
