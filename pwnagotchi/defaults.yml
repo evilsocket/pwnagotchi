@@ -83,6 +83,12 @@ main:
             enabled: false
             #The IP Address of your phone with Paw Server running, default (option is empty) is 192.168.44.1
             ip: ''
+        gpio_buttons:
+            enabled: false
+            #The following is a list of the GPIO number for your button, and the command you want to run when it is pressed
+            gpios:
+            - 20: 'sudo touch /root/.pwnagotchi-auto && sudo systemctl restart pwnagotchi'
+            - 21: 'shutdown -h now'
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -204,7 +210,7 @@ ui:
     display:
         enabled: true
         rotation: 180
-        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, lcdhat, waveshare27inch, dfrobot/df
+        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, lcdhat, waveshare154inch, waveshare27inch, dfrobot/df
         type: 'waveshare_2'
         # Possible options red/yellow/black (black used for monocromatic displays)
         # Waveshare tri-color 2.13in display can be over-driven with color set as 'fastAndFurious'
