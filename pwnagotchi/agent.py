@@ -170,7 +170,9 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             s = self.session()
             plugins.on("unfiltered_ap_list", self, s['wifi']['aps'])
             for ap in s['wifi']['aps']:
-                if ap['hostname'] not in whitelist:
+                if ap['encryption'] == '' or ap['encryption'] == 'OPEN':
+                    continue
+                elif ap['hostname'] not in whitelist:
                     if self._filter_included(ap):
                         aps.append(ap)
         except Exception as e:
