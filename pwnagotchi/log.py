@@ -137,7 +137,7 @@ class LastSession(object):
                                 'channel': 1,
                                 'rssi': int(rssi),
                                 'identity': pubkey,
-                                'advertisement':{
+                                'advertisement': {
                                     'name': name,
                                     'pwnd_tot': int(pwnd_tot)
                                 }})
@@ -171,7 +171,7 @@ class LastSession(object):
         if skip:
             logging.debug("skipping parsing of the last session logs ...")
         else:
-            logging.debug("parsing last session logs ...")
+            logging.debug("reading last session logs ...")
 
             lines = []
 
@@ -192,6 +192,8 @@ class LastSession(object):
             self.last_session = lines
             self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()
             self.last_saved_session_id = self._get_last_saved_session_id()
+
+            logging.debug("parsing last session logs (%d lines) ..." % len(lines))
 
             self._parse_stats()
         self.parsed = True
