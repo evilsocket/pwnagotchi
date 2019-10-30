@@ -9,6 +9,7 @@ import os
 import logging
 import time
 import glob
+import re
 
 import pwnagotchi.grid as grid
 from pwnagotchi.utils import StatusFile, WifiInfo, extract_from_pcap
@@ -35,6 +36,10 @@ def parse_pcap(filename):
     else:
         # /root/handshakes/BSSID.pcap
         essid, bssid = '', net_id
+
+    mac_re = re.compile('[0-9a-fA-F]{12}')
+    if not mac_re.match(bssid):
+        return '', ''
 
     it = iter(bssid)
     bssid = ':'.join([a + b for a, b in zip(it, it)])
