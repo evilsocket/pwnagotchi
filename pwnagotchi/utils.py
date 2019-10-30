@@ -65,12 +65,16 @@ def load_config(args):
         config = yaml.safe_load(fp)
 
     # load the user config
-    if os.path.exists(args.user_config):
-        with open(args.user_config) as fp:
-            user_config = yaml.safe_load(fp)
-            # if the file is empty, safe_load will return None and merge_config will boom.
-            if user_config:
-                config = merge_config(user_config, config)
+    try:
+        if os.path.exists(args.user_config):
+            with open(args.user_config) as fp:
+                user_config = yaml.safe_load(fp)
+                # if the file is empty, safe_load will return None and merge_config will boom.
+                if user_config:
+                    config = merge_config(user_config, config)
+    except yaml.YAMLError as ex:
+        print("There was an error processing the configuration file:\n%s " % ex)
+        exit(1)
 
     # the very first step is to normalize the display name so we don't need dozens of if/elif around
     if config['ui']['display']['type'] in ('inky', 'inkyphat'):

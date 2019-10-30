@@ -87,8 +87,7 @@ def append_images(images, horizontal=True, xmargin=0, ymargin=0):
 def main():
     parser = argparse.ArgumentParser(description="This program emulates\
                                      the pwnagotchi display")
-    parser.add_argument('--displays', help="Which displays to use.", nargs="+",
-                        default="waveshare_2")
+    parser.add_argument('--displays', help="Which displays to use.", nargs="+", default=["waveshare_2"])
     parser.add_argument('--lang', help="Language to use",
                         default="en")
     parser.add_argument('--output', help="Path to output image (PNG)", default="preview.png")
