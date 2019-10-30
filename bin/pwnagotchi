@@ -57,7 +57,7 @@ if __name__ == '__main__':
     elif args.do_manual:
         logging.info("entering manual mode ...")
 
-        agent.last_session.parse(args.skip_session)
+        agent.last_session.parse(agent.view(), args.skip_session)
         if not args.skip_session:
             logging.info(
                 "the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (

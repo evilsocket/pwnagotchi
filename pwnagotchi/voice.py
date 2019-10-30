@@ -43,6 +43,12 @@ class Voice:
     def on_free_channel(self, channel):
         return self._('Hey, channel {channel} is free! Your AP will say thanks.').format(channel=channel)
 
+    def on_reading_logs(self, lines_so_far=0):
+        if lines_so_far == 0:
+            return self._('Reading last session logs ...')
+        else:
+            return self._('Read {lines_so_far} log lines so far ...').format(lines_so_far=lines_so_far)
+
     def on_bored(self):
         return random.choice([
             self._('I\'m bored ...'),

@@ -167,11 +167,13 @@ class LastSession(object):
         self.duration_human = ', '.join(self.duration_human)
         self.avg_reward /= (self.epochs if self.epochs else 1)
 
-    def parse(self, skip=False):
+    def parse(self, ui, skip=False):
         if skip:
             logging.debug("skipping parsing of the last session logs ...")
         else:
             logging.debug("reading last session logs ...")
+
+            ui.on_reading_logs()
 
             lines = []
 
@@ -184,10 +186,17 @@ class LastSession(object):
                         lines.append(line)
                         if LastSession.START_TOKEN in line:
                             break
+
+                        lines_so_far = len(lines)
+                        if lines_so_far % 100 == 0:
+                            ui.on_reading_logs(lines_so_far)
+
                 lines.reverse()
 
             if len(lines) == 0:
                 lines.append("Initial Session");
+
+            ui.on_reading_logs()
 
             self.last_session = lines
             self.last_session_id = hashlib.md5(lines[0].encode()).hexdigest()

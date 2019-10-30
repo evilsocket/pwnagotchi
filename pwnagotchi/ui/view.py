@@ -233,6 +233,11 @@ class View(object):
         self.set('status', self._voice.on_free_channel(channel))
         self.update()
 
+    def on_reading_logs(self, lines_so_far=0):
+        self.set('face', faces.SMART)
+        self.set('status', self._voice.on_reading_logs(lines_so_far))
+        self.update()
+
     def wait(self, secs, sleeping=True):
         was_normal = self.is_normal()
         part = secs / 10.0
