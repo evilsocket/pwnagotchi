@@ -1,12 +1,14 @@
 {
-  "builders": [{
-    "name": "pwnagotchi",
-    "type": "arm-image",
-    "iso_url" : "https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip",
-    "iso_checksum_type":"sha256",
-    "iso_checksum":"9e5cf24ce483bb96e7736ea75ca422e3560e7b455eee63dd28f66fa1825db70e",
-    "last_partition_extra_size" : 3221225472
-  }],
+  "builders": [
+    {
+      "name": "pwnagotchi",
+      "type": "arm-image",
+      "iso_url": "https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip",
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "9e5cf24ce483bb96e7736ea75ca422e3560e7b455eee63dd28f66fa1825db70e",
+      "last_partition_extra_size": 3221225472
+    }
+  ],
   "provisioners": [
     {
       "type": "shell",
@@ -18,7 +20,7 @@
       ]
     },
     {
-      "type":"ansible-local",
+      "type": "ansible-local",
       "playbook_file": "pwnagotchi.yml",
       "command": "ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 PWN_VERSION={{user `pwn_version`}} PWN_HOSTNAME={{user `pwn_hostname`}} ansible-playbook"
     },
@@ -27,6 +29,46 @@
       "inline": [
         "sed -i 's/^#\\(.+\\)/\\1/g' /etc/ld.so.preload"
       ]
+    },
+    {
+      "type": "file",
+      "source": "data/usr/bin/bettercap-launcher",
+      "destination": "/usr/bin/bettercap-launcher"
+    },
+    {
+      "type": "file",
+      "source": "data/usr/bin/pwnagotchi-launcher",
+      "destination": "/usr/bin/pwnagotchi-launcher"
+    },
+    {
+      "type": "file",
+      "source": "data/usr/bin/monstop",
+      "destination": "/usr/bin/monstop"
+    },
+    {
+      "type": "file",
+      "source": "data/usr/bin/bootblink",
+      "destination": "/usr/bin/bootblink"
+    },
+    {
+      "type": "file",
+      "source": "data/usr/bin/monstart",
+      "destination": "/usr/bin/monstart"
+    },
+    {
+      "type": "file",
+      "source": "data/etc/systemd/system/pwngrid-peer.service",
+      "destination": "/etc/systemd/system/pwngrid-peer.service"
+    },
+    {
+      "type": "file",
+      "source": "data/etc/systemd/system/pwnagotchi.service",
+      "destination": "/etc/systemd/system/pwnagotchi.service"
+    },
+    {
+      "type": "file",
+      "source": "data/etc/systemd/system/bettercap.service",
+      "destination": "/etc/systemd/system/bettercap.service"
     }
   ]
 }

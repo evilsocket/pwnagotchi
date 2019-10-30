@@ -1,0 +1,15 @@
+[Unit]
+Description=pwngrid peer service.
+Documentation=https://pwnagotchi.ai
+Wants=network.target
+After=bettercap.service
+
+[Service]
+Type=simple
+PermissionsStartOnly=true
+ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666 -client-token /root/.api-enrollment.json -wait -log /var/log/pwngrid-peer.log -iface mon0
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

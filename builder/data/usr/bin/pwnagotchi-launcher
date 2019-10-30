@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# blink 10 times to signal ready state
+/usr/bin/bootblink 10 &
+# start a detached screen session with bettercap
+if [[ $(ifconfig | grep usb0 | grep RUNNING) ]] || [[ !$(grep '1' /sys/class/net/eth0/carrier) ]]; then
+  # if override file exists, go into auto mode
+  if [ -f /root/.pwnagotchi-auto ]; then
+    rm /root/.pwnagotchi-auto
+    /usr/local/bin/pwnagotchi
+  else
+    /usr/local/bin/pwnagotchi --manual
+  fi
+else
+  /usr/local/bin/pwnagotchi
+fi

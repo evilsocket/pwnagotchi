@@ -145,6 +145,18 @@ def install(display, update):
 
         os.system("cd %s && pip3 install ." % source_path)
 
+        data_path = os.path.join(source_path, "builder/data")
+        for source in glob.glob("%s/**" % data_path, recursive=True):
+            if os.path.isfile(source):
+                dest = source.replace(data_path, '')
+                dest_path = os.path.dirname(dest)
+                if not os.path.isdir(dest_path):
+                    os.makedirs(dest_path)
+                logging.info("[update] installing %s to %s ..." % (source, dest))
+                os.system("mv '%s' '%s'" % (source, dest))
+
+        os.system("systemctl daemon-reload")
+
     return True
 
 
