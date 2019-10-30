@@ -1,5 +1,6 @@
 import os
 import logging
+import re
 import requests
 from pwnagotchi.utils import StatusFile
 import pwnagotchi.plugins as plugins
@@ -24,7 +25,25 @@ class OnlineHashCrack(plugins.Plugin):
             logging.error("OHC: Email isn't set. Can't upload to onlinehashcrack.com")
             return
 
+        if 'whitelist' not in self.options:
+            self.options['whitelist'] = []
+
+        # remove special characters from whitelist APs to match on-disk format
+        self.options['whitelist'] = set(map(lambda x: re.sub(r'[^a-zA-Z0-9]', '', x), self.options['whitelist']))
+
         self.ready = True
+
+    def _filter_handshake_file(self, handshake_filename):
+        try:
+            basename = os.path.basename(handshake_filename)
+            ssid, bssid = basename.split('_')
+            # remove the ".pcap" from the bssid (which is really just the end of the filename)
+            bssid = bssid[:-5]
+        except:
+            # something failed in our parsing of the filename. let the file through
+            return True
+
+        return ssid not in self.options['whitelist'] and bssid not in self.options['whitelist']
 
     def _upload_to_ohc(self, path, timeout=30):
         """
@@ -58,6 +77,10 @@ class OnlineHashCrack(plugins.Plugin):
             handshake_filenames = os.listdir(handshake_dir)
             handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames if
                                filename.endswith('.pcap')]
+
+            # pull out whitelisted APs
+            handshake_paths = filter(lambda path: self._filter_handshake_file(path), handshake_paths)
+
             handshake_new = set(handshake_paths) - set(reported) - set(self.skip)
 
             if handshake_new:
