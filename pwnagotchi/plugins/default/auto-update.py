@@ -1,10 +1,11 @@
 __author__ = 'evilsocket@gmail.com'
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 __name__ = 'auto-update'
 __license__ = 'GPL3'
 __description__ = 'This plugin checks when updates are available and applies them when internet is available.'
 
 import os
+import re
 import logging
 import subprocess
 import requests
@@ -147,6 +148,15 @@ def install(display, update):
     return True
 
 
+def parse_version(cmd):
+    out = subprocess.getoutput(cmd)
+    for part in out.split(' '):
+        part = part.replace('v', '').strip()
+        if re.search(r'^\d+\.\d+\.\d+.*$', part):
+            return part
+    raise Exception('could not parse version from "%s": output=\n%s' % (cmd, out))
+
+
 def on_internet_available(agent):
     global STATUS
 
@@ -167,9 +177,8 @@ def on_internet_available(agent):
 
             to_install = []
             to_check = [
-                ('bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
-                 True, 'bettercap'),
-                ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True, 'pwngrid-peer'),
+                ('bettercap/bettercap', parse_version('bettercap -version'), True, 'bettercap'),
+                ('evilsocket/pwngrid', parse_version('pwngrid -version'), True, 'pwngrid-peer'),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
             ]
 
