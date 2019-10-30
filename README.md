@@ -32,7 +32,7 @@ https://www.pwnagotchi.ai
 
 &nbsp; | Official Links
 ---------|-------
-Slack | [pwnagotchi.slack.com](https://pwnagotchi.herokuapp.com)
+Slack | [pwnagotchi.slack.com](https://invite.pwnagotchi.ai/)
 Twitter | [@pwnagotchi](https://twitter.com/pwnagotchi)
 Subreddit | [r/pwnagotchi](https://www.reddit.com/r/pwnagotchi/)
 Website | [pwnagotchi.ai](https://pwnagotchi.ai/)
