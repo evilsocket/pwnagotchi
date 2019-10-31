@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
+# start mon0
 /usr/bin/monstart
+
+# if usb0 or eth0 are up
 if [[ $(ifconfig | grep usb0 | grep RUNNING) ]] || [[ !$(grep '1' /sys/class/net/eth0/carrier) ]]; then
   # if override file exists, go into auto mode
   if [ -f /root/.pwnagotchi-auto ]; then
