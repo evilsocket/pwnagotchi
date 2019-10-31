@@ -89,8 +89,8 @@ main:
             gpios:
             - 20: 'sudo touch /root/.pwnagotchi-auto && sudo systemctl restart pwnagotchi'
             - 21: 'shutdown -h now'
-        pinormi-button-shim:
-          enabled: true
+        pinormi-button-shim:#Requires library install to function, see https://github.com/pimoroni/button-shim
+          enabled: false
           #Commands to run when the buttons are released.
           buttons_press:
             1: 'sudo touch /root/.pwnagotchi-auto && sudo systemctl restart pwnagotchi'
