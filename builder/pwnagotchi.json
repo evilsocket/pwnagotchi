@@ -90,6 +90,12 @@
       "destination": "/etc/systemd/system/bettercap.service"
     },
     {
+      "type": "shell",
+      "inline": [
+        "chmod +x /usr/bin/*"
+      ]
+    },
+    {
       "type": "ansible-local",
       "playbook_file": "pwnagotchi.yml",
       "command": "ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 PWN_VERSION={{user `pwn_version`}} PWN_HOSTNAME={{user `pwn_hostname`}} ansible-playbook"
