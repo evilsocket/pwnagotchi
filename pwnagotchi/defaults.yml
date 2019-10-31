@@ -21,9 +21,9 @@ main:
                 - YourHomeNetworkHere
 
         auto-update:
-            enabled: false
-            interval: 12 # every 12 hours
+            enabled: true
             install: true # if false, it will only warn that updates are available, if true it will install them
+            interval: 1 # every 1 hour
 
         auto-backup:
             enabled: false
