@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-ifconfig mon0 down && iw dev mon0 del
+source /usr/bin/pwnlib
+stop_monitor_interface

@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
-# blink 10 times to signal ready state
-/usr/bin/bootblink 10 &
+source /usr/bin/pwnlib
 
-# if usb0 or eth0 are up
-if [[ $(ifconfig | grep usb0 | grep RUNNING) ]] || [[ !$(grep '1' /sys/class/net/eth0/carrier) ]]; then
-  # if override file exists, go into auto mode
-  if [ -f /root/.pwnagotchi-auto ]; then
-    rm /root/.pwnagotchi-auto
-    /usr/local/bin/pwnagotchi
-  else
-    /usr/local/bin/pwnagotchi --manual
-  fi
-else
+# blink 10 times to signal ready state
+blink_led 10 &
+
+if is_auto_mode; then
   /usr/local/bin/pwnagotchi
+else
+  /usr/local/bin/pwnagotchi --manual
 fi

@@ -21,6 +21,11 @@
     },
     {
       "type": "file",
+      "source": "data/usr/bin/pwnlib",
+      "destination": "/usr/bin/pwnlib"
+    },
+    {
+      "type": "file",
       "source": "data/usr/bin/bettercap-launcher",
       "destination": "/usr/bin/bettercap-launcher"
     },
@@ -33,11 +38,6 @@
       "type": "file",
       "source": "data/usr/bin/monstop",
       "destination": "/usr/bin/monstop"
-    },
-    {
-      "type": "file",
-      "source": "data/usr/bin/bootblink",
-      "destination": "/usr/bin/bootblink"
     },
     {
       "type": "file",
