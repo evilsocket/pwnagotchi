@@ -21,7 +21,6 @@ def display_for(config):
     if config['ui']['display']['type'] == 'lcdhat':
         return LcdHat(config)
 
-
     elif config['ui']['display']['type'] == 'waveshare_1':
         return WaveshareV1(config)
 
@@ -30,3 +29,7 @@ def display_for(config):
 
     elif config['ui']['display']['type'] == 'waveshare27inch':
         return Waveshare27inch(config)
+    
+    elif config['ui']['display']['type'] == 'waveshare29inch':
+        return Waveshare29inch(config)
+    
