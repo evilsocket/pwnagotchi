@@ -89,6 +89,24 @@ main:
             gpios:
             - 20: 'sudo touch /root/.pwnagotchi-auto && sudo systemctl restart pwnagotchi'
             - 21: 'shutdown -h now'
+        pinormi-button-shim:
+          enabled: true
+          #Commands to run when the buttons are released.
+          buttons_press:
+            1: 'sudo touch /root/.pwnagotchi-auto && sudo systemctl restart pwnagotchi'
+            2: 'shutdown -h now'
+            3:
+            4:
+            5:
+          #Commands to run when button is held for 2 seconds.
+          buttons_hold:
+            1:
+            2:
+            3:
+            4:
+            5:
+          led_color: 0, 0, 0 #RGB Color value for LED. 0-255, (0,0,0) = Off
+
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
