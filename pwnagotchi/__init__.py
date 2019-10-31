@@ -103,7 +103,7 @@ def shutdown():
     if view.ROOT:
         view.ROOT.on_shutdown()
         # give it some time to refresh the ui
-        time.sleep(5)
+        time.sleep(10)
     os.system("sync")
     os.system("halt")
 
