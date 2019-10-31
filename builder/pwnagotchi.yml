@@ -280,22 +280,6 @@
       remote_src: yes
       mode: 0755
 
-  - name: create hdmion script
-    copy:
-      dest: /usr/bin/hdmion
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        sudo /opt/vc/bin/tvservice -p
-
-  - name: create hdmioff script
-    copy:
-      dest: /usr/bin/hdmioff
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        sudo /opt/vc/bin/tvservice -o
-
   - name: add HDMI powersave to rc.local
     blockinfile:
       path: /etc/rc.local
@@ -328,39 +312,6 @@
         #     color: 'black'
         #
     when: not user_config.stat.exists
-
-  - name: configure lo interface
-    copy:
-      dest: /etc/network/interfaces.d/lo-cfg
-      content: |
-        auto lo
-        iface lo inet loopback
-
-  - name: configure wlan interface
-    copy:
-      dest: /etc/network/interfaces.d/wlan0-cfg
-      content: |
-        allow-hotplug wlan0
-        iface wlan0 inet static
-
-  - name: configure usb interface
-    copy:
-      dest: /etc/network/interfaces.d/usb0-cfg
-      content: |
-        allow-hotplug usb0
-        iface usb0 inet static
-          address 10.0.0.2
-          netmask 255.255.255.0
-          network 10.0.0.0
-          broadcast 10.0.0.255
-          gateway 10.0.0.1
-
-  - name: configure eth0 interface (pi2/3/4)
-    copy:
-      dest: /etc/network/interfaces.d/eth0-cfg
-      content: |
-        allow-hotplug eth0
-        iface eth0 inet dhcp
 
   - name: enable ssh on boot
     file:
