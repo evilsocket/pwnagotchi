@@ -18,7 +18,7 @@ from pwnagotchi.utils import StatusFile
 READY = False
 INTERVAL = StatusFile('/root/.bt-tether')
 OPTIONS = dict()
-
+NETWORK = None
 
 class BTError(Exception):
     """
@@ -275,15 +275,15 @@ class BTNap:
         try:
             logging.debug('BT-TETHER: Connecting to nap network ...')
             net.Connect('nap')
-            return True
+            return net, True
         except dbus.exceptions.DBusException as err:
             if err.get_dbus_name() == 'org.bluez.Error.AlreadyConnected':
-                return True
+                return net, True
 
             connected = BTNap.prop_get(net, 'Connected')
             if not connected:
-                return False
-            return True
+                return None, False
+            return net, True
 
 
 class SystemdUnitWrapper:
@@ -444,6 +444,7 @@ def on_ui_update(ui):
 
     if READY:
         global INTERVAL
+        global NETWORK
         if INTERVAL.newer_then_minutes(OPTIONS['interval']):
             return
 
@@ -488,7 +489,9 @@ def on_ui_update(ui):
         if not btnap_iface.exists():
             # connected and paired but not napping
             logging.debug('BT-TETHER: Try to connect to nap ...')
-            if BTNap.nap(dev_remote):
+            network, status = BTNap.nap(dev_remote)
+            NETWORK = network
+            if status:
                 logging.info('BT-TETHER: Napping!')
                 ui.set('bluetooth', 'C')
                 time.sleep(5)
