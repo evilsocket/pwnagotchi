@@ -41,13 +41,23 @@ class MemTemp(plugins.Plugin):
         return int(pwnagotchi.cpu_load() * 100)
 
     def on_ui_setup(self, ui):
+        # self._layout['width'] = 250
+        # self._layout['height'] = 122
+
+        if ui.is_waveshare_v2():
+            h_pos = (180, 76)
+            v_pos = (180, 61)
+        else:
+            h_pos = (155, 76)
+            v_pos = (180, 61)
+
         if self.options['orientation'] == "horizontal":
             ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value='mem cpu temp\n - -  -',
-                                                   position=(ui.width() / 2 + 30, ui.height() / 2 + 15),
+                                                   position=h_pos,
                                                    label_font=fonts.Small, text_font=fonts.Small))
         elif self.options['orientation'] == "vertical":
             ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value=' mem:-\n cpu:-\ntemp:-',
-                                                   position=(ui.width() / 2 + 55, ui.height() / 2),
+                                                   position=v_pos,
                                                    label_font=fonts.Small, text_font=fonts.Small))
 
     def on_ui_update(self, ui):
