@@ -71,11 +71,27 @@ main:
             enabled: false
         bt-tether:
             enabled: false # if you want to use this, set ui.display.video.address to 0.0.0.0
-            mac: ~ # mac of your bluetooth device
-            ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
-            netmask: 24
-            interval: 1 # check every x minutes for device
-            share_internet: false
+            devices:
+              android-phone:
+                search_order: 1 # search for this first
+                mac: ~ # mac of your bluetooth device
+                ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
+                netmask: 24
+                interval: 1 # check every minute for device
+                scantime: 10 # search for 10 seconds
+                max_tries: 10 # after 10 tries of "not found"; don't try anymore
+                share_internet: false
+                priority: 1 # low routing priority; ios (prio: 999) would win here
+              ios-phone:
+                search_order: 2 # search for this second
+                mac: ~ # mac of your bluetooth device
+                ip: '172.20.10.2' # ip from which your pwnagotchi should be reachable
+                netmask: 24
+                interval: 5 # check every 5 minutes for device
+                scantime: 20
+                max_tries: 0 # infinity
+                share_internet: false
+                priority: 999 # routing priority
         memtemp: # Display memory usage, cpu load and cpu temperature on screen
             enabled: false
             orientation: horizontal # horizontal/vertical
