@@ -122,7 +122,7 @@ class BTNap:
             device = ifaces.get(BTNap.IFACE_DEV)
             if device is None:
                 continue
-            if str(device['Address']) == device_address and path.startswith(path_prefix):
+            if str(device['Address']).lower() == device_address.lower() and path.startswith(path_prefix):
                 obj = bus.get_object(BTNap.IFACE_BASE, path)
                 return dbus.Interface(obj, BTNap.IFACE_DEV)
         raise BTError('Bluetooth device not found')
