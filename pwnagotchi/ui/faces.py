@@ -16,6 +16,7 @@ DEMOTIVATED = '(≖__≖)'
 SMART = '(✜‿‿✜)'
 LONELY = '(ب__ب)'
 SAD = '(╥☁╥ )'
+ANGRY = "(-_-')"
 FRIEND = '(♥‿‿♥)'
 BROKEN = '(☓‿‿☓)'
 DEBUG = '(#__#)'

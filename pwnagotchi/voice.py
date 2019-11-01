@@ -67,6 +67,13 @@ class Voice:
             self._('I\'m sad'),
             '...'])
 
+    def on_angry(self):
+        # passive aggressive or not? :D
+        return random.choice([
+            '...',
+            self._('Leave me alone ...'),
+            self._('I\'m mad at you!')])
+
     def on_excited(self):
         return random.choice([
             self._('I\'m living the life!'),

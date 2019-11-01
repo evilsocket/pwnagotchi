@@ -284,6 +284,11 @@ class View(object):
         self.set('status', self._voice.on_sad())
         self.update()
 
+    def on_angry(self):
+        self.set('face', faces.ANGRY)
+        self.set('status', self._voice.on_angry())
+        self.update()
+
     def on_motivated(self, reward):
         self.set('face', faces.MOTIVATED)
         self.set('status', self._voice.on_motivated(reward))
