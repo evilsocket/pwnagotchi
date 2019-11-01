@@ -41,11 +41,8 @@ class MemTemp(plugins.Plugin):
         return int(pwnagotchi.cpu_load() * 100)
 
     def on_ui_setup(self, ui):
-        # self._layout['width'] = 250
-        # self._layout['height'] = 122
-
         if ui.is_waveshare_v2():
-            h_pos = (180, 76)
+            h_pos = (180, 80)
             v_pos = (180, 61)
         else:
             h_pos = (155, 76)
