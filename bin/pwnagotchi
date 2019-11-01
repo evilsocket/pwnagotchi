@@ -31,7 +31,15 @@ if __name__ == '__main__':
     parser.add_argument('--debug', dest="debug", action="store_true", default=False,
                         help="Enable debug logs.")
 
+    parser.add_argument('--version', dest="version", action="store_true", default=False,
+                        help="Prints the version.")
+
     args = parser.parse_args()
+
+    if args.version:
+        print(pwnagotchi.version)
+        SystemExit(0)
+
     config = utils.load_config(args)
     utils.setup_logging(args, config)
 
