@@ -56,7 +56,7 @@ if __name__ == '__main__':
     logging.debug("effective configuration:\n\n%s\n\n" % yaml.dump(config, default_flow_style=False))
 
     for _, plugin in plugins.loaded.items():
-        logging.debug("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))
+        logging.debug("plugin '%s' v%s" % (plugin.__class__.__name__, plugin.__version__))
 
     if args.do_clear:
         logging.info("clearing the display ...")
