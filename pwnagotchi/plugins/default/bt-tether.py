@@ -515,6 +515,11 @@ class BTTether(plugins.Plugin):
             device.network, success = BTNap.nap(dev_remote)
 
             if success:
+                if device.interface() is None:
+                    ui.set('bluetooth', 'BE')
+                    logging.info('BT-TETHER: Could not establish nap connection with %s', device.name)
+                    continue
+
                 logging.info('BT-TETHER: Created interface (%s)', device.interface())
                 ui.set('bluetooth', 'C')
                 any_device_connected = True
