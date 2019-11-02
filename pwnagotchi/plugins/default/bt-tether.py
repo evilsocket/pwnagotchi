@@ -426,29 +426,30 @@ class BTTether(plugins.Plugin):
         self.devices = dict()
 
     def on_loaded(self):
+        # new config
         if 'devices' in self.options:
             for device, options in self.options['devices'].items():
-                for device_opt in ['priority', 'scantime', 'search_order', 'max_tries', 'share_internet', 'mac', 'ip', 'netmask', 'interval']:
+                for device_opt in ['enabled', 'priority', 'scantime', 'search_order', 'max_tries', 'share_internet', 'mac', 'ip', 'netmask', 'interval']:
                     if device_opt not in options or (device_opt in options and options[device_opt] is None):
                         logging.error("BT-TET: Pleace specify the %s for device %s.", device_opt, device)
                         break
                 else:
-                    self.devices[device] = Device(name=device, **options)
-        elif 'mac' in self.options:
-            # legacy
+                    if options['enabled']:
+                        self.devices[device] = Device(name=device, **options)
+
+        # legacy
+        if 'mac' in self.options:
             for opt in ['share_internet', 'mac', 'ip', 'netmask', 'interval']:
                 if opt not in self.options or (opt in self.options and self.options[opt] is None):
                     logging.error("BT-TET: Please specify the %s in your config.yml.", opt)
                     return
 
-            self.devices['default'] = Device(name='default', **self.options)
-        else:
-            logging.error("BT-TET: No configuration found")
-            return
+            self.devices['legacy'] = Device(name='legacy', **self.options)
 
         if not self.devices:
             logging.error("BT-TET: No valid devices found")
             return
+
         # ensure bluetooth is running
         bt_unit = SystemdUnitWrapper('bluetooth.service')
         if not bt_unit.is_active():

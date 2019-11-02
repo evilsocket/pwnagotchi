@@ -73,6 +73,7 @@ main:
             enabled: false # if you want to use this, set ui.display.video.address to 0.0.0.0
             devices:
               android-phone:
+                enabled: false
                 search_order: 1 # search for this first
                 mac: ~ # mac of your bluetooth device
                 ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
@@ -83,9 +84,10 @@ main:
                 share_internet: false
                 priority: 1 # low routing priority; ios (prio: 999) would win here
               ios-phone:
+                enabled: false
                 search_order: 2 # search for this second
                 mac: ~ # mac of your bluetooth device
-                ip: '172.20.10.2' # ip from which your pwnagotchi should be reachable
+                ip: '172.20.10.6' # ip from which your pwnagotchi should be reachable
                 netmask: 24
                 interval: 5 # check every 5 minutes for device
                 scantime: 20
