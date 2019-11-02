@@ -1,31 +1,12 @@
-__author__ = 'evilsocket@gmail.com'
-__version__ = '1.0.1'
-__name__ = 'grid'
-__license__ = 'GPL3'
-__description__ = 'This plugin signals the unit cryptographic identity and list of pwned networks and list of pwned ' \
-                  'networks to api.pwnagotchi.ai '
-
 import os
 import logging
 import time
 import glob
+import re
 
 import pwnagotchi.grid as grid
-import pwnagotchi.utils as utils
-from pwnagotchi.ui.components import LabeledValue
-from pwnagotchi.ui.view import BLACK
-import pwnagotchi.ui.fonts as fonts
-from pwnagotchi.utils import WifiInfo, extract_from_pcap
-
-OPTIONS = dict()
-REPORT = utils.StatusFile('/root/.api-report.json', data_format='json')
-
-UNREAD_MESSAGES = 0
-TOTAL_MESSAGES = 0
-
-
-def on_loaded():
-    logging.info("grid plugin loaded.")
+import pwnagotchi.plugins as plugins
+from pwnagotchi.utils import StatusFile, WifiInfo, extract_from_pcap
 
 
 def parse_pcap(filename):
@@ -39,6 +20,10 @@ def parse_pcap(filename):
     else:
         # /root/handshakes/BSSID.pcap
         essid, bssid = '', net_id
+
+    mac_re = re.compile('[0-9a-fA-F]{12}')
+    if not mac_re.match(bssid):
+        return '', ''
 
     it = iter(bssid)
     bssid = ':'.join([a + b for a, b in zip(it, it)])
@@ -56,93 +41,100 @@ def parse_pcap(filename):
     return info[WifiInfo.ESSID], info[WifiInfo.BSSID]
 
 
-def is_excluded(what):
-    for skip in OPTIONS['exclude']:
-        skip = skip.lower()
-        what = what.lower()
-        if skip in what or skip.replace(':', '') in what:
-            return True
-    return False
+class Grid(plugins.Plugin):
+    __author__ = 'evilsocket@gmail.com'
+    __version__ = '1.0.1'
+    __license__ = 'GPL3'
+    __description__ = 'This plugin signals the unit cryptographic identity and list of pwned networks and list of pwned ' \
+                      'networks to api.pwnagotchi.ai '
 
+    def __init__(self):
+        self.options = dict()
+        self.report = StatusFile('/root/.api-report.json', data_format='json')
 
-def on_ui_update(ui):
-    new_value = ' %d (%d)' % (UNREAD_MESSAGES, TOTAL_MESSAGES)
-    if not ui.has_element('mailbox') and UNREAD_MESSAGES > 0:
-        if ui.is_inky():
-            pos = (80, 0)
-        else:
-            pos = (100, 0)
-        ui.add_element('mailbox',
-                       LabeledValue(color=BLACK, label='MSG', value=new_value,
-                                    position=pos,
-                                    label_font=fonts.Bold,
-                                    text_font=fonts.Medium))
-    ui.set('mailbox', new_value)
+        self.unread_messages = 0
+        self.total_messages = 0
 
+    def is_excluded(self, what):
+        for skip in self.options['exclude']:
+            skip = skip.lower()
+            what = what.lower()
+            if skip in what or skip.replace(':', '') in what:
+                return True
+        return False
 
-def set_reported(reported, net_id):
-    global REPORT
-    reported.append(net_id)
-    REPORT.update(data={'reported': reported})
+    def on_loaded(self):
+        logging.info("grid plugin loaded.")
 
+    def set_reported(self, reported, net_id):
+        reported.append(net_id)
+        self.report.update(data={'reported': reported})
 
-def on_internet_available(agent):
-    global REPORT, UNREAD_MESSAGES, TOTAL_MESSAGES
-
-    logging.debug("internet available")
-
-    try:
-        grid.update_data(agent.last_session)
-    except Exception as e:
-        logging.error("error connecting to the pwngrid-peer service: %s" % e)
-        return
-
-    try:
+    def check_inbox(self, agent):
         logging.debug("checking mailbox ...")
-
         messages = grid.inbox()
-        TOTAL_MESSAGES = len(messages)
-        UNREAD_MESSAGES = len([m for m in messages if m['seen_at'] is None])
+        self.total_messages = len(messages)
+        self.unread_messages = len([m for m in messages if m['seen_at'] is None])
 
-        if TOTAL_MESSAGES:
-            on_ui_update(agent.view())
-            logging.debug(" %d unread messages of %d total" % (UNREAD_MESSAGES, TOTAL_MESSAGES))
+        if self.unread_messages:
+            logging.debug("[grid] unread:%d total:%d" % (self.unread_messages, self.total_messages))
+            agent.view().on_unread_messages(self.unread_messages, self.total_messages)
 
+    def check_handshakes(self, agent):
         logging.debug("checking pcaps")
 
         pcap_files = glob.glob(os.path.join(agent.config()['bettercap']['handshakes'], "*.pcap"))
         num_networks = len(pcap_files)
-        reported = REPORT.data_field_or('reported', default=[])
+        reported = self.report.data_field_or('reported', default=[])
         num_reported = len(reported)
         num_new = num_networks - num_reported
 
         if num_new > 0:
-            if OPTIONS['report']:
+            if self.options['report']:
                 logging.info("grid: %d new networks to report" % num_new)
-                logging.debug("OPTIONS: %s" % OPTIONS)
-                logging.debug("  exclude: %s" % OPTIONS['exclude'])
+                logging.debug("self.options: %s" % self.options)
+                logging.debug("  exclude: %s" % self.options['exclude'])
 
                 for pcap_file in pcap_files:
                     net_id = os.path.basename(pcap_file).replace('.pcap', '')
                     if net_id not in reported:
-                        if is_excluded(net_id):
+                        if self.is_excluded(net_id):
                             logging.debug("skipping %s due to exclusion filter" % pcap_file)
-                            set_reported(reported, net_id)
+                            self.set_reported(reported, net_id)
                             continue
 
                         essid, bssid = parse_pcap(pcap_file)
                         if bssid:
-                            if is_excluded(essid) or is_excluded(bssid):
+                            if self.is_excluded(essid) or self.is_excluded(bssid):
                                 logging.debug("not reporting %s due to exclusion filter" % pcap_file)
-                                set_reported(reported, net_id)
+                                self.set_reported(reported, net_id)
                             else:
                                 if grid.report_ap(essid, bssid):
-                                    set_reported(reported, net_id)
+                                    self.set_reported(reported, net_id)
                                 time.sleep(1.5)
                         else:
                             logging.warning("no bssid found?!")
             else:
                 logging.debug("grid: reporting disabled")
 
-    except Exception as e:
-        logging.error("grid api: %s" % e)
+    def on_internet_available(self, agent):
+        logging.debug("internet available")
+
+        try:
+            grid.update_data(agent.last_session)
+        except Exception as e:
+            logging.error("error connecting to the pwngrid-peer service: %s" % e)
+            logging.debug(e, exc_info=True)
+            return
+
+        try:
+            self.check_inbox(agent)
+        except Exception as e:
+            logging.error("[grid] error while checking inbox: %s" % e)
+            logging.debug(e, exc_info=True)
+
+        try:
+            self.check_handshakes(agent)
+        except Exception as e:
+            logging.error("[grid] error while checking pcaps: %s" % e)
+            logging.debug(e, exc_info=True)

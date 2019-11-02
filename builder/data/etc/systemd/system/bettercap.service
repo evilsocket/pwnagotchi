@@ -1,0 +1,14 @@
+[Unit]
+Description=bettercap api.rest service.
+Documentation=https://bettercap.org
+Wants=network.target
+
+[Service]
+Type=simple
+PermissionsStartOnly=true
+ExecStart=/usr/bin/bettercap-launcher
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

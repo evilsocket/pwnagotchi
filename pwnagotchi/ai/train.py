@@ -8,7 +8,6 @@ import logging
 
 import pwnagotchi.plugins as plugins
 import pwnagotchi.ai as ai
-from pwnagotchi.ai.epoch import Epoch
 
 
 class Stats(object):
@@ -88,7 +87,6 @@ class AsyncTrainer(object):
     def __init__(self, config):
         self._config = config
         self._model = None
-        self._epoch = Epoch(config)
         self._is_training = False
         self._training_epochs = 0
         self._nn_path = self._config['ai']['path']

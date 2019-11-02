@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+source /usr/bin/pwnlib
+
+# start mon0
+start_monitor_interface
+
+if is_auto_mode; then
+  /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
+else
+  /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual -iface mon0
+fi

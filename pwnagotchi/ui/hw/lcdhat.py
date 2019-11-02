@@ -37,7 +37,7 @@ class LcdHat(DisplayImpl):
         from pwnagotchi.ui.hw.libs.waveshare.lcdhat.epd import EPD
         self._display = EPD()
         self._display.init()
-        self._display.Clear()
+        self._display.clear()
 
     def render(self, canvas):
         self._display.display(canvas)

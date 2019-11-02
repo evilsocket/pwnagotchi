@@ -1,50 +1,49 @@
-__author__ = '33197631+dadav@users.noreply.github.com'
-__version__ = '1.0.0'
-__name__ = 'twitter'
-__license__ = 'GPL3'
-__description__ = 'This plugin creates tweets about the recent activity of pwnagotchi'
-
 import logging
 from pwnagotchi.voice import Voice
-
-OPTIONS = dict()
-
-def on_loaded():
-    logging.info("twitter plugin loaded.")
+import pwnagotchi.plugins as plugins
 
 
-# called in manual mode when there's internet connectivity
-def on_internet_available(agent):
-    config = agent.config()
-    display = agent.view()
-    last_session = agent.last_session
+class Twitter(plugins.Plugin):
+    __author__ = 'evilsocket@gmail.com'
+    __version__ = '1.0.0'
+    __license__ = 'GPL3'
+    __description__ = 'This plugin creates tweets about the recent activity of pwnagotchi'
 
-    if last_session.is_new() and last_session.handshakes > 0:
-        try:
-            import tweepy
-        except ImportError:
-            logging.error("Couldn't import tweepy")
-            return
+    def on_loaded(self):
+        logging.info("twitter plugin loaded.")
 
-        logging.info("detected a new session and internet connectivity!")
+    # called in manual mode when there's internet connectivity
+    def on_internet_available(self, agent):
+        config = agent.config()
+        display = agent.view()
+        last_session = agent.last_session
 
-        picture = '/dev/shm/pwnagotchi.png'
+        if last_session.is_new() and last_session.handshakes > 0:
+            try:
+                import tweepy
+            except ImportError:
+                logging.error("Couldn't import tweepy")
+                return
 
-        display.on_manual_mode(last_session)
-        display.update(force=True)
-        display.image().save(picture, 'png')
-        display.set('status', 'Tweeting...')
-        display.update(force=True)
+            logging.info("detected a new session and internet connectivity!")
 
-        try:
-            auth = tweepy.OAuthHandler(OPTIONS['consumer_key'], OPTIONS['consumer_secret'])
-            auth.set_access_token(OPTIONS['access_token_key'], OPTIONS['access_token_secret'])
-            api = tweepy.API(auth)
+            picture = '/root/pwnagotchi.png'
 
-            tweet = Voice(lang=config['main']['lang']).on_last_session_tweet(last_session)
-            api.update_with_media(filename=picture, status=tweet)
-            last_session.save_session_id()
+            display.on_manual_mode(last_session)
+            display.update(force=True)
+            display.image().save(picture, 'png')
+            display.set('status', 'Tweeting...')
+            display.update(force=True)
 
-            logging.info("tweeted: %s" % tweet)
-        except Exception as e:
-            logging.exception("error while tweeting")
+            try:
+                auth = tweepy.OAuthHandler(self.options['consumer_key'], self.options['consumer_secret'])
+                auth.set_access_token(self.options['access_token_key'], self.options['access_token_secret'])
+                api = tweepy.API(auth)
+
+                tweet = Voice(lang=config['main']['lang']).on_last_session_tweet(last_session)
+                api.update_with_media(filename=picture, status=tweet)
+                last_session.save_session_id()
+
+                logging.info("tweeted: %s" % tweet)
+            except Exception as e:
+                logging.exception("error while tweeting")

@@ -2,6 +2,7 @@ import _thread
 from threading import Lock
 import time
 import logging
+import random
 from PIL import ImageDraw
 
 import pwnagotchi.utils as utils
@@ -25,6 +26,7 @@ class View(object):
         # setup faces from the configuration in case the user customized them
         faces.load_from_config(config['ui']['faces'])
 
+        self._agent = None
         self._render_cbs = []
         self._config = config
         self._canvas = None
@@ -88,6 +90,9 @@ class View(object):
 
         ROOT = self
 
+    def set_agent(self, agent):
+        self._agent = agent
+
     def has_element(self, key):
         self._state.has_element(key)
 
@@ -147,6 +152,7 @@ class View(object):
         self.set('shakes', '%d (%s)' % (last_session.handshakes, \
                                         utils.total_unique_handshakes(self._config['bettercap']['handshakes'])))
         self.set_closest_peer(last_session.last_peer, last_session.peers)
+        self.update()
 
     def is_normal(self):
         return self._state.get('face') not in (
@@ -201,9 +207,21 @@ class View(object):
         self.update()
 
     def on_new_peer(self, peer):
-        self.set('face', faces.FRIEND)
+        face = ''
+        # first time they met, neutral mood
+        if peer.first_encounter():
+            face = random.choice((faces.AWAKE, faces.COOL))
+        # a good friend, positive expression
+        elif peer.is_good_friend(self._config):
+            face = random.choice((faces.MOTIVATED, faces.FRIEND, faces.HAPPY))
+        # normal friend, neutral-positive
+        else:
+            face = random.choice((faces.EXCITED, faces.HAPPY, faces.SMART))
+
+        self.set('face', face)
         self.set('status', self._voice.on_new_peer(peer))
         self.update()
+        time.sleep(3)
 
     def on_lost_peer(self, peer):
         self.set('face', faces.LONELY)
@@ -215,12 +233,17 @@ class View(object):
         self.set('status', self._voice.on_free_channel(channel))
         self.update()
 
+    def on_reading_logs(self, lines_so_far=0):
+        self.set('face', faces.SMART)
+        self.set('status', self._voice.on_reading_logs(lines_so_far))
+        self.update()
+
     def wait(self, secs, sleeping=True):
         was_normal = self.is_normal()
         part = secs / 10.0
 
         for step in range(0, 10):
-            # if we weren't in a normal state before goin
+            # if we weren't in a normal state before going
             # to sleep, keep that face and status on for
             # a while, otherwise the sleep animation will
             # always override any minor state change before it
@@ -234,10 +257,11 @@ class View(object):
                         self.set('status', self._voice.on_awakening())
                 else:
                     self.set('status', self._voice.on_waiting(int(secs)))
+                    good_mood = self._agent.in_good_mood()
                     if step % 2 == 0:
-                        self.set('face', faces.LOOK_R)
+                        self.set('face', faces.LOOK_R_HAPPY if good_mood else faces.LOOK_R)
                     else:
-                        self.set('face', faces.LOOK_L)
+                        self.set('face', faces.LOOK_L_HAPPY if good_mood else faces.LOOK_L)
 
             time.sleep(part)
             secs -= part
@@ -258,6 +282,11 @@ class View(object):
     def on_sad(self):
         self.set('face', faces.SAD)
         self.set('status', self._voice.on_sad())
+        self.update()
+
+    def on_angry(self):
+        self.set('face', faces.ANGRY)
+        self.set('status', self._voice.on_angry())
         self.update()
 
     def on_motivated(self, reward):
@@ -290,6 +319,11 @@ class View(object):
         self.set('status', self._voice.on_miss(who))
         self.update()
 
+    def on_grateful(self):
+        self.set('face', faces.GRATEFUL)
+        self.set('status', self._voice.on_grateful())
+        self.update()
+
     def on_lonely(self):
         self.set('face', faces.LONELY)
         self.set('status', self._voice.on_lonely())
@@ -299,6 +333,12 @@ class View(object):
         self.set('face', faces.HAPPY)
         self.set('status', self._voice.on_handshakes(new_shakes))
         self.update()
+
+    def on_unread_messages(self, count, total):
+        self.set('face', faces.EXCITED)
+        self.set('status', self._voice.on_unread_messages(count, total))
+        self.update()
+        time.sleep(5.0)
 
     def on_rebooting(self):
         self.set('face', faces.BROKEN)

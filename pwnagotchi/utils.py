@@ -38,6 +38,12 @@ def load_config(args):
         # https://stackoverflow.com/questions/42392600/oserror-errno-18-invalid-cross-device-link
         shutil.move("/boot/config.yml", args.user_config)
 
+    # check for an entire pwnagotchi folder on /boot/
+    if os.path.isdir('/boot/pwnagotchi'):
+        print("installing /boot/pwnagotchi to /etc/pwnagotchi ...")
+        shutil.rmtree('/etc/pwnagotchi', ignore_errors=True)
+        shutil.move('/boot/pwnagotchi', '/etc/')
+
     # if not config is found, copy the defaults
     if not os.path.exists(args.config):
         print("copying %s to %s ..." % (ref_defaults_file, args.config))
@@ -59,12 +65,16 @@ def load_config(args):
         config = yaml.safe_load(fp)
 
     # load the user config
-    if os.path.exists(args.user_config):
-        with open(args.user_config) as fp:
-            user_config = yaml.safe_load(fp)
-            # if the file is empty, safe_load will return None and merge_config will boom.
-            if user_config:
-                config = merge_config(user_config, config)
+    try:
+        if os.path.exists(args.user_config):
+            with open(args.user_config) as fp:
+                user_config = yaml.safe_load(fp)
+                # if the file is empty, safe_load will return None and merge_config will boom.
+                if user_config:
+                    config = merge_config(user_config, config)
+    except yaml.YAMLError as ex:
+        print("There was an error processing the configuration file:\n%s " % ex)
+        exit(1)
 
     # the very first step is to normalize the display name so we don't need dozens of if/elif around
     if config['ui']['display']['type'] in ('inky', 'inkyphat'):
@@ -73,7 +83,7 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('papirus', 'papi'):
         config['ui']['display']['type'] = 'papirus'
 
-    elif config['ui']['display']['type'] in ('oledhat'):
+    elif config['ui']['display']['type'] in ('oledhat',):
         config['ui']['display']['type'] = 'oledhat'
 
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1'):
@@ -85,12 +95,22 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('ws_27inch', 'ws27inch', 'waveshare_27inch', 'waveshare27inch'):
         config['ui']['display']['type'] = 'waveshare27inch'
 
+    elif config['ui']['display']['type'] in ('lcdhat',):
+        config['ui']['display']['type'] = 'lcdhat'
+
+    elif config['ui']['display']['type'] in ('dfrobot', 'df'):
+        config['ui']['display']['type'] = 'dfrobot'
+
+    elif config['ui']['display']['type'] in ('ws_154inch', 'ws154inch', 'waveshare_154inch', 'waveshare154inch'):
+        config['ui']['display']['type'] = 'waveshare154inch'
+
+    elif config['ui']['display']['type'] in ('ws_213d', 'ws213d', 'waveshare_213d', 'waveshare213d'):
+        config['ui']['display']['type'] = 'waveshare213d'
+
     else:
         print("unsupported display type %s" % config['ui']['display']['type'])
         exit(1)
 
-    print("Effective Configuration:")
-    print(yaml.dump(config, default_flow_style=False))
     return config
 
 
@@ -108,6 +128,12 @@ def setup_logging(args, config):
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
     root.addHandler(console_handler)
+
+    # https://stackoverflow.com/questions/24344045/how-can-i-completely-remove-any-logging-from-requests-module-in-python?noredirect=1&lq=1
+    logging.getLogger("urllib3").propagate = False
+    requests_log = logging.getLogger("requests")
+    requests_log.addHandler(logging.NullHandler())
+    requests_log.propagate = False
 
 
 def secs_to_hhmmss(secs):
@@ -267,7 +293,7 @@ class StatusFile(object):
         return self._updated is not None and ((datetime.now() - self._updated).seconds / 60) < minutes
 
     def newer_then_hours(self, hours):
-        return self._updated is not None and ((datetime.now() - self._updated).seconds / (60*60)) < hours
+        return self._updated is not None and ((datetime.now() - self._updated).seconds / (60 * 60)) < hours
 
     def newer_then_days(self, days):
         return self._updated is not None and (datetime.now() - self._updated).days < days

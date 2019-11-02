@@ -8,6 +8,7 @@ import _thread
 import pwnagotchi
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
+from pwnagotchi.automata import Automata
 from pwnagotchi.log import LastSession
 from pwnagotchi.bettercap import Client
 from pwnagotchi.mesh.utils import AsyncAdvertiser
@@ -16,13 +17,14 @@ from pwnagotchi.ai.train import AsyncTrainer
 RECOVERY_DATA_FILE = '/root/.pwnagotchi-recovery'
 
 
-class Agent(Client, AsyncAdvertiser, AsyncTrainer):
+class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
     def __init__(self, view, config, keypair):
         Client.__init__(self, config['bettercap']['hostname'],
                         config['bettercap']['scheme'],
                         config['bettercap']['port'],
                         config['bettercap']['username'],
                         config['bettercap']['password'])
+        Automata.__init__(self, config, view)
         AsyncAdvertiser.__init__(self, config, view, keypair)
         AsyncTrainer.__init__(self, config)
 
@@ -31,6 +33,7 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self._current_channel = 0
         self._supported_channels = utils.iface_channels(config['main']['iface'])
         self._view = view
+        self._view.set_agent(self)
         self._access_points = []
         self._last_pwnd = None
         self._history = {}
@@ -48,36 +51,6 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
     def supported_channels(self):
         return self._supported_channels
-
-    def set_starting(self):
-        self._view.on_starting()
-
-    def set_ready(self):
-        plugins.on('ready', self)
-
-    def set_free_channel(self, channel):
-        self._view.on_free_channel(channel)
-        plugins.on('free_channel', self, channel)
-
-    def set_bored(self):
-        self._view.on_bored()
-        plugins.on('bored', self)
-
-    def set_sad(self):
-        self._view.on_sad()
-        plugins.on('sad', self)
-
-    def set_excited(self):
-        self._view.on_excited()
-        plugins.on('excited', self)
-
-    def set_lonely(self):
-        self._view.on_lonely()
-        plugins.on('lonely', self)
-
-    def set_rebooting(self):
-        self._view.on_rebooting()
-        plugins.on('rebooting', self)
 
     def setup_events(self):
         logging.info("connecting to %s ..." % self.url)
@@ -155,11 +128,6 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
         self.next_epoch()
         self.set_ready()
 
-    def wait_for(self, t, sleeping=True):
-        plugins.on('sleep' if sleeping else 'wait', self, t)
-        self._view.wait(t, sleeping)
-        self._epoch.track(sleep=True, inc=t)
-
     def recon(self):
         recon_time = self._config['personality']['recon_time']
         max_inactive = self._config['personality']['max_inactive_scale']
@@ -202,7 +170,9 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             s = self.session()
             plugins.on("unfiltered_ap_list", self, s['wifi']['aps'])
             for ap in s['wifi']['aps']:
-                if ap['hostname'] not in whitelist:
+                if ap['encryption'] == '' or ap['encryption'] == 'OPEN':
+                    continue
+                elif ap['hostname'] not in whitelist:
                     if self._filter_included(ap):
                         aps.append(ap)
         except Exception as e:
@@ -277,6 +247,11 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
     def _update_peers(self):
         self._view.set_closest_peer(self._closest_peer, len(self._peers))
 
+    def _reboot(self):
+        self.set_rebooting()
+        self._save_recovery_data()
+        pwnagotchi.reboot()
+
     def _save_recovery_data(self):
         logging.warning("writing recovery data to %s ..." % RECOVERY_DATA_FILE)
         with open(RECOVERY_DATA_FILE, 'w') as fp:
@@ -312,11 +287,12 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
         self.run('events.clear')
 
-        logging.debug("event polling started ...")
         while True:
             time.sleep(1)
 
             new_shakes = 0
+
+            logging.debug("polling events ...")
 
             try:
                 s = self.session()
@@ -390,21 +366,6 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
             self._history[who] += 1
 
         return self._history[who] < self._config['personality']['max_interactions']
-
-    def _on_miss(self, who):
-        logging.info("it looks like %s is not in range anymore :/" % who)
-        self._epoch.track(miss=True)
-        self._view.on_miss(who)
-
-    def _on_error(self, who, e):
-        error = "%s" % e
-        # when we're trying to associate or deauth something that is not in range anymore
-        # (if we are moving), we get the following error from bettercap:
-        # error 400: 50:c7:bf:2e:d3:37 is an unknown BSSID or it is in the association skip list.
-        if 'is an unknown BSSID' in error:
-            self._on_miss(who)
-        else:
-            logging.error("%s" % e)
 
     def associate(self, ap, throttle=0):
         if self.is_stale():
@@ -482,44 +443,3 @@ class Agent(Client, AsyncAdvertiser, AsyncTrainer):
 
             except Exception as e:
                 logging.error("error: %s" % e)
-
-    def is_stale(self):
-        return self._epoch.num_missed > self._config['personality']['max_misses_for_recon']
-
-    def any_activity(self):
-        return self._epoch.any_activity
-
-    def _reboot(self):
-        self.set_rebooting()
-        self._save_recovery_data()
-        pwnagotchi.reboot()
-
-    def next_epoch(self):
-        was_stale = self.is_stale()
-        did_miss = self._epoch.num_missed
-
-        self._epoch.next()
-
-        # after X misses during an epoch, set the status to lonely
-        if was_stale:
-            logging.warning("agent missed %d interactions -> lonely" % did_miss)
-            self.set_lonely()
-        # after X times being bored, the status is set to sad
-        elif self._epoch.inactive_for >= self._config['personality']['sad_num_epochs']:
-            logging.warning("%d epochs with no activity -> sad" % self._epoch.inactive_for)
-            self.set_sad()
-        # after X times being inactive, the status is set to bored
-        elif self._epoch.inactive_for >= self._config['personality']['bored_num_epochs']:
-            logging.warning("%d epochs with no activity -> bored" % self._epoch.inactive_for)
-            self.set_bored()
-        # after X times being active, the status is set to happy / excited
-        elif self._epoch.active_for >= self._config['personality']['excited_num_epochs']:
-            logging.warning("%d epochs with activity -> excited" % self._epoch.active_for)
-            self.set_excited()
-
-        plugins.on('epoch', self, self._epoch.epoch - 1, self._epoch.data())
-
-        if self._epoch.blind_for >= self._config['main']['mon_max_blind_epochs']:
-            logging.critical("%d epochs without visible access points -> rebooting ..." % self._epoch.blind_for)
-            self._reboot()
-            self._epoch.blind_for = 0

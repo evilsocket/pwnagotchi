@@ -1,0 +1,225 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <511225068@qq.com>, 2019.
+# 还有很多未翻译和翻译不准确，后期希望大家加入进来一起翻译！
+# 翻译可以联系QQ群：959559103 找 名字叫 初九 的 管理员
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-23 20:56+0200\n"
+"PO-Revision-Date: 2019-11-02 10:00+0008\n"
+"Last-Translator: 极客之眼-初九 <511225068@qq.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: chinese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ZzzzZZzzzzZzzz"
+msgstr ""
+
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "主人，你好.我是WiFi狩猎兽..."
+
+msgid "New day, new hunt, new pwns!"
+msgstr "美好的一天，狩猎开始!"
+
+msgid "Hack the Planet!"
+msgstr "我要入侵整个地球!"
+
+msgid "AI ready."
+msgstr "人工智能已启动."
+
+msgid "The neural network is ready."
+msgstr "神经元网络已启动."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "创建密钥中, 请勿断电..."
+
+#, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr ""
+
+msgid "I'm bored ..."
+msgstr "我无聊了..."
+
+msgid "Let's go for a walk!"
+msgstr "主人带我出门走走吧!"
+
+msgid "This is the best day of my life!"
+msgstr "这是我生命中最美好的一天!"
+
+msgid "Shitty day :/"
+msgstr "今天不开心 :/"
+
+msgid "I'm extremely bored ..."
+msgstr "主人，找点事做吧 ..."
+
+msgid "I'm very sad ..."
+msgstr "我很伤心..."
+
+msgid "I'm sad"
+msgstr "我伤心了"
+
+msgid "I'm living the life!"
+msgstr ""
+
+msgid "I pwn therefore I am."
+msgstr ""
+
+msgid "So many networks!!!"
+msgstr "哇，好多猎物!!!"
+
+msgid "I'm having so much fun!"
+msgstr "我玩的好开心!"
+
+msgid "My crime is that of curiosity ..."
+msgstr "我最大的缺点就是好奇..."
+
+#, python-brace-format
+msgid "Hello {name}! Nice to meet you."
+msgstr "你好{name}!很高兴认识你."
+
+#, python-brace-format
+msgid "Unit {name} is nearby!"
+msgstr ""
+
+#, python-brace-format
+msgid "Uhm ... goodbye {name}"
+msgstr "额 ... 再见{name}"
+
+#, python-brace-format
+msgid "{name} is gone ..."
+msgstr "{name} 它走了 ..."
+
+#, python-brace-format
+msgid "Whoops ... {name} is gone."
+msgstr "哎呀... {name} 离开了."
+
+#, python-brace-format
+msgid "{name} missed!"
+msgstr "刚刚错过了{name}!"
+
+msgid "Missed!"
+msgstr "刚刚错过了一个对的它"
+
+msgid "Good friends are a blessing!"
+msgstr "有个好朋友就是福气"
+
+msgid "I love my friends!"
+msgstr "我爱我的朋友!"
+
+msgid "Nobody wants to play with me ..."
+msgstr "没有人愿意和我玩耍..."
+
+msgid "I feel so alone ..."
+msgstr "我可能是天煞孤星..."
+
+msgid "Where's everybody?!"
+msgstr "朋友们都去哪里了?!"
+
+#, python-brace-format
+msgid "Napping for {secs}s ..."
+msgstr "小憩{secs}s ..."
+
+msgid "Zzzzz"
+msgstr ""
+
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr ""
+
+msgid "Good night."
+msgstr "晚安宝贝."
+
+msgid "Zzz"
+msgstr ""
+
+#, python-brace-format
+msgid "Waiting for {secs}s ..."
+msgstr "等待{secs}s ..."
+
+#, python-brace-format
+msgid "Looking around ({secs}s)"
+msgstr "追踪四周猎物({secs}s)"
+
+#, python-brace-format
+msgid "Hey {what} let's be friends!"
+msgstr "嗨{what}我们做朋友吧!"
+
+#, python-brace-format
+msgid "Associating to {what}"
+msgstr "正在连接到{what}"
+
+#, python-brace-format
+msgid "Yo {what}!"
+msgstr "追踪到你了{what}!"
+
+#, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "猎物{mac}不需要联网，我们给它断开!"
+
+#, python-brace-format
+msgid "Deauthenticating {mac}"
+msgstr "开始攻击猎物{mac}"
+
+#, python-brace-format
+msgid "Kickbanning {mac}!"
+msgstr "已捕获{mac}!"
+
+#, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "太酷了, 我们抓到了{num}新的猎物{plural}!"
+
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "主人，有{count}新消息{plural}!"
+
+msgid "Ops, something went wrong ... Rebooting ..."
+msgstr "行动,额等等有点小问题... 重启ing ..."
+
+#, python-brace-format
+msgid "Kicked {num} stations\n"
+msgstr "限制了{num}个猎物\n"
+
+#, python-brace-format
+msgid "Made {num} new friends\n"
+msgstr "交了{num}新朋友\n"
+
+#, python-brace-format
+msgid "Got {num} handshakes\n"
+msgstr "捕获了{num}握手包\n"
+
+msgid "Met 1 peer"
+msgstr ""
+
+#, python-brace-format
+msgid "Met {num} peers"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+
+msgid "hours"
+msgstr "时"
+
+msgid "minutes"
+msgstr "分"
+
+msgid "seconds"
+msgstr "秒"
+
+msgid "hour"
+msgstr "时"
+
+msgid "minute"
+msgstr "分"
+
+msgid "second"
+msgstr "秒"

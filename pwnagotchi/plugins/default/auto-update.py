@@ -1,10 +1,5 @@
-__author__ = 'evilsocket@gmail.com'
-__version__ = '1.1.0'
-__name__ = 'auto-update'
-__license__ = 'GPL3'
-__description__ = 'This plugin checks when updates are available and applies them when internet is available.'
-
 import os
+import re
 import logging
 import subprocess
 import requests
@@ -14,20 +9,8 @@ import glob
 import pkg_resources
 
 import pwnagotchi
+import pwnagotchi.plugins as plugins
 from pwnagotchi.utils import StatusFile
-
-OPTIONS = dict()
-READY = False
-STATUS = StatusFile('/root/.auto-update')
-
-
-def on_loaded():
-    global READY
-    if 'interval' not in OPTIONS or ('interval' in OPTIONS and OPTIONS['interval'] is None):
-        logging.error("[update] main.plugins.auto-update.interval is not set")
-        return
-    READY = True
-    logging.info("[update] plugin loaded.")
 
 
 def check(version, repo, native=True):
@@ -142,19 +125,47 @@ def install(display, update):
         if not os.path.exists(source_path):
             source_path = "%s-%s" % (source_path, update['available'])
 
+        # setup.py is going to install data files for us
         os.system("cd %s && pip3 install ." % source_path)
 
     return True
 
 
-def on_internet_available(agent):
-    global STATUS
+def parse_version(cmd):
+    out = subprocess.getoutput(cmd)
+    for part in out.split(' '):
+        part = part.replace('v', '').strip()
+        if re.search(r'^\d+\.\d+\.\d+.*$', part):
+            return part
+    raise Exception('could not parse version from "%s": output=\n%s' % (cmd, out))
 
-    logging.debug("[update] internet connectivity is available (ready %s)" % READY)
 
-    if READY:
-        if STATUS.newer_then_hours(OPTIONS['interval']):
-            logging.debug("[update] last check happened less than %d hours ago" % OPTIONS['interval'])
+class AutoUpdate(plugins.Plugin):
+    __author__ = 'evilsocket@gmail.com'
+    __version__ = '1.1.1'
+    __name__ = 'auto-update'
+    __license__ = 'GPL3'
+    __description__ = 'This plugin checks when updates are available and applies them when internet is available.'
+
+    def __init__(self):
+        self.ready = False
+        self.status = StatusFile('/root/.auto-update')
+
+    def on_loaded(self):
+        if 'interval' not in self.options or ('interval' in self.options and self.options['interval'] is None):
+            logging.error("[update] main.plugins.auto-update.interval is not set")
+            return
+        self.ready = True
+        logging.info("[update] plugin loaded.")
+
+    def on_internet_available(self, agent):
+        logging.debug("[update] internet connectivity is available (ready %s)" % self.ready)
+
+        if not self.ready:
+            return
+
+        if self.status.newer_then_hours(self.options['interval']):
+            logging.debug("[update] last check happened less than %d hours ago" % self.options['interval'])
             return
 
         logging.info("[update] checking for updates ...")
@@ -167,16 +178,17 @@ def on_internet_available(agent):
 
             to_install = []
             to_check = [
-                ('bettercap/bettercap', subprocess.getoutput('bettercap -version').split(' ')[1].replace('v', ''),
-                 True, 'bettercap'),
-                ('evilsocket/pwngrid', subprocess.getoutput('pwngrid -version').replace('v', ''), True, 'pwngrid-peer'),
+                ('bettercap/bettercap', parse_version('bettercap -version'), True, 'bettercap'),
+                ('evilsocket/pwngrid', parse_version('pwngrid -version'), True, 'pwngrid-peer'),
                 ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
             ]
 
             for repo, local_version, is_native, svc_name in to_check:
                 info = check(local_version, repo, is_native)
                 if info['url'] is not None:
-                    logging.warning("update for %s available: %s" % (repo, info['url']))
+                    logging.warning(
+                        "update for %s available (local version is '%s'): %s" % (
+                            repo, info['current'], info['url']))
                     info['service'] = svc_name
                     to_install.append(info)
 
@@ -184,7 +196,7 @@ def on_internet_available(agent):
             num_installed = 0
 
             if num_updates > 0:
-                if OPTIONS['install']:
+                if self.options['install']:
                     for update in to_install:
                         if install(display, update):
                             num_installed += 1
@@ -193,7 +205,7 @@ def on_internet_available(agent):
 
             logging.info("[update] done")
 
-            STATUS.update()
+            self.status.update()
 
             if num_installed > 0:
                 display.update(force=True, new_data={'status': 'Rebooting ...'})

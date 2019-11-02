@@ -52,7 +52,7 @@ INDEX = """<html>
         <img src="/ui" id="ui" style="width:100%%"/>
         <br/>
         <hr/>
-        <form action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
+        <form method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
             <input type="submit" class="block" value="Shutdown"/>
         </form>
     </div>
@@ -75,7 +75,7 @@ SHUTDOWN = """<html>
 
 
 class Handler(BaseHTTPRequestHandler):
-    AllowedOrigin = '*'
+    AllowedOrigin = None  # CORS headers are not sent
 
     # suppress internal logging
     def log_message(self, format, *args):
@@ -88,12 +88,13 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-XSS-Protection", "1; mode=block")
         self.send_header("Referrer-Policy", "same-origin")
         # cors
-        self.send_header("Access-Control-Allow-Origin", Handler.AllowedOrigin)
-        self.send_header('Access-Control-Allow-Credentials', 'true')
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers",
-                         "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-        self.send_header("Vary", "Origin")
+        if Handler.AllowedOrigin:
+            self.send_header("Access-Control-Allow-Origin", Handler.AllowedOrigin)
+            self.send_header('Access-Control-Allow-Credentials', 'true')
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers",
+                            "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+            self.send_header("Vary", "Origin")
 
     # just render some html in a 200 response
     def _html(self, html):
@@ -130,44 +131,54 @@ class Handler(BaseHTTPRequestHandler):
             except:
                 pass
 
+    # check the Origin header vs CORS
+    def _is_allowed(self):
+        if not Handler.AllowedOrigin or Handler.AllowedOrigin == '*':
+            return True
+
+        # TODO: FIX doesn't work with GET requests same-origin
+        origin = self.headers.get('origin')
+        if not origin:
+            logging.warning("request with no Origin header from %s" % self.address_string())
+            return False
+
+        if origin != Handler.AllowedOrigin:
+            logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
+            return False
+
+        return True
+
     def do_OPTIONS(self):
         self.send_response(200)
         self._send_cors_headers()
         self.end_headers()
 
-    # check the Origin header vs CORS
-    def _is_allowed(self):
-        origin = self.headers.get('origin')
-        if not origin and Handler.AllowedOrigin != '*':
-            logging.warning("request with no Origin header from %s" % self.address_string())
-            return False
+    def do_POST(self):
+        if not self._is_allowed():
+            return
+        if self.path.startswith('/shutdown'):
+            self._shutdown()
+        else:
+            self.send_response(404)
 
-        if Handler.AllowedOrigin != '*':
-            if origin != Handler.AllowedOrigin:
-                logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
-                return False
-
-        return True
-
-    # main entry point of the http server
     def do_GET(self):
         if not self._is_allowed():
             return
 
         if self.path == '/':
             self._index()
-        elif self.path.startswith('/shutdown'):
-            self._shutdown()
 
         elif self.path.startswith('/ui'):
             self._image()
+
         elif self.path.startswith('/plugins'):
-            plugin_from_path = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
-            if plugin_from_path:
-                plugin_name = plugin_from_path.groups()[0]
-                right_path = plugin_from_path.groups()[1] if len(plugin_from_path.groups()) == 2 else None
-                if plugin_name in plugins.loaded and hasattr(plugins.loaded[plugin_name], 'on_webhook'):
-                    plugins.loaded[plugin_name].on_webhook(self, right_path)
+            matches = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
+            if matches:
+                groups = matches.groups()
+                plugin_name = groups[0]
+                right_path = groups[1] if len(groups) == 2 else None
+                plugins.one(plugin_name, 'webhook', self, right_path)
+
         else:
             self.send_response(404)
 
@@ -179,11 +190,8 @@ class Server(object):
         self._address = config['video']['address']
         self._httpd = None
 
-        if 'origin' in config['video'] and config['video']['origin'] != '*':
+        if 'origin' in config['video']:
             Handler.AllowedOrigin = config['video']['origin']
-        else:
-            logging.warning("THE WEB UI IS RUNNING WITH ALLOWED ORIGIN SET TO *, READ WHY YOU SHOULD CHANGE IT HERE " +
-                            "https://developer.mozilla.org/it/docs/Web/HTTP/CORS")
 
         if self._enabled:
             _thread.start_new_thread(self._http_serve, ())

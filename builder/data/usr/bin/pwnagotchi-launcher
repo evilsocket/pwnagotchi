@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+source /usr/bin/pwnlib
+
+# blink 10 times to signal ready state
+blink_led 10 &
+
+if is_auto_mode; then
+  /usr/local/bin/pwnagotchi
+else
+  /usr/local/bin/pwnagotchi --manual
+fi

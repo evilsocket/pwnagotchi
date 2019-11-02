@@ -53,11 +53,27 @@ class AsyncAdvertiser(object):
         self._advertisement['face'] = new
         grid.set_advertisement_data(self._advertisement)
 
-    def _adv_poller(self):
-        while True:
-            logging.debug("polling pwngrid-peer for peers ...")
+    def cumulative_encounters(self):
+        return sum(peer.encounters for _, peer in self._peers.items())
 
+    def _on_new_peer(self, peer):
+        logging.info("new peer %s detected (%d encounters)" % (peer.full_name(), peer.encounters))
+        self._view.on_new_peer(peer)
+        plugins.on('peer_detected', self, peer)
+
+    def _on_lost_peer(self, peer):
+        logging.info("lost peer %s" % peer.full_name())
+        self._view.on_lost_peer(peer)
+        plugins.on('peer_lost', self, peer)
+
+    def _adv_poller(self):
+        # give the system a few seconds to start the first time so that any expressions
+        # due to nearby units will be rendered properly
+        time.sleep(20)
+        while True:
             try:
+                logging.debug("polling pwngrid-peer for peers ...")
+
                 grid_peers = grid.peers()
                 new_peers = {}
 
@@ -72,24 +88,23 @@ class AsyncAdvertiser(object):
                 to_delete = []
                 for ident, peer in self._peers.items():
                     if ident not in new_peers:
-                        self._view.on_lost_peer(peer)
-                        plugins.on('peer_lost', self, peer)
                         to_delete.append(ident)
 
                 for ident in to_delete:
+                    self._on_lost_peer(self._peers[ident])
                     del self._peers[ident]
 
                 for ident, peer in new_peers.items():
                     # check who's new
                     if ident not in self._peers:
                         self._peers[ident] = peer
-                        self._view.on_new_peer(peer)
-                        plugins.on('peer_detected', self, peer)
+                        self._on_new_peer(peer)
                     # update the rest
                     else:
                         self._peers[ident].update(peer)
 
             except Exception as e:
-                logging.exception("error while polling pwngrid-peer")
+                logging.warning("error while polling pwngrid-peer: %s" % e)
+                logging.debug(e, exc_info=True)
 
-            time.sleep(1)
+            time.sleep(3)

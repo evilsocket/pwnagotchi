@@ -3,6 +3,7 @@ if __name__ == '__main__':
     import argparse
     import time
     import logging
+    import yaml
 
     import pwnagotchi
     import pwnagotchi.grid as grid
@@ -30,9 +31,19 @@ if __name__ == '__main__':
     parser.add_argument('--debug', dest="debug", action="store_true", default=False,
                         help="Enable debug logs.")
 
+    parser.add_argument('--version', dest="version", action="store_true", default=False,
+                        help="Prints the version.")
+
     args = parser.parse_args()
+
+    if args.version:
+        print(pwnagotchi.version)
+        SystemExit(0)
+
     config = utils.load_config(args)
     utils.setup_logging(args, config)
+
+    pwnagotchi.set_name(config['main']['name'])
 
     plugins.load(config)
 
@@ -42,8 +53,10 @@ if __name__ == '__main__':
 
     logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent.fingerprint(), pwnagotchi.version))
 
+    logging.debug("effective configuration:\n\n%s\n\n" % yaml.dump(config, default_flow_style=False))
+
     for _, plugin in plugins.loaded.items():
-        logging.debug("plugin '%s' v%s loaded from %s" % (plugin.__name__, plugin.__version__, plugin.__file__))
+        logging.debug("plugin '%s' v%s" % (plugin.__class__.__name__, plugin.__version__))
 
     if args.do_clear:
         logging.info("clearing the display ...")
@@ -52,7 +65,7 @@ if __name__ == '__main__':
     elif args.do_manual:
         logging.info("entering manual mode ...")
 
-        agent.last_session.parse(args.skip_session)
+        agent.last_session.parse(agent.view(), args.skip_session)
         if not args.skip_session:
             logging.info(
                 "the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (
@@ -63,10 +76,9 @@ if __name__ == '__main__':
                     agent.last_session.min_reward,
                     agent.last_session.max_reward))
 
-        display.on_manual_mode(agent.last_session)
-
         while True:
-            time.sleep(1)
+            display.on_manual_mode(agent.last_session)
+            time.sleep(5)
             if grid.is_connected():
                 plugins.on('internet_available', agent)
 

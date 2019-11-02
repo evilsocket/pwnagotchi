@@ -43,6 +43,12 @@ class Voice:
     def on_free_channel(self, channel):
         return self._('Hey, channel {channel} is free! Your AP will say thanks.').format(channel=channel)
 
+    def on_reading_logs(self, lines_so_far=0):
+        if lines_so_far == 0:
+            return self._('Reading last session logs ...')
+        else:
+            return self._('Read {lines_so_far} log lines so far ...').format(lines_so_far=lines_so_far)
+
     def on_bored(self):
         return random.choice([
             self._('I\'m bored ...'),
@@ -61,6 +67,13 @@ class Voice:
             self._('I\'m sad'),
             '...'])
 
+    def on_angry(self):
+        # passive aggressive or not? :D
+        return random.choice([
+            '...',
+            self._('Leave me alone ...'),
+            self._('I\'m mad at you!')])
+
     def on_excited(self):
         return random.choice([
             self._('I\'m living the life!'),
@@ -70,9 +83,14 @@ class Voice:
             self._('My crime is that of curiosity ...')])
 
     def on_new_peer(self, peer):
-        return random.choice([
-            self._('Hello {name}! Nice to meet you.').format(name=peer.name()),
-            self._('Unit {name} is nearby!').format(name=peer.name())])
+        if peer.first_encounter():
+            return random.choice([
+                self._('Hello {name}! Nice to meet you.').format(name=peer.name())])
+        else:
+            return random.choice([
+                self._('Yo {name}! Sup?').format(name=peer.name()),
+                self._('Hey {name} how are you doing?').format(name=peer.name()),
+                self._('Unit {name} is nearby!').format(name=peer.name())])
 
     def on_lost_peer(self, peer):
         return random.choice([
@@ -84,6 +102,11 @@ class Voice:
             self._('Whoops ... {name} is gone.').format(name=who),
             self._('{name} missed!').format(name=who),
             self._('Missed!')])
+
+    def on_grateful(self):
+        return random.choice([
+            self._('Good friends are a blessing!'),
+            self._('I love my friends!')])
 
     def on_lonely(self):
         return random.choice([
@@ -128,6 +151,10 @@ class Voice:
     def on_handshakes(self, new_shakes):
         s = 's' if new_shakes > 1 else ''
         return self._('Cool, we got {num} new handshake{plural}!').format(num=new_shakes, plural=s)
+
+    def on_unread_messages(self, count, total):
+        s = 's' if count > 1 else ''
+        return self._('You have {count} new message{plural}!').format(count=count, plural=s)
 
     def on_rebooting(self):
         return self._("Ops, something went wrong ... Rebooting ...")

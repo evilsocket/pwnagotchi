@@ -13,6 +13,7 @@
         - "dtparam=spi=on"
         - "dtparam=i2c_arm=on"
         - "dtparam=i2c1=on"
+        - "gpu_mem=16"
       modules:
         - "i2c-dev"
     services:
@@ -33,10 +34,10 @@
         - ifup@wlan0.service
     packages:
       bettercap:
-        url: "https://github.com/bettercap/bettercap/releases/download/v2.25/bettercap_linux_armv6l_2.25.zip"
+        url: "https://github.com/bettercap/bettercap/releases/download/v2.26.1/bettercap_linux_armhf_v2.26.1.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
-        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.9.0/pwngrid_linux_armhf_v1.9.0.zip"
+        url: "https://github.com/evilsocket/pwngrid/releases/download/v1.10.1/pwngrid_linux_armhf_v1.10.1.zip"
       apt:
         hold:
           - firmware-atheros
@@ -279,102 +280,12 @@
       remote_src: yes
       mode: 0755
 
-  - name: create bootblink script
-    copy:
-      dest: /usr/bin/bootblink
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        for i in $(seq 1 "$1");
-        do
-        echo 0 >/sys/class/leds/led0/brightness
-        sleep 0.3
-        echo 1 >/sys/class/leds/led0/brightness
-        sleep 0.3
-        done
-        echo 0 >/sys/class/leds/led0/brightness
-        sleep 0.3
-
-  - name: create pwnagotchi-launcher script
-    copy:
-      dest: /usr/bin/pwnagotchi-launcher
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        # blink 10 times to signal ready state
-        /usr/bin/bootblink 10 &
-        # start a detached screen session with bettercap
-        if ifconfig | grep usb0 | grep RUNNING; then
-          # if override file exists, go into auto mode
-          if [ -f /root/.pwnagotchi-auto ]; then
-            rm /root/.pwnagotchi-auto
-            /usr/local/bin/pwnagotchi
-          else
-            /usr/local/bin/pwnagotchi --manual
-          fi
-        else
-          /usr/local/bin/pwnagotchi
-        fi
-
-  - name: create bettercap-launcher script
-    copy:
-      dest: /usr/bin/bettercap-launcher
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        # blink 10 times to signal ready state
-        /usr/bin/bootblink 10 &
-        /usr/bin/monstart
-        if ifconfig | grep usb0 | grep RUNNING; then
-          # if override file exists, go into auto mode
-          if [ -f /root/.pwnagotchi-auto ]; then
-            rm /root/.pwnagotchi-auto
-            /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
-          else
-            /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual -iface mon0
-          fi
-        else
-          /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
-        fi
-
-  - name: create monstart script
-    copy:
-      dest: /usr/bin/monstart
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        iw phy phy0 interface add mon0 type monitor && ifconfig mon0 up
-
-  - name: create monstop script
-    copy:
-      dest: /usr/bin/monstop
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        ifconfig mon0 down && iw dev mon0 del
-
-  - name: create hdmion script
-    copy:
-      dest: /usr/bin/hdmion
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        sudo /opt/vc/bin/tvservice -p
-
-  - name: create hdmioff script
-    copy:
-      dest: /usr/bin/hdmioff
-      mode: 0755
-      content: |
-        #!/usr/bin/env bash
-        sudo /opt/vc/bin/tvservice -o
-
   - name: add HDMI powersave to rc.local
     blockinfile:
       path: /etc/rc.local
       insertbefore: "exit 0"
       block: |
-        if ! /opt/vc/bin/tvservice -s | grep HDMI; then
+        if ! /opt/vc/bin/tvservice -s | egrep 'HDMI|DVI'; then
           /opt/vc/bin/tvservice -o
         fi
 
@@ -401,39 +312,6 @@
         #     color: 'black'
         #
     when: not user_config.stat.exists
-
-  - name: configure lo interface
-    copy:
-      dest: /etc/network/interfaces.d/lo-cfg
-      content: |
-        auto lo
-        iface lo inet loopback
-
-  - name: configure wlan interface
-    copy:
-      dest: /etc/network/interfaces.d/wlan0-cfg
-      content: |
-        allow-hotplug wlan0
-        iface wlan0 inet static
-
-  - name: configure usb interface
-    copy:
-      dest: /etc/network/interfaces.d/usb0-cfg
-      content: |
-        allow-hotplug usb0
-        iface usb0 inet static
-          address 10.0.0.2
-          netmask 255.255.255.0
-          network 10.0.0.0
-          broadcast 10.0.0.255
-          gateway 10.0.0.1
-
-  - name: configure eth0 interface (pi2/3/4)
-    copy:
-      dest: /etc/network/interfaces.d/eth0-cfg
-      content: |
-        allow-hotplug eth0
-        iface eth0 inet dhcp
 
   - name: enable ssh on boot
     file:
@@ -474,7 +352,7 @@
     copy:
       dest: /etc/motd
       content: |
-        (◕‿‿◕) {{pwnagotchi.hostname}} (pwnagotchi-{{pwnagotchi.version}})
+        (◕‿‿◕) {{pwnagotchi.hostname}}
 
         Hi! I'm a pwnagotchi, please take good care of me!
         Here are some basic things you need to know to raise me properly!
@@ -509,71 +387,6 @@
   - name: remove dependencies that are no longer required
     apt:
       autoremove: yes
-
-  - name: add pwngrid-peer service to systemd
-    copy:
-      dest: /etc/systemd/system/pwngrid-peer.service
-      content: |
-        [Unit]
-        Description=pwngrid peer service.
-        Documentation=https://pwnagotchi.ai
-        Wants=network.target
-
-        [Service]
-        Type=simple
-        PermissionsStartOnly=true
-        ExecStart=/usr/bin/pwngrid -keys /etc/pwnagotchi -address 127.0.0.1:8666 -client-token /root/.api-enrollment.json -wait -log /var/log/pwngrid-peer.log -iface mon0
-        Restart=always
-        RestartSec=30
-
-        [Install]
-        WantedBy=multi-user.target
-    notify:
-      - reload systemd services
-
-  - name: add bettercap service to systemd
-    copy:
-      dest: /etc/systemd/system/bettercap.service
-      content: |
-        [Unit]
-        Description=bettercap api.rest service.
-        Documentation=https://bettercap.org
-        Wants=network.target
-        After=pwngrid.service
-
-        [Service]
-        Type=simple
-        PermissionsStartOnly=true
-        ExecStart=/usr/bin/bettercap-launcher
-        Restart=always
-        RestartSec=30
-
-        [Install]
-        WantedBy=multi-user.target
-    notify:
-      - reload systemd services
-
-  - name: add pwnagotchi service to systemd
-    copy:
-      dest: /etc/systemd/system/pwnagotchi.service
-      content: |
-        [Unit]
-        Description=pwnagotchi Deep Reinforcement Learning instrumenting bettercap for WiFI pwning.
-        Documentation=https://pwnagotchi.ai
-        Wants=network.target
-        After=bettercap.service
-
-        [Service]
-        Type=simple
-        PermissionsStartOnly=true
-        ExecStart=/usr/bin/pwnagotchi-launcher
-        Restart=always
-        RestartSec=30
-
-        [Install]
-        WantedBy=multi-user.target
-    notify:
-      - reload systemd services
 
   - name: enable services
     systemd:

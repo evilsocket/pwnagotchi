@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+source /usr/bin/pwnlib
+start_monitor_interface

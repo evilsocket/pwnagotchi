@@ -6,6 +6,8 @@
 #
 # main algorithm configuration
 main:
+    # if set this will set the hostname of the unit. min length is 2, max length 25, only a-zA-Z0-9- allowed
+    name: ''
     # currently implemented: en (default), de, el, fr, it, mk, nl, ru, se, pt-BR, es, pt
     lang: en
     # custom plugins path, if null only default plugins with be loaded
@@ -19,9 +21,9 @@ main:
                 - YourHomeNetworkHere
 
         auto-update:
-            enabled: false
-            interval: 12 # every 12 hours
+            enabled: true
             install: true # if false, it will only warn that updates are available, if true it will install them
+            interval: 1 # every 1 hour
 
         auto-backup:
             enabled: false
@@ -31,6 +33,7 @@ main:
                 - /root/brain.json
                 - /root/.api-report.json
                 - /root/handshakes/
+                - /root/peers/
                 - /etc/pwnagotchi/
                 - /var/log/pwnagotchi.log
             commands:
@@ -68,14 +71,42 @@ main:
             enabled: false
         bt-tether:
             enabled: false # if you want to use this, set ui.display.video.address to 0.0.0.0
-            mac: ~ # mac of your bluetooth device
-            ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
-            netmask: 24
-            interval: 1 # check every x minutes for device
-            share_internet: false
+            devices:
+              android-phone:
+                enabled: false
+                search_order: 1 # search for this first
+                mac: ~ # mac of your bluetooth device
+                ip: '192.168.44.44' # ip from which your pwnagotchi should be reachable
+                netmask: 24
+                interval: 1 # check every minute for device
+                scantime: 10 # search for 10 seconds
+                max_tries: 10 # after 10 tries of "not found"; don't try anymore
+                share_internet: false
+                priority: 1 # low routing priority; ios (prio: 999) would win here
+              ios-phone:
+                enabled: false
+                search_order: 2 # search for this second
+                mac: ~ # mac of your bluetooth device
+                ip: '172.20.10.6' # ip from which your pwnagotchi should be reachable
+                netmask: 24
+                interval: 5 # check every 5 minutes for device
+                scantime: 20
+                max_tries: 0 # infinity
+                share_internet: false
+                priority: 999 # routing priority
         memtemp: # Display memory usage, cpu load and cpu temperature on screen
             enabled: false
             orientation: horizontal # horizontal/vertical
+        pawgps:
+            enabled: false
+            #The IP Address of your phone with Paw Server running, default (option is empty) is 192.168.44.1
+            ip: ''
+        gpio_buttons:
+            enabled: false
+            #The following is a list of the GPIO number for your button, and the command you want to run when it is pressed
+            gpios:
+            - 20: 'sudo touch /root/.pwnagotchi-auto && sudo systemctl restart pwnagotchi'
+            - 21: 'shutdown -h now'
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
@@ -160,6 +191,9 @@ personality:
     bored_num_epochs: 15
     # number of inactive epochs that triggers the sad state
     sad_num_epochs: 25
+    # number of encounters (times met on a channel) with another unit before considering it a friend and bond
+    # also used for cumulative bonding score of nearby units
+    bond_encounters_factor: 20000
 
 # ui configuration
 ui:
@@ -167,6 +201,8 @@ ui:
     faces:
         look_r: '( ⚆_⚆)'
         look_l: '(☉_☉ )'
+        look_r_happy: '( ◕‿◕)'
+        look_l_happy: '(◕‿◕ )'
         sleep: '(⇀‿‿↼)'
         sleep2: '(≖‿‿≖)'
         awake: '(◕‿‿◕)'
@@ -175,11 +211,13 @@ ui:
         cool: '(⌐■_■)'
         happy: '(•‿‿•)'
         excited: '(ᵔ◡◡ᵔ)'
+        grateful: '(^‿‿^)'
         motivated: '(☼‿‿☼)'
         demotivated: '(≖__≖)'
         smart: '(✜‿‿✜)'
         lonely: '(ب__ب)'
         sad: '(╥☁╥ )'
+        angry: "(-_-')"
         friend: '(♥‿‿♥)'
         broken: '(☓‿‿☓)'
         debug: '(#__#)'
@@ -191,14 +229,16 @@ ui:
     display:
         enabled: true
         rotation: 180
-        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, waveshare27inch
+        # Possible options inkyphat/inky, papirus/papi, waveshare_1/ws_1 or waveshare_2/ws_2, oledhat, lcdhat, waveshare154inch, waveshare27inch, dfrobot/df
         type: 'waveshare_2'
         # Possible options red/yellow/black (black used for monocromatic displays)
+        # Waveshare tri-color 2.13in display can be over-driven with color set as 'fastAndFurious'
+        # THIS IS POTENTIALLY DANGEROUS. DO NOT USE UNLESS YOU UNDERSTAND THAT IT COULD KILL YOUR DISPLAY
         color: 'black'
         video:
             enabled: true
             address: '0.0.0.0'
-            origin: '*'
+            origin: null
             port: 8080
             # command to be executed when a new png frame is available
             # for instance, to use with framebuffer based displays:
