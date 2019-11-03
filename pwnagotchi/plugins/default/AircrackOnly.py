@@ -27,16 +27,16 @@ class AircrackOnly(plugins.Plugin):
     def on_handshake(self, agent, filename, access_point, client_station):
         display = agent._view
         todelete = 0
+        handshakeFound = 0
 
         result = subprocess.run(('/usr/bin/aircrack-ng ' + filename + ' | grep "1 handshake" | awk \'{print $2}\''),
                                 shell=True, stdout=subprocess.PIPE)
         result = result.stdout.decode('utf-8').translate({ord(c): None for c in string.whitespace})
         if result:
+            handshakeFound = 1
             logging.info("[AircrackOnly] contains handshake")
-        else:
-            todelete = 1
 
-        if todelete == 0:
+        if handshakeFound == 0:
             result = subprocess.run(('/usr/bin/aircrack-ng ' + filename + ' | grep "PMKID" | awk \'{print $2}\''),
                                     shell=True, stdout=subprocess.PIPE)
             result = result.stdout.decode('utf-8').translate({ord(c): None for c in string.whitespace})
