@@ -112,3 +112,14 @@ def reboot():
     logging.warning("rebooting ...")
     os.system("sync")
     os.system("shutdown -r now")
+
+
+def reboot_into_auto():
+    logging.warning("rebooting into AUTO mode ...")
+    if view.ROOT:
+        view.ROOT.on_reboot()
+        # give it some time to refresh the ui
+        time.sleep(10)
+    os.system("touch /root/.pwnagotchi-auto")
+    os.system("sync")
+    os.system("shutdown -r now")
