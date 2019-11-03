@@ -99,6 +99,8 @@
           - bc
           - fonts-freefont-ttf
           - fbi
+          - python3-flask
+          - python3-flask-cors
 
   tasks:
   - name: change hostname
