@@ -49,7 +49,7 @@ INDEX = """<html>
   </head>
   <body>
     <div style="position: absolute; top:0; left:0; width:100%%;">
-        <img src="/ui" id="ui" style="width:100%%"/>
+        <img src="/ui" id="ui" style="width:100%%;image-rendering: pixelated;"/>
         <br/>
         <hr/>
         <form method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
