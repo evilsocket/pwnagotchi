@@ -8,6 +8,11 @@ import logging
 import pwnagotchi
 from pwnagotchi.agent import Agent
 from pwnagotchi import plugins
+from flask import Flask
+from flask import send_file
+from flask import request
+from flask import abort
+from flask_cors import CORS
 
 frame_path = '/root/pwnagotchi.png'
 frame_format = 'PNG'
@@ -88,141 +93,73 @@ STATUS_PAGE = """<html>
 </html>"""
 
 
-class Handler(BaseHTTPRequestHandler):
-    AllowedOrigin = None  # CORS headers are not sent
+class Handler:
+    def __init__(self, app):
+        self._app = app
+        self._app.add_url_rule('/', 'index', self.index)
+        self._app.add_url_rule('/ui', 'ui', self.ui)
+        self._app.add_url_rule('/shutdown', 'shutdown', self.shutdown, methods=['POST'])
+        # plugins
+        self._app.add_url_rule('/plugins', 'plugins', self.plugins, strict_slashes=False, defaults={'name': None, 'subpath': None})
+        self._app.add_url_rule('/plugins/<name>', 'plugins', self.plugins, strict_slashes=False, methods=['GET','POST'], defaults={'subpath': None})
+        self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', self.plugins, methods=['GET','POST'])
 
-    # suppress internal logging
-    def log_message(self, format, *args):
-        return
 
-    def _send_cors_headers(self):
-        # misc security
-        self.send_header("X-Frame-Options", "DENY")
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("X-XSS-Protection", "1; mode=block")
-        self.send_header("Referrer-Policy", "same-origin")
-        # cors
-        if Handler.AllowedOrigin:
-            self.send_header("Access-Control-Allow-Origin", Handler.AllowedOrigin)
-            self.send_header('Access-Control-Allow-Credentials', 'true')
-            self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-            self.send_header("Access-Control-Allow-Headers",
-                             "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-            self.send_header("Vary", "Origin")
+    def index(self):
+        return INDEX % (pwnagotchi.name(), 1000)
 
-    # just render some html in a 200 response
-    def _html(self, html):
-        self.send_response(200)
-        self._send_cors_headers()
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        try:
-            self.wfile.write(bytes(html, "utf8"))
-        except:
+    def plugins(self, name, subpath):
+        if name is None:
+            # show plugins overview
             pass
+        else:
 
-    # serve the main html page
-    def _index(self):
-        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
-        self._html(INDEX % (
-            pwnagotchi.name(),
-            other_mode,
-            other_mode,
-            1000))
+            # call plugin on_webhook
+            arguments = request.args
+            req_method = request.method
+
+            # need to return something here
+            if name in plugins.loaded and hasattr(plugins.loaded[name], 'on_webhook'):
+                return plugins.loaded[name].on_webhook(subpath, args=arguments, req_method=req_method)
+
+            abort(500)
+
 
     # serve a message and shuts down the unit
-    def _shutdown(self):
-        self._html(STATUS_PAGE % (pwnagotchi.name(), 'Shutting down ...'))
+    def shutdown(self):
         pwnagotchi.shutdown()
-
-    # serve a message and restart the unit in the other mode
-    def _restart(self):
-        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
-        self._html(STATUS_PAGE % (pwnagotchi.name(), 'Restart in %s mode ...' % other_mode))
-        pwnagotchi.restart(other_mode)
+        return SHUTDOWN % pwnagotchi.name()
 
     # serve the PNG file with the display image
-    def _image(self):
-        global frame_lock, frame_path, frame_ctype
+    def ui(self):
+        global frame_lock, frame_path
 
         with frame_lock:
-            self.send_response(200)
-            self._send_cors_headers()
-            self.send_header('Content-type', frame_ctype)
-            self.end_headers()
-            try:
-                with open(frame_path, 'rb') as fp:
-                    shutil.copyfileobj(fp, self.wfile)
-            except:
-                pass
-
-    # check the Origin header vs CORS
-    def _is_allowed(self):
-        if not Handler.AllowedOrigin or Handler.AllowedOrigin == '*':
-            return True
-
-        # TODO: FIX doesn't work with GET requests same-origin
-        origin = self.headers.get('origin')
-        if not origin:
-            logging.warning("request with no Origin header from %s" % self.address_string())
-            return False
-
-        if origin != Handler.AllowedOrigin:
-            logging.warning("request with blocked Origin from %s: %s" % (self.address_string(), origin))
-            return False
-
-        return True
-
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self._send_cors_headers()
-        self.end_headers()
-
-    def do_POST(self):
-        if not self._is_allowed():
-            return
-        elif self.path.startswith('/shutdown'):
-            self._shutdown()
-        elif self.path.startswith('/restart'):
-            self._restart()
-        else:
-            self.send_response(404)
-
-    def do_GET(self):
-        if not self._is_allowed():
-            return
-        elif self.path == '/':
-            self._index()
-        elif self.path.startswith('/ui'):
-            self._image()
-        elif self.path.startswith('/plugins'):
-            matches = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
-            if matches:
-                groups = matches.groups()
-                plugin_name = groups[0]
-                right_path = groups[1] if len(groups) == 2 else None
-                plugins.one(plugin_name, 'webhook', self, right_path)
-        else:
-            self.send_response(404)
+            return send_file(frame_path, mimetype='image/png')
 
 
-class Server(object):
+class Server:
     def __init__(self, config):
         self._enabled = config['video']['enabled']
         self._port = config['video']['port']
         self._address = config['video']['address']
-        self._httpd = None
+        self._origin = None
 
         if 'origin' in config['video']:
-            Handler.AllowedOrigin = config['video']['origin']
+            self._origin = config['video']['origin']
 
         if self._enabled:
             _thread.start_new_thread(self._http_serve, ())
 
     def _http_serve(self):
         if self._address is not None:
-            self._httpd = HTTPServer((self._address, self._port), Handler)
-            logging.info("web ui available at http://%s:%d/" % (self._address, self._port))
-            self._httpd.serve_forever()
+            app = Flask(__name__)
+
+            if self._origin:
+                CORS(app, resources={r"*": {"origins": self._origin}})
+
+            Handler(app)
+
+            app.run(host=self._address, port=self._port, debug=False)
         else:
             logging.info("could not get ip of usb0, video server not starting")

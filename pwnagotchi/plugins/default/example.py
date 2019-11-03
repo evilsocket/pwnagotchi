@@ -15,6 +15,11 @@ class Example(plugins.Plugin):
     def __init__(self):
         logging.debug("example plugin created")
 
+    # called when http://<host>:<port>/plugins/<plugin>/ is called
+    # must return a response
+    def on_webhook(self, path, args, req_method):
+        pass
+
     # called when the plugin is loaded
     def on_loaded(self):
         logging.warning("WARNING: this plugin should be disabled! options = " % self.options)
