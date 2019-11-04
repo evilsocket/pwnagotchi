@@ -101,6 +101,7 @@
           - fbi
           - python3-flask
           - python3-flask-cors
+          - python3-flaskext.wtf
 
   tasks:
   - name: change hostname

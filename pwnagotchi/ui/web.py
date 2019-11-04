@@ -1,6 +1,6 @@
 import re
 import _thread
-from http.server import BaseHTTPRequestHandler, HTTPServer
+import secrets
 from threading import Lock
 import shutil
 import logging
@@ -12,7 +12,9 @@ from flask import Flask
 from flask import send_file
 from flask import request
 from flask import abort
+from flask import render_template_string
 from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect
 
 frame_path = '/root/pwnagotchi.png'
 frame_format = 'PNG'
@@ -70,8 +72,10 @@ INDEX = """<html>
         <hr/>
         <form style="display:inline;" method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
             <input style="display:inline;" type="submit" class="block" value="Shutdown"/>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
         <form style="display:inline;" method="POST" action="/restart" onsubmit="return confirm('This will restart the service in %s mode, continue?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input style="display:inline;" type="submit" class="block" value="Restart in %s mode"/>
         </form>
     </div>
@@ -93,7 +97,7 @@ STATUS_PAGE = """<html>
 </html>"""
 
 
-class Handler:
+class RequestHandler:
     def __init__(self, app):
         self._app = app
         self._app.add_url_rule('/', 'index', self.index)
@@ -106,12 +110,12 @@ class Handler:
 
 
     def index(self):
-        return INDEX % (pwnagotchi.name(), 1000)
+        return render_template_string(INDEX % (pwnagotchi.name(), 1000))
 
     def plugins(self, name, subpath):
         if name is None:
             # show plugins overview
-            pass
+            abort(404)
         else:
 
             # call plugin on_webhook
@@ -120,7 +124,7 @@ class Handler:
 
             # need to return something here
             if name in plugins.loaded and hasattr(plugins.loaded[name], 'on_webhook'):
-                return plugins.loaded[name].on_webhook(subpath, args=arguments, req_method=req_method)
+                return render_template_string(plugins.loaded[name].on_webhook(subpath, args=arguments, req_method=req_method))
 
             abort(500)
 
@@ -128,7 +132,7 @@ class Handler:
     # serve a message and shuts down the unit
     def shutdown(self):
         pwnagotchi.shutdown()
-        return SHUTDOWN % pwnagotchi.name()
+        return render_template_string(STATUS_PAGE % pwnagotchi.name())
 
     # serve the PNG file with the display image
     def ui(self):
@@ -154,11 +158,13 @@ class Server:
     def _http_serve(self):
         if self._address is not None:
             app = Flask(__name__)
+            app.secret_key = secrets.token_urlsafe(256)
 
             if self._origin:
                 CORS(app, resources={r"*": {"origins": self._origin}})
 
-            Handler(app)
+            CSRFProtect(app)
+            RequestHandler(app)
 
             app.run(host=self._address, port=self._port, debug=False)
         else:
