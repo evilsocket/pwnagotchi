@@ -461,6 +461,7 @@ class BTTether(plugins.Plugin):
                 logging.error("BT-TET: Can't start bluetooth.service")
                 return
 
+        logging.info("BT-TETHER: Sussessfully loaded ...")
         self.ready = True
 
     def on_ui_setup(self, ui):
