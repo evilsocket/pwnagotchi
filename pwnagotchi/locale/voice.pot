@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 20:56+0200\n"
+"POT-Creation-Date: 2019-11-04 12:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,6 +42,13 @@ msgstr ""
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr ""
 
+msgid "Reading last session logs ..."
+msgstr ""
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr ""
+
 msgid "I'm bored ..."
 msgstr ""
 
@@ -63,6 +70,12 @@ msgstr ""
 msgid "I'm sad"
 msgstr ""
 
+msgid "Leave me alone ..."
+msgstr ""
+
+msgid "I'm mad at you!"
+msgstr ""
+
 msgid "I'm living the life!"
 msgstr ""
 
@@ -80,6 +93,14 @@ msgstr ""
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
+msgstr ""
+
+#, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr ""
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
 msgstr ""
 
 #, python-brace-format

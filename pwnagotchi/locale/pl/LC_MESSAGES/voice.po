@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.0.2\n"
+"Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-21 08:39+0200\n"
+"POT-Creation-Date: 2019-11-04 06:37+0100\n"
 "PO-Revision-Date: 2019-10-21 10:55+0200\n"
 "Last-Translator: gkrs <457603+gkrs@users.noreply.github.com>\n"
 "Language-Team: PL <457603+gkrs@users.noreply.github.com>\n"
@@ -41,6 +41,13 @@ msgstr "Generuję klucze, nie wyłączaj ..."
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr "Hej, kanał {channel} jest wolny! Twój AP będzie Ci wdzięczny."
 
+msgid "Reading last session logs ..."
+msgstr "Czytam logi z ostatniej sesji ..."
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "Na razie przeczytałem {lines_so_far} linii logów ..."
+
 msgid "I'm bored ..."
 msgstr "Nudzi mi się ..."
 
@@ -62,6 +69,12 @@ msgstr "Jest mi bardzo smutno ..."
 msgid "I'm sad"
 msgstr "Jest mi smutno"
 
+msgid "Leave me alone ..."
+msgstr "Zostaw mnie w spokoju ..."
+
+msgid "I'm mad at you!"
+msgstr "Wkurzam się na ciebie"
+
 msgid "I'm living the life!"
 msgstr "Cieszę się życiem!"
 
@@ -80,6 +93,14 @@ msgstr "Moją zbrodnią jest ciekawość ..."
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
 msgstr "Cześć {name}! Miło Cię poznać."
+
+#, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr "Siema {name}! Co słychać?"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Hej {name} jak się masz?"
 
 #, python-brace-format
 msgid "Unit {name} is nearby!"
@@ -103,6 +124,12 @@ msgstr "{name} pudło!"
 
 msgid "Missed!"
 msgstr "Pudło!"
+
+msgid "Good friends are a blessing!"
+msgstr "Dobrzy przyjaciele to błogosławieństwo!"
+
+msgid "I love my friends!"
+msgstr "Kocham moich przyjaciół!"
 
 msgid "Nobody wants to play with me ..."
 msgstr "Nikt nie chce się ze mną bawić ..."
@@ -166,6 +193,10 @@ msgstr "Banuję {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Super, zdobyliśmy {num} nowych handshake'ów!"
 
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "Masz {count} nowych wiadomości!"
+
 msgid "Ops, something went wrong ... Rebooting ..."
 msgstr "Ups, coś poszło nie tak ... Restaruję ..."
 
@@ -195,8 +226,8 @@ msgid ""
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
 "Pwnowałem {duration} i wyrzuciłem {deauthed} klientów! Spotkałem także "
-"{associated} nowych przyjaciół i zjadłem {handshakes} handshake'ow! #pwnagotchi "
-"#pwnlog #pwnlife #hacktheplanet #skynet"
+"{associated} nowych przyjaciół i zjadłem {handshakes} handshake'ow! "
+"#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"
 msgstr "godzin"
