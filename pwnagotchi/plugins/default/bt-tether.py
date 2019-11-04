@@ -434,7 +434,7 @@ class BTTether(plugins.Plugin):
                                        'max_tries', 'share_internet', 'mac', 'ip',
                                        'netmask', 'interval']:
                         if device_opt not in options or (device_opt in options and options[device_opt] is None):
-                            logging.error("BT-TET: Please specify the %s for device %s.",
+                            logging.error("BT-TETHER: Please specify the %s for device %s.",
                                           device_opt, device)
                             break
                     else:
@@ -445,20 +445,20 @@ class BTTether(plugins.Plugin):
         if 'mac' in self.options:
             for opt in ['share_internet', 'mac', 'ip', 'netmask', 'interval']:
                 if opt not in self.options or (opt in self.options and self.options[opt] is None):
-                    logging.error("BT-TET: Please specify the %s in your config.yml.", opt)
+                    logging.error("BT-TETHER: Please specify the %s in your config.yml.", opt)
                     return
 
             self.devices['legacy'] = Device(name='legacy', **self.options)
 
         if not self.devices:
-            logging.error("BT-TET: No valid devices found")
+            logging.error("BT-TETHER: No valid devices found")
             return
 
         # ensure bluetooth is running
         bt_unit = SystemdUnitWrapper('bluetooth.service')
         if not bt_unit.is_active():
             if not bt_unit.start():
-                logging.error("BT-TET: Can't start bluetooth.service")
+                logging.error("BT-TETHER: Can't start bluetooth.service")
                 return
 
         logging.info("BT-TETHER: Sussessfully loaded ...")
