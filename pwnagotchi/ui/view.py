@@ -5,6 +5,7 @@ import logging
 import random
 from PIL import ImageDraw
 
+import pwnagotchi
 import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
 from pwnagotchi.voice import Voice
@@ -132,7 +133,7 @@ class View(object):
         return self._state.get(key)
 
     def on_starting(self):
-        self.set('status', self._voice.on_starting())
+        self.set('status', self._voice.on_starting() + ("\n(v%s)" % pwnagotchi.version))
         self.set('face', faces.AWAKE)
 
     def on_ai_ready(self):
