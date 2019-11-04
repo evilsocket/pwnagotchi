@@ -52,8 +52,11 @@ INDEX = """<html>
         <img src="/ui" id="ui" style="width:100%%;image-rendering: pixelated;"/>
         <br/>
         <hr/>
-        <form method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
-            <input type="submit" class="block" value="Shutdown"/>
+        <form style="display:inline;" method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
+            <input style="display:inline;" type="submit" class="block" value="Shutdown"/>
+        </form>
+        <form style="display:inline;" method="POST" action="/reboot_into_auto" onsubmit="return confirm('This will reboot the unit into AUTO mode, continue?');">
+            <input style="display:inline;" type="submit" class="block" value="Reboot into AUTO mode"/>
         </form>
     </div>
 
@@ -73,6 +76,17 @@ SHUTDOWN = """<html>
   </body>
 </html>"""
 
+REBOOT_INTO_AUTO = """<html>
+  <head>
+      <title>%s</title>
+      <style>""" + STYLE + """</style>
+  </head>
+  <body>
+    <div style="position: absolute; top:0; left:0; width:100%%;">
+        Rebooting into AUTO mode ...
+    </div>
+  </body>
+</html>"""
 
 class Handler(BaseHTTPRequestHandler):
     AllowedOrigin = None  # CORS headers are not sent
@@ -115,6 +129,11 @@ class Handler(BaseHTTPRequestHandler):
     def _shutdown(self):
         self._html(SHUTDOWN % pwnagotchi.name())
         pwnagotchi.shutdown()
+
+    # serve a message and reboot the unit into auto mode
+    def _reboot(self):
+        self._html(REBOOT % pwnagotchi.name())
+        pwnagotchi.reboot_into_auto()
 
     # serve the PNG file with the display image
     def _image(self):
