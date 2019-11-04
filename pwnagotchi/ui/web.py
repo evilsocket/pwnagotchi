@@ -126,8 +126,9 @@ class Handler(BaseHTTPRequestHandler):
         other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
         self._html(INDEX % (
             pwnagotchi.name(),
-            1000, other_mode,
-            other_mode))
+            other_mode,
+            other_mode,
+            1000))
 
     # serve a message and shuts down the unit
     def _shutdown(self):
@@ -135,7 +136,7 @@ class Handler(BaseHTTPRequestHandler):
         pwnagotchi.shutdown()
 
     # serve a message and restart the unit in the other mode
-    def _reboot(self):
+    def _restart(self):
         other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
         self._html(STATUS_PAGE % (pwnagotchi.name(), 'Restart in %s mode ...' % other_mode))
         pwnagotchi.restart(other_mode)
