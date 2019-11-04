@@ -219,7 +219,7 @@ class BTNap:
         logging.debug('BT-TETHER: Trying to pair ...')
         try:
             device.Pair()
-            logging.info('BT-TETHER: Successful paired with device ;)')
+            logging.debug('BT-TETHER: Successful paired with device ;)')
             return True
         except dbus.exceptions.DBusException as err:
             if err.get_dbus_name() == 'org.bluez.Error.AlreadyExists':
@@ -429,13 +429,17 @@ class BTTether(plugins.Plugin):
         # new config
         if 'devices' in self.options:
             for device, options in self.options['devices'].items():
-                for device_opt in ['enabled', 'priority', 'scantime', 'search_order', 'max_tries', 'share_internet', 'mac', 'ip', 'netmask', 'interval']:
-                    if device_opt not in options or (device_opt in options and options[device_opt] is None):
-                        logging.error("BT-TET: Pleace specify the %s for device %s.", device_opt, device)
-                        break
-                else:
-                    if options['enabled']:
-                        self.devices[device] = Device(name=device, **options)
+                if 'enabled' in options and options['enabled']:
+                    for device_opt in ['enabled', 'priority', 'scantime', 'search_order',
+                                       'max_tries', 'share_internet', 'mac', 'ip',
+                                       'netmask', 'interval']:
+                        if device_opt not in options or (device_opt in options and options[device_opt] is None):
+                            logging.error("BT-TET: Pleace specify the %s for device %s.",
+                                          device_opt, device)
+                            break
+                    else:
+                        if options['enabled']:
+                            self.devices[device] = Device(name=device, **options)
 
         # legacy
         if 'mac' in self.options:
@@ -489,10 +493,10 @@ class BTTether(plugins.Plugin):
             bt = BTNap(device.mac)
 
             try:
-                logging.info('BT-TETHER: Search %d secs for %s ...', device.scantime, device.name)
+                logging.debug('BT-TETHER: Search %d secs for %s ...', device.scantime, device.name)
                 dev_remote = bt.wait_for_device(timeout=device.scantime)
                 if dev_remote is None:
-                    logging.info('BT-TETHER: Could not find %s, try again in %d minutes.', device.name, device.interval)
+                    logging.debug('BT-TETHER: Could not find %s, try again in %d minutes.', device.name, device.interval)
                     ui.set('bluetooth', 'NF')
                     continue
             except Exception as bt_ex:
@@ -503,9 +507,9 @@ class BTTether(plugins.Plugin):
             paired = bt.is_paired()
             if not paired:
                 if BTNap.pair(dev_remote):
-                    logging.info('BT-TETHER: Paired with %s.', device.name)
+                    logging.debug('BT-TETHER: Paired with %s.', device.name)
                 else:
-                    logging.info('BT-TETHER: Pairing with %s failed ...', device.name)
+                    logging.debug('BT-TETHER: Pairing with %s failed ...', device.name)
                     ui.set('bluetooth', 'PE')
                     continue
             else:
@@ -518,15 +522,15 @@ class BTTether(plugins.Plugin):
             if success:
                 if device.interface() is None:
                     ui.set('bluetooth', 'BE')
-                    logging.info('BT-TETHER: Could not establish nap connection with %s', device.name)
+                    logging.debug('BT-TETHER: Could not establish nap connection with %s', device.name)
                     continue
 
-                logging.info('BT-TETHER: Created interface (%s)', device.interface())
+                logging.debug('BT-TETHER: Created interface (%s)', device.interface())
                 ui.set('bluetooth', 'C')
                 any_device_connected = True
                 device.tries = 0 # reset tries
             else:
-                logging.info('BT-TETHER: Could not establish nap connection with %s', device.name)
+                logging.debug('BT-TETHER: Could not establish nap connection with %s', device.name)
                 ui.set('bluetooth', 'NF')
                 continue
 
@@ -538,7 +542,7 @@ class BTTether(plugins.Plugin):
             logging.debug('BT-TETHER: Add ip to %s', interface)
             if not wrapped_interface.set_addr(addr):
                 ui.set('bluetooth', 'AE')
-                logging.error("BT-TETHER: Could not add ip to %s", interface)
+                logging.debug("BT-TETHER: Could not add ip to %s", interface)
                 continue
 
             if device.share_internet:
@@ -551,7 +555,7 @@ class BTTether(plugins.Plugin):
                     with open('/etc/resolv.conf', 'r+') as resolv:
                         nameserver = resolv.read()
                         if 'nameserver 9.9.9.9' not in nameserver:
-                            logging.info('BT-TETHER: Added nameserver')
+                            logging.debug('BT-TETHER: Added nameserver')
                             resolv.seek(0)
                             resolv.write(nameserver + 'nameserver 9.9.9.9\n')
 
