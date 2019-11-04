@@ -519,14 +519,21 @@ class BTTether(plugins.Plugin):
 
             logging.debug('BT-TETHER: Try to create nap connection with %s ...', device.name)
             device.network, success = BTNap.nap(dev_remote)
+            interface = None
 
             if success:
-                if device.interface() is None:
+                try:
+                    interface = device.interface()
+                except Exception:
+                    logging.debug('BT-TETHER: Could not establish nap connection with %s', device.name)
+                    continue
+
+                if interface is None:
                     ui.set('bluetooth', 'BE')
                     logging.debug('BT-TETHER: Could not establish nap connection with %s', device.name)
                     continue
 
-                logging.debug('BT-TETHER: Created interface (%s)', device.interface())
+                logging.debug('BT-TETHER: Created interface (%s)', interface)
                 ui.set('bluetooth', 'C')
                 any_device_connected = True
                 device.tries = 0 # reset tries
@@ -535,7 +542,6 @@ class BTTether(plugins.Plugin):
                 ui.set('bluetooth', 'NF')
                 continue
 
-            interface = device.interface()
             addr = f"{device.ip}/{device.netmask}"
             gateway = ".".join(device.ip.split('.')[:-1] + ['1'])
 
