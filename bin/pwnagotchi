@@ -65,6 +65,7 @@ if __name__ == '__main__':
     elif args.do_manual:
         logging.info("entering manual mode ...")
 
+        agent.mode = 'manual'
         agent.last_session.parse(agent.view(), args.skip_session)
         if not args.skip_session:
             logging.info(
@@ -85,6 +86,7 @@ if __name__ == '__main__':
     else:
         logging.info("entering auto mode ...")
 
+        agent.mode = 'auto'
         agent.start()
 
         while True:

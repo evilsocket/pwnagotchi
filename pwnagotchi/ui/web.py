@@ -6,6 +6,7 @@ import shutil
 import logging
 
 import pwnagotchi
+from pwnagotchi.agent import Agent
 from pwnagotchi import plugins
 
 frame_path = '/root/pwnagotchi.png'
@@ -65,8 +66,8 @@ INDEX = """<html>
         <form style="display:inline;" method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
             <input style="display:inline;" type="submit" class="block" value="Shutdown"/>
         </form>
-        <form style="display:inline;" method="POST" action="/reboot_into_auto" onsubmit="return confirm('This will reboot the unit into AUTO mode, continue?');">
-            <input style="display:inline;" type="submit" class="block" value="Reboot into AUTO mode"/>
+        <form style="display:inline;" method="POST" action="/restart" onsubmit="return confirm('This will restart the service in %s mode, continue?');">
+            <input style="display:inline;" type="submit" class="block" value="Restart in %s mode"/>
         </form>
     </div>
 
@@ -122,17 +123,22 @@ class Handler(BaseHTTPRequestHandler):
 
     # serve the main html page
     def _index(self):
-        self._html(INDEX % (pwnagotchi.name(), 1000))
+        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
+        self._html(INDEX % (
+            pwnagotchi.name(),
+            1000, other_mode,
+            other_mode))
 
     # serve a message and shuts down the unit
     def _shutdown(self):
         self._html(STATUS_PAGE % (pwnagotchi.name(), 'Shutting down ...'))
         pwnagotchi.shutdown()
 
-    # serve a message and reboot the unit into auto mode
+    # serve a message and restart the unit in the other mode
     def _reboot(self):
-        self._html(STATUS_PAGE % (pwnagotchi.name(), 'Rebooting into AUTO mode ...'))
-        pwnagotchi.reboot(mode='AUTO')
+        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
+        self._html(STATUS_PAGE % (pwnagotchi.name(), 'Restart in %s mode ...' % other_mode))
+        pwnagotchi.restart(other_mode)
 
     # serve the PNG file with the display image
     def _image(self):
@@ -174,21 +180,20 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self._is_allowed():
             return
-        if self.path.startswith('/shutdown'):
+        elif self.path.startswith('/shutdown'):
             self._shutdown()
+        elif self.path.startswith('/restart'):
+            self._restart()
         else:
             self.send_response(404)
 
     def do_GET(self):
         if not self._is_allowed():
             return
-
-        if self.path == '/':
+        elif self.path == '/':
             self._index()
-
         elif self.path.startswith('/ui'):
             self._image()
-
         elif self.path.startswith('/plugins'):
             matches = re.match(r'\/plugins\/([^\/]+)(\/.*)?', self.path)
             if matches:
@@ -196,7 +201,6 @@ class Handler(BaseHTTPRequestHandler):
                 plugin_name = groups[0]
                 right_path = groups[1] if len(groups) == 2 else None
                 plugins.one(plugin_name, 'webhook', self, right_path)
-
         else:
             self.send_response(404)
 

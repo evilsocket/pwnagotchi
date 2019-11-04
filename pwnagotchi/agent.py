@@ -18,6 +18,8 @@ RECOVERY_DATA_FILE = '/root/.pwnagotchi-recovery'
 
 
 class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
+    INSTANCE = None
+
     def __init__(self, view, config, keypair):
         Client.__init__(self, config['bettercap']['hostname'],
                         config['bettercap']['scheme'],
@@ -39,9 +41,12 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self._history = {}
         self._handshakes = {}
         self.last_session = LastSession(self._config)
+        self.mode = 'auto'
 
         if not os.path.exists(config['bettercap']['handshakes']):
             os.makedirs(config['bettercap']['handshakes'])
+
+        Agent.INSTANCE = self
 
     def config(self):
         return self._config

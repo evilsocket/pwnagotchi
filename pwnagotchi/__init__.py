@@ -108,6 +108,18 @@ def shutdown():
     os.system("halt")
 
 
+def restart(mode):
+    logging.warning("restarting in %s mode ..." % mode)
+
+    if mode == 'AUTO':
+        os.system("touch /root/.pwnagotchi-auto")
+    else:
+        os.system("touch /root/.pwnagotchi-manual")
+
+    os.system("service bettercap restart")
+    os.system("service pwnagotchi restart")
+
+
 def reboot(mode=None):
     if mode is not None:
         mode = mode.upper()
@@ -122,6 +134,8 @@ def reboot(mode=None):
 
     if mode == 'AUTO':
         os.system("touch /root/.pwnagotchi-auto")
+    elif mode == 'MANU':
+        os.system("touch /root/.pwnagotchi-manual")
 
     os.system("sync")
     os.system("shutdown -r now")
