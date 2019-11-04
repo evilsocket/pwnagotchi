@@ -30,6 +30,16 @@ STYLE = """
     cursor: pointer;
     text-align: center;
 }
+.pixelated {
+  image-rendering:optimizeSpeed;             /* Legal fallback */
+  image-rendering:-moz-crisp-edges;          /* Firefox        */
+  image-rendering:-o-crisp-edges;            /* Opera          */
+  image-rendering:-webkit-optimize-contrast; /* Safari         */
+  image-rendering:optimize-contrast;         /* CSS3 Proposed  */
+  image-rendering:crisp-edges;               /* CSS4 Proposed  */
+  image-rendering:pixelated;                 /* CSS4 Proposed  */
+  -ms-interpolation-mode:nearest-neighbor;   /* IE8+           */
+}
 """
 
 SCRIPT = """
@@ -48,8 +58,8 @@ INDEX = """<html>
       <style>""" + STYLE + """</style>
   </head>
   <body>
-    <div style="position: absolute; top:0; left:0; width:100%%;">
-        <img src="/ui" id="ui" style="width:100%%;image-rendering: pixelated;"/>
+    <div style="position: absolute; top:0; left:0; width:100%%;" class="pixelated">
+        <img src="/ui" id="ui" style="width:100%%;"/>
         <br/>
         <hr/>
         <form style="display:inline;" method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
