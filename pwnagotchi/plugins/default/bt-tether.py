@@ -434,7 +434,7 @@ class BTTether(plugins.Plugin):
                                        'max_tries', 'share_internet', 'mac', 'ip',
                                        'netmask', 'interval']:
                         if device_opt not in options or (device_opt in options and options[device_opt] is None):
-                            logging.error("BT-TET: Pleace specify the %s for device %s.",
+                            logging.error("BT-TET: Please specify the %s for device %s.",
                                           device_opt, device)
                             break
                     else:
