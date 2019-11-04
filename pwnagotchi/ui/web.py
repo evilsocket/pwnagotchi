@@ -103,6 +103,7 @@ class RequestHandler:
         self._app.add_url_rule('/', 'index', self.index)
         self._app.add_url_rule('/ui', 'ui', self.ui)
         self._app.add_url_rule('/shutdown', 'shutdown', self.shutdown, methods=['POST'])
+        self._app.add_url_rule('/restart', 'restart', self.restart, methods=['POST'])
         # plugins
         self._app.add_url_rule('/plugins', 'plugins', self.plugins, strict_slashes=False, defaults={'name': None, 'subpath': None})
         self._app.add_url_rule('/plugins/<name>', 'plugins', self.plugins, strict_slashes=False, methods=['GET','POST'], defaults={'subpath': None})
