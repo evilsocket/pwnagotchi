@@ -75,8 +75,8 @@ INDEX = """<html>
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
         <form style="display:inline;" method="POST" action="/restart" onsubmit="return confirm('This will restart the service in %s mode, continue?');">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input style="display:inline;" type="submit" class="block" value="Restart in %s mode"/>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
     </div>
 
@@ -110,7 +110,12 @@ class RequestHandler:
 
 
     def index(self):
-        return render_template_string(INDEX % (pwnagotchi.name(), 1000))
+        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
+        return render_template_string(INDEX % (
+            pwnagotchi.name(),
+            other_mode,
+            other_mode,
+            1000))
 
     def plugins(self, name, subpath):
         if name is None:
@@ -132,7 +137,13 @@ class RequestHandler:
     # serve a message and shuts down the unit
     def shutdown(self):
         pwnagotchi.shutdown()
-        return render_template_string(STATUS_PAGE % pwnagotchi.name())
+        return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Shutting down ...'))
+
+    # serve a message and restart the unit in the other mode
+    def restart(self):
+        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
+        pwnagotchi.restart(other_mode)
+        return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Restart in %s mode ...' % other_mode))
 
     # serve the PNG file with the display image
     def ui(self):
