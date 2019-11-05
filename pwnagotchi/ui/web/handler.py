@@ -75,7 +75,7 @@ INDEX = """<html>
 STATUS_PAGE = """<html>
   <head>
       <title>{{ title }}</title>
-      <meta http-equiv="refresh" content="{{ go_back_after }};URL=/ui">
+      <meta http-equiv="refresh" content="{{ go_back_after }};URL=/">
       <style>""" + STYLE + """</style>
   </head>
   <body>
