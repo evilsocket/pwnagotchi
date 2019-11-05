@@ -1,6 +1,3 @@
-import _thread
-import secrets
-from threading import Lock
 import logging
 import os
 
@@ -9,27 +6,14 @@ logging.getLogger('werkzeug').setLevel(logging.ERROR)
 os.environ['WERKZEUG_RUN_MAIN'] = 'true'
 
 import pwnagotchi
+import pwnagotchi.ui.web as web
 from pwnagotchi.agent import Agent
 from pwnagotchi import plugins
-from flask import Flask
+
 from flask import send_file
 from flask import request
 from flask import abort
 from flask import render_template_string
-from flask_cors import CORS
-from flask_wtf.csrf import CSRFProtect
-
-frame_path = '/root/pwnagotchi.png'
-frame_format = 'PNG'
-frame_ctype = 'image/png'
-frame_lock = Lock()
-
-
-def update_frame(img):
-    global frame_lock, frame_path, frame_format
-    with frame_lock:
-        img.save(frame_path, format=frame_format)
-
 
 STYLE = """
 .block {
@@ -59,26 +43,27 @@ window.onload = function() {
     function updateImage() {
         image.src = image.src.split("?")[0] + "?" + new Date().getTime();
     }
-    setInterval(updateImage, %d);
+    setInterval(updateImage, 1000);
 }
 """
 
 INDEX = """<html>
   <head>
-      <title>%s</title>
+      <title>{{ title }}</title>
       <style>""" + STYLE + """</style>
   </head>
   <body>
-    <div style="position: absolute; top:0; left:0; width:100%%;" class="pixelated">
-        <img src="/ui" id="ui" style="width:100%%;"/>
+    <div style="position: absolute; top:0; left:0; width:100%;" class="pixelated">
+        <img src="/ui" id="ui" style="width:100%;"/>
         <br/>
         <hr/>
         <form style="display:inline;" method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
             <input style="display:inline;" type="submit" class="block" value="Shutdown"/>
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
-        <form style="display:inline;" method="POST" action="/restart" onsubmit="return confirm('This will restart the service in %s mode, continue?');">
-            <input style="display:inline;" type="submit" class="block" value="Restart in %s mode"/>
+        <form style="display:inline;" method="POST" action="/restart" onsubmit="return confirm('This will restart the service in {{ other_mode }} mode, continue?');">
+            <input style="display:inline;" type="submit" class="block" value="Restart in {{ other_mode }} mode"/>
+            <input type="hidden" name="mode" value="{{ other_mode }}"/>
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
     </div>
@@ -89,18 +74,18 @@ INDEX = """<html>
 
 STATUS_PAGE = """<html>
   <head>
-      <title>%s</title>
+      <title>{{ title }}</title>
       <style>""" + STYLE + """</style>
   </head>
   <body>
-    <div style="position: absolute; top:0; left:0; width:100%%;">
-        %s
+    <div style="position: absolute; top:0; left:0; width:100%;">
+        {{ message }}
     </div>
   </body>
 </html>"""
 
 
-class RequestHandler:
+class Handler:
     def __init__(self, app):
         self._app = app
         self._app.add_url_rule('/', 'index', self.index)
@@ -115,12 +100,8 @@ class RequestHandler:
         self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', self.plugins, methods=['GET', 'POST'])
 
     def index(self):
-        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
-        return render_template_string(INDEX % (
-            pwnagotchi.name(),
-            other_mode,
-            other_mode,
-            1000))
+        return render_template_string(INDEX, title=pwnagotchi.name(),
+                                      other_mode='AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU')
 
     def plugins(self, name, subpath):
         if name is None:
@@ -142,49 +123,23 @@ class RequestHandler:
     # serve a message and shuts down the unit
     def shutdown(self):
         try:
-            return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Shutting down ...'))
+            return render_template_string(STATUS_PAGE, title=pwnagotchi.name(), message='Shutting down ...')
         finally:
             pwnagotchi.shutdown()
 
     # serve a message and restart the unit in the other mode
     def restart(self):
-        other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
+        mode = request.form['mode']
+        if mode not in ('AUTO', 'MANU'):
+            mode = 'MANU'
+
         try:
-            return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Restart in %s mode ...' % other_mode))
+            return render_template_string(STATUS_PAGE, title=pwnagotchi.name(),
+                                          message='Restart in %s mode ...' % mode)
         finally:
-            pwnagotchi.restart(other_mode)
+            pwnagotchi.restart(mode)
 
     # serve the PNG file with the display image
     def ui(self):
-        global frame_lock, frame_path
-        with frame_lock:
-            return send_file(frame_path, mimetype='image/png')
-
-
-class Server:
-    def __init__(self, config):
-        self._enabled = config['video']['enabled']
-        self._port = config['video']['port']
-        self._address = config['video']['address']
-        self._origin = None
-
-        if 'origin' in config['video']:
-            self._origin = config['video']['origin']
-
-        if self._enabled:
-            _thread.start_new_thread(self._http_serve, ())
-
-    def _http_serve(self):
-        if self._address is not None:
-            app = Flask(__name__)
-            app.secret_key = secrets.token_urlsafe(256)
-
-            if self._origin:
-                CORS(app, resources={r"*": {"origins": self._origin}})
-
-            CSRFProtect(app)
-            RequestHandler(app)
-
-            app.run(host=self._address, port=self._port, debug=False)
-        else:
-            logging.info("could not get ip of usb0, video server not starting")
+        with web.frame_lock:
+            return send_file(web.frame_path, mimetype='image/png')

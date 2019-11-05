@@ -5,6 +5,7 @@ import threading
 import pwnagotchi.plugins as plugins
 import pwnagotchi.ui.hw as hw
 import pwnagotchi.ui.web as web
+from pwnagotchi.ui.web.server import Server
 from pwnagotchi.ui.view import View
 
 
@@ -15,7 +16,7 @@ class Display(View):
 
         self._enabled = config['enabled']
         self._rotation = config['rotation']
-        self._webui = web.Server(config)
+        self._webui = Server(config)
 
         self.init_display()
 
@@ -41,7 +42,7 @@ class Display(View):
 
     def is_waveshare27inch(self):
         return self._implementation.name == 'waveshare27inch'
-    
+
     def is_waveshare29inch(self):
         return self._implementation.name == 'waveshare29inch'
 
