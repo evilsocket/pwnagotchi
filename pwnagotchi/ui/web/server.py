@@ -36,7 +36,7 @@ class Server:
                 CORS(app, resources={r"*": {"origins": self._origin}})
 
             CSRFProtect(app)
-            Handler(agent, app)
+            Handler(self._agent, app)
 
             app.run(host=self._address, port=self._port, debug=False)
         else:
