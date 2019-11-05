@@ -128,7 +128,7 @@ def reboot(mode=None):
         logging.warning("rebooting ...")
 
     if view.ROOT:
-        view.ROOT.on_reboot()
+        view.ROOT.on_rebooting()
         # give it some time to refresh the ui
         time.sleep(10)
 
