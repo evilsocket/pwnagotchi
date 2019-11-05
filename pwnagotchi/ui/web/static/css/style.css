@@ -9,18 +9,14 @@
 }
 
 img#ui {
-    width: 100vw;
-    height:100%;
-    max-width:100vw;
-    object-fit: contain;
+    width:100%;
 }
 
 .full {
     position: absolute;
     top:0;
     left:0;
-    height: 100vh;
-    width: 100vw;
+    width:100%;
 }
 
 .pixelated {
