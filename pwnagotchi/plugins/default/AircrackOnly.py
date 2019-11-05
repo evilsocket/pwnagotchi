@@ -18,7 +18,6 @@ class AircrackOnly(plugins.Plugin):
     __description__ = 'confirm pcap contains handshake/PMKID or delete it'
 
     def __init__(self):
-        super().__init__(self)
         self.text_to_set = ""
 
     def on_loaded(self):
