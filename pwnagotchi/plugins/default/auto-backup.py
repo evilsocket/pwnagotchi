@@ -13,26 +13,23 @@ class AutoBackup(plugins.Plugin):
 
     def __init__(self):
         self.ready = False
+        self.tries = 0
         self.status = StatusFile('/root/.auto-backup')
 
     def on_loaded(self):
-        if 'files' not in self.options or ('files' in self.options and self.options['files'] is None):
-            logging.error("AUTO-BACKUP: No files to backup.")
-            return
-
-        if 'interval' not in self.options or ('interval' in self.options and self.options['interval'] is None):
-            logging.error("AUTO-BACKUP: Interval is not set.")
-            return
-
-        if 'commands' not in self.options or ('commands' in self.options and self.options['commands'] is None):
-            logging.error("AUTO-BACKUP: No commands given.")
-            return
+        for opt in ['files', 'interval', 'commands', 'max_tries']:
+            if opt not in self.options or (opt in self.options and self.options[opt] is None):
+                logging.error(f"AUTO-BACKUP: Option {opt} is not set.")
+                return
 
         self.ready = True
         logging.info("AUTO-BACKUP: Successfully loaded.")
 
     def on_internet_available(self, agent):
         if not self.ready:
+            return
+
+        if self.options['max_tries'] and self.tries >= self.options['max_tries']:
             return
 
         if self.status.newer_then_days(self.options['interval']):
@@ -62,6 +59,7 @@ class AutoBackup(plugins.Plugin):
             display.update()
             self.status.update()
         except OSError as os_e:
+            self.tries += 1
             logging.info(f"AUTO-BACKUP: Error: {os_e}")
             display.set('status', 'Backup failed!')
             display.update()

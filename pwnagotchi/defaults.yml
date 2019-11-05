@@ -28,6 +28,7 @@ main:
         auto-backup:
             enabled: false
             interval: 1 # every day
+            max_tries: 0 # 0=infinity
             files:
                 - /root/brain.nn
                 - /root/brain.json
