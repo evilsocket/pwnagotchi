@@ -14,3 +14,6 @@ smbus2==0.3.0
 Pillow==5.4.1
 spidev==3.4
 gast==0.2.2
+flask==1.0.2
+flask-cors==3.0.7
+flask-wtf==0.14.2
