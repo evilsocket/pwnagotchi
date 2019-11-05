@@ -15,12 +15,12 @@ from pwnagotchi.ui.web.handler import Handler
 
 
 class Server:
-    def __init__(self, config):
+    def __init__(self, agent, config):
         self._enabled = config['video']['enabled']
         self._port = config['video']['port']
         self._address = config['video']['address']
         self._origin = None
-
+        self._agent = agent
         if 'origin' in config['video']:
             self._origin = config['video']['origin']
 
@@ -36,7 +36,7 @@ class Server:
                 CORS(app, resources={r"*": {"origins": self._origin}})
 
             CSRFProtect(app)
-            Handler(app)
+            Handler(agent, app)
 
             app.run(host=self._address, port=self._port, debug=False)
         else:

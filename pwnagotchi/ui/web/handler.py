@@ -8,7 +8,6 @@ os.environ['WERKZEUG_RUN_MAIN'] = 'true'
 
 import pwnagotchi
 import pwnagotchi.ui.web as web
-from pwnagotchi.agent import Agent
 from pwnagotchi import plugins
 
 from flask import send_file
@@ -87,7 +86,8 @@ STATUS_PAGE = """<html>
 
 
 class Handler:
-    def __init__(self, app):
+    def __init__(self, agent, app):
+        self._agent = agent
         self._app = app
         self._app.add_url_rule('/', 'index', self.index)
         self._app.add_url_rule('/ui', 'ui', self.ui)
@@ -102,7 +102,7 @@ class Handler:
 
     def index(self):
         return render_template_string(INDEX, title=pwnagotchi.name(),
-                                      other_mode='AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU')
+                                      other_mode='AUTO' if self._agent.mode == 'manual' else 'MANU')
 
     def plugins(self, name, subpath):
         if name is None:

@@ -10,6 +10,7 @@ import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
 from pwnagotchi.voice import Voice
 
+import pwnagotchi.ui.web as web
 import pwnagotchi.ui.fonts as fonts
 import pwnagotchi.ui.faces as faces
 from pwnagotchi.ui.components import *
@@ -368,6 +369,8 @@ class View(object):
 
                 for key, lv in self._state.items():
                     lv.draw(self._canvas, drawer)
+
+                web.update_frame(self._canvas)
 
                 for cb in self._render_cbs:
                     cb(self._canvas)
