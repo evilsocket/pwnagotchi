@@ -1,9 +1,12 @@
-import re
 import _thread
 import secrets
 from threading import Lock
-import shutil
 import logging
+import os
+
+# https://stackoverflow.com/questions/14888799/disable-console-messages-in-flask-server
+logging.getLogger('werkzeug').disabled = True
+os.environ['WERKZEUG_RUN_MAIN'] = 'true'
 
 import pwnagotchi
 from pwnagotchi.agent import Agent
