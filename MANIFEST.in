@@ -6,3 +6,4 @@ include LICENSE
 recursive-include bin *
 recursive-include pwnagotchi *.py
 recursive-include pwnagotchi *.yml
+recursive-include pwnagotchi *.*

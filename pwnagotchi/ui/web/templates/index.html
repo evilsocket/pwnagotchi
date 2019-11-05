@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+</head>
+<body>
+<div class="full pixelated">
+    <img src="/ui" id="ui"/>
+    <br/>
+    <hr/>
+
+    <form class="action" method="POST" action="/shutdown"
+          onsubmit="return confirm('This will halt the unit, continue?');">
+        <input style="display:inline;" type="submit" class="block" value="Shutdown"/>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    </form>
+
+    <form class="action" method="POST" action="/restart"
+          onsubmit="return confirm('This will restart the service in {{ other_mode }} mode, continue?');">
+        <input style="display:inline;" type="submit" class="block" value="Restart in {{ other_mode }} mode"/>
+        <input type="hidden" name="mode" value="{{ other_mode }}"/>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    </form>
+</div>
+
+<script type="text/javascript" src="/js/refresh.js"></script>
+
+</body>
+</html>

@@ -29,7 +29,12 @@ class Server:
 
     def _http_serve(self):
         if self._address is not None:
-            app = Flask(__name__)
+            web_path = os.path.dirname(os.path.realpath(__file__))
+
+            app = Flask(__name__,
+                        static_url_path='',
+                        static_folder=os.path.join(web_path, 'static'),
+                        template_folder=os.path.join(web_path, 'templates'))
             app.secret_key = secrets.token_urlsafe(256)
 
             if self._origin:
