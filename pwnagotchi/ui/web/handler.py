@@ -1,5 +1,6 @@
 import logging
 import os
+import _thread
 
 # https://stackoverflow.com/questions/14888799/disable-console-messages-in-flask-server
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
@@ -125,7 +126,7 @@ class Handler:
         try:
             return render_template_string(STATUS_PAGE, title=pwnagotchi.name(), message='Shutting down ...')
         finally:
-            pwnagotchi.shutdown()
+            _thread.start_new_thread(pwnagotchi.shutdown, ())
 
     # serve a message and restart the unit in the other mode
     def restart(self):
@@ -137,7 +138,7 @@ class Handler:
             return render_template_string(STATUS_PAGE, title=pwnagotchi.name(),
                                           message='Restart in %s mode ...' % mode)
         finally:
-            pwnagotchi.restart(mode)
+            _thread.start_new_thread(pwnagotchi.shutdown, (mode,))
 
     # serve the PNG file with the display image
     def ui(self):
