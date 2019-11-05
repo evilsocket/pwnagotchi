@@ -105,10 +105,11 @@ class RequestHandler:
         self._app.add_url_rule('/shutdown', 'shutdown', self.shutdown, methods=['POST'])
         self._app.add_url_rule('/restart', 'restart', self.restart, methods=['POST'])
         # plugins
-        self._app.add_url_rule('/plugins', 'plugins', self.plugins, strict_slashes=False, defaults={'name': None, 'subpath': None})
-        self._app.add_url_rule('/plugins/<name>', 'plugins', self.plugins, strict_slashes=False, methods=['GET','POST'], defaults={'subpath': None})
-        self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', self.plugins, methods=['GET','POST'])
-
+        self._app.add_url_rule('/plugins', 'plugins', self.plugins, strict_slashes=False,
+                               defaults={'name': None, 'subpath': None})
+        self._app.add_url_rule('/plugins/<name>', 'plugins', self.plugins, strict_slashes=False,
+                               methods=['GET', 'POST'], defaults={'subpath': None})
+        self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', self.plugins, methods=['GET', 'POST'])
 
     def index(self):
         other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
@@ -130,26 +131,29 @@ class RequestHandler:
 
             # need to return something here
             if name in plugins.loaded and hasattr(plugins.loaded[name], 'on_webhook'):
-                return render_template_string(plugins.loaded[name].on_webhook(subpath, args=arguments, req_method=req_method))
+                return render_template_string(
+                    plugins.loaded[name].on_webhook(subpath, args=arguments, req_method=req_method))
 
             abort(500)
 
-
     # serve a message and shuts down the unit
     def shutdown(self):
-        pwnagotchi.shutdown()
-        return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Shutting down ...'))
+        try:
+            return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Shutting down ...'))
+        finally:
+            pwnagotchi.shutdown()
 
     # serve a message and restart the unit in the other mode
     def restart(self):
         other_mode = 'AUTO' if Agent.INSTANCE.mode == 'manual' else 'MANU'
-        pwnagotchi.restart(other_mode)
-        return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Restart in %s mode ...' % other_mode))
+        try:
+            return render_template_string(STATUS_PAGE % (pwnagotchi.name(), 'Restart in %s mode ...' % other_mode))
+        finally:
+            pwnagotchi.restart(other_mode)
 
     # serve the PNG file with the display image
     def ui(self):
         global frame_lock, frame_path
-
         with frame_lock:
             return send_file(frame_path, mimetype='image/png')
 
