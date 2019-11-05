@@ -32,7 +32,7 @@ class Handler:
         self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', self.plugins, methods=['GET', 'POST'])
 
     def index(self):
-        return render_template('index', title=pwnagotchi.name(),
+        return render_template('index.html', title=pwnagotchi.name(),
                                other_mode='AUTO' if self._agent.mode == 'manual' else 'MANU')
 
     def plugins(self, name, subpath):
@@ -55,7 +55,7 @@ class Handler:
     # serve a message and shuts down the unit
     def shutdown(self):
         try:
-            return render_template('status', title=pwnagotchi.name(), go_back_after=60,
+            return render_template('status.html', title=pwnagotchi.name(), go_back_after=60,
                                    message='Shutting down ...')
         finally:
             _thread.start_new_thread(pwnagotchi.shutdown, ())
@@ -67,7 +67,7 @@ class Handler:
             mode = 'MANU'
 
         try:
-            return render_template('status', title=pwnagotchi.name(), go_back_after=30,
+            return render_template('status.html', title=pwnagotchi.name(), go_back_after=30,
                                    message='Restarting in %s mode ...' % mode)
         finally:
             _thread.start_new_thread(pwnagotchi.restart, (mode,))
