@@ -75,6 +75,7 @@ INDEX = """<html>
 STATUS_PAGE = """<html>
   <head>
       <title>{{ title }}</title>
+      <meta http-equiv="refresh" content="{{ go_back_after }};URL=/ui">
       <style>""" + STYLE + """</style>
   </head>
   <body>
@@ -124,7 +125,8 @@ class Handler:
     # serve a message and shuts down the unit
     def shutdown(self):
         try:
-            return render_template_string(STATUS_PAGE, title=pwnagotchi.name(), message='Shutting down ...')
+            return render_template_string(STATUS_PAGE, title=pwnagotchi.name(), go_back_after=60,
+                                          message='Shutting down ...')
         finally:
             _thread.start_new_thread(pwnagotchi.shutdown, ())
 
@@ -135,7 +137,7 @@ class Handler:
             mode = 'MANU'
 
         try:
-            return render_template_string(STATUS_PAGE, title=pwnagotchi.name(),
+            return render_template_string(STATUS_PAGE, title=pwnagotchi.name(), go_back_after=30,
                                           message='Restart in %s mode ...' % mode)
         finally:
             _thread.start_new_thread(pwnagotchi.restart, (mode,))
