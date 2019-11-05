@@ -42,7 +42,7 @@ form {
     max-width: 100vw;
     height: 100%;
     object-fit: contain;
-    object-position: 0 0;
+    object-position: 50% 0;
 }
 
 .buttons-wrapper {
