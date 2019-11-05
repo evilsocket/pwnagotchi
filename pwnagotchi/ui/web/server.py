@@ -38,6 +38,8 @@ class Server:
             CSRFProtect(app)
             Handler(self._agent, app)
 
+            logging.info("web ui available at http://%s:%d/" % (self._address, self._port))
+
             app.run(host=self._address, port=self._port, debug=False)
         else:
             logging.info("could not get ip of usb0, video server not starting")
