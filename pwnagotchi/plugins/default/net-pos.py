@@ -73,15 +73,15 @@ class NetPos(plugins.Plugin):
                     try:
                         geo_data = self._get_geo_data(np_file)  # returns json obj
                     except requests.exceptions.RequestException as req_e:
-                        logging.error("NET-POS: %s", req_e)
+                        logging.error("NET-POS: %s - RequestException: %s", np_file, req_e)
                         self.skip += np_file
                         continue
                     except json.JSONDecodeError as js_e:
-                        logging.error("NET-POS: %s", js_e)
+                        logging.error("NET-POS: %s - JSONDecodeError: %s", np_file, js_e)
                         self.skip += np_file
                         continue
                     except OSError as os_e:
-                        logging.error("NET-POS: %s", os_e)
+                        logging.error("NET-POS: %s - OSError: %s", np_file, os_e)
                         self.skip += np_file
                         continue
 
