@@ -40,17 +40,13 @@ class Handler:
             # show plugins overview
             abort(404)
         else:
-
-            # call plugin on_webhook
-            arguments = request.args
-            req_method = request.method
-
-            # need to return something here
             if name in plugins.loaded and hasattr(plugins.loaded[name], 'on_webhook'):
-                return render_template_string(
-                    plugins.loaded[name].on_webhook(subpath, args=arguments, req_method=req_method))
-
-            abort(500)
+                try:
+                    return plugins.loaded[name].on_webhook(subpath, request)
+                except Exception:
+                    abort(500)
+            else:
+                abort(404)
 
     # serve a message and shuts down the unit
     def shutdown(self):

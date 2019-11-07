@@ -16,25 +16,14 @@ class Example(plugins.Plugin):
         logging.debug("example plugin created")
 
     # called when http://<host>:<port>/plugins/<plugin>/ is called
-    # must return a response
-    def on_webhook(self, path, args, req_method):
+    # must return a html page
+    # IMPORTANT: If you use "POST"s, add a csrf-token (via csrf_token() and render_template_string)
+    def on_webhook(self, path, request):
         pass
 
     # called when the plugin is loaded
     def on_loaded(self):
         logging.warning("WARNING: this plugin should be disabled! options = " % self.options)
-
-    # called when <host>:<port>/plugins/<pluginname> is opened
-    def on_webhook(self, response, path):
-        res = "<html><body><a>Hook triggered</a></body></html>"
-        response.send_response(200)
-        response.send_header('Content-type', 'text/html')
-        response.end_headers()
-
-        try:
-            response.wfile.write(bytes(res, "utf-8"))
-        except Exception as ex:
-            logging.error(ex)
 
     # called in manual mode when there's internet connectivity
     def on_internet_available(self, agent):
