@@ -10,6 +10,7 @@ class WaveshareV2(DisplayImpl):
         super(WaveshareV2, self).__init__(config, 'waveshare_2')
         self._display = None
         self._lock = RLock()
+        self._is_full_update = None
 
     def layout(self):
         if self.config['color'] == 'black':
@@ -55,6 +56,16 @@ class WaveshareV2(DisplayImpl):
             }
         return self._layout
 
+    def _setFullUpdate(self):
+        with self._lock:
+            self._display.init(self._display.FULL_UPDATE)
+            self._is_full_update = True
+            
+    def _setPartUpdate(self):
+        with self._lock:
+            self._display.init(self._display.PART_UPDATE)
+            self._is_full_update = False
+        
     def initialize(self):
         logging.info("initializing waveshare v2 display")
         from pwnagotchi.ui.hw.libs.waveshare.v2.waveshare import EPD
@@ -64,10 +75,11 @@ class WaveshareV2(DisplayImpl):
     def render(self, canvas):
         buf = self._display.getbuffer(canvas)
         with self._lock:
-            self._display.displayPartial(buf)
+            if self._is_full_update:
+                self._display.display(buf)
+                self._setPartUpdate()
+            else:
+                self._display.displayPartial(buf)
 
     def clear(self):
-        with self._lock:
-            self._display.init(self._display.FULL_UPDATE)
-            self._display.Clear(0xff)
-            self._display.init(self._display.PART_UPDATE)
+        self._setFullUpdate()
