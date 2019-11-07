@@ -1,4 +1,5 @@
 import logging
+from threading import RLock
 
 import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.ui.hw.base import DisplayImpl
@@ -8,6 +9,7 @@ class WaveshareV2(DisplayImpl):
     def __init__(self, config):
         super(WaveshareV2, self).__init__(config, 'waveshare_2')
         self._display = None
+        self._lock = RLock()
 
     def layout(self):
         if self.config['color'] == 'black':
@@ -57,13 +59,15 @@ class WaveshareV2(DisplayImpl):
         logging.info("initializing waveshare v2 display")
         from pwnagotchi.ui.hw.libs.waveshare.v2.waveshare import EPD
         self._display = EPD()
-        self._display.init(self._display.FULL_UPDATE)
-        self._display.Clear(0xff)
-        self._display.init(self._display.PART_UPDATE)
+        self.clear()
 
     def render(self, canvas):
         buf = self._display.getbuffer(canvas)
-        self._display.displayPartial(buf)
+        with self._lock:
+            self._display.displayPartial(buf)
 
     def clear(self):
-        self._display.Clear(0xff)
+        with self._lock:
+            self._display.init(self._display.FULL_UPDATE)
+            self._display.Clear(0xff)
+            self._display.init(self._display.PART_UPDATE)
