@@ -119,10 +119,12 @@ main:
     mon_max_blind_epochs: 50
     # if true, will not restart the wifi module
     no_restart: false
-    # access points to ignore
+    # access points to ignore. Could be the ssid, bssid or the vendor part of bssid.
     whitelist:
         - EXAMPLE_NETWORK
         - ANOTHER_EXAMPLE_NETWORK
+        - fo:od:ba:be:fo:od   # BSSID
+        - fo:od:ba            # Vendor BSSID
     # if not null, filter access points by this regular expression
     filter: null
     # logging
