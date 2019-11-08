@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the pwnagotchi package.
 # mil1200 <mil.kyselica@gmail.com>, 2019.
 #
-#, fuzzy
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
