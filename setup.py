@@ -37,7 +37,13 @@ def install_system_files():
     os.system("systemctl daemon-reload")
 
 
-install_system_files()
+def installer():
+    install_system_files()
+    # for people updating https://github.com/evilsocket/pwnagotchi/pull/551/files
+    os.system("systemctl enable fstrim.timer")
+
+
+installer()
 
 required = []
 with open('requirements.txt') as fp:
