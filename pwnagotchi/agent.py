@@ -176,7 +176,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             for ap in s['wifi']['aps']:
                 if ap['encryption'] == '' or ap['encryption'] == 'OPEN':
                     continue
-                elif ap['hostname'] not in whitelist:
+                elif ap['hostname'] not in whitelist and ap['mac'].lower() not in whitelist and ap['mac'][:8].lower() not in whitelist:
                     if self._filter_included(ap):
                         aps.append(ap)
         except Exception as e:
