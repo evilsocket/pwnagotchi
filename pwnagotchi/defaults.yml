@@ -84,8 +84,6 @@ main:
     mon_start_cmd: /usr/bin/monstart
     mon_stop_cmd: /usr/bin/monstop
     mon_max_blind_epochs: 50
-    # log file
-    log: /var/log/pwnagotchi.log
     # if true, will not restart the wifi module
     no_restart: false
     # access points to ignore
@@ -94,6 +92,14 @@ main:
         - ANOTHER_EXAMPLE_NETWORK
     # if not null, filter access points by this regular expression
     filter: null
+    # logging
+    log:
+        # file to log to
+        path: /var/log/pwnagotchi.log
+        rotation:
+            enabled: true
+            # specify a maximum size to rotate ( format is 10/10B, 10K, 10M 10G )
+            size: '10M'
 
 ai:
     # if false, only the default 'personality' will be used

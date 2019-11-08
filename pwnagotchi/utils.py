@@ -3,11 +3,13 @@ from enum import Enum
 import logging
 import glob
 import os
+import re
 import time
 import subprocess
 import yaml
 import json
 import shutil
+import gzip
 
 import pwnagotchi
 
@@ -117,14 +119,80 @@ def load_config(args):
     return config
 
 
+def parse_max_size(s):
+    parts = re.findall(r'(^\d+)([bBkKmMgG]?)', s)
+    if len(parts) != 1:
+        raise Exception("can't parse %s as a max size" % s)
+
+    num, unit = parts[1]
+    num = int(num)
+    unit = unit.lower()
+
+    if unit == 'k':
+        return num * 1024
+    elif unit == 'm':
+        return num * 1024 * 1024
+    elif unit == 'g':
+        return num * 1024 * 1024 * 1024
+    else:
+        return num
+
+
+def do_rotate(filename, stats, cfg):
+    base_path = os.path.dirname(filename)
+    name = os.path.splitext(os.path.basename(filename))[0]
+    archive_filename = os.path.join(base_path, "%s.gz" % name)
+    counter = 2
+
+    while os.path.exists(archive_filename):
+        archive_filename = os.path.join(base_path, "%s-%d.gz" % (name, counter))
+        counter += 1
+
+    log_filename = archive_filename.replace('gz', 'log')
+
+    print("%s is %d bytes big, rotating to %s ..." % (filename, stats.st_size, log_filename))
+
+    shutil.move(filename, log_filename)
+
+    print("compressing to %s ..." % archive_filename)
+
+    with open(log_filename, 'rb') as src:
+        with gzip.open(archive_filename, 'wb') as dst:
+            dst.writelines(src)
+
+
+def log_rotation(filename, cfg):
+    rotation = cfg['rotation']
+    if not rotation['enabled']:
+        return
+    elif not os.path.isfile(filename):
+        return
+
+    stats = os.stat(filename)
+    # specify a maximum size to rotate ( format is 10/10B, 10K, 10M 10G )
+    if rotation['size']:
+        max_size = parse_max_size(rotation['size'])
+        if stats.st_size >= max_size:
+            do_rotate(filename, stats, cfg)
+    else:
+        raise Exception("log rotation is enabled but log.rotation.size was not specified")
+
+
 def setup_logging(args, config):
+    cfg = config['main']['log']
+    filename = cfg['path']
+
     formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s")
     root = logging.getLogger()
 
     root.setLevel(logging.DEBUG if args.debug else logging.INFO)
 
-    if config['main']['log']:
-        file_handler = logging.FileHandler(config['main']['log'])
+    if filename:
+        # since python default log rotation might break session data in different files,
+        # we need to do log rotation ourselves
+        log_rotation(filename, cfg)
+
+        file_handler = logging.FileHandler(filename)
         file_handler.setFormatter(formatter)
         root.addHandler(file_handler)
 

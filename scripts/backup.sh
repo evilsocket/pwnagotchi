@@ -16,6 +16,7 @@ FILES_TO_BACKUP=(
   /root/peers
   /etc/pwnagotchi/
   /var/log/pwnagotchi.log
+  /var/log/pwnagotchi*.gz
   /home/pi/.bashrc
 )
 

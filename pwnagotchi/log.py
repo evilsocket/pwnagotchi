@@ -26,7 +26,7 @@ class LastSession(object):
     def __init__(self, config):
         self.config = config
         self.voice = Voice(lang=config['main']['lang'])
-        self.path = config['main']['log']
+        self.path = config['main']['log']['path']
         self.last_session = []
         self.last_session_id = ''
         self.last_saved_session_id = ''
