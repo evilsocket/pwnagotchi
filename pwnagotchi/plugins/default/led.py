@@ -73,6 +73,10 @@ class Led(plugins.Plugin):
     def on_updating(self):
         self._on_event('updating')
 
+    # called when there's one or more unread pwnmail messages
+    def on_unread_inbox(self, num_unread):
+        self._on_event('unread_inbox')
+
     # called when there's internet connectivity
     def on_internet_available(self, agent):
         self._on_event('internet_available')

@@ -89,6 +89,7 @@ main:
                 loaded: 'oo  oo  oo oo  oo  oo  oo'
                 updating: 'oo  oo  oo oo  oo  oo  oo'
                 # internet_available: 'oo  oo  oo oo  oo  oo  oo'
+                unread_inbox: 'oo  oo  oo oo  oo  oo  oo'
                 ready: 'oo  oo  oo oo  oo  oo  oo'
                 ai_ready: 'oo  oo  oo oo  oo  oo  oo'
                 ai_training_start: 'oo  oo  oo oo  oo  oo  oo'

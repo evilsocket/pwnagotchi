@@ -77,6 +77,7 @@ class Grid(plugins.Plugin):
         self.unread_messages = len([m for m in messages if m['seen_at'] is None])
 
         if self.unread_messages:
+            plugins.on('unread_inbox', self.unread_messages)
             logging.debug("[grid] unread:%d total:%d" % (self.unread_messages, self.total_messages))
             agent.view().on_unread_messages(self.unread_messages, self.total_messages)
 
