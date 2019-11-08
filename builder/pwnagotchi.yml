@@ -23,6 +23,7 @@
         - bettercap.service
         - pwngrid-peer.service
         - epd-fuse.service
+        - fstrim.timer
       disable:
         - apt-daily.timer
         - apt-daily.service
