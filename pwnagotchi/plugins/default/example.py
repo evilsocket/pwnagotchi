@@ -95,7 +95,7 @@ class Example(plugins.Plugin):
         pass
 
     # called when the status is set to excited
-    def on_excited(aself, gent):
+    def on_excited(self, agent):
         pass
 
     # called when the status is set to lonely
