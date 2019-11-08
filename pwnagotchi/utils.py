@@ -121,10 +121,10 @@ def load_config(args):
 
 def parse_max_size(s):
     parts = re.findall(r'(^\d+)([bBkKmMgG]?)', s)
-    if len(parts) != 2:
+    if len(parts) != 1:
         raise Exception("can't parse %s as a max size" % s)
 
-    num, unit = parts[1]
+    num, unit = parts[0][1]
     num = int(num)
     unit = unit.lower()
 
