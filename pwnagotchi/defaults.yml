@@ -78,6 +78,36 @@ main:
             gpios:
               20: 'touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi'
               21: 'shutdown -h now'
+        led:
+            enabled: true
+            # for /sys/class/leds/led0/brightness
+            led: 0
+            # time in milliseconds for each element of the patterns
+            delay: 200
+            # o=on space=off, comment the ones you don't want
+            patterns:
+                loaded: 'ooo   ooo   ooo'
+                internet_available: 'ooo   ooo   ooo'
+                ready: 'ooo   ooo   ooo'
+                ai_ready: 'ooo   ooo   ooo'
+                ai_training_start: 'ooo   ooo   ooo'
+                ai_best_reward: 'ooo   ooo   ooo'
+                ai_worst_reward: 'ooo   ooo   ooo'
+                bored: 'ooo   ooo   ooo'
+                sad: 'ooo   ooo   ooo'
+                excited: 'ooo   ooo   ooo'
+                lonely: 'ooo   ooo   ooo'
+                rebooting: 'ooo   ooo   ooo'
+                wait: 'ooo   ooo   ooo'
+                sleep: 'ooo   ooo   ooo'
+                wifi_update: 'ooo   ooo   ooo'
+                association: 'ooo   ooo   ooo'
+                deauthentication: 'ooo   ooo   ooo'
+                handshake: 'ooo   ooo   ooo'
+                epoch: 'ooo   ooo   ooo'
+                peer_detected: 'ooo   ooo   ooo'
+                peer_lost: 'ooo   ooo   ooo'
+
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
