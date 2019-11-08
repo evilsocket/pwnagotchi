@@ -87,6 +87,7 @@ main:
             # o=on space=off, comment the ones you don't want
             patterns:
                 loaded: 'oo  oo  oo oo  oo  oo  oo'
+                updating: 'oo  oo  oo oo  oo  oo  oo'
                 # internet_available: 'oo  oo  oo oo  oo  oo  oo'
                 ready: 'oo  oo  oo oo  oo  oo  oo'
                 ai_ready: 'oo  oo  oo oo  oo  oo  oo'

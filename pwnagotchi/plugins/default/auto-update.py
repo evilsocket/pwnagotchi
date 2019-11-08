@@ -198,6 +198,7 @@ class AutoUpdate(plugins.Plugin):
             if num_updates > 0:
                 if self.options['install']:
                     for update in to_install:
+                        plugins.on('updating')
                         if install(display, update):
                             num_installed += 1
                 else:

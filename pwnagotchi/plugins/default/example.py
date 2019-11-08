@@ -25,7 +25,7 @@ class Example(plugins.Plugin):
     def on_loaded(self):
         logging.warning("WARNING: this plugin should be disabled! options = " % self.options)
 
-    # called in manual mode when there's internet connectivity
+    # called hen there's internet connectivity
     def on_internet_available(self, agent):
         pass
 

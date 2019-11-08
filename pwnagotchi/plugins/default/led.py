@@ -69,7 +69,11 @@ class Led(plugins.Plugin):
             finally:
                 self._is_busy = False
 
-    # called in manual mode when there's internet connectivity
+    # called when the unit is updating its software
+    def on_updating(self):
+        self._on_event('updating')
+
+    # called when there's internet connectivity
     def on_internet_available(self, agent):
         self._on_event('internet_available')
 
