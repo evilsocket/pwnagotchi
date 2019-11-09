@@ -1,0 +1,227 @@
+# Slovak language
+# Copyright (C) 2019
+# This file is distributed under the same license as the pwnagotchi package.
+# mil1200 <mil.kyselica@gmail.com>, 2019.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-8 17:55+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Milan Kyselica <mil.kyselica@gmail.com>\n"
+"Language-Team: SK\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ZzzzZZzzzzZzzz"
+msgstr "ZzzzZZzzzzZzzz"
+
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "Ahoj, ja som Pwnagotchi! Začíname ..."
+
+msgid "New day, new hunt, new pwns!"
+msgstr "Nový deň, nový lov, nové pwns!"
+
+msgid "Hack the Planet!"
+msgstr "Hacknime Planétu!"
+
+msgid "AI ready."
+msgstr "AI pripravené."
+
+msgid "The neural network is ready."
+msgstr "Neurónová sieť je pripravená."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "Generujú sa kľúče, nevypínaj ..."
+
+#, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr "Hej, kanál {channel} je voľný! Váš AP vám poďakuje."
+
+msgid "I'm bored ..."
+msgstr "Nudím sa ..."
+
+msgid "Let's go for a walk!"
+msgstr "Poďme na prechádzku!"
+
+msgid "This is the best day of my life!"
+msgstr "Toto je najlepší deň môjho života!"
+
+msgid "Shitty day :/"
+msgstr "Na hovno deň :/"
+
+msgid "I'm extremely bored ..."
+msgstr "Veľmi sa nudím ..."
+
+msgid "I'm very sad ..."
+msgstr "Som veľmi smutný ..."
+
+msgid "I'm sad"
+msgstr "Som smutný"
+
+msgid "I'm living the life!"
+msgstr "Žijem život!"
+
+msgid "I pwn therefore I am."
+msgstr "I pwn therefore I am."
+
+msgid "So many networks!!!"
+msgstr "Toľko sietí !!!"
+
+msgid "I'm having so much fun!"
+msgstr "Zabávam sa!"
+
+msgid "My crime is that of curiosity ..."
+msgstr "Môj zločin je zvedavosť ..."
+
+#, python-brace-format
+msgid "Hello {name}! Nice to meet you."
+msgstr "Dobrý deň, {name}! Rád som ťa spoznal."
+
+#, python-brace-format
+msgid "Unit {name} is nearby!"
+msgstr "Jednotka {name} je blízko!"
+
+#, python-brace-format
+msgid "Uhm ... goodbye {name}"
+msgstr "Uhm ... zbohom {name}"
+
+#, python-brace-format
+msgid "{name} is gone ..."
+msgstr "{name} je preč ..."
+
+#, python-brace-format
+msgid "Whoops ... {name} is gone."
+msgstr "Hups ... {name} je preč."
+
+#, python-brace-format
+msgid "{name} missed!"
+msgstr "{name} nechytené!"
+
+msgid "Missed!"
+msgstr "Vedľa!"
+
+msgid "Good friends are a blessing!"
+msgstr "Dobrí priatelia sú požehnaním!"
+
+msgid "I love my friends!"
+msgstr "Milujem svojich priateľov!"
+
+msgid "Nobody wants to play with me ..."
+msgstr "Nikto sa so mnou nechce hrať ..."
+
+msgid "I feel so alone ..."
+msgstr "Cítim sa tak sám ..."
+
+msgid "Where's everybody?!"
+msgstr "Kde sú všetci ?!"
+
+#, python-brace-format
+msgid "Napping for {secs}s ..."
+msgstr "Zdriemnem si na {secs}s ..."
+
+msgid "Zzzzz"
+msgstr "Zzzzz"
+
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr "ZzzZzzz ({secs}s)"
+
+msgid "Good night."
+msgstr "Dobrú noc."
+
+msgid "Zzz"
+msgstr "Zzz"
+
+#, python-brace-format
+msgid "Waiting for {secs}s ..."
+msgstr "Čaká sa {secs}s ..."
+
+#, python-brace-format
+msgid "Looking around ({secs}s)"
+msgstr "Rozhliadam sa okolo ({secs} s)"
+
+#, python-brace-format
+msgid "Hey {what} let's be friends!"
+msgstr "Ahoj {what} buďme priatelia!"
+
+#, python-brace-format
+msgid "Associating to {what}"
+msgstr "Spájam sa s {what}"
+
+#, python-brace-format
+msgid "Yo {what}!"
+msgstr "Yo {what}!"
+
+#, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "Rozhodol som sa že {mac} nepotrebuje Wi-Fi!"
+
+#, python-brace-format
+msgid "Deauthenticating {mac}"
+msgstr "Deautentifikujem {mac}"
+
+#, python-brace-format
+msgid "Kickbanning {mac}!"
+msgstr "Kickujem {mac}!"
+
+#, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Super, máme {num} nový handshake{plural}!"
+
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "Máte {count} novú správu{plural}!"
+
+msgid "Ops, something went wrong ... Rebooting ..."
+msgstr "Ops, niečo sa pokazilo ... Reštartujem sa ..."
+
+#, python-brace-format
+msgid "Kicked {num} stations\n"
+msgstr "Kicknutá/ých {num} stanica/íc\n"
+
+#, python-brace-format
+msgid "Made {num} new friends\n"
+msgstr "Získaní {num} noví kamaráti\n"
+
+#, python-brace-format
+msgid "Got {num} handshakes\n"
+msgstr "Získali sme {num} handshake/-y/ov rúk\n"
+
+msgid "Met 1 peer"
+msgstr "Sretli sme 1 rovesníka"
+
+#, python-brace-format
+msgid "Met {num} peers"
+msgstr "Stretli sme {num} rovesníkov"
+
+#, python-brace-format
+msgid ""
+"I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr "Pwnoval som {duration} a kickol som {deauthed} klienta/ov! Tiež som"
+"stretol {associated} nového/ých kamaráta/ov a zjedol {handshakes} handshake/y!"
+" #pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr "hodiny"
+
+msgid "minutes"
+msgstr "minúty"
+
+msgid "seconds"
+msgstr "sekundy"
+
+msgid "hour"
+msgstr "hodina"
+
+msgid "minute"
+msgstr "minúta"
+
+msgid "second"
+msgstr "sekunda"
