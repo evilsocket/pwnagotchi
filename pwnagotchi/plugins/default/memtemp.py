@@ -58,10 +58,16 @@ class MemTemp(plugins.Plugin):
                                                    label_font=fonts.Small, text_font=fonts.Small))
 
     def on_ui_update(self, ui):
+        if self.options['scale'] == "fahrenheit":
+            temp = (pwnagotchi.temperature() * 9 / 5) + 32
+        elif self.options['scale'] == "celsius":
+            temp = pwnagotchi.temperature()
+        elif self.options['scale'] == "kelvin":
+            temp = pwnagotchi.temperature() + 273.15
         if self.options['orientation'] == "horizontal":
             ui.set('memtemp',
-                   " mem cpu temp\n %s%% %s%%  %sc" % (self.mem_usage(), self.cpu_load(), pwnagotchi.temperature()))
+                   " mem cpu temp\n %s%% %s%%  %sc" % (self.mem_usage(), self.cpu_load(), temp))
 
         elif self.options['orientation'] == "vertical":
             ui.set('memtemp',
-                   " mem:%s%%\n cpu:%s%%\ntemp:%sc" % (self.mem_usage(), self.cpu_load(), pwnagotchi.temperature()))
+                   " mem:%s%%\n cpu:%s%%\ntemp:%sc" % (self.mem_usage(), self.cpu_load(), temp))
