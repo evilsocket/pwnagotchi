@@ -30,6 +30,8 @@ main:
             enabled: false
             speed: 19200
             device: /dev/ttyUSB0
+        webgpsmap:
+            enabled: true
         onlinehashcrack:
             enabled: false
             email: ~
