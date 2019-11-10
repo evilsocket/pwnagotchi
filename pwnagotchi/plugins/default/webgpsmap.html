@@ -90,7 +90,7 @@
 </head>
 <body>
   <div id="mapdiv"></div>
-  <div id="loading"><div class="face"><nobr>(⌐■&nbsp;<span id="loading_ap_img"></span>&nbsp;■)</nobr></div><div class="text">loading positions...</div></div>
+  <div id="loading"><div class="face"><nobr>(⌐■&nbsp;<span id="loading_ap_img"></span>&nbsp;■)</nobr></div><div class="text" id="loading_infotext">loading positions...</div></div>
   <script type="text/javascript">
     function loadJSON(url, callback) {
       document.getElementById("loading").style.display = "flex";
@@ -164,7 +164,9 @@
 
     loadJSON("/plugins/webgpsmap/all", function(response) {
       var positions = JSON.parse(response);
+      count = 0;
       Object.keys(positions).forEach(function(key) {
+        count++;
         if(positions[key].lng){
           new_marker_pos = [positions[key].lat, positions[key].lng];
           if (positions[key].acc) {
@@ -197,17 +199,20 @@
           if (positions[key].pass) {
               passInfo = '<br/><b>Pass:</b> '+escapeHtml(positions[key].pass);
           }
-          console.log(JSON.stringify(positions[key]))
           newMarker.bindPopup("<b>"+escapeHtml(positions[key].ssid)+"</b><br><nobr>MAC: "+escapeHtml(formatMacAddress(positions[key].mac))+"</nobr><br/>"+"<nobr>position type: "+escapeHtml(positions[key].type)+"</nobr><br/>"+"<nobr>position accuracy: "+escapeHtml(Math.round(positions[key].acc))+"</nobr>"+passInfo, { maxWidth: "auto" });
           markers.push(newMarker);
           marker_pos.push(new_marker_pos);
           markerClusters.addLayer( newMarker );
         }
       });
-      mymap.addLayer( markerClusters );
-      var bounds = new L.LatLngBounds(marker_pos);
-      mymap.fitBounds(bounds);
-      document.getElementById("loading").style.display = "none";
+      if (count > 0) {
+        mymap.addLayer( markerClusters );
+        var bounds = new L.LatLngBounds(marker_pos);
+        mymap.fitBounds(bounds);
+        document.getElementById("loading").style.display = "none";
+      } else {
+        document.getElementById("loading_infotext").innerHTML = "NO POSITION DATA FOUND :(";
+      }
     });
   </script>
 </body></html>
