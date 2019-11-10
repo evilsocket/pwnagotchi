@@ -15,3 +15,5 @@ output-pwnagotchi
 build
 dist
 pwnagotchi.egg-info
+*backup*.tgz
+*backup*.gz
