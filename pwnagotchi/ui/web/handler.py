@@ -32,8 +32,10 @@ class Handler:
         self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', self.plugins, methods=['GET', 'POST'])
 
     def index(self):
-        return render_template('index.html', title=pwnagotchi.name(),
-                               other_mode='AUTO' if self._agent.mode == 'manual' else 'MANU')
+        return render_template('index.html',
+                               title=pwnagotchi.name(),
+                               other_mode='AUTO' if self._agent.mode == 'manual' else 'MANU',
+                               fingerprint=self._agent.fingerprint())
 
     def plugins(self, name, subpath):
         if name is None:

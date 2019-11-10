@@ -21,6 +21,10 @@
       <input type="hidden" name="mode" value="{{ other_mode }}"/>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     </form>
+
+    <form class="action" method="GET" action="https://pwnagotchi.ai/pwnfile/#{{ fingerprint }}">
+      <input type="submit" class="button" formtarget="_blank" value="Pwnfile"/>
+    </form>
   </div>
 </div>
 
