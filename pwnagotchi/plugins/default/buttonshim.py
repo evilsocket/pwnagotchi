@@ -415,12 +415,25 @@ def set_pixel(r, g, b):
     _write_byte(0)
     _enqueue()
 
+def blink(r, g, b, t, repeats):
+   for i in range(0, repeats + 1):
+        set_pixel(r, g, b)
+        time.sleep(t)
+        set_pixel(0, 0, 0)
+        time.sleep(t)
+    
 def runCommand(button, pressed, plugin):
-    logging.debug(f"Button Pressed! Loading command from slot '{button}'")
+    logging.debug(f"[buttonshim] Button Pressed! Loading command from slot '{button}' for button '{NAMES[button]}'")
     command = plugin.commands[button]
-    logging.debug(f"Button Pressed! Running command: {command}")
+    logging.debug(f"[buttonshim] Running command: {command}")
     process = subprocess.Popen(command, shell=True, stdin=None, stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
-    procfess.wait()
+    r = plugin.colors[button][0]
+    g = plugin.colors[button][1]
+    b = plugin.colors[button][2]
+    thread = Thread(target=blink,args=(r, g, b, 0.3, 3))
+    thread.start()
+    process.wait()
+    thread.stop()
 
 class Buttonshim(plugins.Plugin):
     __author__ = 'gon@o2online.de'
@@ -432,6 +445,7 @@ class Buttonshim(plugins.Plugin):
         self.running = False
         self.options = dict()
         self.commands = ['', '', '', '', '']
+        self.colors = [[0xFF,0x00,0x00],[0x00,0xFF,0x00],[0x00,0x00,0xFF],[0xFF,0xFF,0x00],[0x00,0xFF,0xFF]]
         global _handlers
         _handlers = [Handler(self) for x in range(NUM_BUTTONS)]
         on_press([BUTTON_A, BUTTON_B, BUTTON_C, BUTTON_D, BUTTON_E], runCommand)
@@ -440,7 +454,8 @@ class Buttonshim(plugins.Plugin):
         i = 0
         for b in self.options['buttons']:
             self.commands[i] = b
-            logging.debug(f"Loaded command '{b}' into slot '{i}'.")
+            #self.colors = self.options['colors']
+            logging.debug(f"[buttonshim] Loaded command '{b}' into slot '{i}' for button '{NAMES[i]}'.")
             i=i+1
-        logging.info("Button Shim GPIO Button plugin loaded.")
+        logging.info("[buttonshim] GPIO Button plugin loaded.")
         self.running = True
