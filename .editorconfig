@@ -1,15 +1,6 @@
 # top-most EditorConfig file
 root = true
 
-# Unix-style newlines with a newline ending every file
-[*]
-charset = utf-8
-end_of_line = lf // Helps keep Windows, Mac, Linux on the same page since they handle end of line differently
-indent_style = tab // Converts spaces to tabs
-indent_size = 4 // 4 spaces per tab
-insert_final_newline = true // Auto-adds a blank newline to the end of a file
-trim_trailing_whitespace = true // Auto-trims trailing whitespace
-
 # Matches the exact files either package.json or .travis.yml
 [{*.yml,*.yaml,config.yml,defaults.yml}]
 indent_style = space
