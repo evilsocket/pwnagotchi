@@ -2,7 +2,7 @@
 
 # name of the ethernet gadget interface on the host
 UNIT_HOSTNAME=${1:-10.0.0.2}
-# output backup zip file
+# output backup tgz file
 OUTPUT=${2:-pwnagotchi-backup.tgz}
 # username to use for ssh
 USERNAME=${3:-pi}
@@ -26,4 +26,4 @@ ping -c 1 "${UNIT_HOSTNAME}" >/dev/null || {
 }
 
 echo "@ backing up $UNIT_HOSTNAME to $OUTPUT ..."
-ssh "${USERNAME}@${UNIT_HOSTNAME}" "sudo tar cv ${FILES_TO_BACKUP[@]}" | gzip -9 > "$OUTPUT"
+ssh "${USERNAME}@${UNIT_HOSTNAME}" "sudo find ${FILES_TO_BACKUP[@]} -print0 | xargs -0 sudo tar cv" | gzip -9 > "$OUTPUT"
