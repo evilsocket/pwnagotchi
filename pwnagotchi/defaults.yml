@@ -67,6 +67,7 @@ main:
                 priority: 999 # routing priority
         memtemp: # Display memory usage, cpu load and cpu temperature on screen
             enabled: false
+            scale: celsius
             orientation: horizontal # horizontal/vertical
         pawgps:
             enabled: false
