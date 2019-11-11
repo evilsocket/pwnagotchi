@@ -415,25 +415,40 @@ def set_pixel(r, g, b):
     _write_byte(0)
     _enqueue()
 
-def blink(r, g, b, t, repeats):
-   for i in range(0, repeats + 1):
+def blink(r, g, b, ontime, offtime, blinktimes):
+    logging.info("[buttonshim] Blink")
+    for i in range(0, blinktimes):
         set_pixel(r, g, b)
-        time.sleep(t)
+        time.sleep(ontime)
         set_pixel(0, 0, 0)
-        time.sleep(t)
-    
+        time.sleep(offtime)
+
 def runCommand(button, pressed, plugin):
-    logging.debug(f"[buttonshim] Button Pressed! Loading command from slot '{button}' for button '{NAMES[button]}'")
-    command = plugin.commands[button]
-    logging.debug(f"[buttonshim] Running command: {command}")
-    process = subprocess.Popen(command, shell=True, stdin=None, stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
-    r = plugin.colors[button][0]
-    g = plugin.colors[button][1]
-    b = plugin.colors[button][2]
-    thread = Thread(target=blink,args=(r, g, b, 0.3, 3))
-    thread.start()
-    process.wait()
-    thread.stop()
+    logging.info(f"[buttonshim] Button Pressed! Loading command from slot '{button}' for button '{NAMES[button]}'")
+    bCfg = plugin.options['buttons'][NAMES[button]]
+    blinkCfg = bCfg['blink']
+    logging.debug(blink)
+    if blinkCfg['enabled'] == True:
+        logging.debug(f"[buttonshim] Blinking led")
+        red = int(blinkCfg['red'])
+        green = int(blinkCfg['green'])
+        blue = int(blinkCfg['blue'])
+        on_time = float(blinkCfg['on_time'])
+        off_time = float(blinkCfg['off_time'])
+        blink_times =  int(blinkCfg['blink_times'])
+        logging.debug(f"red {red} green {green} blue {blue} on_time {on_time} off_time {off_time} blink_times {blink_times}")
+        thread = Thread(target=blink, args=(red, green, blue, on_time, off_time, blink_times))
+        thread.start()
+        logging.debug(f"[buttonshim] Blink thread started")
+    command = bCfg['command']
+    if command == '':
+        logging.debug(f"[buttonshim] Command empty")
+    else:
+        logging.debug(f"[buttonshim] Process create: {command}")
+        process = subprocess.Popen(command, shell=True, stdin=None, stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
+        process.wait()
+        process = None
+        logging.debug(f"[buttonshim] Process end")
 
 class Buttonshim(plugins.Plugin):
     __author__ = 'gon@o2online.de'
@@ -444,18 +459,10 @@ class Buttonshim(plugins.Plugin):
     def __init__(self):
         self.running = False
         self.options = dict()
-        self.commands = ['', '', '', '', '']
-        self.colors = [[0xFF,0x00,0x00],[0x00,0xFF,0x00],[0x00,0x00,0xFF],[0xFF,0xFF,0x00],[0x00,0xFF,0xFF]]
         global _handlers
         _handlers = [Handler(self) for x in range(NUM_BUTTONS)]
         on_press([BUTTON_A, BUTTON_B, BUTTON_C, BUTTON_D, BUTTON_E], runCommand)
 
     def on_loaded(self):
-        i = 0
-        for b in self.options['buttons']:
-            self.commands[i] = b
-            #self.colors = self.options['colors']
-            logging.debug(f"[buttonshim] Loaded command '{b}' into slot '{i}' for button '{NAMES[i]}'.")
-            i=i+1
         logging.info("[buttonshim] GPIO Button plugin loaded.")
         self.running = True
