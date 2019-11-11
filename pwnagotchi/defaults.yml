@@ -30,6 +30,8 @@ main:
             enabled: false
             speed: 19200
             device: /dev/ttyUSB0
+        webgpsmap:
+            enabled: false
         onlinehashcrack:
             enabled: false
             email: ~
@@ -77,8 +79,8 @@ main:
             enabled: false
             #The following is a list of the GPIO number for your button, and the command you want to run when it is pressed
             gpios:
-              20: 'touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi'
-              21: 'shutdown -h now'
+              #20: 'touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi'
+              #21: 'shutdown -h now'
         led:
             enabled: true
             # for /sys/class/leds/led0/brightness
