@@ -27,7 +27,7 @@ class GPS(plugins.Plugin):
             agent.run('set gps.device %s' % self.options['device'])
             agent.run('set gps.speed %d' % self.options['speed'])
             agent.run('gps on')
-            running = True
+            self.running = True
         else:
             logging.warning("no GPS detected")
 
