@@ -1,0 +1,7 @@
+# top-most EditorConfig file
+root = true
+
+# Matches the exact files either package.json or .travis.yml
+[{*.yml,*.yaml,config.yml,defaults.yml}]
+indent_style = space
+indent_size = 2
