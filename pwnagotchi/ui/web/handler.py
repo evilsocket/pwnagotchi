@@ -2,6 +2,8 @@ import logging
 import os
 import base64
 import _thread
+import secrets
+from functools import wraps
 
 # https://stackoverflow.com/questions/14888799/disable-console-messages-in-flask-server
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
@@ -13,6 +15,7 @@ import pwnagotchi.ui.web as web
 from pwnagotchi import plugins
 
 from flask import send_file
+from flask import Response
 from flask import request
 from flask import jsonify
 from flask import abort
@@ -21,28 +24,46 @@ from flask import render_template, render_template_string
 
 
 class Handler:
-    def __init__(self, agent, app):
+    def __init__(self, config, agent, app):
+        self._config = config
         self._agent = agent
         self._app = app
-        self._app.add_url_rule('/', 'index', self.index)
-        self._app.add_url_rule('/ui', 'ui', self.ui)
-        self._app.add_url_rule('/shutdown', 'shutdown', self.shutdown, methods=['POST'])
-        self._app.add_url_rule('/restart', 'restart', self.restart, methods=['POST'])
+
+        self._app.add_url_rule('/', 'index', self.with_auth(self.index))
+        self._app.add_url_rule('/ui', 'ui', self.with_auth(self.ui))
+
+        self._app.add_url_rule('/shutdown', 'shutdown', self.with_auth(self.shutdown), methods=['POST'])
+        self._app.add_url_rule('/restart', 'restart', self.with_auth(self.restart), methods=['POST'])
 
         # inbox
-        self._app.add_url_rule('/inbox', 'inbox', self.inbox)
-        self._app.add_url_rule('/inbox/profile', 'inbox_profile', self.inbox_profile)
-        self._app.add_url_rule('/inbox/<id>', 'show_message', self.show_message)
-        self._app.add_url_rule('/inbox/<id>/<mark>', 'mark_message', self.mark_message)
-        self._app.add_url_rule('/inbox/new', 'new_message', self.new_message)
-        self._app.add_url_rule('/inbox/send', 'send_message', self.send_message, methods=['POST'])
+        self._app.add_url_rule('/inbox', 'inbox', self.with_auth(self.inbox))
+        self._app.add_url_rule('/inbox/profile', 'inbox_profile', self.with_auth(self.inbox_profile))
+        self._app.add_url_rule('/inbox/<id>', 'show_message', self.with_auth(self.show_message))
+        self._app.add_url_rule('/inbox/<id>/<mark>', 'mark_message', self.with_auth(self.mark_message))
+        self._app.add_url_rule('/inbox/new', 'new_message', self.with_auth(self.new_message))
+        self._app.add_url_rule('/inbox/send', 'send_message', self.with_auth(self.send_message), methods=['POST'])
 
         # plugins
-        self._app.add_url_rule('/plugins', 'plugins', self.plugins, strict_slashes=False,
+        plugins_with_auth = self.with_auth(self.plugins)
+        self._app.add_url_rule('/plugins', 'plugins', plugins_with_auth, strict_slashes=False,
                                defaults={'name': None, 'subpath': None})
-        self._app.add_url_rule('/plugins/<name>', 'plugins', self.plugins, strict_slashes=False,
+        self._app.add_url_rule('/plugins/<name>', 'plugins', plugins_with_auth, strict_slashes=False,
                                methods=['GET', 'POST'], defaults={'subpath': None})
-        self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', self.plugins, methods=['GET', 'POST'])
+        self._app.add_url_rule('/plugins/<name>/<path:subpath>', 'plugins', plugins_with_auth, methods=['GET', 'POST'])
+
+    def _check_creds(self, u, p):
+        # trying to be timing attack safe
+        return secrets.compare_digest(u, self._config['username']) and \
+               secrets.compare_digest(p, self._config['password'])
+
+    def with_auth(self, f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            auth = request.authorization
+            if not auth or not auth.username or not auth.password or not self._check_creds(auth.username, auth.password):
+                return Response('Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Unauthorized"'})
+            return f(*args, **kwargs)
+        return wrapper
 
     def index(self):
         return render_template('index.html',

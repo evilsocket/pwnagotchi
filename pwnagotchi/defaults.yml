@@ -245,6 +245,8 @@ ui:
     web:
       enabled: true
       address: '0.0.0.0'
+      username: changeme # !!! CHANGE THIS !!!
+      password: changeme # !!! CHANGE THIS !!!
       origin: null
       port: 8080
       # command to be executed when a new png frame is available
