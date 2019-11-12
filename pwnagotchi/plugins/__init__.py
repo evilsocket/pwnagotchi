@@ -1,5 +1,6 @@
 import os
 import glob
+import _thread
 import importlib, importlib.util
 import logging
 
@@ -31,7 +32,7 @@ def one(plugin_name, event_name, *args, **kwargs):
         callback = getattr(plugin, cb_name, None)
         if callback is not None and callable(callback):
             try:
-                callback(*args, **kwargs)
+                _thread.start_new_thread(callback, (*args, *kwargs))
             except Exception as e:
                 logging.error("error while running %s.%s : %s" % (plugin_name, cb_name, e))
                 logging.error(e, exc_info=True)

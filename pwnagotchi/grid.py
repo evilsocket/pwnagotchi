@@ -12,9 +12,9 @@ API_ADDRESS = "http://127.0.0.1:8666/api/v1"
 
 def is_connected():
     try:
-        socket.create_connection(("www.google.com", 80))
+        socket.create_connection(("api.pwnagotchi.ai", 443), timeout=30)
         return True
-    except OSError:
+    except:
         pass
     return False
 
@@ -22,11 +22,11 @@ def is_connected():
 def call(path, obj=None):
     url = '%s%s' % (API_ADDRESS, path)
     if obj is None:
-        r = requests.get(url, headers=None)
+        r = requests.get(url, headers=None, timeout=(30.0, 60.0))
     elif isinstance(obj, dict):
-        r = requests.post(url, headers=None, json=obj)
+        r = requests.post(url, headers=None, json=obj, timeout=(30.0, 60.0))
     else:
-        r = requests.post(url, headers=None, data=obj)
+        r = requests.post(url, headers=None, data=obj, timeout=(30.0, 60.0))
 
     if r.status_code != 200:
         raise Exception("(status %d) %s" % (r.status_code, r.text))
