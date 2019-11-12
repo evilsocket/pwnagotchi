@@ -43,7 +43,7 @@ main:
             enabled: false
             api_key: ~
         bt-tether:
-            enabled: false # if you want to use this, set ui.display.video.address to 0.0.0.0
+            enabled: false # if you want to use this, set ui.display.web.address to 0.0.0.0
             devices:
               android-phone:
                 enabled: false
@@ -241,6 +241,17 @@ ui:
     # preserve your display over time, you should set this value to 0.0 so that the display will be refreshed only
     # if any of the important data fields changed (the uptime and blinking cursor won't trigger a refresh).
     fps: 0.0
+    # web ui
+    web:
+      enabled: true
+      address: '0.0.0.0'
+      origin: null
+      port: 8080
+      # command to be executed when a new png frame is available
+      # for instance, to use with framebuffer based displays:
+      # on_frame: 'fbi --noverbose -a -d /dev/fb1 -T 1 /root/pwnagotchi.png > /dev/null 2>&1'
+      on_frame: ''
+    # hardware display
     display:
         enabled: true
         rotation: 180
@@ -250,16 +261,6 @@ ui:
         # Waveshare tri-color 2.13in display can be over-driven with color set as 'fastAndFurious'
         # THIS IS POTENTIALLY DANGEROUS. DO NOT USE UNLESS YOU UNDERSTAND THAT IT COULD KILL YOUR DISPLAY
         color: 'black'
-        video:
-            enabled: true
-            address: '0.0.0.0'
-            origin: null
-            port: 8080
-            # command to be executed when a new png frame is available
-            # for instance, to use with framebuffer based displays:
-            # on_frame: 'fbi --noverbose -a -d /dev/fb1 -T 1 /root/pwnagotchi.png > /dev/null 2>&1'
-            on_frame: ''
-
 
 # bettercap rest api configuration
 bettercap:

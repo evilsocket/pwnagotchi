@@ -35,7 +35,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self._supported_channels = utils.iface_channels(config['main']['iface'])
         self._view = view
         self._view.set_agent(self)
-        self._web_ui = Server(self, self._config['ui']['display'])
+        self._web_ui = Server(self, config['ui'])
 
         self._access_points = []
         self._last_pwnd = None

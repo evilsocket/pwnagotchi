@@ -16,13 +16,13 @@ from pwnagotchi.ui.web.handler import Handler
 
 class Server:
     def __init__(self, agent, config):
-        self._enabled = config['video']['enabled']
-        self._port = config['video']['port']
-        self._address = config['video']['address']
+        self._enabled = config['web']['enabled']
+        self._port = config['web']['port']
+        self._address = config['web']['address']
         self._origin = None
         self._agent = agent
-        if 'origin' in config['video']:
-            self._origin = config['video']['origin']
+        if 'origin' in config['web']:
+            self._origin = config['web']['origin']
 
         if self._enabled:
             _thread.start_new_thread(self._http_serve, ())
