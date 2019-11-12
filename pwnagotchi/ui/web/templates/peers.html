@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ name }} friends</title>
+
+    <link rel="stylesheet" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css"/>
+    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+    <script type="text/javascript" src="/js/jquery-qrcode-0.17.0.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+
+    <script type="text/javascript">
+        $.mobile.ajaxEnabled = false;
+    </script>
+
+</head>
+<body>
+<div data-role="page">
+
+    <div data-role="footer">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/inbox" id="email" data-icon="back">Back</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="peers" data-role="listview" data-filter="true" data-filter-placeholder="Search peers..." data-inset="true">
+        {% for peer in peers %}
+        <li class="peer">
+            <a href="/inbox/new?to={{ peer.fingerprint }}">
+                <h2>{{ peer.advertisement.face }} {{ peer.advertisement.name }}@{{ peer.fingerprint }}</h2>
+                <p>
+                    Pwned {{ peer.advertisement.pwnd_tot }} networks, {{ peer.encounters }} encounters.
+                </p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+</body>
+</html>

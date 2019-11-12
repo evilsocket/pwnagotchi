@@ -38,6 +38,7 @@ class Handler:
         # inbox
         self._app.add_url_rule('/inbox', 'inbox', self.with_auth(self.inbox))
         self._app.add_url_rule('/inbox/profile', 'inbox_profile', self.with_auth(self.inbox_profile))
+        self._app.add_url_rule('/inbox/peers', 'inbox_peers', self.with_auth(self.inbox_peers))
         self._app.add_url_rule('/inbox/<id>', 'show_message', self.with_auth(self.show_message))
         self._app.add_url_rule('/inbox/<id>/<mark>', 'mark_message', self.with_auth(self.mark_message))
         self._app.add_url_rule('/inbox/new', 'new_message', self.with_auth(self.new_message))
@@ -106,6 +107,21 @@ class Handler:
                                name=pwnagotchi.name(),
                                fingerprint=self._agent.fingerprint(),
                                data=data,
+                               error=error)
+
+    def inbox_peers(self):
+        peers = {}
+        error = None
+
+        try:
+            peers = grid.memory()
+        except Exception as e:
+            logging.exception('error while reading pwngrid peers')
+            error = str(e)
+
+        return render_template('peers.html',
+                               name=pwnagotchi.name(),
+                               peers=peers,
                                error=error)
 
     def show_message(self, id):

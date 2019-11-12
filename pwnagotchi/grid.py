@@ -45,6 +45,10 @@ def get_advertisement_data():
     return call("/mesh/data")
 
 
+def memory():
+    return call("/mesh/memory")
+
+
 def peers():
     return call("/mesh/peers")
 
