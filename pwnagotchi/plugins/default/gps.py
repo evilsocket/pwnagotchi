@@ -18,7 +18,7 @@ class GPS(plugins.Plugin):
 
     def on_ready(self, agent):
         if os.path.exists(self.options['device']):
-            logging.info("enabling gps bettercap's module for %s" % self.options['device'])
+            logging.info("enabling bettercap's gps module for %s" % self.options['device'])
             try:
                 agent.run('gps off')
             except:
