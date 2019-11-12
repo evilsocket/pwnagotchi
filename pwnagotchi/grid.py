@@ -112,4 +112,4 @@ def mark_message(id, mark):
 
 
 def send_message(to, message):
-    return call("/unit/%s/inbox" % to, message)
+    return call("/unit/%s/inbox" % to, message.encode('utf-8'))
