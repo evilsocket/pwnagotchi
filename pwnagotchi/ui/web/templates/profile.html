@@ -10,11 +10,21 @@
     <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
     <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+    <script type="text/javascript" src="/js/jquery-qrcode-0.17.0.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
 
     <script type="text/javascript">
         $.mobile.ajaxEnabled = false;
+        $(function(){
+            $('#qrcode').qrcode({
+                render: 'div',
+                mode: 0,
+                size: 400,
+                fontname: 'sans',
+                fontcolor: '#000'
+            });
+        });
     </script>
 
 </head>
@@ -34,8 +44,12 @@
         <h4 id="name">{{ name }}</h4>
 
         <label for="fingerprint">Fingerprint</label>
-        <h4 id="fingerprint">{{ fingerprint }}</h4>
+        <h4 id="fingerprint">
+            <a href="https://pwnagotchi.ai/pwnfile/#{{ fingerprint }}" target="_blank">{{ fingerprint }}</a>
+        </h4>
+        <div id="qrcode"></div>
 
+        <br/>
         <label for="data">Data</label>
         <pre><code id="data">{{ data }}</code></pre>
     </div>
