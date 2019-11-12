@@ -32,6 +32,8 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self._started_at = time.time()
         self._filter = None if config['main']['filter'] is None else re.compile(config['main']['filter'])
         self._current_channel = 0
+        self._tot_aps = 0
+        self._aps_on_channel = 0
         self._supported_channels = utils.iface_channels(config['main']['iface'])
         self._view = view
         self._view.set_agent(self)
@@ -187,6 +189,15 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         aps.sort(key=lambda ap: ap['channel'])
         return self.set_access_points(aps)
 
+    def get_total_aps(self):
+        return self._tot_aps
+
+    def get_aps_on_channel(self):
+        return self._aps_on_channel
+
+    def get_current_channel(self):
+        return self._current_channel
+
     def get_access_points_by_channel(self):
         aps = self.get_access_points()
         channels = self._config['personality']['channels']
@@ -223,16 +234,16 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         # self._view.set('epoch', '%04d' % self._epoch.epoch)
 
     def _update_counters(self):
-        tot_aps = len(self._access_points)
+        self._tot_aps = len(self._access_points)
         tot_stas = sum(len(ap['clients']) for ap in self._access_points)
         if self._current_channel == 0:
-            self._view.set('aps', '%d' % tot_aps)
+            self._view.set('aps', '%d' % self._tot_aps)
             self._view.set('sta', '%d' % tot_stas)
         else:
-            aps_on_channel = len([ap for ap in self._access_points if ap['channel'] == self._current_channel])
+            self._aps_on_channel = len([ap for ap in self._access_points if ap['channel'] == self._current_channel])
             stas_on_channel = sum(
                 [len(ap['clients']) for ap in self._access_points if ap['channel'] == self._current_channel])
-            self._view.set('aps', '%d (%d)' % (aps_on_channel, tot_aps))
+            self._view.set('aps', '%d (%d)' % (self._aps_on_channel, self._tot_aps))
             self._view.set('sta', '%d (%d)' % (stas_on_channel, tot_stas))
 
     def _update_handshakes(self, new_shakes=0):
