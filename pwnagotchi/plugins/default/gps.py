@@ -25,7 +25,7 @@ class GPS(plugins.Plugin):
                 pass
 
             agent.run('set gps.device %s' % self.options['device'])
-            agent.run('set gps.speed %d' % self.options['speed'])
+            agent.run('set gps.baudrate %d' % self.options['speed'])
             agent.run('gps on')
             self.running = True
         else:
