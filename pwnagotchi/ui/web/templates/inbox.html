@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ name }} Inbox</title>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+
+    <script type="text/javascript">
+        $.mobile.ajaxEnabled = false;
+
+        jQuery(document).ready(function() {
+          jQuery("time.timeago").timeago();
+        });
+    </script>
+</head>
+<body>
+<div data-role="page">
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% else %}
+    {% if inbox.records == 0 %}
+    <small>Inbox is empty.</small>
+    {% else %}
+
+    <div data-role="footer">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/inbox" id="email" class="ui-btn-active" data-icon="bars">Inbox</a></li>
+                <li><a href="/inbox/new" id="new" data-icon="mail">New</a></li>
+                <li><a href="/inbox/profile" id="profile" data-icon="user">Profile</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="inbox" data-role="listview" data-inset="true">
+        {% for message in inbox.messages %}
+        <li class="message">
+            <a href="/inbox/{{ message.id }}" class="{{ 'unread' if not message.seen_at else 'read' }}">
+                <h2>{{ message.sender_name }}@{{ message.sender }}</h2>
+                <p>
+                    Received
+                    <time class="timeago" datetime="{{ message.created_at }}">{{ message.created_at }}</time>
+                    {% if message.seen_at %}, seen
+                    <time class="timeago" datetime="{{ message.seen_at }}">{{ message.seen_at }}</time>
+                    {% endif %}.
+                </p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if inbox.pages > 1 %}
+    <div data-role="navbar">
+        <ul>
+            {% if page > 1 %}
+            <li><a href="/inbox?p={{ page - 1 }}" class="ui-btn">Prev</a></li>
+            {% endif %}
+            {% if page < inbox.pages %}
+            <li><a href="/inbox?p={{ page + 1 }}" class="ui-btn">Next</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

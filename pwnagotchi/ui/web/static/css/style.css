@@ -66,3 +66,11 @@ div.status {
     left: 0;
     width: 100%;
 }
+
+a.read {
+    color: #777 !important;
+}
+
+p.messagebody {
+    padding: 1em;
+}

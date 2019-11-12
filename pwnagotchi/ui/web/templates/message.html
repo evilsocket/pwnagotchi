@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Message from {{ message.sender_name }}</title>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+
+    <script type="text/javascript">
+        $.mobile.ajaxEnabled = false;
+
+        jQuery(document).ready(function() {
+          jQuery("time.timeago").timeago();
+          // mark the message as read
+          jQuery.get("/inbox/{{ message.id }}/seen", function(res){
+            console.log(res);
+          });
+        });
+
+    </script>
+
+</head>
+<body>
+<div data-role="page">
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% else %}
+
+    <div data-role="footer">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/inbox" id="email" data-icon="back">Back</a></li>
+                <li><a href="/inbox/new?to={{ message.sender }}" id="reply" data-icon="edit">Reply</a></li>
+                <li><a href="/inbox/{{ message.id }}/deleted" id="delete" data-icon="delete"
+                       onclick="return confirm('Are you sure?')">Delete</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <p class="messagebody">
+        <span style="color: #888">
+        Message from {{ message.sender_name }}@{{ message.sender }}, received
+        <time class="timeago" datetime="{{ message.created_at }}">{{ message.created_at }}</time>
+        {% if message.seen_at %}, seen
+        <time class="timeago" datetime="{{ message.seen_at }}">{{ message.seen_at }}</time>{% endif %}.</span>
+
+        <br/>
+        <br/>
+
+        {% if message.data %}
+            <span style="white-space: pre-line">{{ message.data }}</span>
+        {% else %}
+            <small>This message is empty.</small>
+        {% endif %}
+    </p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

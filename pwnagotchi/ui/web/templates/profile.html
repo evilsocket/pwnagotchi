@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Profile</title>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+
+    <script type="text/javascript">
+        $.mobile.ajaxEnabled = false;
+    </script>
+
+</head>
+<body>
+<div data-role="page">
+
+    <div data-role="footer">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/inbox" id="email" data-icon="back">Back</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="padding: 1em">
+        <label for="name">Name</label>
+        <h4 id="name">{{ name }}</h4>
+
+        <label for="fingerprint">Fingerprint</label>
+        <h4 id="fingerprint">{{ fingerprint }}</h4>
+
+        <label for="data">Data</label>
+        <pre><code id="data">{{ data }}</code></pre>
+    </div>
+
+</div>
+
+</body>
+</html>

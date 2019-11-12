@@ -23,8 +23,10 @@ def call(path, obj=None):
     url = '%s%s' % (API_ADDRESS, path)
     if obj is None:
         r = requests.get(url, headers=None)
-    else:
+    elif isinstance(obj, dict):
         r = requests.post(url, headers=None, json=obj)
+    else:
+        r = requests.post(url, headers=None, data=obj)
 
     if r.status_code != 200:
         raise Exception("(status %d) %s" % (r.status_code, r.text))
@@ -37,6 +39,10 @@ def advertise(enabled=True):
 
 def set_advertisement_data(data):
     return call("/mesh/data", obj=data)
+
+
+def get_advertisement_data():
+    return call("/mesh/data")
 
 
 def peers():
@@ -95,3 +101,15 @@ def report_ap(essid, bssid):
 def inbox(page=1, with_pager=False):
     obj = call("/inbox?p=%d" % page)
     return obj["messages"] if not with_pager else obj
+
+
+def inbox_message(id):
+    return call("/inbox/%d" % int(id))
+
+
+def mark_message(id, mark):
+    return call("/inbox/%d/%s" % (int(id), str(mark)))
+
+
+def send_message(to, message):
+    return call("/unit/%s/inbox" % to, message)
