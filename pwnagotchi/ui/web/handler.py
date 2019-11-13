@@ -123,10 +123,8 @@ class Handler:
             return send_file(web.frame_path, mimetype="image/png")
 
     def index(self):
-
         theme = "theme-default.html"
-
-        theme_config_location = self._config()["ui"]["display"]["video"]
+        theme_config_location = self._agent.config()["ui"]["display"]["video"]
 
         if "theme" in theme_config_location:
             theme = "theme-" + theme_config_location["theme"] + ".html"
