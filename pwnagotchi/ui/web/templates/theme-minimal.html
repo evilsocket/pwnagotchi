@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+
+        <style>
+            body{font-family:"Courier New",Courier,monospace;font-size:100%;background:#000;color:#AAA}
+            @media screen and (min-width: 750px) {
+            body{font-size:150%}
+            }
+            @media screen and (min-width: 1000px) {
+            body{font-size:200%}
+            }
+            @media screen and (min-width: 1250px) {
+            body{font-size:250%}
+            }
+            .face{font-family:"Courier New",Courier,monospace;font-size:3em;flex:auto;min-width:4em;max-width:6em}
+            .name{font-weight:700}
+            .title{font-weight:700}
+            .status{flex:auto}
+            .systemarea > div{flex-shrink:auto;padding:15px}
+            .systemarea div{display:inline}
+            .lowerarea div{display:inline}
+            .shakes{flex-shrink:1}
+
+        </style>
+
+        <script>
+            const $ = document.querySelector.bind(document);
+
+            let stateRetrieval = (function(){
+                let _populateDisplay = function(result){
+
+                    $("#name").innerText = result.name + ">";
+                    $("#face").innerText = result.face;
+                    $("#status").innerText = result.status;
+
+                    $("#shakes").innerText = result.pwnd_run + "(" + result.pwnd_tot + ")";
+                };
+
+                let _retrieval = function(){
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState === 4 && this.status === 200) {
+                            let response = JSON.parse(this.responseText);
+                            _populateDisplay(response)
+                        }
+                    };
+                    xhttp.open("GET", "/state/json", true);
+                    xhttp.send();
+                };
+
+                let initialise = function(){
+                    setInterval(_retrieval, 2000)
+                };
+
+                return {
+                    initialise: initialise
+                }
+            }());
+
+        </script>
+    </head>
+    <body>
+        <div id="maindisplay">
+            <div class="mainarea">
+                <div class="name" id="name"></div>
+                <div class="face" id="face"></div>
+            </div>
+            <div class="status" id="status"></div>
+            <div class="lowerarea">
+                <div>
+                    <div class="title">Pwned: </div>
+                    <div class="shakes" id="shakes"></div>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.onload = function() {
+                stateRetrieval.initialise();
+            };
+        </script>
+    </body>
+</html>
