@@ -22,14 +22,14 @@ window.onload = function() {
 		<li>
 			<form class="action" method="post" action="/shutdown"
           onsubmit="return confirm('this will halt the unit, continue?');">
-				<input type="submit" class="button ui-btn ui-corner-all" value="shutdown"/>
+				<input type="submit" class="button ui-btn ui-corner-all" value="Shutdown"/>
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 			</form>
 		</li>
 		<li>
 			<form class="action" method="post" action="/restart"
-          onsubmit="return confirm('this will restart the service in {{ other_mode }} mode, continue?');">
-				<input type="submit" class="button ui-btn ui-corner-all" value="restart in {{ other_mode }} mode"/>
+          onsubmit="return confirm('This will restart the service in {{ other_mode }} mode, continue?');">
+				<input type="submit" class="button ui-btn ui-corner-all" value="Restart in {{ other_mode }} mode"/>
 				<input type="hidden" name="mode" value="{{ other_mode }}"/>
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 			</form>
