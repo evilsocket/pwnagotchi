@@ -8,6 +8,7 @@ Profile
 {% block script %}
 $(function(){
     $('#qrcode').qrcode({
+        text: 'https://pwnagotchi.ai/pwnfile/#{{ fingerprint }}',
         render: 'div',
         mode: 0,
         size: 400,
