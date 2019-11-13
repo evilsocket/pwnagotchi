@@ -34,10 +34,14 @@ class Environment(gym.Env):
         self._epoch_num = 0
         self._last_render = None
 
-        channels = agent.supported_channels()
+        # see https://github.com/evilsocket/pwnagotchi/issues/583
+        self._supported_channels = agent.supported_channels()
+        self._extended_spectrum = any(ch > 140 for ch in self._supported_channels)
+        self._histogram_size, self._observation_shape = featurizer.describe(self._extended_spectrum)
+
         Environment.params += [
             Parameter('_channel_%d' % ch, min_value=0, max_value=1, meta=ch + 1) for ch in
-            range(featurizer.histogram_size) if ch + 1 in channels
+            range(self._histogram_size) if ch + 1 in self._supported_channels
         ]
 
         self.last = {
@@ -50,7 +54,7 @@ class Environment(gym.Env):
         }
 
         self.action_space = spaces.MultiDiscrete([p.space_size() for p in Environment.params if p.trainable])
-        self.observation_space = spaces.Box(low=0, high=1, shape=featurizer.shape, dtype=np.float32)
+        self.observation_space = spaces.Box(low=0, high=1, shape=self._observation_shape, dtype=np.float32)
         self.reward_range = reward.range
 
     @staticmethod
@@ -118,7 +122,7 @@ class Environment(gym.Env):
         return self.last['state_v']
 
     def _render_histogram(self, hist):
-        for ch in range(featurizer.histogram_size):
+        for ch in range(self._histogram_size):
             if hist[ch]:
                 logging.info("      CH %d: %s" % (ch + 1, hist[ch]))
 
