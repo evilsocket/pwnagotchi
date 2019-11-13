@@ -48,10 +48,10 @@ FILES_TO_BACKUP="/root/brain.nn \
   /home/pi/.bashrc \
   /home/pi/.profile"
 
-ping -w 3 -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
+ping -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
   echo "@ unit ${UNIT_HOSTNAME} can't be reached, make sure it's connected and a static IP assigned to the USB interface."
   exit 1
 }
 
 echo "@ backing up $UNIT_HOSTNAME to $OUTPUT ..."
-ssh "${USERNAME}@${UNIT_HOSTNAME}" "sudo find ${FILES_TO_BACKUP[@]} -print0 | xargs -0 sudo tar cv" | gzip -9 > "$OUTPUT"
+ssh "${USERNAME}@${UNIT_HOSTNAME}" "sudo find ${FILES_TO_BACKUP} -print0 | xargs -0 sudo tar cv" | gzip -9 > "$OUTPUT"
