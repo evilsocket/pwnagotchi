@@ -59,4 +59,4 @@ class UPSLite(plugins.Plugin):
                                            label_font=fonts.Bold, text_font=fonts.Medium))
 
     def on_ui_update(self, ui):
-        ui.set('ups', "%%2i%%" % self.ups.capacity())
+        ui.set('ups', "%2i%%" % self.ups.capacity())
