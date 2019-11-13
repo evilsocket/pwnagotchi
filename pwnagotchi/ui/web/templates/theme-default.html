@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <style>
+            body{font-family:"Courier New",Courier,monospace;font-size:100%;}
+
+            @media screen and (min-width: 750px) {
+            body{font-size:150%}
+            }
+            @media screen and (min-width: 1000px) {
+            body{font-size:200%}
+            }
+            @media screen and (min-width: 1250px) {
+            body{font-size:250%}
+            }
+            .gotchicontainer{max-width:38em}
+            .flexible{display:flex;flex-wrap:wrap}
+            .headerbar{border-bottom:3px solid}
+            .headerbar div{display:inline}
+            .channel{width:10em;margin-right:1em}
+            .aps{flex-shrink:1;width:10em}
+            .padder{flex-grow:1;flex-shrink:1}
+            .uptime{flex-shrink:1;width:13em}
+            .face{font-family:"Courier New",Courier,monospace;font-size:3em;flex:auto;min-width:4em;max-width:6em}
+            .name{font-weight:700}
+            .title{font-weight:700}
+            .status{flex:1 1 0;flex-wrap:nowrap}
+            .friend_face_text{font-family:"Courier New",Courier,monospace;font-size:1.5em;height:2em;line-height:2em;width:5em;margin-top:auto;margin-bottom:auto}
+            .friend_name_text{flex-shrink:1;font-size:.8em;height:2em;line-height:2em;width:16em;padding-left:.5em;margin-top:auto;margin-bottom:auto}
+            .systemarea > div{flex-shrink:auto;padding:15px}
+            .systemarea div{display:inline}
+            .lowerarea{border-top:3px solid}
+            .lowerarea div{display:inline}
+            .shakes{flex-shrink:1}
+            .mode{flex-shrink:1}
+            .buttons-wrapper { flex-shrink: 0; display: flex; /*flex-wrap: wrap;*/ padding: 0 16px; }
+            .buttons-wrapper .button { border: 1px solid black; border-radius: 4px; font-size: 1em; background: #f8b506; margin: 16px; }
+        </style>
+
+        <script>
+            const $ = document.querySelector.bind(document);
+
+            let stateRetrieval = (function(){
+
+                let _show_buttons = false;
+
+                let _populateDisplay = function(result){
+                    $("#button-bar").style.display = this._show_buttons === false ? "none" : "flex";
+
+                    $("#channel").innerText = result.channel_text;
+                    $("#aps").innerText = result.aps_text;
+                    $("#uptime").innerText = result.uptime;
+
+                    $("#name").innerText = result.name + ">";
+                    $("#face").innerText = result.face;
+                    $("#status").innerText = result.status;
+
+                    $("#friend_face_text").innerText = result.friend_face_text !== null ? result.friend_face_text : "";
+                    $("#friend_name_text").innerText = result.friend_name_text !== null ? result.friend_name_text : "";
+
+                    $("#shakes").innerText = result.pwnd_run + "(" + result.pwnd_tot + ")";
+                    $("#mode").innerText = result.mode;
+
+                    $("#cpu").innerText = (result.cpu * 100).toFixed(2) + "%";
+                    $("#temperature").innerText = result.temperature.toFixed(2) +"c";
+                    $("#memory").innerText = (result.memory * 100).toFixed(2) + "%"
+                    };
+
+                let _retrieval = function(){
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState === 4 && this.status === 200) {
+                            let response = JSON.parse(this.responseText);
+                            _populateDisplay(response)
+                        }
+                    };
+                    xhttp.open("GET", "/state/json", true);
+                    xhttp.send();
+                };
+
+                let initialise = function(){
+                    let show_buttons = false;
+                    let url = new URL(document.URL);
+                    let search_params = new URLSearchParams(url.search);
+                    if(search_params.has('show_buttons')) {
+                        let buttons = search_params.get('show_buttons');
+                        show_buttons = buttons.toLowerCase() === "true";
+                    }
+                    $("#button-bar").style.display = show_buttons === false ? "none" : "flex";
+
+                    setInterval(_retrieval, 2000)
+                };
+
+                return {
+                    initialise: initialise
+                }
+            }());
+
+        </script>
+    </head>
+    <body>
+        <div id="maindisplay" class="gotchicontainer">
+            <div class="headerbar flexible">
+                <div>
+                    <div class="title">Channel:</div>
+                    <div class="channel" id="channel" ></div>
+                </div>
+
+                <div>
+                    <div class="title">APs:</div>
+                    <div class="aps" id="aps"></div>
+                </div>
+
+                <div class="padder"></div>
+                <div>
+                    <div class="title">Uptime: </div>
+                    <div class="uptime" id="uptime"></div>
+                </div>
+            </div>
+            <div class="mainarea flexible">
+                <div class="name" id="name"></div>
+                <div class="face" id="face"></div>
+                <div class="status" id="status"></div>
+            </div>
+            <div class="friendarea flexible">
+                <div class="friend_face_text" id="friend_face_text"></div>
+                <div class="friend_name_text" id="friend_name_text"></div>
+            </div>
+            <div class="systemarea flexible">
+                <div>
+                    <div class="title">CPU: </div>
+                    <div class="cpu" id="cpu"></div>
+                </div>
+                <div>
+                    <div class="title">Temp: </div>
+                    <div class="temperature" id="temperature"></div>
+                </div>
+                <div>
+                    <div class="title">Memory: </div>
+                    <div class="memory" id="memory"></div>
+                </div>
+            </div>
+            <div class="lowerarea flexible">
+                <div>
+                    <div class="title">Pwned: </div>
+                    <div class="shakes" id="shakes"></div>
+                </div>
+                <div class="padder"></div>
+                <div class="mode title" id="mode"></div>
+            </div>
+        </div>
+        <div id="button-bar" class="buttons-wrapper" style="display:none;">
+                <form class="action" method="POST" action="/shutdown" onsubmit="return confirm('This will halt the unit, continue?');">
+                  <input type="submit" class="button" value="Shutdown"/>
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                </form>
+
+                <form class="action" method="POST" action="/restart" onsubmit="return confirm('This will restart the service in {{ other_mode }} mode, continue?');">
+                  <input type="submit" class="button" value="Restart in {{ other_mode }} mode"/>
+                  <input type="hidden" name="mode" value="{{ other_mode }}"/>
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                </form>
+
+                <form class="action" method="GET" action="/inbox">
+                  <input type="submit" class="button" value="PwnMail"/>
+                </form>
+              </div>
+        <script>
+            window.onload = function() {
+                stateRetrieval.initialise();
+            };
+        </script>
+    </body>
+</html>
