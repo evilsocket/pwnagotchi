@@ -3,6 +3,7 @@ import os
 import base64
 import _thread
 import secrets
+import json
 from functools import wraps
 
 # https://stackoverflow.com/questions/14888799/disable-console-messages-in-flask-server
@@ -61,9 +62,11 @@ class Handler:
         @wraps(f)
         def wrapper(*args, **kwargs):
             auth = request.authorization
-            if not auth or not auth.username or not auth.password or not self._check_creds(auth.username, auth.password):
+            if not auth or not auth.username or not auth.password or not self._check_creds(auth.username,
+                                                                                           auth.password):
                 return Response('Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Unauthorized"'})
             return f(*args, **kwargs)
+
         return wrapper
 
     def index(self):
@@ -82,6 +85,9 @@ class Handler:
         error = None
 
         try:
+            if not grid.is_connected():
+                raise Exception('not connected')
+
             inbox = grid.inbox(page, with_pager=True)
         except Exception as e:
             logging.exception('error while reading pwnmail inbox')
@@ -106,7 +112,7 @@ class Handler:
         return render_template('profile.html',
                                name=pwnagotchi.name(),
                                fingerprint=self._agent.fingerprint(),
-                               data=data,
+                               data=json.dumps(data, indent=2),
                                error=error)
 
     def inbox_peers(self):
@@ -129,6 +135,9 @@ class Handler:
         error = None
 
         try:
+            if not grid.is_connected():
+                raise Exception('not connected')
+
             message = grid.inbox_message(id)
             if message['data']:
                 message['data'] = base64.b64decode(message['data']).decode("utf-8")
@@ -151,6 +160,9 @@ class Handler:
         error = None
 
         try:
+            if not grid.is_connected():
+                raise Exception('not connected')
+
             grid.send_message(to, message)
         except Exception as e:
             error = str(e)
@@ -158,6 +170,9 @@ class Handler:
         return jsonify({"error": error})
 
     def mark_message(self, id, mark):
+        if not grid.is_connected():
+            abort(200)
+
         logging.info("marking message %d as %s" % (int(id), mark))
         grid.mark_message(id, mark)
         return redirect("/inbox")

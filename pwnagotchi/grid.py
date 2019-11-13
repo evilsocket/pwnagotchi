@@ -12,8 +12,12 @@ API_ADDRESS = "http://127.0.0.1:8666/api/v1"
 
 def is_connected():
     try:
-        socket.create_connection(("api.pwnagotchi.ai", 443), timeout=30)
-        return True
+        # check DNS
+        host = socket.gethostbyname('api.pwnagotchi.ai')
+        if host:
+            # check connectivity itself
+            socket.create_connection((host, 443), timeout=30)
+            return True
     except:
         pass
     return False

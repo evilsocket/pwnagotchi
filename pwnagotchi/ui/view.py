@@ -119,12 +119,14 @@ class View(object):
 
     def _refresh_handler(self):
         delay = 1.0 / self._config['ui']['fps']
-        # logging.info("view refresh handler started with period of %.2fs" % delay)
-
         while True:
-            name = self._state.get('name')
-            self.set('name', name.rstrip('█').strip() if '█' in name else (name + ' █'))
-            self.update()
+            try:
+                name = self._state.get('name')
+                self.set('name', name.rstrip('█').strip() if '█' in name else (name + ' █'))
+                self.update()
+            except Exception as e:
+                logging.warning("non fatal error while updating view: %s" % e)
+
             time.sleep(delay)
 
     def set(self, key, value):
@@ -360,14 +362,15 @@ class View(object):
             if self._frozen:
                 return
 
-            changes = self._state.changes(ignore=self._ignore_changes)
+            state = self._state
+            changes = state.changes(ignore=self._ignore_changes)
             if force or len(changes):
                 self._canvas = Image.new('1', (self._width, self._height), WHITE)
                 drawer = ImageDraw.Draw(self._canvas)
 
                 plugins.on('ui_update', self)
 
-                for key, lv in self._state.items():
+                for key, lv in state.items():
                     lv.draw(self._canvas, drawer)
 
                 web.update_frame(self._canvas)

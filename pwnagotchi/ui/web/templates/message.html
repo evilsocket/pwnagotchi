@@ -1,70 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "base.html" %}
+{% set active_page = "" %}
 
-    <title>Message from {{ message.sender_name }}</title>
+{% block title %}
+Message from {{ message.sender_name }}
+{% endblock %}
 
-    <link rel="stylesheet" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css"/>
-    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+{% block script %}
+jQuery(document).ready(function() {
+    // mark the message as read
+    jQuery.get("/inbox/{{ message.id }}/seen", function(res){ console.log(res); });
+});
+{% endblock %}
 
-    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-
-    <script type="text/javascript">
-        $.mobile.ajaxEnabled = false;
-
-        jQuery(document).ready(function() {
-          jQuery("time.timeago").timeago();
-          // mark the message as read
-          jQuery.get("/inbox/{{ message.id }}/seen", function(res){
-            console.log(res);
-          });
-        });
-
-    </script>
-
-</head>
-<body>
-<div data-role="page">
-
-    {% if error %}
-    <div class="error">{{ error }}</div>
-    {% else %}
-
-    <div data-role="footer">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="/inbox" id="email" data-icon="back">Back</a></li>
-                <li><a href="/inbox/new?to={{ message.sender }}" id="reply" data-icon="edit">Reply</a></li>
-                <li><a href="/inbox/{{ message.id }}/deleted" id="delete" data-icon="delete"
-                       onclick="return confirm('Are you sure?')">Delete</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <p class="messagebody">
+{% block content %}
+<p class="messagebody">
         <span style="color: #888">
-        Message from {{ message.sender_name }}@{{ message.sender }}, received
+        Message from {{ message.sender_name }}@{{ message.sender }}, sent
         <time class="timeago" datetime="{{ message.created_at }}">{{ message.created_at }}</time>
         {% if message.seen_at %}, seen
         <time class="timeago" datetime="{{ message.seen_at }}">{{ message.seen_at }}</time>{% endif %}.</span>
 
-        <br/>
-        <br/>
+    <br/>
+    <br/>
 
-        {% if message.data %}
-            <span style="white-space: pre-line">{{ message.data }}</span>
-        {% else %}
-            <small>This message is empty.</small>
-        {% endif %}
-    </p>
-
+    {% if message.data %}
+    <span style="white-space: pre-line">{{ message.data }}</span>
+    {% else %}
+    <small>This message is empty.</small>
     {% endif %}
 
-</div>
-
-</body>
-</html>
+    <br/>
+    <br/>
+    <a href="/inbox/new?to={{ message.sender }}" class="ui-btn ui-icon-comment ui-btn-icon-left ui-shadow-icon">Reply</a>
+    <a href="/inbox/{{ message.id }}/deleted" class="ui-btn ui-icon-delete ui-btn-icon-left ui-shadow-icon" onclick="return confirm('Are you sure?')">Delete</a>
+</p>
+{% endblock %}

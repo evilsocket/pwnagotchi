@@ -1,60 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "base.html" %}
+{% set active_page = "profile" %}
 
-    <title>Profile</title>
+{% block title %}
+Profile
+{% endblock %}
 
-    <link rel="stylesheet" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css"/>
-    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
-    <script type="text/javascript" src="/js/jquery-qrcode-0.17.0.min.js"></script>
+{% block script %}
+$(function(){
+    $('#qrcode').qrcode({
+        render: 'div',
+        mode: 0,
+        size: 400,
+        fontname: 'sans',
+        fontcolor: '#000'
+    });
+});
+{% endblock %}
 
-    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+{% block content %}
+<div style="padding: 1em">
+    <label for="name">Name</label>
+    <h4 id="name">{{ name }}</h4>
 
-    <script type="text/javascript">
-        $.mobile.ajaxEnabled = false;
-        $(function(){
-            $('#qrcode').qrcode({
-                render: 'div',
-                mode: 0,
-                size: 400,
-                fontname: 'sans',
-                fontcolor: '#000'
-            });
-        });
-    </script>
+    <label for="fingerprint">Fingerprint</label>
+    <h4 id="fingerprint">
+        <a href="https://pwnagotchi.ai/pwnfile/#{{ fingerprint }}" target="_blank">{{ fingerprint }}</a>
+    </h4>
+    <div id="qrcode"></div>
 
-</head>
-<body>
-<div data-role="page">
-
-    <div data-role="footer">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="/inbox" id="email" data-icon="back">Back</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div style="padding: 1em">
-        <label for="name">Name</label>
-        <h4 id="name">{{ name }}</h4>
-
-        <label for="fingerprint">Fingerprint</label>
-        <h4 id="fingerprint">
-            <a href="https://pwnagotchi.ai/pwnfile/#{{ fingerprint }}" target="_blank">{{ fingerprint }}</a>
-        </h4>
-        <div id="qrcode"></div>
-
-        <br/>
-        <label for="data">Data</label>
-        <pre><code id="data">{{ data }}</code></pre>
-    </div>
-
+    <br/>
+    <label for="data">Data</label>
+    <pre><code id="data">{{ data }}</code></pre>
 </div>
-
-</body>
-</html>
+{% endblock %}

@@ -35,6 +35,7 @@ class Server:
                         static_url_path='',
                         static_folder=os.path.join(web_path, 'static'),
                         template_folder=os.path.join(web_path, 'templates'))
+
             app.secret_key = secrets.token_urlsafe(256)
 
             if self._origin:
