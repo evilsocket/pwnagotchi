@@ -10,8 +10,8 @@ logging.getLogger('werkzeug').setLevel(logging.ERROR)
 os.environ['WERKZEUG_RUN_MAIN'] = 'true'
 
 import pwnagotchi
-import pwnagotchi.ui.web as web
 import pwnagotchi.grid as grid
+import pwnagotchi.ui.web as web
 from pwnagotchi import plugins
 
 from flask import send_file
@@ -22,8 +22,10 @@ from flask import abort
 from flask import redirect
 from flask import render_template
 
+
 class Handler:
-    def __init__(self, agent, app):
+    def __init__(self, config, agent, app):
+        self._config = config
         self._agent = agent
         self._app = app
 
@@ -60,8 +62,7 @@ class Handler:
         @wraps(f)
         def wrapper(*args, **kwargs):
             auth = request.authorization
-            if not auth or not auth.username or not auth.password or not self._check_creds(auth.username,
-                                                                                           auth.password):
+            if not auth or not auth.username or not auth.password or not self._check_creds(auth.username, auth.password):
                 return Response('Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Unauthorized"'})
             return f(*args, **kwargs)
 
@@ -125,7 +126,7 @@ class Handler:
 
         theme = "theme-default.html"
 
-        theme_config_location = self._agent.config()["ui"]["display"]["video"]
+        theme_config_location = self._config()["ui"]["display"]["video"]
 
         if "theme" in theme_config_location:
             theme = "theme-" + theme_config_location["theme"] + ".html"
@@ -170,21 +171,6 @@ class Handler:
                                name=pwnagotchi.name(),
                                fingerprint=self._agent.fingerprint(),
                                data=data,
-                               error=error)
-
-    def inbox_peers(self):
-        peers = {}
-        error = None
-
-        try:
-            peers = grid.memory()
-        except Exception as e:
-            logging.exception('error while reading pwngrid peers')
-            error = str(e)
-
-        return render_template('peers.html',
-                               name=pwnagotchi.name(),
-                               peers=peers,
                                error=error)
 
     def inbox_peers(self):
