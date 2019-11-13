@@ -118,7 +118,6 @@ class Handler:
         return jsonify(result)
 
     def _return_png(self):
-        # TODO - can we avoid writing to a file then reading, or keep it in memory?
         with web.frame_lock:
             return send_file(web.frame_path, mimetype="image/png")
 
