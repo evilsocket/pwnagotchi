@@ -44,7 +44,7 @@ fi
 # username to use for ssh
 USERNAME=${USERNAME:-pi}
 
-ping -w 3 -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
+ping -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
   echo "@ unit ${UNIT_HOSTNAME} can't be reached, make sure it's connected and a static IP assigned to the USB interface."
   exit 1
 }
