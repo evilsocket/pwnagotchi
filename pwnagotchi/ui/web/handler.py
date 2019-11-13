@@ -123,13 +123,10 @@ class Handler:
             return send_file(web.frame_path, mimetype="image/png")
 
     def index(self):
-        theme = "theme-default.html"
-        theme_config_location = self._agent.config()["ui"]["display"]["video"]
+        theme = self._config['theme']
+        theme_page = "theme-" + theme + ".html"
 
-        if "theme" in theme_config_location:
-            theme = "theme-" + theme_config_location["theme"] + ".html"
-
-        return render_template(theme,
+        return render_template(theme_page,
                                title=pwnagotchi.name(),
                                other_mode='AUTO' if self._agent.mode == 'manual' else 'MANU',
                                fingerprint=self._agent.fingerprint())
@@ -265,4 +262,3 @@ class Handler:
                                    message='Restarting in %s mode ...' % mode)
         finally:
             _thread.start_new_thread(pwnagotchi.restart, (mode,))
-

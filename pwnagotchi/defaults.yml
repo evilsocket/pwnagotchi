@@ -249,6 +249,8 @@ ui:
       password: changeme # !!! CHANGE THIS !!!
       origin: null
       port: 8080
+      # Possible options: default, darkmode, hotdog, minimal, oldskool
+      theme: 'default'
       # command to be executed when a new png frame is available
       # for instance, to use with framebuffer based displays:
       # on_frame: 'fbi --noverbose -a -d /dev/fb1 -T 1 /root/pwnagotchi.png > /dev/null 2>&1'

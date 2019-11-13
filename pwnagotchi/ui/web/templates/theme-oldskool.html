@@ -32,18 +32,34 @@
     <script type="text/javascript" src="/js/viewportHeight.js"></script>
 
     <script>
+        // Replacement for URL() and URLSearchParams() because IE sucks.
+        let _getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+
         window.onload = function() {
 
           const $ = document.querySelector.bind(document);
 
           let show_buttons = false;
+                    let show_param = _getUrlParameter('show_buttons');
 
-          let url = new URL(document.URL);
-          var search_params = new URLSearchParams(url.search);
-          if(search_params.has('show_buttons')) {
-              let buttons = search_params.get('show_buttons');
-              show_buttons = buttons.toLowerCase() === "true";
-          }
+                    if (show_param !== undefined){
+                        show_buttons = show_param === "true";
+                    }
+
+                    $("#button-bar").style.display = show_buttons === false ? "none" : "flex";
 
           $(".buttons-wrapper").style.display = show_buttons === false ? "none" : "flex";
         };

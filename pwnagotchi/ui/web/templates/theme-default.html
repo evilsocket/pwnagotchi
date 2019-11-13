@@ -43,12 +43,7 @@
             const $ = document.querySelector.bind(document);
 
             let stateRetrieval = (function(){
-
-                let _show_buttons = false;
-
                 let _populateDisplay = function(result){
-                    $("#button-bar").style.display = this._show_buttons === false ? "none" : "flex";
-
                     $("#channel").innerText = result.channel_text;
                     $("#aps").innerText = result.aps_text;
                     $("#uptime").innerText = result.uptime;
@@ -80,14 +75,30 @@
                     xhttp.send();
                 };
 
+                // Replacement for URL() and URLSearchParams() because IE sucks.
+                let _getUrlParameter = function getUrlParameter(sParam) {
+                    var sPageURL = window.location.search.substring(1),
+                        sURLVariables = sPageURL.split('&'),
+                        sParameterName,
+                        i;
+
+                    for (i = 0; i < sURLVariables.length; i++) {
+                        sParameterName = sURLVariables[i].split('=');
+
+                        if (sParameterName[0] === sParam) {
+                            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                        }
+                    }
+                };
+
                 let initialise = function(){
                     let show_buttons = false;
-                    let url = new URL(document.URL);
-                    let search_params = new URLSearchParams(url.search);
-                    if(search_params.has('show_buttons')) {
-                        let buttons = search_params.get('show_buttons');
-                        show_buttons = buttons.toLowerCase() === "true";
+                    let show_param = _getUrlParameter('show_buttons');
+
+                    if (show_param !== undefined){
+                        show_buttons = show_param === "true";
                     }
+
                     $("#button-bar").style.display = show_buttons === false ? "none" : "flex";
 
                     setInterval(_retrieval, 2000)

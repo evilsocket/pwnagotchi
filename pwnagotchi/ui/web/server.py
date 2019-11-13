@@ -36,6 +36,7 @@ class Server:
                         static_folder=os.path.join(web_path, 'static'),
                         template_folder=os.path.join(web_path, 'templates'))
             app.secret_key = secrets.token_urlsafe(256)
+            app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # Caching is bad on the results
 
             if self._origin:
                 CORS(app, resources={r"*": {"origins": self._origin}})
