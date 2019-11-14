@@ -71,7 +71,7 @@ main:
             enabled: false
             scale: celsius
             orientation: horizontal # horizontal/vertical
-        pawgps:
+        paw-gps:
             enabled: false
             #The IP Address of your phone with Paw Server running, default (option is empty) is 192.168.44.1
             ip: ''
