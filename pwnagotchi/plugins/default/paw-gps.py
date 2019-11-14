@@ -23,6 +23,8 @@ class PawGPS(plugins.Plugin):
     def on_handshake(self, agent, filename, access_point, client_station):
         if 'ip' not in self.options or ('ip' in self.options and self.options['ip'] is None):
             ip = "192.168.44.1:8080"
+        else:
+            ip = self.options['ip]
 
         gps = requests.get('http://' + ip + '/gps.xhtml')
         gps_filename = filename.replace('.pcap', '.gps.json')
