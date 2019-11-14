@@ -63,6 +63,8 @@ class GPS(plugins.Plugin):
             lon_pos = (127, 56)
             alt_pos = (102, 71)
 
+        label_spacing = 0
+
         ui.add_element(
             "latitude",
             LabeledValue(
@@ -72,6 +74,7 @@ class GPS(plugins.Plugin):
                 position=lat_pos,
                 label_font=fonts.Small,
                 text_font=fonts.Small,
+                label_spacing=label_spacing,
             ),
         )
         ui.add_element(
@@ -83,6 +86,7 @@ class GPS(plugins.Plugin):
                 position=lon_pos,
                 label_font=fonts.Small,
                 text_font=fonts.Small,
+                label_spacing=label_spacing,
             ),
         )
         ui.add_element(
@@ -94,6 +98,7 @@ class GPS(plugins.Plugin):
                 position=alt_pos,
                 label_font=fonts.Small,
                 text_font=fonts.Small,
+                label_spacing=label_spacing,
             ),
         )
 
@@ -102,6 +107,8 @@ class GPS(plugins.Plugin):
             # avoid 0.000... measurements
             self.coordinates["Latitude"], self.coordinates["Longitude"]
         ]):
-            ui.set("latitude", f"{self.coordinates['Latitude']:.4f}")
-            ui.set("longitude", f" {self.coordinates['Longitude']:.4f}")
-            ui.set("altitude", f" {self.coordinates['Altitude']:.1f}m")
+            # last char is sometimes not completely drawn ¯\_(ツ)_/¯
+            # using an ending-whitespace as workaround on each line
+            ui.set("latitude", f"{self.coordinates['Latitude']:.4f} ")
+            ui.set("longitude", f" {self.coordinates['Longitude']:.4f} ")
+            ui.set("altitude", f" {self.coordinates['Altitude']:.1f}m ")
