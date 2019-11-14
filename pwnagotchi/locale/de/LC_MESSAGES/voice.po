@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 20:56+0200\n"
+"POT-Creation-Date: 2019-11-14 21:15+0100\n"
 "PO-Revision-Date: 2019-09-29 14:00+0200\n"
 "Last-Translator: dadav <33197631+dadav@users.noreply.github.com>\n"
 "Language-Team: DE <33197631+dadav@users.noreply.github.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "ZzzzZZzzzzZzzz"
-msgstr ""
+msgstr "ZzzzZZzzzzZzzz"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
 msgstr "Hi, ich bin ein Pwnagotchi! Starte..."
@@ -41,6 +41,13 @@ msgstr "Generiere Keys, nicht ausschalten..."
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr "Hey, Channel {channel} ist frei! Dein AP wird es Dir danken."
 
+msgid "Reading last session logs ..."
+msgstr "Lese die Logs der letzten Session..."
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "Bisher {lines_so_far} Zeilen im Log gelesen..."
+
 msgid "I'm bored ..."
 msgstr "Mir ist langweilig..."
 
@@ -62,6 +69,13 @@ msgstr "Ich bin sehr traurig..."
 msgid "I'm sad"
 msgstr "Ich bin traurig"
 
+#, fuzzy
+msgid "Leave me alone ..."
+msgstr "Lass mich in Ruhe..."
+
+msgid "I'm mad at you!"
+msgstr "Ich bin wütend auf Dich!"
+
 msgid "I'm living the life!"
 msgstr "Ich lebe das Leben!"
 
@@ -80,6 +94,14 @@ msgstr "Mein Verbrechen ist das der Neugier ..."
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
 msgstr "Hallo {name}, nett Dich kennenzulernen."
+
+#, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr "Jo {name}! Was geht!?"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Hey {name}, wie geht's?"
 
 #, python-brace-format
 msgid "Unit {name} is nearby!"
@@ -124,17 +146,17 @@ msgid "Napping for {secs}s ..."
 msgstr "Schlafe für {secs}s..."
 
 msgid "Zzzzz"
-msgstr ""
+msgstr "Zzzzz"
 
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
-msgstr ""
+msgstr "ZzzZzzz ({secs}s)"
 
 msgid "Good night."
 msgstr "Gute Nacht."
 
 msgid "Zzz"
-msgstr ""
+msgstr "Zzz"
 
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
