@@ -17,7 +17,7 @@ while getopts "hb:n:u:" arg; do
 			UNIT_HOSTNAME=$OPTARG
 			;;
 		u)
-			USERNAME=$OPTARG
+			UNIT_USERNAME=$OPTARG
 			;;
 		*)
 			exit 1
@@ -42,7 +42,7 @@ if [ -z $BACKUP ]; then
 	fi
 fi
 # username to use for ssh
-USERNAME=${USERNAME:-pi}
+UNIT_USERNAME=${UNIT_USERNAME:-pi}
 
 ping -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
   echo "@ unit ${UNIT_HOSTNAME} can't be reached, make sure it's connected and a static IP assigned to the USB interface."
@@ -50,4 +50,4 @@ ping -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
 }
 
 echo "@ restoring $BACKUP to $UNIT_HOSTNAME ..."
-cat ${BACKUP} | ssh "${USERNAME}@${UNIT_HOSTNAME}" "sudo tar xzv -C /"
+cat ${BACKUP} | ssh "${UNIT_USERNAME}@${UNIT_HOSTNAME}" "sudo tar xzv -C /"
