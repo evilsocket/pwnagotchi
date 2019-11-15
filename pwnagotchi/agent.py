@@ -337,8 +337,9 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
                             (ap, sta) = ap_and_station
                             self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
                                 'hostname'] != '<hidden>' else ap_mac
-                            logging.warning("!!! captured new handshake on channel %d: %s (%s) -> %s [%s (%s)] !!!" % ( \
+                            logging.warning("!!! captured new handshake on channel %d, %d dBm: %s (%s) -> %s [%s (%s)] !!!" % ( \ ))
                                 ap['channel'],
+                                ap['rssi'],
                                 sta['mac'], sta['vendor'],
                                 ap['hostname'], ap['mac'], ap['vendor']))
                             plugins.on('handshake', self, filename, ap, sta)
@@ -393,8 +394,8 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             self._view.on_assoc(ap)
 
             try:
-                logging.info("sending association frame to %s (%s %s) on channel %d [%d clients]..." % ( \
-                    ap['hostname'], ap['mac'], ap['vendor'], ap['channel'], len(ap['clients'])))
+		logging.info("sending association frame to %s (%s %s) on channel %d [%d clients], %d dBm..." % ( \
+                    ap['hostname'], ap['mac'], ap['vendor'], ap['channel'], len(ap['clients']), ap['rssi']))
                 self.run('wifi.assoc %s' % ap['mac'])
                 self._epoch.track(assoc=True)
             except Exception as e:
@@ -414,8 +415,8 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             self._view.on_deauth(sta)
 
             try:
-                logging.info("deauthing %s (%s) from %s (%s %s) on channel %d ..." % (
-                    sta['mac'], sta['vendor'], ap['hostname'], ap['mac'], ap['vendor'], ap['channel']))
+		logging.info("deauthing %s (%s) from %s (%s %s) on channel %d, %d dBm ..." % (
+		    sta['mac'], sta['vendor'], ap['hostname'], ap['mac'], ap['vendor'], ap['channel'], ap['rssi']))
                 self.run('wifi.deauth %s' % sta['mac'])
                 self._epoch.track(deauth=True)
             except Exception as e:
