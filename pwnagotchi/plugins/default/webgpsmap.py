@@ -338,7 +338,7 @@ class PositionFile:
                 lat = self._json['Latitude']
             if self.type() == PositionFile.GEO:
                 lat = self._json['location']['lat']
-            if lat > 0:
+            if lat != 0:
                 return lat
             raise ValueError("Lat is 0")
         except KeyError:
@@ -351,7 +351,7 @@ class PositionFile:
                 lng = self._json['Longitude']
             if self.type() == PositionFile.GEO:
                 lng = self._json['location']['lng']
-            if lng > 0:
+            if lng != 0:
                 return lng
             raise ValueError("Lng is 0")
         except KeyError:
