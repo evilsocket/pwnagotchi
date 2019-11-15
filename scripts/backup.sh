@@ -17,7 +17,7 @@ while getopts "ho:n:u:" arg; do
 			OUTPUT=$OPTARG
 			;;
 		u)
-			USERNAME=$OPTARG
+			UNIT_USERNAME=$OPTARG
 			;;
 		*)
 			usage
@@ -30,7 +30,7 @@ UNIT_HOSTNAME=${UNIT_HOSTNAME:-10.0.0.2}
 # output backup tgz file
 OUTPUT=${OUTPUT:-${UNIT_HOSTNAME}-backup-$(date +%s).tgz}
 # username to use for ssh
-USERNAME=${USERNAME:-pi}
+UNIT_USERNAME=${UNIT_USERNAME:-pi}
 # what to backup
 FILES_TO_BACKUP="/root/brain.nn \
   /root/brain.json \
@@ -54,4 +54,4 @@ ping -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
 }
 
 echo "@ backing up $UNIT_HOSTNAME to $OUTPUT ..."
-ssh "${USERNAME}@${UNIT_HOSTNAME}" "sudo find ${FILES_TO_BACKUP} -print0 | xargs -0 sudo tar cv" | gzip -9 > "$OUTPUT"
+ssh "${UNIT_USERNAME}@${UNIT_HOSTNAME}" "sudo find ${FILES_TO_BACKUP} -print0 | xargs -0 sudo tar cv" | gzip -9 > "$OUTPUT"
