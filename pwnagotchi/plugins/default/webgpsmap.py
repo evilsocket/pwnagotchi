@@ -22,8 +22,6 @@ import pwnagotchi.plugins as plugins
         http://bl.ocks.org/zross/47760925fcb1643b4225
 '''
 
-logger = logging.getLogger()
-
 
 class Webgpsmap(plugins.Plugin):
     __author__ = 'https://github.com/xenDE and https://github.com/dadav'
@@ -52,7 +50,7 @@ class Webgpsmap(plugins.Plugin):
         """
         Plugin got loaded
         """
-        logger.info("[webgpsmap]: plugin loaded")
+        logging.info("[webgpsmap]: plugin loaded")
 
     def on_webhook(self, path, request):
         """
@@ -74,7 +72,7 @@ class Webgpsmap(plugins.Plugin):
                 response_mimetype = "application/xhtml+xml"
                 response_header_contenttype = 'text/html'
             except Exception as error:
-                logger.error(f"[webgpsmap] error: {error}")
+                logging.error(f"[webgpsmap] error: {error}")
                 return
         else:
             if request.method == "GET":
@@ -84,7 +82,7 @@ class Webgpsmap(plugins.Plugin):
                     try:
                         response_data = bytes(self.get_html(), "utf-8")
                     except Exception as error:
-                        logger.error(f"[webgpsmap] error: {error}")
+                        logging.error(f"[webgpsmap] error: {error}")
                         return
                     response_status = 200
                     response_mimetype = "application/xhtml+xml"
@@ -98,7 +96,7 @@ class Webgpsmap(plugins.Plugin):
                         response_mimetype = "application/json"
                         response_header_contenttype = 'application/json'
                     except Exception as error:
-                        logger.error(f"[webgpsmap] error: {error}")
+                        logging.error(f"[webgpsmap] error: {error}")
                         return
                 # elif path.startswith('/newest'):
                 #     # returns all positions newer then timestamp
@@ -132,7 +130,7 @@ class Webgpsmap(plugins.Plugin):
                 r.headers["Content-Type"] = response_header_contenttype
             return r
         except Exception as error:
-            logger.error(f"[webgpsmap] error: {error}")
+            logging.error(f"[webgpsmap] error: {error}")
             return
 
     # # cache 1024 items
@@ -150,16 +148,16 @@ class Webgpsmap(plugins.Plugin):
             location_files = handshakes_path.glob(location_file_pattern)
             # handshake_files = handshakes_path.glob("/*_*.pcap")
         except Exception as error:
-            logger.error(f"[webgpsmap] error: {error}")
+            logging.error(f"[webgpsmap] error: {error}")
 
-        logger.info(f"[webgpsmap]: parsing files matching '{location_file_pattern}' in {handshakes_path}")
+        logging.info(f"[webgpsmap]: parsing files matching '{location_file_pattern}' in {handshakes_path}")
 
         locations = dict()
 
         for file_path in location_files:
             location_data = dict()
 
-            logger.debug(f"[webgpsmap]: processing file {file_path.name}...")
+            logging.debug(f"[webgpsmap]: processing file {file_path.name}...")
 
             with open(file_path, 'r') as json_file:
                 location_data = json.load(json_file)
@@ -185,9 +183,9 @@ class Webgpsmap(plugins.Plugin):
                 net_id = "_".join([location_data["ssid"], location_data["mac"]])
                 locations[net_id] = location_data
 
-                logger.debug(f"[webgpsmap]: {file_path.name}: {locations[net_id]}")
+                logging.debug(f"[webgpsmap]: {file_path.name}: {locations[net_id]}")
 
-        logger.info(f"[webgpsmap]: successfully loaded {len(locations)} locations")
+        logging.info(f"[webgpsmap]: successfully loaded {len(locations)} locations")
 
         return locations
 
@@ -199,5 +197,5 @@ class Webgpsmap(plugins.Plugin):
             template_file = os.path.dirname(os.path.realpath(__file__)) + "/" + "webgpsmap.html"
             html_data = open(template_file, "r").read()
         except Exception as error:
-            logger.error(f"[webgpsmap] error: loading template file {template_file}: {error}")
+            logging.error(f"[webgpsmap] error: loading template file {template_file}: {error}")
         return html_data
