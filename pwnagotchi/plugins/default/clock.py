@@ -76,10 +76,16 @@ class Clock(plugins.Plugin):
     def on_ui_update(self, ui):
         if self.synced:
             ui.set("clock", f"{datetime.now().time().isoformat(timespec='seconds')} ")
-        elif self.query_ntp():
-            ui.set("clock", f"{self.query_ntp()} ")
         else:
             ui.set("clock", f"-:-:- ")
+
+    def on_wait(self, agent, t):
+        if not self.synced:
+            self.query_ntp()
+
+    def on_bored(self, agent):
+        if not self.synced:
+            self.query_ntp()
 
     def on_internet_available(self, agent):
         if not self.synced:
