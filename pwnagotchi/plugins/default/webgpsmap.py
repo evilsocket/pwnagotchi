@@ -1,11 +1,14 @@
-import pwnagotchi.plugins as plugins
+import datetime
+import json
 import logging
 import os
-import json
 import re
-import datetime
+from pathlib import Path
+
+from dateutil import parser
 from flask import Response
-from functools import lru_cache
+
+import pwnagotchi.plugins as plugins
 
 '''
 2do:
@@ -17,8 +20,10 @@ from functools import lru_cache
         https://blogs.kent.ac.uk/websolutions/2015/01/29/filtering-map-markers-with-leaflet-js-a-brief-technical-overview/
         http://www.digital-geography.com/filter-leaflet-maps-slider/
         http://bl.ocks.org/zross/47760925fcb1643b4225
-    - 
 '''
+
+logger = logging.getLogger()
+
 
 class Webgpsmap(plugins.Plugin):
     __author__ = 'https://github.com/xenDE and https://github.com/dadav'
@@ -47,7 +52,7 @@ class Webgpsmap(plugins.Plugin):
         """
         Plugin got loaded
         """
-        logging.info("webgpsmap plugin loaded")
+        logger.info("[webgpsmap]: plugin loaded")
 
     def on_webhook(self, path, request):
         """
@@ -68,8 +73,8 @@ class Webgpsmap(plugins.Plugin):
                 response_status = 500
                 response_mimetype = "application/xhtml+xml"
                 response_header_contenttype = 'text/html'
-            except Exception as ex:
-                logging.error(ex)
+            except Exception as error:
+                logger.error(f"[webgpsmap] error: {error}")
                 return
         else:
             if request.method == "GET":
@@ -78,8 +83,8 @@ class Webgpsmap(plugins.Plugin):
                     self.ALREADY_SENT = list()
                     try:
                         response_data = bytes(self.get_html(), "utf-8")
-                    except Exception as ex:
-                        logging.error(ex)
+                    except Exception as error:
+                        logger.error(f"[webgpsmap] error: {error}")
                         return
                     response_status = 200
                     response_mimetype = "application/xhtml+xml"
@@ -92,8 +97,8 @@ class Webgpsmap(plugins.Plugin):
                         response_status = 200
                         response_mimetype = "application/json"
                         response_header_contenttype = 'application/json'
-                    except Exception as ex:
-                        logging.error(ex)
+                    except Exception as error:
+                        logger.error(f"[webgpsmap] error: {error}")
                         return
                 # elif path.startswith('/newest'):
                 #     # returns all positions newer then timestamp
@@ -126,244 +131,73 @@ class Webgpsmap(plugins.Plugin):
             if response_header_contenttype is not None:
                 r.headers["Content-Type"] = response_header_contenttype
             return r
-        except Exception as ex:
-            logging.error(ex)
+        except Exception as error:
+            logger.error(f"[webgpsmap] error: {error}")
             return
 
-    # cache 1024 items
-    @lru_cache(maxsize=1024, typed=False)
-    def _get_pos_from_file(self, path):
-        return PositionFile(path)
+    # # cache 1024 items
+    # @lru_cache(maxsize=1024, typed=False)
+    # def _get_pos_from_file(self, path):
+    #     return PositionFile(path)
 
-
-    def load_gps_from_dir(self, gpsdir, newest_only=False):
+    def load_gps_from_dir(self, handshake_dir, newest_only=False):
         """
         Parses the gps-data from disk
         """
+        try:
+            handshakes_path = Path(handshake_dir)
+            location_file_pattern = "*_*.g??.json"
+            location_files = handshakes_path.glob(location_file_pattern)
+            # handshake_files = handshakes_path.glob("/*_*.pcap")
+        except Exception as error:
+            logger.error(f"[webgpsmap] error: {error}")
 
-        handshake_dir = gpsdir
-        gps_data = dict()
+        logger.info(f"[webgpsmap]: parsing files matching '{location_file_pattern}' in {handshakes_path}")
 
-        logging.info("webgpsmap: scanning %s", handshake_dir)
+        locations = dict()
 
+        for file_path in location_files:
+            location_data = dict()
 
-        all_files = os.listdir(handshake_dir)
-        #print(all_files)
-        all_pcap_files = [os.path.join(handshake_dir, filename)
-                                for filename in all_files
-                                if filename.endswith('.pcap')
-                                ]
-        all_geo_or_gps_files = []
-        for filename_pcap in all_pcap_files:
-            filename_base = filename_pcap[:-5]  # remove ".pcap"
-            logging.debug("webgpsmap: found: " + filename_base)
-            filename_position = None
+            logger.debug(f"[webgpsmap]: processing file {file_path.name}...")
 
-            check_for = os.path.basename(filename_base) + ".gps.json"
-            if check_for in all_files:
-                filename_position = str(os.path.join(handshake_dir, check_for))
+            with open(file_path, 'r') as json_file:
+                location_data = json.load(json_file)
 
-            check_for = os.path.basename(filename_base) + ".geo.json"
-            if check_for in all_files:
-                filename_position = str(os.path.join(handshake_dir, check_for))
+            matches = re.search(r"(.*)_([a-zA-Z0-9]{12})\.(geo|gps)\.json", file_path.name)
+            if matches and all([location_data["Longitude"], location_data["Latitude"]]):
+                location_data["ssid"] = matches.group(1)
+                location_data["mac"] = matches.group(2)
+                location_data["source_type"] = matches.group(3)
 
-            if filename_position is not None:
-    #            logging.debug("webgpsmap: -- found: %s %d" % (check_for, len(all_geo_or_gps_files)) )
-                all_geo_or_gps_files.append(filename_position)
+                location_data["seen_first"] = os.path.getctime(file_path)
+                location_data["seen_last"] = parser.isoparse(
+                    location_data['Updated']).replace(tzinfo=datetime.timezone.utc).timestamp()
 
-    #    all_geo_or_gps_files = set(all_geo_or_gps_files) - set(SKIP)   # remove skiped networks? No!
+                # the great matching-the-html/js-part-hack
+                location_data["lng"] = location_data["Longitude"]
+                location_data["lat"] = location_data["Latitude"]
+                location_data["type"] = location_data["source_type"]
+                location_data["acc"] = location_data.get("accuracy", 0.0)
+                location_data["ts_first"] = int(location_data['seen_first'])
+                location_data["ts_last"] = int(location_data['seen_last'])
 
-        if newest_only:
-            all_geo_or_gps_files = set(all_geo_or_gps_files) - set(self.ALREADY_SENT)
+                net_id = "_".join([location_data["ssid"], location_data["mac"]])
+                locations[net_id] = location_data
 
-        logging.info("webgpsmap: Found %d .(geo|gps).json files from %d handshakes. Fetching positions ...",
-                     len(all_geo_or_gps_files), len(all_pcap_files))
+                logger.debug(f"[webgpsmap]: {file_path.name}: {locations[net_id]}")
 
-        for pos_file in all_geo_or_gps_files:
-            try:
-                pos = self._get_pos_from_file(pos_file)
-                if not pos.type() == PositionFile.GPS and not pos.type() == PositionFile.GEO:
-                    continue
+        logger.info(f"[webgpsmap]: successfully loaded {len(locations)} locations")
 
-                ssid, mac = pos.ssid(), pos.mac()
-                ssid = "unknown" if not ssid else ssid
-                # invalid mac is strange and should abort; ssid is ok
-                if not mac:
-                    raise ValueError("Mac can't be parsed from filename")
-                gps_data[ssid+"_"+mac] = {
-                    'ssid': ssid,
-                    'mac': mac,
-                    'type': 'gps' if pos.type() == PositionFile.GPS else 'geo',
-                    'lng': pos.lng(),
-                    'lat': pos.lat(),
-                    'acc': pos.accuracy(),
-                    'ts_first': pos.timestamp_first(),
-                    'ts_last': pos.timestamp_last(),
-                    }
-
-                check_for = os.path.basename(pos_file[:-9]) + ".pcap.cracked"
-                if check_for in all_files:
-                    gps_data[ssid + "_" + mac]["pass"] = pos.password()
-
-                self.ALREADY_SENT += pos_file
-            except json.JSONDecodeError as js_e:
-                self.SKIP += pos_file
-                logging.error(js_e)
-                continue
-            except ValueError as v_e:
-                self.SKIP += pos_file
-                logging.error(v_e)
-                continue
-            except OSError as os_e:
-                self.SKIP += pos_file
-                logging.error(os_e)
-                continue
-        logging.info("webgpsmap loaded %d positions", len(gps_data))
-        return gps_data
+        return locations
 
     def get_html(self):
         """
         Returns the html page
         """
         try:
-            template_file = os.path.dirname(os.path.realpath(__file__))+"/"+"webgpsmap.html"
+            template_file = os.path.dirname(os.path.realpath(__file__)) + "/" + "webgpsmap.html"
             html_data = open(template_file, "r").read()
-        except Exception as ex:
-            logging.error("error loading template file: %s", template_file)
-            logging.error(ex)
+        except Exception as error:
+            logger.error(f"[webgpsmap] error: loading template file {template_file}: {error}")
         return html_data
-
-
-class PositionFile:
-    """
-    Wraps gps / net-pos files
-    """
-    GPS = 0
-    GEO = 1
-
-    def __init__(self, path):
-        self._file = path
-        self._filename = os.path.basename(path)
-        try:
-            with open(path, 'r') as json_file:
-                self._json = json.load(json_file)
-        except json.JSONDecodeError as js_e:
-            raise js_e
-
-    def mac(self):
-        """
-        Returns the mac from filename
-        """
-        parsed_mac = re.search(r'.*_?([a-zA-Z0-9]{12})\.(?:gps|geo)\.json', self._filename)
-        if parsed_mac:
-            mac = parsed_mac.groups()[0]
-            return mac
-        return None
-
-    def ssid(self):
-        """
-        Returns the ssid from filename
-        """
-        parsed_ssid = re.search(r'(.+)_[a-zA-Z0-9]{12}\.(?:gps|geo)\.json', self._filename)
-        if parsed_ssid:
-            return parsed_ssid.groups()[0]
-        return None
-
-
-    def json(self):
-        """
-        returns the parsed json
-        """
-        return self._json
-
-    def timestamp_first(self):
-        """
-        returns the timestamp of AP first seen
-        """
-        # use file timestamp creation time of the pcap file
-        return int("%.0f" % os.path.getctime(self._file))
-
-    def timestamp_last(self):
-        """
-        returns the timestamp of AP last seen
-        """
-        return_ts = None
-        if 'ts' in self._json:
-            return_ts = self._json['ts']
-        elif 'Updated' in self._json:
-            # convert gps datetime to unix timestamp: "2019-10-05T23:12:40.422996+01:00"
-            date_iso_formated = self._json['Updated']
-            # fill milliseconds to 6 numbers
-            part1, part2, part3 = re.split('\.|\+', date_iso_formated)
-            part2 = part2.ljust(6, '0')
-            date_iso_formated = part1 + "." + part2 + "+" + part3
-            dateObj = datetime.datetime.fromisoformat(date_iso_formated)
-            return_ts = int("%.0f" % dateObj.timestamp())
-        else:
-            # use file timestamp last modification of the pcap file
-            return_ts = int("%.0f" % os.path.getmtime(self._file))
-        return return_ts
-
-    def password(self):
-        """
-        returns the password from file.pcap.cracked od None
-        """
-        return_pass = None
-        password_file_path = self._file[:-9] + ".pcap.cracked"
-        if os.path.isfile(password_file_path):
-            try:
-                password_file = open(password_file_path, 'r')
-                return_pass = password_file.read()
-                password_file.close()
-            except OSError as err:
-                print("OS error: {0}".format(err))
-            except:
-                print("Unexpected error:", sys.exc_info()[0])
-                raise
-        return return_pass
-
-    def type(self):
-        """
-        returns the type of the file
-        """
-        if self._file.endswith('.gps.json'):
-            return PositionFile.GPS
-        if self._file.endswith('.geo.json'):
-            return PositionFile.GEO
-        return None
-
-    def lat(self):
-        try:
-            if self.type() == PositionFile.GPS:
-                lat = self._json['Latitude']
-            if self.type() == PositionFile.GEO:
-                lat = self._json['location']['lat']
-            if lat != 0:
-                return lat
-            raise ValueError("Lat is 0")
-        except KeyError:
-            pass
-        return None
-
-    def lng(self):
-        try:
-            if self.type() == PositionFile.GPS:
-                lng = self._json['Longitude']
-            if self.type() == PositionFile.GEO:
-                lng = self._json['location']['lng']
-            if lng != 0:
-                return lng
-            raise ValueError("Lng is 0")
-        except KeyError:
-            pass
-        return None
-
-    def accuracy(self):
-        if self.type() == PositionFile.GPS:
-            return 50.0
-        if self.type() == PositionFile.GEO:
-            try:
-                return self._json['accuracy']
-            except KeyError:
-                pass
-        return None
