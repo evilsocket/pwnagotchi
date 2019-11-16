@@ -23,10 +23,7 @@ class Clock(plugins.Plugin):
     def __init__(self):
         self.synced = False
 
-    def on_loaded(self):
-        logging.info(f"[{self.__plugin__}]: plugin loaded")
-
-    def on_ready(self, agent):
+    def timedatectl_state(self):
         try:
             state = subprocess.run(
                 ["timedatectl", "status"],
@@ -35,13 +32,36 @@ class Clock(plugins.Plugin):
 
             matches = re.search(r".*System clock synchronized: (\w*)\W", state.stdout, re.MULTILINE)
             if matches and matches.group(1) == "yes":
-                logging.info(f"[{self.__plugin__}]: system clock is synchronized")
+                logging.info(f"[{self.__plugin__}]: system clock is in sync")
                 self.synced = True
+
+            return self.synced
 
         except TimeoutError as error:
             logging.error(f"[{self.__plugin__}] timeout: {error}")
         except CalledProcessError as error:
             logging.error(f"[{self.__plugin__}] error: {error}")
+
+    def on_loaded(self):
+        logging.info(f"[{self.__plugin__}]: plugin loaded")
+
+    def on_ready(self, agent):
+        self.timedatectl_state()
+        # try:
+        #     state = subprocess.run(
+        #         ["timedatectl", "status"],
+        #         capture_output=True, check=True, text=True, timeout=5
+        #     )
+
+        #     matches = re.search(r".*System clock synchronized: (\w*)\W", state.stdout, re.MULTILINE)
+        #     if matches and matches.group(1) == "yes":
+        #         logging.info(f"[{self.__plugin__}]: system clock is synchronized")
+        #         self.synced = True
+
+        # except TimeoutError as error:
+        #     logging.error(f"[{self.__plugin__}] timeout: {error}")
+        # except CalledProcessError as error:
+        #     logging.error(f"[{self.__plugin__}] error: {error}")
 
     def on_ui_setup(self, ui):
         if ui.is_waveshare_v2():
@@ -88,6 +108,8 @@ class Clock(plugins.Plugin):
             self.query_ntp()
 
     def on_internet_available(self, agent):
+        self.timedatectl_state()
+
         if not self.synced:
             self.query_ntp()
 
