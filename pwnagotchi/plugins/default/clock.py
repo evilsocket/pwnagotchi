@@ -3,7 +3,7 @@ import re
 import subprocess
 from datetime import datetime
 from time import ctime
-from subprocess import CalledProcessError
+from subprocess import CalledProcessError, TimeoutExpired
 
 import pwnagotchi.plugins as plugins
 import pwnagotchi.ui.fonts as fonts
@@ -37,7 +37,7 @@ class Clock(plugins.Plugin):
 
             return self.synced
 
-        except TimeoutError as error:
+        except TimeoutExpired as error:
             logging.error(f"[{self.__plugin__}] timeout: {error}")
         except CalledProcessError as error:
             logging.error(f"[{self.__plugin__}] error: {error}")
@@ -138,9 +138,10 @@ class Clock(plugins.Plugin):
         t = struct.unpack("!12I", msg)[10]
         t -= TIME1970
 
-        matches = re.search(r".* (\d{2}:\d{2}:\d{2}) .*", ctime(t))
-        ntp_time = matches.group(1)
+        if t > 0:
+            matches = re.search(r".* (\d{2}:\d{2}:\d{2}) .*", ctime(t))
+            ntp_time = matches.group(1)
 
-        logging.debug(f"[{self.__plugin__}]: synchronized clock with {host} - {ntp_time}")
+            logging.debug(f"[{self.__plugin__}]: synchronized clock with {host} - {ntp_time}")
 
-        return ntp_time
+            return ntp_time
