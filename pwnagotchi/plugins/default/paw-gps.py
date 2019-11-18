@@ -3,7 +3,10 @@ import requests
 import pwnagotchi.plugins as plugins
 
 '''
-You need an bluetooth connection to your android phone which is running PAW server with the GPS "hack" from Systemic:
+You need an bluetooth connection to your android phone which is running PAW server with the GPS "hack" from Systemik and edited by shaynemk
+NEW BETTER GUIDE HERE: https://community.pwnagotchi.ai/t/setting-up-paw-gps-on-android
+
+Old guide here, (not recommended if you plan on using it with the webgpsmap plugin)
 https://raw.githubusercontent.com/systemik/pwnagotchi-bt-tether/master/GPS-via-PAW
 '''
 
