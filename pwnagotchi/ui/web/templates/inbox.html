@@ -5,6 +5,14 @@
 {{ name }} Inbox
 {% endblock %}
 
+{% block script %}
+$(function() {
+    setTimeout(function(){
+        window.location.reload(true);
+    }, 15000);
+});
+{% endblock %}
+
 {% block content %}
 <ul class="inbox" data-role="listview" data-filter="true" data-filter-placeholder="Search inbox..." data-inset="true">
     {% for message in inbox.messages %}
