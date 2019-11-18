@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% set active_page = "profile" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block script %}
+$(function(){
+    $('#qrcode').qrcode({
+        text: 'https://pwnagotchi.ai/pwnfile/#{{ fingerprint }}',
+        render: 'div',
+        mode: 0,
+        size: 400,
+        fontname: 'sans',
+        fontcolor: '#000'
+    });
+});
+{% endblock %}
+
+{% block content %}
+<div style="padding: 1em">
+    <label for="name">Name</label>
+    <h4 id="name">{{ name }}</h4>
+
+    <label for="fingerprint">Fingerprint</label>
+    <h4 id="fingerprint">
+        <a href="https://pwnagotchi.ai/pwnfile/#{{ fingerprint }}" target="_blank">{{ fingerprint }}</a>
+    </h4>
+    <div id="qrcode"></div>
+
+    <br/>
+    <label for="data">Data</label>
+    <pre><code id="data">{{ data }}</code></pre>
+</div>
+{% endblock %}

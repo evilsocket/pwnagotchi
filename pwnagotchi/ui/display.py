@@ -25,9 +25,6 @@ class Display(View):
         )
         self._render_thread_instance.start()
 
-    def set_ready(self):
-        self._webui.start()
-
     def is_inky(self):
         return self._implementation.name == 'inky'
 
@@ -61,6 +58,9 @@ class Display(View):
     def is_waveshare213d(self):
         return self._implementation.name == 'waveshare213d'
 
+    def is_spotpear24inch(self):
+        return self._implementation.name == 'spotpear24inch'
+
     def is_waveshare_any(self):
         return self.is_waveshare_v1() or self.is_waveshare_v2()
 
@@ -91,8 +91,8 @@ class Display(View):
 
     def _on_view_rendered(self, img):
         try:
-            if self._config['ui']['display']['video']['on_frame'] != '':
-                os.system(self._config['ui']['display']['video']['on_frame'])
+            if self._config['ui']['web']['on_frame'] != '':
+                os.system(self._config['ui']['web']['on_frame'])
         except Exception as e:
             logging.error("%s" % e)
 

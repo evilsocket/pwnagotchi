@@ -13,16 +13,16 @@ from flask_wtf.csrf import CSRFProtect
 
 from pwnagotchi.ui.web.handler import Handler
 
-
 class Server:
     def __init__(self, agent, config):
-        self._enabled = config['video']['enabled']
-        self._port = config['video']['port']
-        self._address = config['video']['address']
+        self._config = config['web']
+        self._enabled = self._config['enabled']
+        self._port = self._config['port']
+        self._address = self._config['address']
         self._origin = None
         self._agent = agent
-        if 'origin' in config['video']:
-            self._origin = config['video']['origin']
+        if 'origin' in self._config:
+            self._origin = self._config['origin']
 
         if self._enabled:
             _thread.start_new_thread(self._http_serve, ())
@@ -35,13 +35,14 @@ class Server:
                         static_url_path='',
                         static_folder=os.path.join(web_path, 'static'),
                         template_folder=os.path.join(web_path, 'templates'))
+
             app.secret_key = secrets.token_urlsafe(256)
 
             if self._origin:
                 CORS(app, resources={r"*": {"origins": self._origin}})
 
             CSRFProtect(app)
-            Handler(self._agent, app)
+            Handler(self._config, self._agent, app)
 
             logging.info("web ui available at http://%s:%d/" % (self._address, self._port))
 

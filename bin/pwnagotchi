@@ -1,19 +1,91 @@
 #!/usr/bin/python3
+import logging
+import argparse
+import time
+import yaml
+
+import pwnagotchi
+import pwnagotchi.grid as grid
+import pwnagotchi.utils as utils
+import pwnagotchi.plugins as plugins
+
+from pwnagotchi.identity import KeyPair
+from pwnagotchi.agent import Agent
+from pwnagotchi.ui.display import Display
+
+
+def do_clear(display):
+    logging.info("clearing the display ...")
+    display.clear()
+    exit(0)
+
+
+def do_manual_mode(agent):
+    logging.info("entering manual mode ...")
+
+    agent.mode = 'manual'
+    agent.last_session.parse(agent.view(), args.skip_session)
+    if not args.skip_session:
+        logging.info(
+            "the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (
+                agent.last_session.duration_human,
+                agent.last_session.epochs,
+                agent.last_session.train_epochs,
+                agent.last_session.avg_reward,
+                agent.last_session.min_reward,
+                agent.last_session.max_reward))
+
+    while True:
+        display.on_manual_mode(agent.last_session)
+        time.sleep(5)
+        if grid.is_connected():
+            plugins.on('internet_available', agent)
+
+
+def do_auto_mode(agent):
+    logging.info("entering auto mode ...")
+
+    agent.mode = 'auto'
+    agent.start()
+
+    while True:
+        try:
+            # recon on all channels
+            agent.recon()
+            # get nearby access points grouped by channel
+            channels = agent.get_access_points_by_channel()
+            # for each channel
+            for ch, aps in channels:
+                agent.set_channel(ch)
+
+                if not agent.is_stale() and agent.any_activity():
+                    logging.info("%d access points on channel %d" % (len(aps), ch))
+
+                # for each ap on this channel
+                for ap in aps:
+                    # send an association frame in order to get for a PMKID
+                    agent.associate(ap)
+                    # deauth all client stations in order to get a full handshake
+                    for sta in ap['clients']:
+                        agent.deauth(ap, sta)
+
+            # An interesting effect of this:
+            #
+            # From Pwnagotchi's perspective, the more new access points
+            # and / or client stations nearby, the longer one epoch of
+            # its relative time will take ... basically, in Pwnagotchi's universe,
+            # WiFi electromagnetic fields affect time like gravitational fields
+            # affect ours ... neat ^_^
+            agent.next_epoch()
+
+            if grid.is_connected():
+                plugins.on('internet_available', agent)
+
+        except Exception as e:
+            logging.exception("main loop exception")
+
+
 if __name__ == '__main__':
-    import argparse
-    import time
-    import logging
-    import yaml
-
-    import pwnagotchi
-    import pwnagotchi.grid as grid
-    import pwnagotchi.utils as utils
-    import pwnagotchi.plugins as plugins
-
-    from pwnagotchi.identity import KeyPair
-    from pwnagotchi.agent import Agent
-    from pwnagotchi.ui.display import Display
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-C', '--config', action='store', dest='config', default='/etc/pwnagotchi/default.yml',
@@ -32,7 +104,10 @@ if __name__ == '__main__':
                         help="Enable debug logs.")
 
     parser.add_argument('--version', dest="version", action="store_true", default=False,
-                        help="Prints the version.")
+                        help="Print the version.")
+
+    parser.add_argument('--print-config', dest="print_config", action="store_true", default=False,
+                        help="Print the configuration.")
 
     args = parser.parse_args()
 
@@ -41,6 +116,10 @@ if __name__ == '__main__':
         exit(0)
 
     config = utils.load_config(args)
+    if args.print_config:
+        print(yaml.dump(config, default_flow_style=False))
+        exit(0)
+
     utils.setup_logging(args, config)
 
     pwnagotchi.set_name(config['main']['name'])
@@ -48,79 +127,14 @@ if __name__ == '__main__':
     plugins.load(config)
 
     display = Display(config=config, state={'name': '%s>' % pwnagotchi.name()})
-    keypair = KeyPair(view=display)
-    agent = Agent(view=display, config=config, keypair=keypair)
-
-    logging.info("%s@%s (v%s)" % (pwnagotchi.name(), agent.fingerprint(), pwnagotchi.version))
-
-    logging.debug("effective configuration:\n\n%s\n\n" % yaml.dump(config, default_flow_style=False))
-
-    for _, plugin in plugins.loaded.items():
-        logging.debug("plugin '%s' v%s" % (plugin.__class__.__name__, plugin.__version__))
 
     if args.do_clear:
-        logging.info("clearing the display ...")
-        display.clear()
+        do_clear(display)
+        exit(0)
 
-    elif args.do_manual:
-        logging.info("entering manual mode ...")
+    agent = Agent(view=display, config=config, keypair=KeyPair(view=display))
 
-        agent.mode = 'manual'
-        agent.last_session.parse(agent.view(), args.skip_session)
-        if not args.skip_session:
-            logging.info(
-                "the last session lasted %s (%d completed epochs, trained for %d), average reward:%s (min:%s max:%s)" % (
-                    agent.last_session.duration_human,
-                    agent.last_session.epochs,
-                    agent.last_session.train_epochs,
-                    agent.last_session.avg_reward,
-                    agent.last_session.min_reward,
-                    agent.last_session.max_reward))
-
-        while True:
-            display.on_manual_mode(agent.last_session)
-            time.sleep(5)
-            if grid.is_connected():
-                plugins.on('internet_available', agent)
-
+    if args.do_manual:
+        do_manual_mode(agent)
     else:
-        logging.info("entering auto mode ...")
-
-        agent.mode = 'auto'
-        agent.start()
-
-        while True:
-            try:
-                # recon on all channels
-                agent.recon()
-                # get nearby access points grouped by channel
-                channels = agent.get_access_points_by_channel()
-                # for each channel
-                for ch, aps in channels:
-                    agent.set_channel(ch)
-
-                    if not agent.is_stale() and agent.any_activity():
-                        logging.info("%d access points on channel %d" % (len(aps), ch))
-
-                    # for each ap on this channel
-                    for ap in aps:
-                        # send an association frame in order to get for a PMKID
-                        agent.associate(ap)
-                        # deauth all client stations in order to get a full handshake
-                        for sta in ap['clients']:
-                            agent.deauth(ap, sta)
-
-                # An interesting effect of this:
-                #
-                # From Pwnagotchi's perspective, the more new access points
-                # and / or client stations nearby, the longer one epoch of
-                # its relative time will take ... basically, in Pwnagotchi's universe,
-                # WiFi electromagnetic fields affect time like gravitational fields
-                # affect ours ... neat ^_^
-                agent.next_epoch()
-
-                if grid.is_connected():
-                    plugins.on('internet_available', agent)
-
-            except Exception as e:
-                logging.exception("main loop exception")
+        do_auto_mode(agent)

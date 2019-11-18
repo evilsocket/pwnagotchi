@@ -30,6 +30,8 @@ main:
             enabled: false
             speed: 19200
             device: /dev/ttyUSB0
+        webgpsmap:
+            enabled: false
         onlinehashcrack:
             enabled: false
             email: ~
@@ -41,7 +43,7 @@ main:
             enabled: false
             api_key: ~
         bt-tether:
-            enabled: false # if you want to use this, set ui.display.video.address to 0.0.0.0
+            enabled: false # if you want to use this, set ui.display.web.address to 0.0.0.0
             devices:
               android-phone:
                 enabled: false
@@ -67,8 +69,9 @@ main:
                 priority: 999 # routing priority
         memtemp: # Display memory usage, cpu load and cpu temperature on screen
             enabled: false
+            scale: celsius
             orientation: horizontal # horizontal/vertical
-        pawgps:
+        paw-gps:
             enabled: false
             #The IP Address of your phone with Paw Server running, default (option is empty) is 192.168.44.1
             ip: ''
@@ -76,8 +79,8 @@ main:
             enabled: false
             #The following is a list of the GPIO number for your button, and the command you want to run when it is pressed
             gpios:
-              20: 'touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi'
-              21: 'shutdown -h now'
+              #20: 'touch /root/.pwnagotchi-auto && systemctl restart pwnagotchi'
+              #21: 'shutdown -h now'
         led:
             enabled: true
             # for /sys/class/leds/led0/brightness
@@ -119,10 +122,12 @@ main:
     mon_max_blind_epochs: 50
     # if true, will not restart the wifi module
     no_restart: false
-    # access points to ignore
+    # access points to ignore. Could be the ssid, bssid or the vendor part of bssid.
     whitelist:
         - EXAMPLE_NETWORK
         - ANOTHER_EXAMPLE_NETWORK
+        - fo:od:ba:be:fo:od   # BSSID
+        - fo:od:ba            # Vendor BSSID
     # if not null, filter access points by this regular expression
     filter: null
     # logging
@@ -289,6 +294,19 @@ ui:
     # preserve your display over time, you should set this value to 0.0 so that the display will be refreshed only
     # if any of the important data fields changed (the uptime and blinking cursor won't trigger a refresh).
     fps: 0.0
+    # web ui
+    web:
+      enabled: true
+      address: '0.0.0.0'
+      username: changeme # !!! CHANGE THIS !!!
+      password: changeme # !!! CHANGE THIS !!!
+      origin: null
+      port: 8080
+      # command to be executed when a new png frame is available
+      # for instance, to use with framebuffer based displays:
+      # on_frame: 'fbi --noverbose -a -d /dev/fb1 -T 1 /root/pwnagotchi.png > /dev/null 2>&1'
+      on_frame: ''
+    # hardware display
     display:
         enabled: true
         rotation: 180
@@ -298,16 +316,6 @@ ui:
         # Waveshare tri-color 2.13in display can be over-driven with color set as 'fastAndFurious'
         # THIS IS POTENTIALLY DANGEROUS. DO NOT USE UNLESS YOU UNDERSTAND THAT IT COULD KILL YOUR DISPLAY
         color: 'black'
-        video:
-            enabled: true
-            address: '0.0.0.0'
-            origin: null
-            port: 8080
-            # command to be executed when a new png frame is available
-            # for instance, to use with framebuffer based displays:
-            # on_frame: 'fbi --noverbose -a -d /dev/fb1 -T 1 /root/pwnagotchi.png > /dev/null 2>&1'
-            on_frame: ''
-
 
 # bettercap rest api configuration
 bettercap:

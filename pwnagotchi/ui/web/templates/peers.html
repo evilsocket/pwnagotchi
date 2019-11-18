@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% set active_page = "peers" %}
+
+{% block title %}
+{{ name }} Friends
+{% endblock %}
+
+{% block content %}
+<ul class="peers" data-role="listview" data-filter="true" data-filter-placeholder="Search peers..." data-inset="true">
+    {% for peer in peers %}
+    <li class="peer">
+        <a href="/inbox/new?to={{ peer.fingerprint }}">
+            <h2>{{ peer.advertisement.face }} {{ peer.advertisement.name }}@{{ peer.fingerprint }}</h2>
+            <p>
+                Pwned {{ peer.advertisement.pwnd_tot }} networks, {{ peer.encounters }} encounters.
+            </p>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

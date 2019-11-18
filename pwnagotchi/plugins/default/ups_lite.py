@@ -55,8 +55,8 @@ class UPSLite(plugins.Plugin):
         self.ups = UPS()
 
     def on_ui_setup(self, ui):
-        ui.add_element('ups', LabeledValue(color=BLACK, label='UPS', value='0%/0V', position=(ui.width() / 2 - 25, 0),
+        ui.add_element('ups', LabeledValue(color=BLACK, label='UPS', value='0%/0V', position=(ui.width() / 2 + 15, 0),
                                            label_font=fonts.Bold, text_font=fonts.Medium))
 
     def on_ui_update(self, ui):
-        ui.set('ups', "%4.2fV/%2i%%" % (self.ups.voltage(), self.ups.capacity()))
+        ui.set('ups', "%2i%%" % self.ups.capacity())

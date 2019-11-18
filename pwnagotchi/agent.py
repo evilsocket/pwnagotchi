@@ -32,10 +32,12 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self._started_at = time.time()
         self._filter = None if config['main']['filter'] is None else re.compile(config['main']['filter'])
         self._current_channel = 0
+        self._tot_aps = 0
+        self._aps_on_channel = 0
         self._supported_channels = utils.iface_channels(config['main']['iface'])
         self._view = view
         self._view.set_agent(self)
-        self._web_ui = Server(self, self._config['ui']['display'])
+        self._web_ui = Server(self, config['ui'])
 
         self._access_points = []
         self._last_pwnd = None
@@ -46,6 +48,10 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
 
         if not os.path.exists(config['bettercap']['handshakes']):
             os.makedirs(config['bettercap']['handshakes'])
+
+        logging.info("%s@%s (v%s)" % (pwnagotchi.name(), self.fingerprint(), pwnagotchi.version))
+        for _, plugin in plugins.loaded.items():
+            logging.debug("plugin '%s' v%s" % (plugin.__class__.__name__, plugin.__version__))
 
     def config(self):
         return self._config
@@ -176,7 +182,9 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             for ap in s['wifi']['aps']:
                 if ap['encryption'] == '' or ap['encryption'] == 'OPEN':
                     continue
-                elif ap['hostname'] not in whitelist:
+                elif ap['hostname'] not in whitelist \
+                        and ap['mac'].lower() not in whitelist \
+                        and ap['mac'][:8].lower() not in whitelist:
                     if self._filter_included(ap):
                         aps.append(ap)
         except Exception as e:
@@ -184,6 +192,15 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
 
         aps.sort(key=lambda ap: ap['channel'])
         return self.set_access_points(aps)
+
+    def get_total_aps(self):
+        return self._tot_aps
+
+    def get_aps_on_channel(self):
+        return self._aps_on_channel
+
+    def get_current_channel(self):
+        return self._current_channel
 
     def get_access_points_by_channel(self):
         aps = self.get_access_points()
@@ -221,16 +238,16 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         # self._view.set('epoch', '%04d' % self._epoch.epoch)
 
     def _update_counters(self):
-        tot_aps = len(self._access_points)
+        self._tot_aps = len(self._access_points)
         tot_stas = sum(len(ap['clients']) for ap in self._access_points)
         if self._current_channel == 0:
-            self._view.set('aps', '%d' % tot_aps)
+            self._view.set('aps', '%d' % self._tot_aps)
             self._view.set('sta', '%d' % tot_stas)
         else:
-            aps_on_channel = len([ap for ap in self._access_points if ap['channel'] == self._current_channel])
+            self._aps_on_channel = len([ap for ap in self._access_points if ap['channel'] == self._current_channel])
             stas_on_channel = sum(
                 [len(ap['clients']) for ap in self._access_points if ap['channel'] == self._current_channel])
-            self._view.set('aps', '%d (%d)' % (aps_on_channel, tot_aps))
+            self._view.set('aps', '%d (%d)' % (self._aps_on_channel, self._tot_aps))
             self._view.set('sta', '%d (%d)' % (stas_on_channel, tot_stas))
 
     def _update_handshakes(self, new_shakes=0):
@@ -324,10 +341,12 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
                             (ap, sta) = ap_and_station
                             self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
                                 'hostname'] != '<hidden>' else ap_mac
-                            logging.warning("!!! captured new handshake on channel %d: %s (%s) -> %s [%s (%s)] !!!" % ( \
-                                ap['channel'],
-                                sta['mac'], sta['vendor'],
-                                ap['hostname'], ap['mac'], ap['vendor']))
+                            logging.warning(
+                                "!!! captured new handshake on channel %d, %d dBm: %s (%s) -> %s [%s (%s)] !!!" % (
+                                    ap['channel'],
+                                    ap['rssi'],
+                                    sta['mac'], sta['vendor'],
+                                    ap['hostname'], ap['mac'], ap['vendor']))
                             plugins.on('handshake', self, filename, ap, sta)
 
             except Exception as e:
@@ -380,8 +399,8 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             self._view.on_assoc(ap)
 
             try:
-                logging.info("sending association frame to %s (%s %s) on channel %d [%d clients]..." % ( \
-                    ap['hostname'], ap['mac'], ap['vendor'], ap['channel'], len(ap['clients'])))
+                logging.info("sending association frame to %s (%s %s) on channel %d [%d clients], %d dBm..." % ( \
+                    ap['hostname'], ap['mac'], ap['vendor'], ap['channel'], len(ap['clients']), ap['rssi']))
                 self.run('wifi.assoc %s' % ap['mac'])
                 self._epoch.track(assoc=True)
             except Exception as e:
@@ -401,8 +420,8 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             self._view.on_deauth(sta)
 
             try:
-                logging.info("deauthing %s (%s) from %s (%s %s) on channel %d ..." % (
-                    sta['mac'], sta['vendor'], ap['hostname'], ap['mac'], ap['vendor'], ap['channel']))
+                logging.info("deauthing %s (%s) from %s (%s %s) on channel %d, %d dBm ..." % (
+                    sta['mac'], sta['vendor'], ap['hostname'], ap['mac'], ap['vendor'], ap['channel'], ap['rssi']))
                 self.run('wifi.deauth %s' % sta['mac'])
                 self._epoch.track(deauth=True)
             except Exception as e:

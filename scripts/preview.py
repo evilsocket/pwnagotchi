@@ -107,7 +107,7 @@ def main():
             color: black
             refresh: 30
             type: {display}
-            video:
+            web:
                 enabled: true
                 address: "0.0.0.0"
                 port: 8080

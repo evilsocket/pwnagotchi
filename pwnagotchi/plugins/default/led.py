@@ -44,12 +44,12 @@ class Led(plugins.Plugin):
         logging.debug("[led] using pattern '%s' ..." % pattern)
         for c in pattern:
             if c == ' ':
-                self._led(0)
-            else:
                 self._led(1)
+            else:
+                self._led(0)
             time.sleep(self._delay / 1000.0)
         # reset
-        self._led(1)
+        self._led(0)
 
     def _worker(self):
         while True:

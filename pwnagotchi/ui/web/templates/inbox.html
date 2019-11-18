@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% set active_page = "inbox" %}
+
+{% block title %}
+{{ name }} Inbox
+{% endblock %}
+
+{% block script %}
+$(function() {
+    setTimeout(function(){
+        window.location.reload(true);
+    }, 15000);
+});
+{% endblock %}
+
+{% block content %}
+<ul class="inbox" data-role="listview" data-filter="true" data-filter-placeholder="Search inbox..." data-inset="true">
+    {% for message in inbox.messages %}
+    <li class="message">
+        <a href="/inbox/{{ message.id }}" class="{{ 'unread' if not message.seen_at else 'read' }}">
+            <h2>{{ message.sender_name }}@{{ message.sender }}</h2>
+            <p>
+                Received
+                <time class="timeago" datetime="{{ message.created_at }}">{{ message.created_at }}</time>
+                {% if message.seen_at %}, seen
+                <time class="timeago" datetime="{{ message.seen_at }}">{{ message.seen_at }}</time>
+                {% endif %}.
+            </p>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% if inbox.pages > 1 %}
+<div data-role="navbar">
+    <ul>
+        {% if page > 1 %}
+        <li><a href="/inbox?p={{ page - 1 }}" class="ui-btn">Prev</a></li>
+        {% endif %}
+        {% if page < inbox.pages %}
+        <li><a href="/inbox?p={{ page + 1 }}" class="ui-btn">Next</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

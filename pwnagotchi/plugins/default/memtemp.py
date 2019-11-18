@@ -44,30 +44,39 @@ class MemTemp(plugins.Plugin):
         if ui.is_waveshare_v2():
             h_pos = (180, 80)
             v_pos = (180, 61)
+        elif ui.is_inky():
+            h_pos = (140, 68)
+            v_pos = (165, 54)
         else:
             h_pos = (155, 76)
             v_pos = (180, 61)
 
-        if self.options['orientation'] == "horizontal":
-            ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value='mem cpu temp\n - -  -',
-                                                   position=h_pos,
-                                                   label_font=fonts.Small, text_font=fonts.Small))
-        elif self.options['orientation'] == "vertical":
+        if self.options['orientation'] == "vertical":
             ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value=' mem:-\n cpu:-\ntemp:-',
                                                    position=v_pos,
+                                                   label_font=fonts.Small, text_font=fonts.Small))
+        else:
+            # default to horizontal
+            ui.add_element('memtemp', LabeledValue(color=BLACK, label='', value='mem cpu temp\n - -  -',
+                                                   position=h_pos,
                                                    label_font=fonts.Small, text_font=fonts.Small))
 
     def on_ui_update(self, ui):
         if self.options['scale'] == "fahrenheit":
             temp = (pwnagotchi.temperature() * 9 / 5) + 32
-        elif self.options['scale'] == "celsius":
-            temp = pwnagotchi.temperature()
+            symbol = "f"
         elif self.options['scale'] == "kelvin":
             temp = pwnagotchi.temperature() + 273.15
-        if self.options['orientation'] == "horizontal":
-            ui.set('memtemp',
-                   " mem cpu temp\n %s%% %s%%  %sc" % (self.mem_usage(), self.cpu_load(), temp))
+            symbol = "k"
+        else:
+            # default to celsius 
+            temp = pwnagotchi.temperature()
+            symbol = "c"
 
-        elif self.options['orientation'] == "vertical":
+        if self.options['orientation'] == "vertical":
             ui.set('memtemp',
-                   " mem:%s%%\n cpu:%s%%\ntemp:%sc" % (self.mem_usage(), self.cpu_load(), temp))
+                   " mem:%s%%\n cpu:%s%%\ntemp:%s%s" % (self.mem_usage(), self.cpu_load(), temp, symbol))
+        else:
+            # default to horizontal
+            ui.set('memtemp',
+                   " mem cpu temp\n %s%% %s%%  %s%s" % (self.mem_usage(), self.cpu_load(), temp, symbol))

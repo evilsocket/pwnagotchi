@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% set active_page = "new" %}
+
+{% block title %}
+{% if to %}
+Reply to {{ to }}
+{% else %}
+New Message
+{% endif %}
+{% endblock %}
+
+{% block script %}
+$(function(){
+    $("#message_form").submit(function(e) {
+          e.preventDefault();
+
+          var form = $(this);
+          var url = form.attr('action');
+
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: form.serialize(),
+             success: function(data) {
+                  if( data.error ) {
+                      if( data.error.indexOf('404') != -1 )
+                          alert('Fingerprint not found.');
+                      else if( data.error.indexOf('aborted') != -1 )
+                          alert('Empty or invalid message.');
+                      else
+                          alert(data.error);
+                      return;
+                  }
+
+                  alert("Message sent!");
+                  document.location.href = "/inbox";
+            }
+        });
+    });
+});
+{% endblock %}
+
+{% block content %}
+<div style="padding: 1em">
+    <form id="message_form" method="POST" action="/inbox/send">
+        <label for="to">To:</label>
+        <input type="text" name="to" id="to" value="{{ to }}">
+
+        <label for="message">Message:</label>
+        <textarea cols="40" rows="8" name="message" id="message"></textarea>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="submit" class="button" value="Send"/>
+    </form>
+</div>
+{% endblock %}

@@ -3,7 +3,10 @@ import requests
 import pwnagotchi.plugins as plugins
 
 '''
-You need an bluetooth connection to your android phone which is running PAW server with the GPS "hack" from Systemic:
+You need an bluetooth connection to your android phone which is running PAW server with the GPS "hack" from Systemik and edited by shaynemk
+NEW BETTER GUIDE HERE: https://community.pwnagotchi.ai/t/setting-up-paw-gps-on-android
+
+Old guide here, (not recommended if you plan on using it with the webgpsmap plugin)
 https://raw.githubusercontent.com/systemik/pwnagotchi-bt-tether/master/GPS-via-PAW
 '''
 
@@ -22,7 +25,9 @@ class PawGPS(plugins.Plugin):
 
     def on_handshake(self, agent, filename, access_point, client_station):
         if 'ip' not in self.options or ('ip' in self.options and self.options['ip'] is None):
-            ip = "192.168.44.1"
+            ip = "192.168.44.1:8080"
+        else:
+            ip = self.options['ip']
 
         gps = requests.get('http://' + ip + '/gps.xhtml')
         gps_filename = filename.replace('.pcap', '.gps.json')

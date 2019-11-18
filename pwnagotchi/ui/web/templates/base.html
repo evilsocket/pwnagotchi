@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+
+    <link rel="stylesheet" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css"/>
+    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+    <script type="text/javascript" src="/js/jquery-qrcode-0.17.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+
+    <script type="text/javascript">
+        $.mobile.ajaxEnabled = false;
+
+        jQuery(document).ready(function() {
+          jQuery("time.timeago").timeago();
+        });
+
+        {% block script %}
+        {% endblock %}
+    </script>
+</head>
+<body>
+<div data-role="page">
+
+    {% if error %}
+    <div id="error" class="error ui-content" data-role="popup" data-overlay-theme="a" data-theme="b">
+        <p>{{ error }}</p>
+    </div>
+    <script>
+        $(function(){
+            $("#error").popup("open");
+        });
+    </script>
+    {% endif %}
+
+    {% set navigation = [
+        ( '/', 'home', 'eye', 'Home' ),
+        ( '/inbox', 'inbox', 'bars', 'Inbox' ),
+        ( '/inbox/new', 'new', 'mail', 'New' ),
+        ( '/inbox/profile', 'profile', 'info', 'Profile' ),
+        ( '/inbox/peers', 'peers', 'user', 'Peers' ),
+    ] %}
+    {% set active_page = active_page|default('inbox') %}
+
+    <div data-role="footer">
+        <div data-role="navbar" data-iconpos="left">
+            <ul>
+                {% for href, id, icon, caption in navigation %}
+                    <li>
+                       <a href="{{ href }}" id="{{ id }}" data-icon="{{ icon }}" class="{{ 'ui-btn-active' if active_page == id }}">{{ caption }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+</body>
+</html>

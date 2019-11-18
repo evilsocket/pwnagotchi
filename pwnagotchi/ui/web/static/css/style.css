@@ -1,22 +1,7 @@
-form {
-    margin-block-end: 0;
+.ui-image {
+    width: 100%;
 }
 
-
-.content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
-    display: flex;
-    flex-direction: column;
-}
-
-/**
- * make sure image is displayed without any blur
- */
 .pixelated {
     image-rendering: optimizeSpeed; /* Legal fallback */
     image-rendering: -moz-crisp-edges; /* Firefox        */
@@ -33,36 +18,17 @@ form {
     position: relative;
 }
 
-.ui-image {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    max-width: 100vw;
-    height: 100%;
-    object-fit: contain;
-    object-position: 50% 0;
-}
-
-.buttons-wrapper {
-    flex-shrink: 0;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0 16px;
-}
-
-.button {
-    border: 1px solid black;
-    border-radius: 4px;
-    font-size: 2em;
-    background: #f8b506;
-    margin: 16px;
-}
-
 div.status {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
+}
+
+a.read {
+    color: #777 !important;
+}
+
+p.messagebody {
+    padding: 1em;
 }

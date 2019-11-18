@@ -1,14 +1,15 @@
-import os
-import time
-import re
 import logging
+import os
 import subprocess
+import time
+
 import dbus
+
+import pwnagotchi.plugins as plugins
+import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
-import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.utils import StatusFile
-import pwnagotchi.plugins as plugins
 
 
 class BTError(Exception):
@@ -382,7 +383,7 @@ class IfaceWrapper:
 
 
 class Device:
-    def __init__(self, name, share_internet, mac, ip, netmask, interval, priority=10, scantime=15, search_order=0, max_tries=0, **kwargs):
+    def __init__(self, name, share_internet, mac, ip, netmask, interval, gateway=None, priority=10, scantime=15, search_order=0, max_tries=0, **kwargs):
         self.name = name
         self.status = StatusFile(f'/root/.bt-tether-{name}')
         self.status.update()
@@ -394,6 +395,7 @@ class Device:
         self.share_internet = share_internet
         self.ip = ip
         self.netmask = netmask
+        self.gateway = gateway
         self.interval = interval
         self.mac = mac
         self.scantime = scantime
@@ -461,7 +463,7 @@ class BTTether(plugins.Plugin):
                 logging.error("BT-TETHER: Can't start bluetooth.service")
                 return
 
-        logging.info("BT-TETHER: Sussessfully loaded ...")
+        logging.info("BT-TETHER: Successfully loaded ...")
         self.ready = True
 
     def on_ui_setup(self, ui):
@@ -543,7 +545,10 @@ class BTTether(plugins.Plugin):
                 continue
 
             addr = f"{device.ip}/{device.netmask}"
-            gateway = ".".join(device.ip.split('.')[:-1] + ['1'])
+            if device.gateway:
+                gateway = device.gateway
+            else:
+                gateway = ".".join(device.ip.split('.')[:-1] + ['1'])
 
             wrapped_interface = IfaceWrapper(interface)
             logging.debug('BT-TETHER: Add ip to %s', interface)

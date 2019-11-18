@@ -12,9 +12,13 @@ API_ADDRESS = "http://127.0.0.1:8666/api/v1"
 
 def is_connected():
     try:
-        socket.create_connection(("www.google.com", 80))
-        return True
-    except OSError:
+        # check DNS
+        host = socket.gethostbyname('api.pwnagotchi.ai')
+        if host:
+            # check connectivity itself
+            socket.create_connection((host, 443), timeout=30)
+            return True
+    except:
         pass
     return False
 
@@ -22,9 +26,11 @@ def is_connected():
 def call(path, obj=None):
     url = '%s%s' % (API_ADDRESS, path)
     if obj is None:
-        r = requests.get(url, headers=None)
+        r = requests.get(url, headers=None, timeout=(30.0, 60.0))
+    elif isinstance(obj, dict):
+        r = requests.post(url, headers=None, json=obj, timeout=(30.0, 60.0))
     else:
-        r = requests.post(url, headers=None, json=obj)
+        r = requests.post(url, headers=None, data=obj, timeout=(30.0, 60.0))
 
     if r.status_code != 200:
         raise Exception("(status %d) %s" % (r.status_code, r.text))
@@ -37,6 +43,14 @@ def advertise(enabled=True):
 
 def set_advertisement_data(data):
     return call("/mesh/data", obj=data)
+
+
+def get_advertisement_data():
+    return call("/mesh/data")
+
+
+def memory():
+    return call("/mesh/memory")
 
 
 def peers():
@@ -95,3 +109,15 @@ def report_ap(essid, bssid):
 def inbox(page=1, with_pager=False):
     obj = call("/inbox?p=%d" % page)
     return obj["messages"] if not with_pager else obj
+
+
+def inbox_message(id):
+    return call("/inbox/%d" % int(id))
+
+
+def mark_message(id, mark):
+    return call("/inbox/%d/%s" % (int(id), str(mark)))
+
+
+def send_message(to, message):
+    return call("/unit/%s/inbox" % to, message.encode('utf-8'))

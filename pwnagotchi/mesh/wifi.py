@@ -1,4 +1,5 @@
 NumChannels = 140
+NumChannelsExt = 165  # see https://github.com/evilsocket/pwnagotchi/issues/583
 
 
 def freq_to_channel(freq):

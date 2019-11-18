@@ -58,12 +58,13 @@ class Text(Widget):
 
 
 class LabeledValue(Widget):
-    def __init__(self, label, value="", position=(0, 0), label_font=None, text_font=None, color=0):
+    def __init__(self, label, value="", position=(0, 0), label_font=None, text_font=None, color=0, label_spacing=5):
         super().__init__(position, color)
         self.label = label
         self.value = value
         self.label_font = label_font
         self.text_font = text_font
+        self.label_spacing = label_spacing
 
     def draw(self, canvas, drawer):
         if self.label is None:
@@ -71,4 +72,4 @@ class LabeledValue(Widget):
         else:
             pos = self.xy
             drawer.text(pos, self.label, font=self.label_font, fill=self.color)
-            drawer.text((pos[0] + 5 + 5 * len(self.label), pos[1]), self.value, font=self.text_font, fill=self.color)
+            drawer.text((pos[0] + self.label_spacing + 5 * len(self.label), pos[1]), self.value, font=self.text_font, fill=self.color)
