@@ -293,9 +293,9 @@ class PositionFile:
         elif 'Updated' in self._json:
             # convert gps datetime to unix timestamp: "2019-10-05T23:12:40.422996+01:00"
             date_iso_formated = self._json['Updated']
-            # fill milliseconds to 6 numbers
+            # fill/cut microseconds to 6 numbers
             part1, part2, part3 = re.split('\.|\+', date_iso_formated)
-            part2 = part2.ljust(6, '0')
+            part2 = part2.ljust(6, '0')[:6]
             date_iso_formated = part1 + "." + part2 + "+" + part3
             dateObj = datetime.datetime.fromisoformat(date_iso_formated)
             return_ts = int("%.0f" % dateObj.timestamp())
