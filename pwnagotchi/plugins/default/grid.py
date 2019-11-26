@@ -67,7 +67,8 @@ class Grid(plugins.Plugin):
         logging.info("grid plugin loaded.")
 
     def set_reported(self, reported, net_id):
-        reported.append(net_id)
+        if net_id not in reported:
+            reported.append(net_id)
         self.report.update(data={'reported': reported})
 
     def check_inbox(self, agent):
