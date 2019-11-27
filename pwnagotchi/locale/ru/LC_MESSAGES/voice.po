@@ -86,7 +86,7 @@ msgid "I'm having so much fun!"
 msgstr "Мне так весело!"
 
 msgid "My crime is that of curiosity ..."
-msgstr "Моe преступление - это из любопытства…"
+msgstr "Моё преступление - это любопытство…"
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you. {name}"
