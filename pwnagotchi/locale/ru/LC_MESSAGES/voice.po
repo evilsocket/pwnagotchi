@@ -201,7 +201,7 @@ msgstr "Заимел {num} новых друзей\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Получил {num} рукопожатие\n"
+msgstr "Получил {num} рукопожатий\n"
 
 msgid "Met 1 peer"
 msgstr "Встретился один знакомый"
