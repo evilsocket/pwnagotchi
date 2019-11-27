@@ -47,6 +47,7 @@
         ( '/inbox/new', 'new', 'mail', 'New' ),
         ( '/inbox/profile', 'profile', 'info', 'Profile' ),
         ( '/inbox/peers', 'peers', 'user', 'Peers' ),
+        ( '/plugins', 'plugins', 'grid', 'Plugins' ),
     ] %}
     {% set active_page = active_page|default('inbox') %}
 
@@ -54,7 +55,7 @@
         <div data-role="navbar" data-iconpos="left">
             <ul>
                 {% for href, id, icon, caption in navigation %}
-                    <li>
+                    <li class="navitem">
                        <a href="{{ href }}" id="{{ id }}" data-icon="{{ icon }}" class="{{ 'ui-btn-active' if active_page == id }}">{{ caption }}</a>
                     </li>
                 {% endfor %}
