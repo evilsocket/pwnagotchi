@@ -122,6 +122,11 @@ class Example(plugins.Plugin):
     def on_wifi_update(self, agent, access_points):
         pass
 
+    # called when the agent refreshed an unfiltered access point list
+    # this list contains all access points that were detected BEFORE filtering
+    def on_unfiltered_ap_list(self, agent, access_points):
+        pass
+
     # called when the agent is sending an association frame
     def on_association(self, agent, access_point):
         pass
