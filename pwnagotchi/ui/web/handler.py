@@ -179,16 +179,19 @@ class Handler:
 
     def plugins(self, name, subpath):
         if name is None:
-            # show plugins overview
-            abort(404)
+            return render_template('plugins.html', loaded=plugins.loaded, database=plugins.database)
+
+        if name == 'toggle' and request.method == 'POST':
+            checked = True if 'enabled' in request.form else False
+            return 'success' if plugins.toggle_plugin(request.form['plugin'], checked) else 'failed'
+
+        if name in plugins.loaded and plugins.loaded[name] is not None and hasattr(plugins.loaded[name], 'on_webhook'):
+            try:
+                return plugins.loaded[name].on_webhook(subpath, request)
+            except Exception:
+                abort(500)
         else:
-            if name in plugins.loaded and hasattr(plugins.loaded[name], 'on_webhook'):
-                try:
-                    return plugins.loaded[name].on_webhook(subpath, request)
-                except Exception:
-                    abort(500)
-            else:
-                abort(404)
+            abort(404)
 
     # serve a message and shuts down the unit
     def shutdown(self):

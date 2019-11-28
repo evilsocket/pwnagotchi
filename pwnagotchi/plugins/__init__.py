@@ -6,7 +6,7 @@ import logging
 
 default_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "default")
 loaded = {}
-
+database = {}
 
 class Plugin:
     @classmethod
@@ -17,6 +17,26 @@ class Plugin:
         plugin_instance = cls()
         logging.debug("loaded plugin %s as %s" % (plugin_name, plugin_instance))
         loaded[plugin_name] = plugin_instance
+
+def toggle_plugin(name, enable=True):
+    """
+    Load or unload a plugin
+
+    returns True if changed, otherwise False
+    """
+    global loaded, database
+    if not enable and name in loaded:
+        if getattr(loaded[name], 'on_unload', None):
+            loaded[name].on_unload()
+        del loaded[name]
+        return True
+
+    if enable and name in database and name not in loaded:
+        load_from_file(database[name])
+        one(name, 'loaded')
+        return True
+
+    return False
 
 
 def on(event_name, *args, **kwargs):
@@ -48,10 +68,11 @@ def load_from_file(filename):
 
 
 def load_from_path(path, enabled=()):
-    global loaded
+    global loaded, database
     logging.debug("loading plugins from %s - enabled: %s" % (path, enabled))
     for filename in glob.glob(os.path.join(path, "*.py")):
         plugin_name = os.path.basename(filename.replace(".py", ""))
+        database[plugin_name] = filename
         if plugin_name in enabled:
             try:
                 load_from_file(filename)
