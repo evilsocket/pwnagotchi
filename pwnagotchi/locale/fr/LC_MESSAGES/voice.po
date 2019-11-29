@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the pwnagotchi package.
 # FIRST AUTHOR <7271496+quantumsheep@users.noreply.github.com>, 2019.
 #
-#,
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 18:37+0200\n"
+"POT-Creation-Date: 2019-11-29 21:50+0100\n"
 "PO-Revision-Date: 2019-10-03 10:34+0200\n"
 "Last-Translator: quantumsheep <7271496+quantumsheep@users.noreply.github."
 "com>\n"
@@ -43,6 +42,13 @@ msgstr "Génération des clés, ne pas éteindre..."
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr "Hey, le canal {channel} est libre! Ton point d'accès va te remercier."
 
+msgid "Reading last session logs ..."
+msgstr "Lecture des logs de la dernière session ..."
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "Jusqu'ici, {lines_so_far} lignes lues dans le log ..."
+
 msgid "I'm bored ..."
 msgstr "Je m'ennuie..."
 
@@ -64,6 +70,13 @@ msgstr "Je suis très triste..."
 msgid "I'm sad"
 msgstr "Je suis triste"
 
+#, fuzzy
+msgid "Leave me alone ..."
+msgstr "Je me sens si seul..."
+
+msgid "I'm mad at you!"
+msgstr "Je t'en veux !"
+
 msgid "I'm living the life!"
 msgstr "Je vis la vie !"
 
@@ -82,6 +95,14 @@ msgstr "Mon crime, c'est la curiosité..."
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
 msgstr "Bonjour {name} ! Ravi de te rencontrer."
+
+#, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr "Yo {name} ! Quoi de neuf ?"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Hey {name} comment vas-tu ?"
 
 #, python-brace-format
 msgid "Unit {name} is nearby!"
@@ -106,6 +127,12 @@ msgstr "{name} raté !"
 msgid "Missed!"
 msgstr "Raté !"
 
+msgid "Good friends are a blessing!"
+msgstr "Les bons amis sont une bénédiction !"
+
+msgid "I love my friends!"
+msgstr "J'aime mes amis !"
+
 msgid "Nobody wants to play with me ..."
 msgstr "Personne ne veut jouer avec moi..."
 
@@ -120,11 +147,11 @@ msgid "Napping for {secs}s ..."
 msgstr "Fais la sieste pendant {secs}s..."
 
 msgid "Zzzzz"
-msgstr ""
+msgstr "Zzzzz"
 
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
-msgstr ""
+msgstr "ZzzZzzz ({secs}s)"
 
 msgid "Good night."
 msgstr "Bonne nuit."
