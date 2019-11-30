@@ -57,7 +57,7 @@ class HandshakesDL(plugins.Plugin):
             handshakes = glob.glob(os.path.join(self.config['bettercap']['handshakes'], "*.pcap"))
             handshakes = [os.path.basename(path)[:-5] for path in handshakes]
             return render_template_string(TEMPLATE,
-                                    title="Handhakes | " + pwnagotchi.name(),
+                                    title="Handshakes | " + pwnagotchi.name(),
                                     handshakes=handshakes)
 
         else:
