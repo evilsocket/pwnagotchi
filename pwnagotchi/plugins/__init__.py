@@ -34,6 +34,7 @@ def toggle_plugin(name, enable=True):
     if enable and name in database and name not in loaded:
         load_from_file(database[name])
         one(name, 'loaded')
+        one(name, 'ui_setup')
         return True
 
     return False
