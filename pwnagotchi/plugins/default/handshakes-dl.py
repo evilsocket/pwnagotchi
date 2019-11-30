@@ -22,7 +22,7 @@ TEMPLATE = """
     <ul id="list" data-role="listview" style="list-style-type:disc;">
         {% for handshake in handshakes %}
             <li class="file">
-                <a href="/handshakes/{{handshake}}">{{handshake}}</a>
+                <a href="/plugins/handshakes-dl/{{handshake}}">{{handshake}}</a>
             </li>
         {% endfor %}
     </ul>
@@ -39,10 +39,14 @@ class HandshakesDL(plugins.Plugin):
         self.ready = False
 
     def on_loaded(self):
-        logging.info("HandshakeDL plugin loaded")
+        logging.info("[HandshakesDL] plugin loaded")
 
     def on_ready(self, agent):
-        self.agent = agent
+        self.config = agent.config()
+        self.ready = True
+
+    def on_internet_available(self, agent):
+        self.config = agent.config()
         self.ready = True
 
     def on_webhook(self, path, request):
@@ -50,15 +54,16 @@ class HandshakesDL(plugins.Plugin):
             return "Plugin not ready"
 
         if path == "/" or not path:
-            handshakes = glob.glob(os.path.join(self.agent.config()['bettercap']['handshakes'], "*.pcap"))
+            handshakes = glob.glob(os.path.join(self.config['bettercap']['handshakes'], "*.pcap"))
             handshakes = [os.path.basename(path)[:-5] for path in handshakes]
             return render_template_string(TEMPLATE,
                                     title="Handhakes | " + pwnagotchi.name(),
                                     handshakes=handshakes)
 
         else:
-            dir = self.agent.config()['bettercap']['handshakes']
+            dir = self.config['bettercap']['handshakes']
             try:
+                logging.info(f"[HandshakesDL] serving {dir}/{path}.pcap")
                 return send_from_directory(directory=dir, filename=path+'.pcap', as_attachment=True)
             except FileNotFoundError:
                 abort(404)
