@@ -115,7 +115,7 @@ main:
                 peer_lost: 'oo  oo  oo oo  oo  oo  oo'
         webcfg:
           enabled: false
-        handhsakes-dl:
+        handshakes-dl:
             enabled: false
     # monitor interface to use
     iface: mon0
