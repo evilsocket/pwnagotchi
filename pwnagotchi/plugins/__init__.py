@@ -36,6 +36,7 @@ def toggle_plugin(name, enable=True):
         load_from_file(database[name])
         one(name, 'loaded')
         one(name, 'ui_setup', view.ROOT)
+        one(name, 'ready', view.ROOT._agent)
         return True
 
     return False
