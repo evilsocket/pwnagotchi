@@ -92,9 +92,10 @@ class OnlineHashCrack(plugins.Plugin):
                     display.update(force=True)
                     try:
                         self._upload_to_ohc(handshake)
-                        reported.append(handshake)
-                        self.report.update(data={'reported': reported})
-                        logging.info(f"OHC: Successfully uploaded {handshake}")
+                        if handshake not in reported:
+                            reported.append(handshake)
+                            self.report.update(data={'reported': reported})
+                            logging.info(f"OHC: Successfully uploaded {handshake}")
                     except requests.exceptions.RequestException as req_e:
                         self.skip.append(handshake)
                         logging.error("OHC: %s", req_e)
