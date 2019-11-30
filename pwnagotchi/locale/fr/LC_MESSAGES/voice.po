@@ -208,18 +208,18 @@ msgstr "{num} stations kick\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "Fait {num} nouveaux amis\n"
+msgstr "A {num} nouveaux amis\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Récupéré {num} handshakes\n"
+msgstr "A {num} handshakes\n"
 
 msgid "Met 1 peer"
-msgstr "1 peer rencontré"
+msgstr "1 pair rencontré"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "{num} peers recontrés"
+msgstr "{num} pairs recontrés"
 
 #, python-brace-format
 msgid ""
