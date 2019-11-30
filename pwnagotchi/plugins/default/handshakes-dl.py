@@ -29,7 +29,7 @@ TEMPLATE = """
 {% endblock %}
 """
 
-class HandshakeDL(plugins.Plugin):
+class HandshakesDL(plugins.Plugin):
     __author__ = 'me@sayakb.com'
     __version__ = '0.1.0'
     __license__ = 'GPL3'

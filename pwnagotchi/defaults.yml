@@ -115,6 +115,8 @@ main:
                 peer_lost: 'oo  oo  oo oo  oo  oo  oo'
         webcfg:
           enabled: false
+        handhsakes-dl:
+            enabled: false
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
