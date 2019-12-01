@@ -25,6 +25,10 @@ class Example(plugins.Plugin):
     def on_loaded(self):
         logging.warning("WARNING: this plugin should be disabled! options = " % self.options)
 
+    # called before the plugin is unloaded
+    def on_unload(self):
+        pass
+
     # called hen there's internet connectivity
     def on_internet_available(self, agent):
         pass
@@ -116,6 +120,11 @@ class Example(plugins.Plugin):
 
     # called when the agent refreshed its access points list
     def on_wifi_update(self, agent, access_points):
+        pass
+
+    # called when the agent refreshed an unfiltered access point list
+    # this list contains all access points that were detected BEFORE filtering
+    def on_unfiltered_ap_list(self, agent, access_points):
         pass
 
     # called when the agent is sending an association frame

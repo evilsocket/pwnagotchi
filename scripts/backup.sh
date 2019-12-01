@@ -54,4 +54,4 @@ ping -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
 }
 
 echo "@ backing up $UNIT_HOSTNAME to $OUTPUT ..."
-ssh "${UNIT_USERNAME}@${UNIT_HOSTNAME}" "sudo find ${FILES_TO_BACKUP} -print0 | xargs -0 sudo tar cv" | gzip -9 > "$OUTPUT"
+ssh "${UNIT_USERNAME}@${UNIT_HOSTNAME}" "sudo find ${FILES_TO_BACKUP} -type f -print0 | xargs -0 sudo tar cv" | gzip -9 > "$OUTPUT"

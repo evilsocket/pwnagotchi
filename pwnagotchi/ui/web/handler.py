@@ -34,6 +34,7 @@ class Handler:
         self._app.add_url_rule('/ui', 'ui', self.with_auth(self.ui))
 
         self._app.add_url_rule('/shutdown', 'shutdown', self.with_auth(self.shutdown), methods=['POST'])
+        self._app.add_url_rule('/reboot', 'reboot', self.with_auth(self.reboot), methods=['POST'])
         self._app.add_url_rule('/restart', 'restart', self.with_auth(self.restart), methods=['POST'])
 
         # inbox
@@ -179,16 +180,19 @@ class Handler:
 
     def plugins(self, name, subpath):
         if name is None:
-            # show plugins overview
-            abort(404)
+            return render_template('plugins.html', loaded=plugins.loaded, database=plugins.database)
+
+        if name == 'toggle' and request.method == 'POST':
+            checked = True if 'enabled' in request.form else False
+            return 'success' if plugins.toggle_plugin(request.form['plugin'], checked) else 'failed'
+
+        if name in plugins.loaded and plugins.loaded[name] is not None and hasattr(plugins.loaded[name], 'on_webhook'):
+            try:
+                return plugins.loaded[name].on_webhook(subpath, request)
+            except Exception:
+                abort(500)
         else:
-            if name in plugins.loaded and hasattr(plugins.loaded[name], 'on_webhook'):
-                try:
-                    return plugins.loaded[name].on_webhook(subpath, request)
-                except Exception:
-                    abort(500)
-            else:
-                abort(404)
+            abort(404)
 
     # serve a message and shuts down the unit
     def shutdown(self):
@@ -197,6 +201,14 @@ class Handler:
                                    message='Shutting down ...')
         finally:
             _thread.start_new_thread(pwnagotchi.shutdown, ())
+
+    # serve a message and reboot the unit
+    def reboot(self):
+          try:
+              return render_template('status.html', title=pwnagotchi.name(), go_back_after=60,
+                                     message='Rebooting ...')
+          finally:
+              _thread.start_new_thread(pwnagotchi.reboot, ())
 
     # serve a message and restart the unit in the other mode
     def restart(self):

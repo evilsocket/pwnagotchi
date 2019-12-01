@@ -27,6 +27,13 @@ window.onload = function() {
 			</form>
 		</li>
 		<li>
+			<form class="action" method="post" action="/reboot"
+          onsubmit="return confirm('this will reboot the unit, continue?');">
+				<input type="submit" class="button ui-btn ui-corner-all" value="Reboot"/>
+				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+			</form>
+		</li>
+		<li>
 			<form class="action" method="post" action="/restart"
           onsubmit="return confirm('This will restart the service in {{ other_mode }} mode, continue?');">
 				<input type="submit" class="button ui-btn ui-corner-all" value="Restart in {{ other_mode }} mode"/>

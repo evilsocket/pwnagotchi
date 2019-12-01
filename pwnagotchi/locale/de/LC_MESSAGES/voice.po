@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 20:56+0200\n"
+"POT-Creation-Date: 2019-11-14 21:15+0100\n"
 "PO-Revision-Date: 2019-09-29 14:00+0200\n"
 "Last-Translator: dadav <33197631+dadav@users.noreply.github.com>\n"
 "Language-Team: DE <33197631+dadav@users.noreply.github.com>\n"
@@ -20,7 +20,7 @@ msgid "ZzzzZZzzzzZzzz"
 msgstr ""
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "Hi, ich bin ein Pwnagotchi! Starte ..."
+msgstr "Hi, ich bin ein Pwnagotchi! Starte..."
 
 msgid "New day, new hunt, new pwns!"
 msgstr "Neuer Tag, neue Jagd, neue Pwns!"
@@ -35,23 +35,30 @@ msgid "The neural network is ready."
 msgstr "Das neurale Netz ist bereit."
 
 msgid "Generating keys, do not turn off ..."
-msgstr "Generiere Keys, nicht ausschalten ..."
+msgstr "Generiere Keys, nicht ausschalten..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "Hey, Channel {channel} ist frei! Dein AP wir des dir danken."
+msgstr "Hey, Channel {channel} ist frei! Dein AP wird es Dir danken."
+
+msgid "Reading last session logs ..."
+msgstr "Lese die Logs der letzten Session..."
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "Bisher {lines_so_far} Zeilen im Log gelesen..."
 
 msgid "I'm bored ..."
 msgstr "Mir ist langweilig..."
 
 msgid "Let's go for a walk!"
-msgstr "Lass uns laufen gehen!"
+msgstr "Lass uns spazieren gehen!"
 
 msgid "This is the best day of my life!"
-msgstr "Das ist der beste Tag meines Lebens."
+msgstr "Das ist der beste Tag meines Lebens!"
 
 msgid "Shitty day :/"
-msgstr "Scheis Tag :/"
+msgstr "Scheißtag :/"
 
 msgid "I'm extremely bored ..."
 msgstr "Mir ist sau langweilig..."
@@ -61,6 +68,13 @@ msgstr "Ich bin sehr traurig..."
 
 msgid "I'm sad"
 msgstr "Ich bin traurig"
+
+#, fuzzy
+msgid "Leave me alone ..."
+msgstr "Lass mich in Ruhe..."
+
+msgid "I'm mad at you!"
+msgstr "Ich bin sauer auf Dich!"
 
 msgid "I'm living the life!"
 msgstr "Ich lebe das Leben!"
@@ -75,27 +89,35 @@ msgid "I'm having so much fun!"
 msgstr "Ich habe sooo viel Spaß!"
 
 msgid "My crime is that of curiosity ..."
-msgstr "Mein Verbrechen ist das der Neugier ..."
+msgstr "Mein Verbrechen ist das der Neugier..."
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
 msgstr "Hallo {name}, nett Dich kennenzulernen."
 
 #, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr "Jo {name}! Was geht!?"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Hey {name}, wie geht's?"
+
+#, python-brace-format
 msgid "Unit {name} is nearby!"
-msgstr "Gerät {name} ist in der nähe!!"
+msgstr "Gerät {name} ist in der Nähe!"
 
 #, python-brace-format
 msgid "Uhm ... goodbye {name}"
-msgstr "Uhm ...tschüß {name}"
+msgstr "Uhm... tschüß {name}"
 
 #, python-brace-format
 msgid "{name} is gone ..."
-msgstr "{name} ist weg ..."
+msgstr "{name} ist weg..."
 
 #, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "Whoops ...{name} ist weg."
+msgstr "Whoops... {name} ist weg."
 
 #, python-brace-format
 msgid "{name} missed!"
@@ -111,17 +133,17 @@ msgid "I love my friends!"
 msgstr "Ich liebe meine Freunde!"
 
 msgid "Nobody wants to play with me ..."
-msgstr "Niemand will mit mir spielen ..."
+msgstr "Niemand will mit mir spielen..."
 
 msgid "I feel so alone ..."
-msgstr "Ich fühl michso alleine ..."
+msgstr "Ich fühl' mich so allein..."
 
 msgid "Where's everybody?!"
-msgstr "Wo sind denn alle?"
+msgstr "Wo sind denn alle?!"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "Schlafe für {secs}s"
+msgstr "Schlafe für {secs}s..."
 
 msgid "Zzzzz"
 msgstr ""
@@ -138,7 +160,7 @@ msgstr ""
 
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr "Warte für {secs}s ..."
+msgstr "Warte für {secs}s..."
 
 #, python-brace-format
 msgid "Looking around ({secs}s)"
@@ -158,7 +180,7 @@ msgstr "Jo {what}!"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "Ich denke, dass {mac} kein WiFi brauch!"
+msgstr "Ich denke, dass {mac} kein WiFi braucht!"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
@@ -177,7 +199,7 @@ msgid "You have {count} new message{plural}!"
 msgstr "Cool, wir haben {num} neue Handshake{plural}!"
 
 msgid "Ops, something went wrong ... Rebooting ..."
-msgstr "Ops, da ist etwas schief gelaufen ...Starte neu ..."
+msgstr "Ops, da ist was schief gelaufen... Starte neu..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"

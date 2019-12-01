@@ -500,8 +500,9 @@ class WebConfig(plugins.Plugin):
         elif request.method == "POST":
             if path == "save-config":
                 try:
+                    parsed_yaml = yaml.safe_load(str(request.get_json()))
                     with open('/etc/pwnagotchi/config.yml', 'w') as config_file:
-                        yaml.safe_dump(request.get_json(), config_file, encoding='utf-8',
+                        yaml.safe_dump(parsed_yaml, config_file, encoding='utf-8',
                                 allow_unicode=True, default_flow_style=False)
 
                     _thread.start_new_thread(restart, (self.mode,))
