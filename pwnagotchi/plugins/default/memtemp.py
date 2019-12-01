@@ -44,7 +44,7 @@ class MemTemp(plugins.Plugin):
         if ui.is_waveshare_v2():
             h_pos = (180, 80)
             v_pos = (180, 61)
-        if ui.is_waveshare_v1():
+        elif ui.is_waveshare_v1():
             h_pos = (180, 80)
             v_pos = (180, 61)
         elif ui.is_inky():
