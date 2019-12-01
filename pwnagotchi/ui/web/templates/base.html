@@ -10,11 +10,16 @@
     </title>
 
     <link rel="stylesheet" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    {% block styles %}
+    {% endblock %}
+
     <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
     <script type="text/javascript" src="/js/jquery.timeago.js"></script>
     <script type="text/javascript" src="/js/jquery-qrcode-0.17.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    {% block scripts %}
+    {% endblock %}
 
     <script type="text/javascript">
         $.mobile.ajaxEnabled = false;
