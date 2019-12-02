@@ -26,7 +26,7 @@ msgid "New day, new hunt, new pwns!"
 msgstr "Neuer Tag, neue Jagd, neue Pwns!"
 
 msgid "Hack the Planet!"
-msgstr "Hack den Planet!"
+msgstr "Hack den Planeten!"
 
 msgid "AI ready."
 msgstr "KI bereit."
@@ -35,7 +35,7 @@ msgid "The neural network is ready."
 msgstr "Das neurale Netz ist bereit."
 
 msgid "Generating keys, do not turn off ..."
-msgstr "Generiere Keys, nicht ausschalten..."
+msgstr "Generiere Schlüssel, nicht ausschalten..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
@@ -83,7 +83,7 @@ msgid "I pwn therefore I am."
 msgstr "Ich pwne, also bin ich."
 
 msgid "So many networks!!!"
-msgstr "So viele Netwerke!!!"
+msgstr "So viele Netzwerke!!!"
 
 msgid "I'm having so much fun!"
 msgstr "Ich habe sooo viel Spaß!"
@@ -93,7 +93,7 @@ msgstr "Mein Verbrechen ist das der Neugier..."
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
-msgstr "Hallo {name}, nett Dich kennenzulernen."
+msgstr "Hallo {name}, schön Dich kennenzulernen."
 
 #, python-brace-format
 msgid "Yo {name}! Sup?"
@@ -203,11 +203,11 @@ msgstr "Ops, da ist was schief gelaufen... Starte neu..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "{num} Stationen gekicked\n"
+msgstr "{num} Stationen gekickt\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "{num} Freunde gefunden\n"
+msgstr "{num} neue Freunde gefunden\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
