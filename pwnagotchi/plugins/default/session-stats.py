@@ -65,6 +65,15 @@ TEMPLATE = """
                 },
                 rowSpacing: '0px'
             },
+            highlighter: {
+                show: true,
+                sizeAdjust: 7.5
+            },
+            cursor:{
+                show: true,
+                tooltipLocation:'sw'
+            }
+          }).replot({
             axes:{
                 xaxis:{
                     renderer:$.jqplot.DateAxisRenderer,
@@ -74,16 +83,8 @@ TEMPLATE = """
                     min: 0,
                     tickOptions:{formatString:'%.2f'}
                 }
-            },
-            highlighter: {
-                show: true,
-                sizeAdjust: 7.5
-            },
-            cursor:{
-                show: true,
-                tooltipLocation:'sw'
             }
-          }).replot({resetAxes: true});
+            });
       }
 
       function loadAll() {
