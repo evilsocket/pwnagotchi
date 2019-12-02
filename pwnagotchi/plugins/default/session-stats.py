@@ -65,6 +65,16 @@ TEMPLATE = """
                 },
                 rowSpacing: '0px'
             },
+            axes:{
+                xaxis:{
+                    renderer:$.jqplot.DateAxisRenderer,
+                    tickOptions:{formatString:'%H:%M:%S'}
+                },
+                yaxis:{
+                    min: 0,
+                    tickOptions:{formatString:'%.2f'}
+                }
+            },
             highlighter: {
                 show: true,
                 sizeAdjust: 7.5
