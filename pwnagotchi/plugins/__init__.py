@@ -3,6 +3,7 @@ import glob
 import _thread
 import importlib, importlib.util
 import logging
+from pwnagotchi.ui import view
 
 default_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "default")
 loaded = {}
@@ -27,13 +28,15 @@ def toggle_plugin(name, enable=True):
     global loaded, database
     if not enable and name in loaded:
         if getattr(loaded[name], 'on_unload', None):
-            loaded[name].on_unload()
+            loaded[name].on_unload(view.ROOT)
         del loaded[name]
         return True
 
     if enable and name in database and name not in loaded:
         load_from_file(database[name])
         one(name, 'loaded')
+        one(name, 'ui_setup', view.ROOT)
+        one(name, 'ready', view.ROOT._agent)
         return True
 
     return False

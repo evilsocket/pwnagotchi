@@ -466,13 +466,14 @@ class BTTether(plugins.Plugin):
         logging.info("BT-TETHER: Successfully loaded ...")
         self.ready = True
 
-    def on_unload(self):
-        self.ui.remove_element('bluetooth')
+    def on_unload(self, ui):
+        with ui._lock:
+            ui.remove_element('bluetooth')
 
     def on_ui_setup(self, ui):
-        self.ui = ui
-        ui.add_element('bluetooth', LabeledValue(color=BLACK, label='BT', value='-', position=(ui.width() / 2 - 15, 0),
-                                                 label_font=fonts.Bold, text_font=fonts.Medium))
+        with ui._lock:
+            ui.add_element('bluetooth', LabeledValue(color=BLACK, label='BT', value='-', position=(ui.width() / 2 - 15, 0),
+                           label_font=fonts.Bold, text_font=fonts.Medium))
 
     def on_ui_update(self, ui):
         if not self.ready:
