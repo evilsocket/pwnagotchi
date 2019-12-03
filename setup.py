@@ -45,12 +45,8 @@ def installer():
 
 installer()
 
-required = []
 with open('requirements.txt') as fp:
-    for line in fp:
-        line = line.strip()
-        if line != "":
-            required.append(line)
+    required = [line.strip() for line in fp if line.strip() != ""]
 
 import pwnagotchi
 
