@@ -28,7 +28,7 @@ $(function(){
 {% block content %}
 <div id="container">
     {% for name in database.keys() %}
-        <div class="element">
+        <div class="plugins-box">
           <h4>
             <a {% if name in loaded and loaded[name].on_webhook is defined %} href="/plugins/{{name}}" {% endif %}>{{name}}</a>
           </h4>
