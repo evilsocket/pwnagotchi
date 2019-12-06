@@ -12,19 +12,18 @@ class Automata(object):
         self._epoch = Epoch(config)
 
     def _on_miss(self, who):
-        logging.info("it looks like %s is not in range anymore :/" % who)
+        logging.info("it looks like %s is not in range anymore :/", who)
         self._epoch.track(miss=True)
         self._view.on_miss(who)
 
     def _on_error(self, who, e):
-        error = "%s" % e
         # when we're trying to associate or deauth something that is not in range anymore
         # (if we are moving), we get the following error from bettercap:
         # error 400: 50:c7:bf:2e:d3:37 is an unknown BSSID or it is in the association skip list.
-        if 'is an unknown BSSID' in error:
+        if 'is an unknown BSSID' in str(error):
             self._on_miss(who)
         else:
-            logging.error("%s" % e)
+            logging.error(e)
 
     def set_starting(self):
         self._view.on_starting()
@@ -58,7 +57,7 @@ class Automata(object):
     def set_bored(self):
         factor = self._epoch.inactive_for / self._config['personality']['bored_num_epochs']
         if not self._has_support_network_for(factor):
-            logging.warning("%d epochs with no activity -> bored" % self._epoch.inactive_for)
+            logging.warning("%d epochs with no activity -> bored", self._epoch.inactive_for)
             self._view.on_bored()
             plugins.on('bored', self)
         else:
@@ -68,7 +67,7 @@ class Automata(object):
     def set_sad(self):
         factor = self._epoch.inactive_for / self._config['personality']['sad_num_epochs']
         if not self._has_support_network_for(factor):
-            logging.warning("%d epochs with no activity -> sad" % self._epoch.inactive_for)
+            logging.warning("%d epochs with no activity -> sad", self._epoch.inactive_for)
             self._view.on_sad()
             plugins.on('sad', self)
         else:
@@ -77,7 +76,7 @@ class Automata(object):
 
     def set_angry(self, factor):
         if not self._has_support_network_for(factor):
-            logging.warning("%d epochs with no activity -> angry" % self._epoch.inactive_for)
+            logging.warning("%d epochs with no activity -> angry", self._epoch.inactive_for)
             self._view.on_angry()
             plugins.on('angry', self)
         else:
@@ -85,7 +84,7 @@ class Automata(object):
             self.set_grateful()
 
     def set_excited(self):
-        logging.warning("%d epochs with activity -> excited" % self._epoch.active_for)
+        logging.warning("%d epochs with activity -> excited", self._epoch.active_for)
         self._view.on_excited()
         plugins.on('excited', self)
 
@@ -118,7 +117,7 @@ class Automata(object):
             if factor >= 2.0:
                 self.set_angry(factor)
             else:
-                logging.warning("agent missed %d interactions -> lonely" % did_miss)
+                logging.warning("agent missed %d interactions -> lonely", did_miss)
                 self.set_lonely()
         # after X times being bored, the status is set to sad or angry
         elif self._epoch.inactive_for >= self._config['personality']['sad_num_epochs']:
@@ -139,6 +138,6 @@ class Automata(object):
         plugins.on('epoch', self, self._epoch.epoch - 1, self._epoch.data())
 
         if self._epoch.blind_for >= self._config['main']['mon_max_blind_epochs']:
-            logging.critical("%d epochs without visible access points -> rebooting ..." % self._epoch.blind_for)
+            logging.critical("%d epochs without visible access points -> rebooting ...", self._epoch.blind_for)
             self._reboot()
             self._epoch.blind_for = 0
