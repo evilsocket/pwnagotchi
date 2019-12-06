@@ -59,6 +59,11 @@ class GPS(plugins.Plugin):
             lat_pos = (112, 30)
             lon_pos = (112, 49)
             alt_pos = (87, 63)
+        elif ui.is_waveshare144lcd():
+            # guessed values, add tested ones if you can
+            lat_pos = (67, 73)
+            lon_pos = (62, 83)
+            alt_pos = (67, 93)
         else:
             # guessed values, add tested ones if you can
             lat_pos = (127, 51)
