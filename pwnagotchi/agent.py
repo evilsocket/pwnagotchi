@@ -67,7 +67,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
 
         for tag in self._config['bettercap']['silence']:
             try:
-                self.run('events.ignore %s', tag, verbose_errors=False)
+                self.run('events.ignore %s' % tag, verbose_errors=False)
             except Exception as e:
                 pass
 
@@ -156,7 +156,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         else:
             logging.debug("RECON %ds ON CHANNELS %s", recon_time, ','.join(map(str, channels)))
             try:
-                self.run('wifi.recon.channel %s', ','.join(map(str, channels)))
+                self.run('wifi.recon.channel %s' % ','.join(map(str, channels)))
             except Exception as e:
                 logging.exception("error")
 
