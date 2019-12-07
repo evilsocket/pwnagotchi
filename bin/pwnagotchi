@@ -13,7 +13,7 @@ import pwnagotchi.plugins as plugins
 from pwnagotchi.identity import KeyPair
 from pwnagotchi.agent import Agent
 from pwnagotchi.ui.display import Display
-from pwnagotch import restart
+from pwnagotchi import restart
 
 
 def do_clear(display):
