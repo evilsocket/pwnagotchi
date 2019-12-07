@@ -7,6 +7,7 @@ import platform
 import shutil
 import glob
 import pkg_resources
+from threading import Lock
 
 import pwnagotchi
 import pwnagotchi.plugins as plugins
@@ -150,6 +151,7 @@ class AutoUpdate(plugins.Plugin):
     def __init__(self):
         self.ready = False
         self.status = StatusFile('/root/.auto-update')
+        self.lock = Lock()
 
     def on_loaded(self):
         if 'interval' not in self.options or ('interval' in self.options and self.options['interval'] is None):
@@ -159,60 +161,61 @@ class AutoUpdate(plugins.Plugin):
         logging.info("[update] plugin loaded.")
 
     def on_internet_available(self, agent):
-        logging.debug("[update] internet connectivity is available (ready %s)" % self.ready)
+        with self.lock:
+            logging.debug("[update] internet connectivity is available (ready %s)" % self.ready)
 
-        if not self.ready:
-            return
+            if not self.ready:
+                return
 
-        if self.status.newer_then_hours(self.options['interval']):
-            logging.debug("[update] last check happened less than %d hours ago" % self.options['interval'])
-            return
+            if self.status.newer_then_hours(self.options['interval']):
+                logging.debug("[update] last check happened less than %d hours ago" % self.options['interval'])
+                return
 
-        logging.info("[update] checking for updates ...")
+            logging.info("[update] checking for updates ...")
 
-        display = agent.view()
-        prev_status = display.get('status')
+            display = agent.view()
+            prev_status = display.get('status')
 
-        try:
-            display.update(force=True, new_data={'status': 'Checking for updates ...'})
+            try:
+                display.update(force=True, new_data={'status': 'Checking for updates ...'})
 
-            to_install = []
-            to_check = [
-                ('bettercap/bettercap', parse_version('bettercap -version'), True, 'bettercap'),
-                ('evilsocket/pwngrid', parse_version('pwngrid -version'), True, 'pwngrid-peer'),
-                ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
-            ]
+                to_install = []
+                to_check = [
+                    ('bettercap/bettercap', parse_version('bettercap -version'), True, 'bettercap'),
+                    ('evilsocket/pwngrid', parse_version('pwngrid -version'), True, 'pwngrid-peer'),
+                    ('evilsocket/pwnagotchi', pwnagotchi.version, False, 'pwnagotchi')
+                ]
 
-            for repo, local_version, is_native, svc_name in to_check:
-                info = check(local_version, repo, is_native)
-                if info['url'] is not None:
-                    logging.warning(
-                        "update for %s available (local version is '%s'): %s" % (
-                            repo, info['current'], info['url']))
-                    info['service'] = svc_name
-                    to_install.append(info)
+                for repo, local_version, is_native, svc_name in to_check:
+                    info = check(local_version, repo, is_native)
+                    if info['url'] is not None:
+                        logging.warning(
+                            "update for %s available (local version is '%s'): %s" % (
+                                repo, info['current'], info['url']))
+                        info['service'] = svc_name
+                        to_install.append(info)
 
-            num_updates = len(to_install)
-            num_installed = 0
+                num_updates = len(to_install)
+                num_installed = 0
 
-            if num_updates > 0:
-                if self.options['install']:
-                    for update in to_install:
-                        plugins.on('updating')
-                        if install(display, update):
-                            num_installed += 1
-                else:
-                    prev_status = '%d new update%c available!' % (num_updates, 's' if num_updates > 1 else '')
+                if num_updates > 0:
+                    if self.options['install']:
+                        for update in to_install:
+                            plugins.on('updating')
+                            if install(display, update):
+                                num_installed += 1
+                    else:
+                        prev_status = '%d new update%c available!' % (num_updates, 's' if num_updates > 1 else '')
 
-            logging.info("[update] done")
+                logging.info("[update] done")
 
-            self.status.update()
+                self.status.update()
 
-            if num_installed > 0:
-                display.update(force=True, new_data={'status': 'Rebooting ...'})
-                pwnagotchi.reboot()
+                if num_installed > 0:
+                    display.update(force=True, new_data={'status': 'Rebooting ...'})
+                    pwnagotchi.reboot()
 
-        except Exception as e:
-            logging.error("[update] %s" % e)
+            except Exception as e:
+                logging.error("[update] %s" % e)
 
-        display.update(force=True, new_data={'status': prev_status if prev_status is not None else ''})
+            display.update(force=True, new_data={'status': prev_status if prev_status is not None else ''})
