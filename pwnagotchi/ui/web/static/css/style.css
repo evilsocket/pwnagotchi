@@ -65,3 +65,18 @@ li.navitem {
         width: 1.875em;
     }
 }
+
+#container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.plugins-box {
+    margin: 0.5rem;
+    padding: 0.2rem;
+    border-style: groove;
+    border-radius: 0.5rem;
+    background-color: lightgrey;
+    text-align: center;
+}

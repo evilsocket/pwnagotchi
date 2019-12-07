@@ -26,16 +26,18 @@ $(function(){
 });
 {% endblock %}
 {% block content %}
-<div style="padding: 1em">
+<div id="container">
     {% for name in database.keys() %}
-      <h4>
-        <a {% if name in loaded and loaded[name].on_webhook is defined %} href="/plugins/{{name}}" {% endif %}>{{name}}</a>
-      </h4>
-      <form method="POST" action="/plugins/toggle">
-        <input type="checkbox" data-role="flipswitch" name="enabled" id="flip-checkbox-{{name}}" data-on-text="Enabled" data-off-text="Disabled" data-wrapper-class="custom-size-flipswitch" {% if name in loaded %} checked {% endif %}>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="plugin" value="{{ name }}"/>
-      </form>
+        <div class="plugins-box">
+          <h4>
+            <a {% if name in loaded and loaded[name].on_webhook is defined %} href="/plugins/{{name}}" {% endif %}>{{name}}</a>
+          </h4>
+          <form method="POST" action="/plugins/toggle">
+            <input type="checkbox" data-role="flipswitch" name="enabled" id="flip-checkbox-{{name}}" data-on-text="Enabled" data-off-text="Disabled" data-wrapper-class="custom-size-flipswitch" {% if name in loaded %} checked {% endif %}>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="plugin" value="{{ name }}"/>
+          </form>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}
