@@ -109,6 +109,9 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('ws_154inch', 'ws154inch', 'waveshare_154inch', 'waveshare154inch'):
         config['ui']['display']['type'] = 'waveshare154inch'
 
+    elif config['ui']['display']['type'] in ('waveshare144lcd', 'ws_144inch', 'ws144inch', 'waveshare_144inch', 'waveshare144inch'):
+        config['ui']['display']['type'] = 'waveshare144lcd'
+
     elif config['ui']['display']['type'] in ('ws_213d', 'ws213d', 'waveshare_213d', 'waveshare213d'):
         config['ui']['display']['type'] = 'waveshare213d'
 
