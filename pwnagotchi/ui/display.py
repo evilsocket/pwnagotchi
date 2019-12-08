@@ -52,6 +52,9 @@ class Display(View):
     def is_dfrobot(self):
         return self._implementation.name == 'dfrobot'
 
+    def is_waveshare144lcd(self):
+        return self._implementation.name == 'waveshare144lcd'
+
     def is_waveshare154inch(self):
         return self._implementation.name == 'waveshare154inch'
 

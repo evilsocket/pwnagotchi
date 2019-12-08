@@ -26,7 +26,7 @@ class Example(plugins.Plugin):
         logging.warning("WARNING: this plugin should be disabled! options = " % self.options)
 
     # called before the plugin is unloaded
-    def on_unload(self):
+    def on_unload(self, ui):
         pass
 
     # called hen there's internet connectivity

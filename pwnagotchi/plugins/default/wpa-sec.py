@@ -1,8 +1,8 @@
 import os
 import logging
-import threading
 import requests
 from datetime import datetime
+from threading import Lock
 from pwnagotchi.utils import StatusFile
 from pwnagotchi import plugins
 from json.decoder import JSONDecodeError
@@ -16,7 +16,7 @@ class WpaSec(plugins.Plugin):
 
     def __init__(self):
         self.ready = False
-        self.lock = threading.Lock()
+        self.lock = Lock()
         try:
             self.report = StatusFile('/root/.wpa_sec_uploads', data_format='json')
         except JSONDecodeError as json_err:

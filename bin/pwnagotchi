@@ -3,6 +3,7 @@ import logging
 import argparse
 import time
 import yaml
+import signal
 
 import pwnagotchi
 import pwnagotchi.grid as grid
@@ -12,6 +13,7 @@ import pwnagotchi.plugins as plugins
 from pwnagotchi.identity import KeyPair
 from pwnagotchi.agent import Agent
 from pwnagotchi.ui.display import Display
+from pwnagotchi import restart
 
 
 def do_clear(display):
@@ -133,6 +135,12 @@ if __name__ == '__main__':
         exit(0)
 
     agent = Agent(view=display, config=config, keypair=KeyPair(view=display))
+
+    def usr1_handler(*unused):
+        logging.info('Received USR1 singal. Restart process ...')
+        restart("MANU" if args.do_manual else "AUTO")
+
+    signal.signal(signal.SIGUSR1, usr1_handler)
 
     if args.do_manual:
         do_manual_mode(agent)
