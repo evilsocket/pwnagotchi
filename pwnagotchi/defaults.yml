@@ -141,6 +141,59 @@ main:
             enabled: true
             # specify a maximum size to rotate ( format is 10/10B, 10K, 10M 10G )
             size: '10M'
+    buttonshim:
+        enabled: false
+        buttons:
+            A:
+                command: ''
+                blink:
+                    enabled: false
+                    red: 0
+                    green: 0
+                    blue: 0
+                    on_time: 0
+                    off_time: 0
+                    blink_times: 0
+            B:
+                command: ''
+                blink:
+                    enabled: false
+                    red: 0
+                    green: 0
+                    blue: 0
+                    on_time: 0
+                    off_time: 0
+                    blink_times: 0
+            C:
+                command: ''
+                blink:
+                    enabled: false
+                    red: 0
+                    green: 0
+                    blue: 0
+                    on_time: 0
+                    off_time: 0
+                    blink_times: 0
+            D:
+                command: ''
+                blink:
+                    enabled: false
+                    red: 0
+                    green: 0
+                    blue: 0
+                    on_time: 0
+                    off_time: 0
+                    blink_times: 0
+            E:
+                command: ''
+                blink:
+                    enabled: false
+                    red: 0
+                    green: 0
+                    blue: 0
+                    on_time: 0
+                    off_time: 0
+                    blink_times: 0
 
 ai:
     # if false, only the default 'personality' will be used
