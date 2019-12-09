@@ -1,8 +1,8 @@
-import subprocess
 import os
 import logging
 import time
 import re
+
 import pwnagotchi.ui.view as view
 import pwnagotchi
 
@@ -27,17 +27,17 @@ def set_name(new_name):
     if new_name != current:
         global _name
 
-        logging.info("setting unit hostname '%s' -> '%s'" % (current, new_name))
+        logging.info("setting unit hostname '%s' -> '%s'", current, new_name)
         with open('/etc/hostname', 'wt') as fp:
             fp.write(new_name)
 
         with open('/etc/hosts', 'rt') as fp:
             prev = fp.read()
-            logging.debug("old hosts:\n%s\n" % prev)
+            logging.debug("old hosts:\n%s\n", prev)
 
         with open('/etc/hosts', 'wt') as fp:
             patched = prev.replace(current, new_name, -1)
-            logging.debug("new hosts:\n%s\n" % patched)
+            logging.debug("new hosts:\n%s\n", patched)
             fp.write(patched)
 
         os.system("hostname '%s'" % new_name)
@@ -109,7 +109,7 @@ def shutdown():
 
 
 def restart(mode):
-    logging.warning("restarting in %s mode ..." % mode)
+    logging.warning("restarting in %s mode ...", mode)
 
     if mode == 'AUTO':
         os.system("touch /root/.pwnagotchi-auto")
@@ -123,7 +123,7 @@ def restart(mode):
 def reboot(mode=None):
     if mode is not None:
         mode = mode.upper()
-        logging.warning("rebooting in %s mode ..." % mode)
+        logging.warning("rebooting in %s mode ...", mode)
     else:
         logging.warning("rebooting ...")
 
