@@ -1,6 +1,7 @@
 import os
 import glob
 import _thread
+import threading
 import importlib, importlib.util
 import logging
 from pwnagotchi.ui import view
@@ -8,16 +9,26 @@ from pwnagotchi.ui import view
 default_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "default")
 loaded = {}
 database = {}
+locks = {}
+
 
 class Plugin:
     @classmethod
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
-        global loaded
+        global loaded, locks
+
         plugin_name = cls.__module__.split('.')[0]
         plugin_instance = cls()
         logging.debug("loaded plugin %s as %s" % (plugin_name, plugin_instance))
         loaded[plugin_name] = plugin_instance
+
+        for attr_name in plugin_instance.__dir__():
+            if attr_name.startswith('on_'):
+                cb = getattr(plugin_instance, attr_name, None)
+                if cb is not None and callable(cb):
+                    locks["%s::%s" % (plugin_name, attr_name)] = threading.Lock()
+
 
 def toggle_plugin(name, enable=True):
     """
@@ -48,14 +59,16 @@ def on(event_name, *args, **kwargs):
 
 
 def one(plugin_name, event_name, *args, **kwargs):
-    global loaded
+    global loaded, locks
+
     if plugin_name in loaded:
         plugin = loaded[plugin_name]
         cb_name = 'on_%s' % event_name
         callback = getattr(plugin, cb_name, None)
         if callback is not None and callable(callback):
             try:
-                _thread.start_new_thread(callback, (*args, *kwargs))
+                with locks["%s::%s" % (plugin_name, cb_name)]:
+                    _thread.start_new_thread(callback, (*args, *kwargs))
             except Exception as e:
                 logging.error("error while running %s.%s : %s" % (plugin_name, cb_name, e))
                 logging.error(e, exc_info=True)
