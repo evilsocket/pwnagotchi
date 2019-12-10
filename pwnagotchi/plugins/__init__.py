@@ -58,14 +58,14 @@ def on(event_name, *args, **kwargs):
         one(plugin_name, event_name, *args, **kwargs)
 
 
-def locked_cb(name, cb, *args, **kwargs):
+def locked_cb(lock_name, cb, *args, **kwargs):
     global locks
-    with locks[name]:
+    with locks[lock_name]:
         cb(*args, *kwargs)
 
 
 def one(plugin_name, event_name, *args, **kwargs):
-    global loaded, locks
+    global loaded
 
     if plugin_name in loaded:
         plugin = loaded[plugin_name]
@@ -74,7 +74,8 @@ def one(plugin_name, event_name, *args, **kwargs):
         if callback is not None and callable(callback):
             try:
                 lock_name = "%s::%s" % (plugin_name, cb_name)
-                _thread.start_new_thread(locked_cb, (lock_name, callback, *args, *kwargs))
+                locked_cb_args = (lock_name, callback, *args, *kwargs)
+                _thread.start_new_thread(locked_cb, locked_cb_args)
             except Exception as e:
                 logging.error("error while running %s.%s : %s" % (plugin_name, cb_name, e))
                 logging.error(e, exc_info=True)
