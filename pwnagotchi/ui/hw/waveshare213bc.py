@@ -42,7 +42,7 @@ class Waveshare213bc(DisplayImpl):
 
     def render(self, canvas):
         buf = self._display.getbuffer(canvas)
-        self._display.display(buf)
+        self._display.pwndisplay(buf)
 
     def clear(self):
         #pass
