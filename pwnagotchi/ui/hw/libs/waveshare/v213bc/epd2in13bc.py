@@ -29,6 +29,7 @@
 
 import logging
 from . import epdconfig
+from PIL import Image
 
 # Display resolution
 EPD_WIDTH       = 104
@@ -192,16 +193,29 @@ class EPD:
         self.send_command(0x04) # POWER_ON
         self.ReadBusy()
 
-        self.send_command(0x00) # PANEL_SETTING
-        self.send_data(0x8F)
+#        self.send_command(0x00) # PANEL_SETTING
+#        self.send_data(0x8F)
+#        self.send_command(0x50) # VCOM_AND_DATA_INTERVAL_SETTING
+#        self.send_data(0xF0)
+#        self.send_command(0x61) # RESOLUTION_SETTING
+#        self.send_data(self.width & 0xff)
+#        self.send_data(self.height >> 8)
+#        self.send_data(self.height & 0xff)
 
-        self.send_command(0x50) # VCOM_AND_DATA_INTERVAL_SETTING
-        self.send_data(0xF0)
+        self.send_command(0x00)	# panel setting
+        self.send_data(0xbf) # LUT from OTP,128x296
+        self.send_data(0x0d) # VCOM to 0V fast
 
-        self.send_command(0x61) # RESOLUTION_SETTING
-        self.send_data(self.width & 0xff)
-        self.send_data(self.height >> 8)
-        self.send_data(self.height & 0xff)
+        self.send_command(0x30)	# PLL setting
+        self.send_data(0x3a) # 3a 100HZ   29 150Hz 39 200HZ	31 171HZ
+
+        self.send_command(0x61)	# resolution setting
+        self.send_data(self.width)
+        self.send_data((self.height >> 8) & 0xff)
+        self.send_data(self.height& 0xff)
+
+        self.send_command(0x82)	# vcom_DC setting
+        self.send_data(0x28)
         return 0
 
     def SetFullReg(self):
@@ -266,7 +280,15 @@ class EPD:
         self.ReadBusy()
 
     def pwndisplay(self, imageblack):
+        if (Image == None):
+            return
+
         self.send_command(0x10)
+        for i in range(0, int(self.width * self.height / 8)):
+            self.send_data(0x00)
+        epdconfig.delay_ms(10)
+
+        self.send_command(0x13)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(imageblack[i])
         epdconfig.delay_ms(10)
@@ -291,6 +313,11 @@ class EPD:
 
     def pwnclear(self):
         self.send_command(0x10)
+        for i in range(0, int(self.width * self.height / 8)):
+            self.send_data(0x00)
+        epdconfig.delay_ms(10)
+
+        self.send_command(0x13)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(0xFF)
         epdconfig.delay_ms(10)
