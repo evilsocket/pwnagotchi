@@ -1,5 +1,4 @@
 import logging
-import time
 
 import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.ui.hw.base import DisplayImpl
@@ -38,7 +37,6 @@ class Waveshare213bc(DisplayImpl):
         self._display = EPD()
         self._display.init()
         self._display.Clear()
-        time.sleep(1)
 
     def render(self, canvas):
         buf = self._display.getbuffer(canvas)
@@ -46,4 +44,4 @@ class Waveshare213bc(DisplayImpl):
 
     def clear(self):
         #pass
-        self._display.Clear()
+        self._display.pwnclear()
