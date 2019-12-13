@@ -44,6 +44,7 @@ class EPD:
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
 
+
     lut_vcomDC = [
         0x00, 0x08, 0x00, 0x00, 0x00, 0x02,
         0x60, 0x28, 0x28, 0x00, 0x00, 0x01,
@@ -183,7 +184,30 @@ class EPD:
         if (epdconfig.module_init() != 0):
             return -1
 
+        logging.debug("e-Paper 2.13bc preboot hang check")
+        while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
+            epdconfig.delay_ms(100)
+            self.reset()
+            self.send_command(0X50)
+            self.send_data(0xf7)
+            self.send_command(0X02) # power off
+            self.send_command(0X07) # deep sleep
+            self.send_data(0xA5)
+            epdconfig.GPIO.output(epdconfig.RST_PIN, 0)
+            epdconfig.GPIO.output(epdconfig.DC_PIN, 0)
+            epdconfig.GPIO.output(epdconfig.CS_PIN, 0)
+            logging.debug("Reset, powerdown, voltage off done")
+        logging.debug("e-Paper did not hungup")
+
+
         self.reset()
+
+        self.send_command(0x01)	# POWER SETTING
+        self.send_data(0x03)
+        self.send_data(0x00)
+        self.send_data(0x2b)
+        self.send_data(0x2b)
+        self.send_data(0x03)
 
         self.send_command(0x06) # BOOSTER_SOFT_START
         self.send_data(0x17)
@@ -191,7 +215,11 @@ class EPD:
         self.send_data(0x17)
 
         self.send_command(0x04) # POWER_ON
-        self.ReadBusy()
+        logging.debug("e-Paper 2.13bc bootup busy")
+        while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
+            epdconfig.delay_ms(100)
+        logging.debug("e-Paper booted")
+
 
 #        self.send_command(0x00) # PANEL_SETTING
 #        self.send_data(0x8F)
@@ -210,7 +238,7 @@ class EPD:
         self.send_data(0x3a) # 3a 100HZ   29 150Hz 39 200HZ	31 171HZ
 
         self.send_command(0x61)	# resolution setting
-        self.send_data(self.width)
+        self.send_data(self.width & 0xff)
         self.send_data((self.height >> 8) & 0xff)
         self.send_data(self.height& 0xff)
 
