@@ -188,6 +188,11 @@ class EPD:
         while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
             epdconfig.delay_ms(100)
             self.reset()
+            self.send_command(0x06) # BOOSTER_SOFT_START
+            self.send_data(0x17)
+            self.send_data(0x17)
+            self.send_data(0x17)
+            self.send_command(0x04) # POWER_ON
             self.send_command(0X50)
             self.send_data(0xf7)
             self.send_command(0X02) # power off
