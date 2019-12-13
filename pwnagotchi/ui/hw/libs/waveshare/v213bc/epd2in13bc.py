@@ -184,7 +184,7 @@ class EPD:
         if (epdconfig.module_init() != 0):
             return -1
 
-        logging.debug("e-Paper 2.13bc preboot hang check")
+        logging.debug("e-Paper 2.13bc preboot Freeze recovery")
         while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
             epdconfig.delay_ms(100)
             self.reset()
@@ -196,8 +196,8 @@ class EPD:
             epdconfig.GPIO.output(epdconfig.RST_PIN, 0)
             epdconfig.GPIO.output(epdconfig.DC_PIN, 0)
             epdconfig.GPIO.output(epdconfig.CS_PIN, 0)
-            logging.debug("Reset, powerdown, voltage off done")
-        logging.debug("e-Paper did not hungup")
+            #logging.debug("Reset, powerdown, voltage off done")
+        logging.debug("e-Paper is not frozen now :)")
 
 
         self.reset()
@@ -218,8 +218,6 @@ class EPD:
         logging.debug("e-Paper 2.13bc bootup busy")
         while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
             epdconfig.delay_ms(100)
-        logging.debug("e-Paper booted")
-
 
 #        self.send_command(0x00) # PANEL_SETTING
 #        self.send_data(0x8F)
@@ -244,6 +242,9 @@ class EPD:
 
         self.send_command(0x82)	# vcom_DC setting
         self.send_data(0x28)
+
+        #self.Clear()
+        logging.debug("e-Paper booted")
         return 0
 
     def SetFullReg(self):
@@ -342,7 +343,7 @@ class EPD:
     def pwnclear(self):
         self.send_command(0x10)
         for i in range(0, int(self.width * self.height / 8)):
-            self.send_data(0x00)
+            self.send_data(0xFF)
         epdconfig.delay_ms(10)
 
         self.send_command(0x13)
