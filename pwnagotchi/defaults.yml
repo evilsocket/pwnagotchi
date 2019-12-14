@@ -31,6 +31,8 @@ main:
             device: /dev/ttyUSB0
         webgpsmap:
             enabled: false
+        hashie:
+            enabled: false
         onlinehashcrack:
             enabled: false
             email: ~
