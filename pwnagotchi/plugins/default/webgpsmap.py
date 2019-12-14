@@ -95,6 +95,19 @@ class Webgpsmap(plugins.Plugin):
                 #     response_status = 200
                 #     response_mimetype = "application/json"
                 #     response_header_contenttype = 'application/json'
+                elif path.startswith('incomplete'):
+                #     # returns all positions without enough packets to create a hash
+                    #response_data = bytes(json.dumps(self.load_gps_from_dir(self.config['bettercap']['handshakes'])), "utf-8")
+                    try:
+                        #self.ALREADY_SENT = list()
+                        response_data = bytes(json.dumps(self.load_gps_from_file(self.config['bettercap']['handshakes'],"/root/.incompletePcaps")), "utf-8")
+                        #response_data = bytes(self.get_html(), "utf-8")
+                        response_status = 200
+                        response_mimetype = "application/xhtml+xml"
+                        response_header_contenttype = 'text/html'
+                    except Exception as error:
+                        logging.error(f"[webgpsmap] error: {error}")
+                        return
                 else:
                     # unknown GET path
                     response_data = bytes('''<html>
@@ -128,7 +141,6 @@ class Webgpsmap(plugins.Plugin):
     @lru_cache(maxsize=2048, typed=False)
     def _get_pos_from_file(self, path):
         return PositionFile(path)
-
 
     def load_gps_from_dir(self, gpsdir, newest_only=False):
         """
@@ -212,6 +224,105 @@ class Webgpsmap(plugins.Plugin):
                 # get ap password if exist
                 check_for = os.path.basename(pos_file[:-9]) + ".pcap.cracked"
                 if check_for in all_files:
+                    gps_data[ssid + "_" + mac]["pass"] = pos.password()
+
+                self.ALREADY_SENT += pos_file
+            except json.JSONDecodeError as error:
+                self.SKIP += pos_file
+                logging.error(f"[webgpsmap] JSONDecodeError in: {error}")
+                continue
+            except ValueError as error:
+                self.SKIP += pos_file
+                logging.error(f"[webgpsmap] ValueError: {error}")
+                continue
+            except OSError as error:
+                self.SKIP += pos_file
+                logging.error(f"[webgpsmap] OSError: {error}")
+                continue
+        logging.info(f"[webgpsmap] loaded {len(gps_data)} positions")
+        return gps_data
+
+    def load_gps_from_file(self, handshake_dir, inFile, newest_only=False):
+        """
+        Parses the gps-data from a file, the file should contain a list of pcaps whose location files should be processed
+        """
+
+        gps_data = dict()
+        logging.info(f"[webgpsmap] reading {inFile}")
+
+        all_files = os.listdir(handshake_dir)
+        #print(all_files)
+        all_pcap_files = [] #[ os.path.join(handshake_dir, filename) for filename in all_files if filename.endswith('.pcap') ]
+        
+        #incomplete pcaps needs to save just the filename&extension
+        with open(inFile,'r') as inFileTemp:
+            for line in inFileTemp.readlines():
+                all_pcap_files.append(handshake_dir + "/" + line.strip('\n'))
+        
+        all_geo_or_gps_files = []
+        for filename_pcap in all_pcap_files:
+            filename_base = filename_pcap[:-5]  # remove ".pcap"
+            filename_position = None
+
+            logging.debug("[webgpsmap] search for .gps.json")
+            check_for = filename_base + ".gps.json"
+            if os.path.isfile(check_for):
+                filename_position = str(check_for)
+
+            logging.debug("[webgpsmap] search for .geo.json")
+            check_for = filename_base + ".geo.json"
+            if os.path.isfile(check_for):
+                filename_position = str(check_for)
+
+            logging.debug("[webgpsmap] search for .paw-gps.json")
+            check_for = filename_base + ".paw-gps.json"
+            if os.path.isfile(check_for):
+                filename_position = str(check_for)
+
+            logging.debug(f"[webgpsmap] end search for position data files and use {filename_position}")
+
+            if filename_position is not None:
+                all_geo_or_gps_files.append(filename_position)
+
+    #    all_geo_or_gps_files = set(all_geo_or_gps_files) - set(SKIP)   # remove skipped networks? No!
+
+        if newest_only:
+            all_geo_or_gps_files = set(all_geo_or_gps_files) - set(self.ALREADY_SENT)
+
+        logging.info(f"[webgpsmap] Found {len(all_geo_or_gps_files)} position-data files from {len(all_pcap_files)} handshakes. Fetching positions ...")
+
+        for pos_file in all_geo_or_gps_files:
+            try:
+                pos = self._get_pos_from_file(pos_file)
+                if not pos.type() == PositionFile.GPS and not pos.type() == PositionFile.GEO and not pos.type() == PositionFile.PAWGPS:
+                    continue
+
+                ssid, mac = pos.ssid(), pos.mac()
+                ssid = "unknown" if not ssid else ssid
+                # invalid mac is strange and should abort; ssid is ok
+                if not mac:
+                    raise ValueError("Mac can't be parsed from filename")
+                pos_type = 'unknown'
+                if pos.type() == PositionFile.GPS:
+                    pos_type = 'gps'
+                elif pos.type() == PositionFile.GEO:
+                    pos_type = 'geo'
+                elif pos.type() == PositionFile.PAWGPS:
+                    pos_type = 'paw'
+                gps_data[ssid+"_"+mac] = {
+                    'ssid': ssid,
+                    'mac': mac,
+                    'type': pos_type,
+                    'lng': pos.lng(),
+                    'lat': pos.lat(),
+                    'acc': pos.accuracy(),
+                    'ts_first': pos.timestamp_first(),
+                    'ts_last': pos.timestamp_last(),
+                    }
+
+                # get ap password if exist
+                check_for = os.path.basename(pos_file[:-9]) + ".pcap.cracked"
+                if check_for in all_pcap_files:
                     gps_data[ssid + "_" + mac]["pass"] = pos.password()
 
                 self.ALREADY_SENT += pos_file
