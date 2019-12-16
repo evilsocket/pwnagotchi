@@ -212,7 +212,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             ch = ap['channel']
             # if we're sticking to a channel, skip anything
             # which is not on that channel
-            if not channels or (channels and ch not in channels):
+            if channels and ch not in channels:
                 continue
 
             if ch not in grouped:
