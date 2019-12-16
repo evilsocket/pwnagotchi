@@ -10,6 +10,8 @@ PermissionsStartOnly=true
 ExecStart=/usr/bin/pwnagotchi-launcher
 Restart=always
 RestartSec=30
+TasksMax=infinity
+LimitNPROC=infinity
 
 [Install]
 WantedBy=multi-user.target
