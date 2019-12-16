@@ -10,6 +10,8 @@ import yaml
 import json
 import shutil
 import gzip
+import contextlib
+import tempfile
 
 import pwnagotchi
 
@@ -345,6 +347,17 @@ def extract_from_pcap(path, fields):
 
     return results
 
+@contextlib.contextmanager
+def ensure_write(filename, mode='w'):
+    path = os.path.dirname(filename)
+    fd, tmp = tempfile.mkstemp(dir=path)
+
+    with os.fdopen(fd, mode) as f:
+        yield f
+        f.flush()
+        os.fsync(f.fileno())
+
+    os.replace(tmp, filename)
 
 class StatusFile(object):
     def __init__(self, path, data_format='raw'):
@@ -378,7 +391,7 @@ class StatusFile(object):
     def update(self, data=None):
         self._updated = datetime.now()
         self.data = data
-        with open(self._path, 'w') as fp:
+        with ensure_write(self._path, 'w') as fp:
             if data is None:
                 fp.write(str(self._updated))
 
