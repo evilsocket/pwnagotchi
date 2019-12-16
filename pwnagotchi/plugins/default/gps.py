@@ -113,6 +113,13 @@ class GPS(plugins.Plugin):
             ),
         )
 
+
+    def on_unload(self, ui):
+        with ui._lock:
+            ui.remove_element('latitude')
+            ui.remove_element('longitude')
+            ui.remove_element('altitude')
+
     def on_ui_update(self, ui):
         if self.coordinates and all([
             # avoid 0.000... measurements

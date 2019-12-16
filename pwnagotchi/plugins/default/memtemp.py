@@ -70,6 +70,10 @@ class MemTemp(plugins.Plugin):
                                                    position=h_pos,
                                                    label_font=fonts.Small, text_font=fonts.Small))
 
+    def on_unload(self, ui):
+        with ui._lock:
+            ui.remove_element('memtemp')
+
     def on_ui_update(self, ui):
         if self.options['scale'] == "fahrenheit":
             temp = (pwnagotchi.temperature() * 9 / 5) + 32
@@ -78,7 +82,7 @@ class MemTemp(plugins.Plugin):
             temp = pwnagotchi.temperature() + 273.15
             symbol = "k"
         else:
-            # default to celsius 
+            # default to celsius
             temp = pwnagotchi.temperature()
             symbol = "c"
 
