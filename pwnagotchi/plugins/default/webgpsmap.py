@@ -304,6 +304,9 @@ class PositionFile:
         elif 'Updated' in self._json:
             # convert gps datetime to unix timestamp: "2019-10-05T23:12:40.422996+01:00"
             date_iso_formated = self._json['Updated']
+            #fix timezone "Z": "2019-11-28T04:44:46.79231Z" >> "2019-11-28T04:44:46.79231+00:00"
+            if date_iso_formated.endswith("Z"):
+              date_iso_formated = date_iso_formated[:-1] + "+00:00"
             # bad microseconds fix: fill/cut microseconds to 6 numbers
             part1, part2, part3 = re.split('\.|\+', date_iso_formated)
             part2 = part2.ljust(6, '0')[:6]
