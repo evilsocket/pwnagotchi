@@ -198,8 +198,8 @@ msgstr "Cool, wir haben {num} neue Handshake{plural}!"
 msgid "You have {count} new message{plural}!"
 msgstr "Cool, wir haben {num} neue Handshake{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
-msgstr "Ops, da ist was schief gelaufen... Starte neu..."
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Oops, da ist was schief gelaufen... Starte neu..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"

@@ -198,7 +198,7 @@ msgstr ""
 msgid "You have {count} new message{plural}!"
 msgstr ""
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr ""
 
 #, python-brace-format

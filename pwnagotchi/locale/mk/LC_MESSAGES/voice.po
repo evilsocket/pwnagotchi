@@ -158,7 +158,7 @@ msgstr "Кикбан {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Кул, фативме {num} нови ракувања!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Упс, нешто не еко што треба ... Рестартирам ..."
 
 #, python-brace-format

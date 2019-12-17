@@ -188,7 +188,7 @@ msgstr "Кикаю {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Круто, мы получили {num} новое рукопожатие!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Ой, что-то пошло не так … Перезагружаюсь …"
 
 #, python-brace-format

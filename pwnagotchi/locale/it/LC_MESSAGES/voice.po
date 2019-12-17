@@ -156,8 +156,8 @@ msgstr "Sto prendendo a calci {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Bene, abbiamo {num} handshake{plural} in più!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
-msgstr "Ops, qualcosa è andato storto ... Riavvio ..."
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Oops, qualcosa è andato storto ... Riavvio ..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"

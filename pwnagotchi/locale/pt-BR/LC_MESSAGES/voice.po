@@ -158,8 +158,8 @@ msgstr "Kickbanning {mac}"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Legal, nos capturamos {num} handshake{plural} novo{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
-msgstr "Ops, algo falhou ... Reiniciando ..."
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Oops, algo falhou ... Reiniciando ..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"

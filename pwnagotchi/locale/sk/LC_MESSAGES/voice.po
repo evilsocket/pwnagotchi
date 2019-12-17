@@ -177,8 +177,8 @@ msgstr "Super, máme {num} nový handshake{plural}!"
 msgid "You have {count} new message{plural}!"
 msgstr "Máte {count} novú správu{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
-msgstr "Ops, niečo sa pokazilo ... Reštartujem sa ..."
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Oops, niečo sa pokazilo ... Reštartujem sa ..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
