@@ -58,5 +58,9 @@ class UPSLite(plugins.Plugin):
         ui.add_element('ups', LabeledValue(color=BLACK, label='UPS', value='0%/0V', position=(ui.width() / 2 + 15, 0),
                                            label_font=fonts.Bold, text_font=fonts.Medium))
 
+    def on_unload(self, ui):
+        with ui._lock:
+            ui.remove_element('ups')
+
     def on_ui_update(self, ui):
         ui.set('ups', "%2i%%" % self.ups.capacity())
