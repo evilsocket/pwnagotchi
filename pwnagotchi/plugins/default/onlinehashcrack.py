@@ -96,6 +96,7 @@ class OnlineHashCrack(plugins.Plugin):
                     logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onlinehashcrack.com")
 
                     for idx, handshake in enumerate(handshake_new):
+                        display.set('face', "(>‿‿>)")
                         display.set('status',
                                     f"Uploading handshake to onlinehashcrack.com ({idx + 1}/{len(handshake_new)})")
                         display.update(force=True)
