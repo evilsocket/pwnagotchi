@@ -39,6 +39,7 @@ class OnlineHashCrack(plugins.Plugin):
         self.options['whitelist'] = set(map(lambda x: re.sub(r'[^a-zA-Z0-9]', '', x), self.options['whitelist']))
 
         self.ready = True
+        logging.info("OHC: OnlineHashCrack plugin loaded.")
 
     def _filter_handshake_file(self, handshake_filename):
         try:
