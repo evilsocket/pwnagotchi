@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 21:50+0100\n"
+"POT-Creation-Date: 2019-12-18 05:58+0930\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,6 +203,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
+msgstr ""
+
+msgid "Made >999 new friends\n"
 msgstr ""
 
 #, python-brace-format
