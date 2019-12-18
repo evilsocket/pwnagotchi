@@ -154,7 +154,7 @@ class AutoUpdate(plugins.Plugin):
         self.lock = Lock()
 
     def on_loaded(self):
-        if 'interval' not in self.options or ('interval' in self.options and self.options['interval'] is None):
+        if 'interval' not in self.options or ('interval' in self.options and not self.options['interval']):
             logging.error("[update] main.plugins.auto-update.interval is not set")
             return
         self.ready = True

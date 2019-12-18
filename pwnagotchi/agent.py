@@ -30,7 +30,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         AsyncTrainer.__init__(self, config)
 
         self._started_at = time.time()
-        self._filter = None if config['main']['filter'] is None else re.compile(config['main']['filter'])
+        self._filter = None if not config['main']['filter'] else re.compile(config['main']['filter'])
         self._current_channel = 0
         self._tot_aps = 0
         self._aps_on_channel = 0
