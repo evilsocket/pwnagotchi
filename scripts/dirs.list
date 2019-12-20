@@ -1,0 +1,15 @@
+/root/brain.nn
+/root/brain.json
+/root/.api-report.json
+/root/.ssh
+/root/.bashrc
+/root/.profile
+/root/handshakes
+/root/peers
+/etc/pwnagotchi/
+/etc/ssh/
+/var/log/pwnagotchi.log
+/var/log/pwnagotchi*.gz
+/home/pi/.ssh
+/home/pi/.bashrc
+/home/pi/.profile
