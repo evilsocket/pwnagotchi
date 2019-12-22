@@ -103,6 +103,9 @@
           - python3-flask
           - python3-flask-cors
           - python3-flaskext.wtf
+          - dns-root-data
+          - dnsmasq
+          - dnsmasq-base
 
   tasks:
   - name: change hostname

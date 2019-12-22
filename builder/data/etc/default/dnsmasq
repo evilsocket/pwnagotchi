@@ -1,0 +1,3 @@
+ENABLED=1
+CONFIG_DIR=/etc/dnsmasq.d,.dpkg-dist,.dpkg-old,.dpkg-new
+DNSMASQ_EXCEPT=lo

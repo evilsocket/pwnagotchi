@@ -56,6 +56,16 @@
     },
     {
       "type": "file",
+      "source": "data/etc/default/dnsmasq",
+      "destination": "/etc/default/dnsmasq"
+    },
+    {
+      "type": "file",
+      "source": "data/etc/dnsmasq.conf",
+      "destination": "/etc/dnsmasq.conf"
+    },
+    {
+      "type": "file",
       "source": "data/etc/network/interfaces.d/lo-cfg",
       "destination": "/etc/network/interfaces.d/lo-cfg"
     },
