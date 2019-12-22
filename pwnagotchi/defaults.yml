@@ -13,6 +13,15 @@ main:
     custom_plugins:
     # which plugins to load and enable
     plugins:
+        switcher:
+            enabled: false
+            tasks:
+                bored:
+                    enabled: false
+                    reboot: true
+                    commands:
+                      - systemctl start fisch # see https://github.com/dadav/fisch
+                    stopwatch: 15 # timeout of the task (in minutes)
         grid:
             enabled: true
             report: false # don't report pwned networks by default!

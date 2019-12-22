@@ -60,6 +60,10 @@ def on(event_name, *args, **kwargs):
 
 def locked_cb(lock_name, cb, *args, **kwargs):
     global locks
+
+    if lock_name not in locks:
+        locks[lock_name] = threading.Lock()
+
     with locks[lock_name]:
         cb(*args, *kwargs)
 
