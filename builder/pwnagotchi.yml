@@ -103,6 +103,9 @@
           - python3-flask
           - python3-flask-cors
           - python3-flaskext.wtf
+          - dns-root-data
+          - dnsmasq
+          - dnsmasq-base
 
   tasks:
   - name: change hostname
@@ -292,6 +295,27 @@
         if ! /opt/vc/bin/tvservice -s | egrep 'HDMI|DVI'; then
           /opt/vc/bin/tvservice -o
         fi
+
+  - name: add dnsmasq configuration
+    copy:
+      dest: /etc/dnsmasq.d/01-usb0.conf
+      content: |
+        # Disable local DNS as we only need DHCP
+        port=0
+        # Listen on usb0, i.e. ethernet gadget
+        listen-address=10.0.0.2
+        # Ensure IP leased is default route so we can access internet if shared
+        # Renew lease every 2 minutes so when usb0 MAC changes
+        # on reboot, lease expires relatively quickly and client can get IP again
+        dhcp-range=10.0.0.1,10.0.0.1,255.255.255.0,2m
+        # Offer empty default route
+        dhcp-option=3
+        # Offer empty DNS
+        dhcp-option=6
+
+        # BOOTP is not recommended and gives leases FOREVER so
+        # do not enable unless you fix the MAC address of usb0 from changing
+        #bootp-dynamic
 
   - name: create /etc/pwnagotchi folder
     file:
