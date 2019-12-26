@@ -22,7 +22,7 @@ from functools import lru_cache
 
 class Webgpsmap(plugins.Plugin):
     __author__ = 'https://github.com/xenDE and https://github.com/dadav'
-    __version__ = '1.3.0'
+    __version__ = '1.3.1'
     __name__ = 'webgpsmap'
     __license__ = 'GPL3'
     __description__ = 'a plugin for pwnagotchi that shows a openstreetmap with positions of ap-handshakes in your webbrowser'
@@ -49,6 +49,7 @@ class Webgpsmap(plugins.Plugin):
         """
         # defaults:
         response_header_contenttype = None
+        response_header_contentdisposition = None
         response_mimetype = "application/xhtml+xml"
         if not self.ready:
             try:
@@ -89,6 +90,21 @@ class Webgpsmap(plugins.Plugin):
                     except Exception as error:
                         logging.error(f"[webgpsmap] error: {error}")
                         return
+                elif path.startswith('offlinemap'):
+                    # for download an all-in-one html file with positions.json inside
+                    try:
+                        self.ALREADY_SENT = list()
+                        json_data = json.dumps(self.load_gps_from_dir(self.config['bettercap']['handshakes']))
+                        html_data = self.get_html()
+                        html_data = html_data.replace('var positions = [];', 'var positions = ' + json_data + ';positionsLoaded=true;drawPositions();')
+                        response_data = bytes(html_data, "utf-8")
+                        response_status = 200
+                        response_mimetype = "application/xhtml+xml"
+                        response_header_contenttype = 'text/html'
+                        response_header_contentdisposition = 'attachment; filename=webgpsmap.html';
+                    except Exception as error:
+                        logging.error(f"[webgpsmap] offlinemap: error: {error}")
+                        return
                 # elif path.startswith('/newest'):
                 #     # returns all positions newer then timestamp
                 #     response_data = bytes(json.dumps(self.load_gps_from_dir(self.config['bettercap']['handshakes']), newest_only=True), "utf-8")
@@ -119,6 +135,8 @@ class Webgpsmap(plugins.Plugin):
             r = Response(response=response_data, status=response_status, mimetype=response_mimetype)
             if response_header_contenttype is not None:
                 r.headers["Content-Type"] = response_header_contenttype
+            if response_header_contentdisposition is not None:
+                r.headers["Content-Disposition"] = response_header_contentdisposition
             return r
         except Exception as error:
             logging.error(f"[webgpsmap] error: {error}")
