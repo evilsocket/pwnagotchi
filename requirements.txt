@@ -1,4 +1,4 @@
-crypto==1.4.1
+pycryptodome==3.9.4
 requests==2.21.0
 PyYAML==5.1
 scapy==2.4.3
