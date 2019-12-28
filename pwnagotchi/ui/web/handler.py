@@ -126,6 +126,9 @@ class Handler:
             logging.exception('error while reading pwngrid peers')
             error = str(e)
 
+        # put last seen friends on top
+        peers.sort(key=lambda peer: peer['seen_at'], reverse=True)
+
         return render_template('peers.html',
                                name=pwnagotchi.name(),
                                peers=peers,

@@ -12,7 +12,8 @@
         <a href="/inbox/new?to={{ peer.fingerprint }}">
             <h2>{{ peer.advertisement.face }} {{ peer.advertisement.name }}@{{ peer.fingerprint }}</h2>
             <p>
-                Pwned {{ peer.advertisement.pwnd_tot }} networks, {{ peer.encounters }} encounters.
+                Pwned {{ peer.advertisement.pwnd_tot }} networks, {{ peer.encounters }} encounters{% if peer.seen_at %}, seen
+                <b><time class="timeago" datetime="{{ peer.seen_at }}">{{ peer.seen_at }}</time></b>{% endif %}.
             </p>
         </a>
     </li>
