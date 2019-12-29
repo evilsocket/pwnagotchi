@@ -270,5 +270,16 @@
       positionsLoaded = true;
       drawPositions();
     });
+    // get current position and set marker in interval
+    var myLocationMarker = {};
+    function onLocationFound(e) {
+      if (myLocationMarker != undefined) {
+        mymap.removeLayer(myLocationMarker);
+      };
+      myLocationMarker = L.marker(e.latlng).addTo(mymap);
+      setTimeout(function(){ mymap.locate(); }, 30000);
+    }
+    mymap.on('locationfound', onLocationFound);
+    mymap.locate({setView: true});
   </script>
 </body></html>
