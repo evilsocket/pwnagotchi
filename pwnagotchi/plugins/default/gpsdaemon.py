@@ -12,7 +12,7 @@ class GPSDaemon(plugins.Plugin):
     __author__ = "fheylis (https://github.com/fheylis)"
     __version__ = "1.0.0"
     __license__ = "GPL3"
-    __description__ = "Save GPS coordinates from GPSD whenever an handshake is captured."
+    __description__ = "Save GPS coordinates from GPSD whenever a handshake is captured."
 
     def __init__(self):
         self.running = False
