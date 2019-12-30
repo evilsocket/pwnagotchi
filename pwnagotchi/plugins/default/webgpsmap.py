@@ -308,12 +308,17 @@ class PositionFile:
             if date_iso_formated.endswith("Z"):
               date_iso_formated = date_iso_formated[:-1] + "+00:00"
             # bad microseconds fix: fill/cut microseconds to 6 numbers
-            part1, part2, part3 = re.split('\.|\+', date_iso_formated)
+            parts = re.split('^(([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60))(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):?[0-5][0-9]))$', date_iso_formated)
+
+            part1 = parts[1]
+            part2 = parts[8][1:]
+            part3 = parts[11]
+            
             part2 = part2.ljust(6, '0')[:6]
             # timezone fix: 0200 >>> 02:00
-            if len(part3) == 4:
-                part3 = part3[1:2].rjust(2, '0') + ':' + part3[3:4].rjust(2, '0')
-            date_iso_formated = part1 + "." + part2 + "+" + part3
+            if len(part3) == 5:
+                part3 = part3[0:1] + part3[1:2].rjust(2, '0') + ':' + part3[3:4].rjust(2, '0')
+            date_iso_formated = part1 + "." + part2 + part3
             dateObj = datetime.datetime.fromisoformat(date_iso_formated)
             return_ts = int("%.0f" % dateObj.timestamp())
         else:
