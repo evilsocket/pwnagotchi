@@ -29,6 +29,10 @@ main:
             enabled: false
             speed: 19200
             device: /dev/ttyUSB0
+        gpsdaemon:
+            enabled: false
+            host: "localhost"
+            port: 2947
         webgpsmap:
             enabled: false
         onlinehashcrack:
