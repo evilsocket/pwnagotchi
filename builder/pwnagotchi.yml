@@ -47,7 +47,7 @@
           - firmware-misc-nonfree
           - firmware-realtek
         remove:
-          - rasberrypi-net-mods
+          - raspberrypi-net-mods
           - dhcpcd5
           - triggerhappy
           - wpa_supplicant
