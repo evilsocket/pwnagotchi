@@ -386,6 +386,24 @@
       regexp: '(.*)$'
       line: '\1 modules-load=dwc2,g_ether'
 
+  - name: configure static RNDIS gadget (usb0) MAC address
+    blockinfile:
+      path: /etc/rc.local
+      insertbefore: "exit 0"
+      block: |
+        # Fixes the MAC address of the ethernet gadget (usb0) so it
+        # doesn't change. This ensures the user doesn't have to wait
+        # for DHCP lease expiry on reconnect without reboot
+
+        CMDLINE="/boot/cmdline.txt"
+
+        if ! grep -q 'g_ether.host_addr=' $CMDLINE && ! grep -q 'g_ether.dev_addr=' $CMDLINE; then
+          HOST_ADDR='g_ether.host_addr='$(dmesg | awk '/: HOST MAC/{print $NF}')
+          DEV_ADDR='g_ether.dev_addr='$(dmesg | awk '/: MAC/{print $NF}')
+          RNDIS="$HOST_ADDR $DEV_ADDR"
+          sed -i '$ s/$/ \'"$RNDIS"'/' $CMDLINE
+        fi
+
   - name: configure motd
     copy:
       dest: /etc/motd
