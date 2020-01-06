@@ -302,12 +302,16 @@
       content: |
         # Disable local DNS as we only need DHCP
         port=0
+        # Ensure we're authoritative, so any requests will get answered without timeout
+        dhcp-authoritative
+        # Do not check if the address is in use, since there is only one address to lease
+        no-ping
+        # Store leasefile in /tmp so it gets cleared on reboot
+        dhcp-leasefile=/tmp/dhcp.leases
         # Listen on usb0, i.e. ethernet gadget
         listen-address=10.0.0.2
         # Ensure IP leased is default route so we can access internet if shared
-        # Renew lease every 2 minutes so when usb0 MAC changes
-        # on reboot, lease expires relatively quickly and client can get IP again
-        dhcp-range=10.0.0.1,10.0.0.1,255.255.255.0,2m
+        dhcp-range=10.0.0.1,10.0.0.1,255.255.255.0,24h
         # Offer empty default route
         dhcp-option=3
         # Offer empty DNS
@@ -383,7 +387,7 @@
       block: |
         # Fixes the MAC address of the ethernet gadget (usb0) so it
         # doesn't change. This ensures the user doesn't have to wait
-        # for DHCP lease expiry on reboot or reconnect
+        # for DHCP lease expiry on reconnect without reboot
 
         CMDLINE="/boot/cmdline.txt"
 
