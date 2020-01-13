@@ -116,6 +116,9 @@ main:
           enabled: false
         session-stats:
           enabled: true
+        ups_lite:
+          enabled: false
+          shutdown: 2  # Auto-shutdown when <= 2%
     # monitor interface to use
     iface: mon0
     # command to run to bring the mon interface up in case it's not up already
