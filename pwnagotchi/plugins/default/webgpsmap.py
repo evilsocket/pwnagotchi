@@ -6,6 +6,7 @@ import re
 import datetime
 from flask import Response
 from functools import lru_cache
+from dateutil.parser import parse
 
 '''
 2do:
@@ -17,7 +18,7 @@ from functools import lru_cache
         https://blogs.kent.ac.uk/websolutions/2015/01/29/filtering-map-markers-with-leaflet-js-a-brief-technical-overview/
         http://www.digital-geography.com/filter-leaflet-maps-slider/
         http://bl.ocks.org/zross/47760925fcb1643b4225
-    - 
+    -
 '''
 
 class Webgpsmap(plugins.Plugin):
@@ -303,23 +304,7 @@ class PositionFile:
             return_ts = self._json['ts']
         elif 'Updated' in self._json:
             # convert gps datetime to unix timestamp: "2019-10-05T23:12:40.422996+01:00"
-            date_iso_formated = self._json['Updated']
-            #fix timezone "Z": "2019-11-28T04:44:46.79231Z" >> "2019-11-28T04:44:46.79231+00:00"
-            if date_iso_formated.endswith("Z"):
-              date_iso_formated = date_iso_formated[:-1] + "+00:00"
-            # bad microseconds fix: fill/cut microseconds to 6 numbers
-            parts = re.split('^(([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60))(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):?[0-5][0-9]))$', date_iso_formated)
-
-            part1 = parts[1]
-            part2 = parts[8][1:]
-            part3 = parts[11]
-            
-            part2 = part2.ljust(6, '0')[:6]
-            # timezone fix: 0200 >>> 02:00
-            if len(part3) == 5:
-                part3 = part3[0:1] + part3[1:2].rjust(2, '0') + ':' + part3[3:4].rjust(2, '0')
-            date_iso_formated = part1 + "." + part2 + part3
-            dateObj = datetime.datetime.fromisoformat(date_iso_formated)
+            dateObj = parse(self._json['Updated'])
             return_ts = int("%.0f" % dateObj.timestamp())
         else:
             # use file timestamp last modification of the json file
