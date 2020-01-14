@@ -4,6 +4,7 @@ import argparse
 import time
 import yaml
 import signal
+import sys
 
 import pwnagotchi
 import pwnagotchi.grid as grid
@@ -19,7 +20,7 @@ from pwnagotchi import restart
 def do_clear(display):
     logging.info("clearing the display ...")
     display.clear()
-    exit(0)
+    sys.exit(0)
 
 
 def do_manual_mode(agent):
@@ -115,12 +116,12 @@ if __name__ == '__main__':
 
     if args.version:
         print(pwnagotchi.version)
-        exit(0)
+        sys.exit(0)
 
     config = utils.load_config(args)
     if args.print_config:
         print(toml.dumps(config))
-        exit(0)
+        sys.exit(0)
 
     utils.setup_logging(args, config)
 
@@ -132,7 +133,7 @@ if __name__ == '__main__':
 
     if args.do_clear:
         do_clear(display)
-        exit(0)
+        sys.exit(0)
 
     agent = Agent(view=display, config=config, keypair=KeyPair(view=display))
 
