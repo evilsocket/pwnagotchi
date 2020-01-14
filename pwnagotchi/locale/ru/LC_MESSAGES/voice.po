@@ -5,17 +5,21 @@
 # Second author <https://github.com/mbgroot>, 2019
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.0.2"
-"Report-Msgid-Bugs-To: m-b-g@yandex.ru"
-"POT-Creation-Date: 2019-11-27 16:47+0200"
-"PO-Revision-Date: 2019-11-27 18:50+0300"
-"Last-Translator: Evgeny Zelenin <m-b-g@yandex.ru>"
-"Language-Team: ru"
-"Language: ru"
-"MIME-Version: 1.0\n"
+"Project-Id-Version: Pwnagotchi Russian translation v 0.0.2\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Language: ru\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: voice.po\n"
 
 msgid "ZzzzZZzzzzZzzz"
 msgstr "Хрррр..."
@@ -34,12 +38,14 @@ msgstr "A.I. готов."
 
 msgid "The neural network is ready."
 msgstr "Нейронная сеть готова."
+
 msgid "Generating keys, do not turn off ..."
 msgstr "Генерация ключей, не выключайте..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
 msgstr "Эй, канал {channel} свободен! Ваша точка доступа скажет спасибо."
+
 msgid "Reading last session logs ..."
 msgstr "Чтение логов последнего сеанса..."
 
@@ -67,6 +73,7 @@ msgstr "Мне очень грустно …"
 
 msgid "I'm sad"
 msgstr "Мне грустно"
+
 msgid "Leave me alone ..."
 msgstr "Оставь меня в покое..."
 
@@ -95,9 +102,10 @@ msgstr "Привет, {name}! Рад встрече с тобой!"
 #, python-brace-format
 msgid "Unit {name} is nearby! {name}"
 msgstr "Цель {name} близко!"
+
 #, python-brace-format
 msgid "Hey {name} how are you doing?"
-msgstr "Хэй {nume}! Как дела?"
+msgstr "Хэй {name}! Как дела?"
 
 #, python-brace-format
 msgid "Unit {name} is nearby!"
@@ -121,6 +129,7 @@ msgstr "{name} упустил!"
 
 msgid "Missed!"
 msgstr "Промахнулся!"
+
 msgid "Good friends are a blessing!"
 msgstr "Хорошие друзья - это благословение!"
 
@@ -146,6 +155,7 @@ msgstr "Хррр..."
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
 msgstr "Хррррр.. ({secs}c)"
+
 msgid "Good night."
 msgstr "Доброй ночи."
 
