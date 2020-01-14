@@ -12,6 +12,7 @@ import shutil
 import gzip
 import contextlib
 import tempfile
+import toml
 
 import pwnagotchi
 
@@ -32,15 +33,17 @@ def load_config(args):
     if not os.path.exists(default_config_path):
         os.makedirs(default_config_path)
 
-    ref_defaults_file = os.path.join(os.path.dirname(pwnagotchi.__file__), 'defaults.yml')
+    ref_defaults_file = os.path.join(os.path.dirname(pwnagotchi.__file__), 'defaults.toml')
     ref_defaults_data = None
 
     # check for a config.yml file on /boot/
-    if os.path.exists("/boot/config.yml"):
-        # logging not configured here yet
-        print("installing /boot/config.yml to %s ...", args.user_config)
-        # https://stackoverflow.com/questions/42392600/oserror-errno-18-invalid-cross-device-link
-        shutil.move("/boot/config.yml", args.user_config)
+    for boot_conf in ['/boot/config.yml', '/boot/config.toml']:
+        if os.path.exists(boot_conf):
+            # logging not configured here yet
+            print("installing %s to %s ...", boot_conf, args.user_config)
+            # https://stackoverflow.com/questions/42392600/oserror-errno-18-invalid-cross-device-link
+            shutil.move(boot_conf, args.user_config)
+            break
 
     # check for an entire pwnagotchi folder on /boot/
     if os.path.isdir('/boot/pwnagotchi'):
@@ -54,6 +57,7 @@ def load_config(args):
         shutil.copy(ref_defaults_file, args.config)
     else:
         # check if the user messed with the defaults
+
         with open(ref_defaults_file) as fp:
             ref_defaults_data = fp.read()
 
@@ -66,18 +70,28 @@ def load_config(args):
 
     # load the defaults
     with open(args.config) as fp:
-        config = yaml.safe_load(fp)
+        config = toml.load(fp)
 
     # load the user config
     try:
-        if os.path.exists(args.user_config):
-            with open(args.user_config) as fp:
-                user_config = yaml.safe_load(fp)
-                # if the file is empty, safe_load will return None and merge_config will boom.
-                if user_config:
-                    config = merge_config(user_config, config)
-    except yaml.YAMLError as ex:
-        print("There was an error processing the configuration file:\n%s " % ex)
+        user_config = None
+        # migrate
+        yaml_name = args.user_config.replace('.toml', '.yml')
+        if not os.path.exists(args.user_config) and os.path.exists(yaml_name):
+            # no toml found; convert yaml
+            logging.info('Old yaml-config found. Converting to toml...')
+            with open(args.user_config, 'w') as toml_file, open(yaml_name) as yaml_file:
+                user_config = yaml.safe_load(yaml_file)
+                # convert to toml but use loaded yaml
+                toml.dump(user_config, toml_file)
+        elif os.path.exists(args.user_config):
+            with open(args.user_config) as toml_file:
+                user_config = toml.load(toml_file)
+
+        if user_config:
+            config = merge_config(user_config, config)
+    except Exception as ex:
+        logging.error("There was an error processing the configuration file:\n%s ",ex)
         exit(1)
 
     # the very first step is to normalize the display name so we don't need dozens of if/elif around
@@ -116,6 +130,9 @@ def load_config(args):
 
     elif config['ui']['display']['type'] in ('ws_213d', 'ws213d', 'waveshare_213d', 'waveshare213d'):
         config['ui']['display']['type'] = 'waveshare213d'
+
+    elif config['ui']['display']['type'] in ('ws_213bc', 'ws213bc', 'waveshare_213bc', 'waveshare213bc'):
+        config['ui']['display']['type'] = 'waveshare213bc'
 
     elif config['ui']['display']['type'] in ('spotpear24inch'):
         config['ui']['display']['type'] = 'spotpear24inch'
