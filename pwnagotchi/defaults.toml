@@ -1,0 +1,205 @@
+main.name = ""
+main.lang = "en"
+main.custom_plugins = ""
+main.iface = "mon0"
+main.mon_start_cmd = "/usr/bin/monstart"
+main.mon_stop_cmd = "/usr/bin/monstop"
+main.mon_max_blind_epochs = 50.0
+main.no_restart = false
+main.whitelist = [
+  "EXAMPLE_NETWORK",
+  "ANOTHER_EXAMPLE_NETWORK",
+  "fo:od:ba:be:fo:od",
+  "fo:od:ba"
+]
+main.filter = ""
+
+
+main.plugins.grid.enabled = true
+main.plugins.grid.report = false
+main.plugins.grid.exclude = [
+  "YourHomeNetworkHere"
+]
+
+main.plugins.auto-update.enabled = true
+main.plugins.auto-update.install = true
+main.plugins.auto-update.interval = 1.0
+
+main.plugins.net-pos.enabled = false
+main.plugins.net-pos.api_key = "test"
+
+main.plugins.gps.enabled = false
+main.plugins.gps.speed = 19200.0
+main.plugins.gps.device = "/dev/ttyUSB0"
+
+main.plugins.webgpsmap.enabled = false
+
+main.plugins.onlinehashcrack.enabled = false
+main.plugins.onlinehashcrack.email = ""
+
+main.plugins.wpa-sec.enabled = false
+main.plugins.wpa-sec.api_key = ""
+main.plugins.wpa-sec.api_url = "https://wpa-sec.stanev.org"
+main.plugins.wpa-sec.download_results = false
+
+main.plugins.wigle.enabled = false
+main.plugins.wigle.api_key = ""
+
+main.plugins.bt-tether.enabled = false
+
+main.plugins.bt-tether.devices.android-phone.enabled = false
+main.plugins.bt-tether.devices.android-phone.search_order = 1.0
+main.plugins.bt-tether.devices.android-phone.mac = ""
+main.plugins.bt-tether.devices.android-phone.ip = "192.168.44.44"
+main.plugins.bt-tether.devices.android-phone.netmask = 24.0
+main.plugins.bt-tether.devices.android-phone.interval = 1.0
+main.plugins.bt-tether.devices.android-phone.scantime = 10.0
+main.plugins.bt-tether.devices.android-phone.max_tries = 10.0
+main.plugins.bt-tether.devices.android-phone.share_internet = false
+main.plugins.bt-tether.devices.android-phone.priority = 1.0
+
+main.plugins.bt-tether.devices.ios-phone.enabled = false
+main.plugins.bt-tether.devices.ios-phone.search_order = 2.0
+main.plugins.bt-tether.devices.ios-phone.mac = ""
+main.plugins.bt-tether.devices.ios-phone.ip = "172.20.10.6"
+main.plugins.bt-tether.devices.ios-phone.netmask = 24.0
+main.plugins.bt-tether.devices.ios-phone.interval = 5.0
+main.plugins.bt-tether.devices.ios-phone.scantime = 20.0
+main.plugins.bt-tether.devices.ios-phone.max_tries = 0.0
+main.plugins.bt-tether.devices.ios-phone.share_internet = false
+main.plugins.bt-tether.devices.ios-phone.priority = 999.0
+
+main.plugins.memtemp.enabled = false
+main.plugins.memtemp.scale = "celsius"
+main.plugins.memtemp.orientation = "horizontal"
+
+main.plugins.paw-gps.enabled = false
+main.plugins.paw-gps.ip = ""
+
+main.plugins.gpio_buttons.enabled = false
+
+main.plugins.led.enabled = true
+main.plugins.led.led = 0.0
+main.plugins.led.delay = 200.0
+main.plugins.led.patterns.loaded = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.updating = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.unread_inbox = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.ready = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.ai_ready = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.ai_training_start = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.ai_best_reward = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.ai_worst_reward = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.bored = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.sad = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.excited = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.lonely = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.rebooting = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.wait = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.sleep = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.wifi_update = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.association = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.deauthentication = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.handshake = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.epoch = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.peer_detected = "oo  oo  oo oo  oo  oo  oo"
+main.plugins.led.patterns.peer_lost = "oo  oo  oo oo  oo  oo  oo"
+
+main.plugins.session-stats.enabled = true
+
+main.log.path = "/var/log/pwnagotchi.log"
+main.log.rotation.enabled = true
+main.log.rotation.size = "10M"
+
+ai.enabled = true
+ai.path = "/root/brain.nn"
+ai.laziness = 0.1
+ai.epochs_per_episode = 50.0
+
+ai.params.gamma = 0.99
+ai.params.n_steps = 1.0
+ai.params.vf_coef = 0.25
+ai.params.ent_coef = 0.01
+ai.params.max_grad_norm = 0.5
+ai.params.learning_rate = 0.001
+ai.params.alpha = 0.99
+ai.params.epsilon = 0.00001
+ai.params.verbose = 1.0
+ai.params.lr_schedule = "constant"
+
+personality.advertise = true
+personality.deauth = true
+personality.associate = true
+personality.channels = []
+personality.min_rssi = -200.0
+personality.ap_ttl = 120.0
+personality.sta_ttl = 300.0
+personality.recon_time = 30.0
+personality.max_inactive_scale = 2.0
+personality.recon_inactive_multiplier = 2.0
+personality.hop_recon_time = 10.0
+personality.min_recon_time = 5.0
+personality.max_interactions = 3.0
+personality.max_misses_for_recon = 5.0
+personality.excited_num_epochs = 10.0
+personality.bored_num_epochs = 15.0
+personality.sad_num_epochs = 25.0
+personality.bond_encounters_factor = 20000.0
+
+ui.fps = 0.0
+
+ui.faces.look_r = "( ⚆_⚆)"
+ui.faces.look_l = "(☉_☉ )"
+ui.faces.look_r_happy = "( ◕‿◕)"
+ui.faces.look_l_happy = "(◕‿◕ )"
+ui.faces.sleep = "(⇀‿‿↼)"
+ui.faces.sleep2 = "(≖‿‿≖)"
+ui.faces.awake = "(◕‿‿◕)"
+ui.faces.bored = "(-__-)"
+ui.faces.intense = "(°▃▃°)"
+ui.faces.cool = "(⌐■_■)"
+ui.faces.happy = "(•‿‿•)"
+ui.faces.excited = "(ᵔ◡◡ᵔ)"
+ui.faces.grateful = "(^‿‿^)"
+ui.faces.motivated = "(☼‿‿☼)"
+ui.faces.demotivated = "(≖__≖)"
+ui.faces.smart = "(✜‿‿✜)"
+ui.faces.lonely = "(ب__ب)"
+ui.faces.sad = "(╥☁╥ )"
+ui.faces.angry = "(-_-')"
+ui.faces.friend = "(♥‿‿♥)"
+ui.faces.broken = "(☓‿‿☓)"
+ui.faces.debug = "(#__#)"
+
+ui.web.enabled = true
+ui.web.address = "0.0.0.0"
+ui.web.username = "changeme"
+ui.web.password = "changeme"
+ui.web.origin = ""
+ui.web.port = 8080.0
+ui.web.on_frame = ""
+
+ui.display.enabled = true
+ui.display.rotation = 180.0
+ui.display.type = "waveshare_2"
+ui.display.color = "black"
+
+bettercap.scheme = "http"
+bettercap.hostname = "localhost"
+bettercap.port = 8081.0
+bettercap.username = "pwnagotchi"
+bettercap.password = "pwnagotchi"
+bettercap.handshakes = "/root/handshakes"
+bettercap.silence = [
+  "ble.device.new",
+  "ble.device.lost",
+  "ble.device.disconnected",
+  "ble.device.connected",
+  "ble.device.service.discovered",
+  "ble.device.characteristic.discovered",
+  "wifi.client.new",
+  "wifi.client.lost",
+  "wifi.client.probe",
+  "wifi.ap.new",
+  "wifi.ap.lost",
+  "mod.started"
+]

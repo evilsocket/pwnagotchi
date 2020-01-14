@@ -1,12 +1,11 @@
 import logging
 import json
-import yaml
+import toml
 import _thread
 import pwnagotchi.plugins as plugins
 from pwnagotchi import restart
 from flask import abort
 from flask import render_template_string
-
 
 INDEX = """
 <html>
@@ -500,13 +499,13 @@ class WebConfig(plugins.Plugin):
         elif request.method == "POST":
             if path == "save-config":
                 try:
-                    parsed_yaml = yaml.safe_load(str(request.get_json()))
-                    with open('/etc/pwnagotchi/config.yml', 'w') as config_file:
-                        yaml.safe_dump(parsed_yaml, config_file, encoding='utf-8',
-                                allow_unicode=True, default_flow_style=False)
+                    parsed_toml = toml.loads(request.get_json())
+                    with open('/etc/pwnagotchi/config.toml') as config_file:
+                        toml.dump(parsed_toml, config_file)
 
                     _thread.start_new_thread(restart, (self.mode,))
                     return "success"
-                except yaml.YAMLError as yaml_ex:
+                except Exception as ex:
+                    logging.error(ex)
                     return "config error"
         abort(404)

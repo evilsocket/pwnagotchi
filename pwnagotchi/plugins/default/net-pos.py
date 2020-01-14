@@ -26,7 +26,7 @@ class NetPos(plugins.Plugin):
         self.lock = threading.Lock()
 
     def on_loaded(self):
-        if 'api_key' not in self.options or ('api_key' in self.options and self.options['api_key'] is None):
+        if 'api_key' not in self.options or ('api_key' in self.options and not self.options['api_key']):
             logging.error("NET-POS: api_key isn't set. Can't use mozilla's api.")
             return
 

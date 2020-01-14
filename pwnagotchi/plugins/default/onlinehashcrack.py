@@ -28,7 +28,7 @@ class OnlineHashCrack(plugins.Plugin):
         """
         Gets called when the plugin gets loaded
         """
-        if 'email' not in self.options or ('email' in self.options and self.options['email'] is None):
+        if 'email' not in self.options or ('email' in self.options and not self.options['email']):
             logging.error("OHC: Email isn't set. Can't upload to onlinehashcrack.com")
             return
 
