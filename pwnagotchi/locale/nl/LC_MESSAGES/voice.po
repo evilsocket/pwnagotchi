@@ -157,7 +157,7 @@ msgstr "Ik ga {mac} even kicken!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Gaaf, we hebben {num} nieuwe handshake{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Oops, iets ging fout ...Rebooting ..."
 
 #, python-brace-format

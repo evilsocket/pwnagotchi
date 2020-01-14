@@ -199,7 +199,7 @@ msgstr "Cool, on a {num} nouve(l/aux) handshake{plural} !"
 msgid "You have {count} new message{plural}!"
 msgstr "Tu as {num} nouveau(x) message{plural} !"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Oups, quelque chose s'est mal passé... Redémarrage..."
 
 #, python-brace-format

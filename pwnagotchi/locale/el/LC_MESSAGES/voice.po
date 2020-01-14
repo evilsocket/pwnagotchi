@@ -158,7 +158,7 @@ msgstr "Μπανάρω την {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Τέλεια δικέ μου, πήραμε {num} νέες χειραψίες!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Ουπς, κάτιπήγε λάθος ... Επανεκκινούμαι ..."
 
 #, python-brace-format

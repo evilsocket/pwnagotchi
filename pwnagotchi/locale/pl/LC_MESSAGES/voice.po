@@ -197,7 +197,7 @@ msgstr "Super, zdobyliśmy {num} nowych handshake'ów!"
 msgid "You have {count} new message{plural}!"
 msgstr "Masz {count} nowych wiadomości!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Ups, coś poszło nie tak ... Restaruję ..."
 
 #, python-brace-format

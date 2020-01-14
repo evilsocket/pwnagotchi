@@ -164,7 +164,7 @@ msgstr "Chiceáil mé agus cosc mé ar {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Go hiontach, fuaireamar {num} handshake{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Hoips...Tháinig ainghléas éigin..."
 
 #, python-brace-format

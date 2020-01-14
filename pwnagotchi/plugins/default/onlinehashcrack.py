@@ -93,7 +93,7 @@ class OnlineHashCrack(plugins.Plugin):
                 handshake_new = set(handshake_paths) - set(reported) - set(self.skip)
 
                 if handshake_new:
-                    logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onelinehashcrack.com")
+                    logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onlinehashcrack.com")
 
                     for idx, handshake in enumerate(handshake_new):
                         display.set('status',

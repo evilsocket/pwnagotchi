@@ -164,7 +164,7 @@ msgstr "A chutar {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Porreiro, temos {num} novo handshake{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Ups, algo correu mal ... A reiniciar ..."
 
 #, python-brace-format
