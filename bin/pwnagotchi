@@ -90,9 +90,9 @@ def do_auto_mode(agent):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-C', '--config', action='store', dest='config', default='/etc/pwnagotchi/default.yml',
+    parser.add_argument('-C', '--config', action='store', dest='config', default='/etc/pwnagotchi/default.toml',
                         help='Main configuration file.')
-    parser.add_argument('-U', '--user-config', action='store', dest='user_config', default='/etc/pwnagotchi/config.yml',
+    parser.add_argument('-U', '--user-config', action='store', dest='user_config', default='/etc/pwnagotchi/config.toml',
                         help='If this file exists, configuration will be merged and this will override default values.')
 
     parser.add_argument('--manual', dest="do_manual", action="store_true", default=False, help="Manual mode.")
@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     config = utils.load_config(args)
     if args.print_config:
-        print(yaml.dump(config, default_flow_style=False))
+        print(toml.dumps(config))
         exit(0)
 
     utils.setup_logging(args, config)

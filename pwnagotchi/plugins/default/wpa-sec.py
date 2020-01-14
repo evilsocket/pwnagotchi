@@ -70,11 +70,11 @@ class WpaSec(plugins.Plugin):
         """
         Gets called when the plugin gets loaded
         """
-        if 'api_key' not in self.options or ('api_key' in self.options and self.options['api_key'] is None):
+        if 'api_key' not in self.options or ('api_key' in self.options and not self.options['api_key']):
             logging.error("WPA_SEC: API-KEY isn't set. Can't upload to wpa-sec.stanev.org")
             return
 
-        if 'api_url' not in self.options or ('api_url' in self.options and self.options['api_url'] is None):
+        if 'api_url' not in self.options or ('api_url' in self.options and not self.options['api_url']):
             logging.error("WPA_SEC: API-URL isn't set. Can't upload, no endpoint configured.")
             return
 
