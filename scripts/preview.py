@@ -3,6 +3,7 @@ import sys
 import os
 import argparse
 import yaml
+import toml
 
 sys.path.insert(0,
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -133,7 +134,7 @@ def main():
             sad: '(╥☁╥ )'
             friend: '(♥‿‿♥)'
             broken: '(☓‿‿☓)'
-            debug: '(#__#)'                
+            debug: '(#__#)'
     '''
 
     list_of_displays = list()
