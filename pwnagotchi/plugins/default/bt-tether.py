@@ -437,7 +437,7 @@ class BTTether(plugins.Plugin):
                     for device_opt in ['enabled', 'priority', 'scantime', 'search_order',
                                        'max_tries', 'share_internet', 'mac', 'ip',
                                        'netmask', 'interval']:
-                        if device_opt not in options or (device_opt in options and not options[device_opt]):
+                        if device_opt not in options or options[device_opt] is None:
                             logging.error("BT-TETHER: Please specify the %s for device %s.",
                                           device_opt, device)
                             break
@@ -448,7 +448,7 @@ class BTTether(plugins.Plugin):
         # legacy
         if 'mac' in self.options:
             for opt in ['share_internet', 'mac', 'ip', 'netmask', 'interval']:
-                if opt not in self.options or (opt in self.options and not self.options[opt]):
+                if opt not in self.options or self.options[opt] is None:
                     logging.error("BT-TETHER: Please specify the %s in your config.yml.", opt)
                     return
 
