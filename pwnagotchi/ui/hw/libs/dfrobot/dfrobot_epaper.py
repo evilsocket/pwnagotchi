@@ -11,7 +11,7 @@ try:
   from .gpio import GPIO
 except:
   print("unknown platform")
-  exit()
+  sys.exit()
 
 CONFIG_IL0376F = {
 

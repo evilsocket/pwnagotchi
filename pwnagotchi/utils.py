@@ -13,6 +13,7 @@ import gzip
 import contextlib
 import tempfile
 import toml
+import sys
 
 import pwnagotchi
 
@@ -92,7 +93,7 @@ def load_config(args):
             config = merge_config(user_config, config)
     except Exception as ex:
         logging.error("There was an error processing the configuration file:\n%s ",ex)
-        exit(1)
+        sys.exit(1)
 
     # the very first step is to normalize the display name so we don't need dozens of if/elif around
     if config['ui']['display']['type'] in ('inky', 'inkyphat'):
@@ -139,7 +140,7 @@ def load_config(args):
 
     else:
         print("unsupported display type %s" % config['ui']['display']['type'])
-        exit(1)
+        sys.exit(1)
 
     return config
 
