@@ -17,7 +17,7 @@ class AsyncAdvertiser(object):
         self._keypair = keypair
         self._advertisement = {
             'name': pwnagotchi.name(),
-            'version': pwnagotchi.version,
+            'version': pwnagotchi.__version__,
             'identity': self._keypair.fingerprint,
             'face': faces.FRIEND,
             'pwnd_run': 0,

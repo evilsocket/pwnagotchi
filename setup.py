@@ -4,6 +4,7 @@ from setuptools import setup, find_packages
 import os
 import glob
 import shutil
+import re
 
 
 def install_file(source_filename, dest_filename):
@@ -42,16 +43,27 @@ def installer():
     # for people updating https://github.com/evilsocket/pwnagotchi/pull/551/files
     os.system("systemctl enable fstrim.timer")
 
+def version(version_file):
+    with open(version_file, 'rt') as vf:
+        version_file_content = vf.read()
+
+    version_match = re.search(r"__version__\s*=\s*[\"\']([^\"\']+)", version_file_content)
+    if version_match:
+        return version_match.groups()[0]
+
+    return None
+
 
 installer()
 
 with open('requirements.txt') as fp:
     required = [line.strip() for line in fp if line.strip() != ""]
 
-import pwnagotchi
+VERSION_FILE = 'pwnagotchi/_version.py'
+pwnagotchi_version = version(VERSION_FILE)
 
 setup(name='pwnagotchi',
-      version=pwnagotchi.version,
+      version=pwnagotchi_version,
       description='(⌐■_■) - Deep Reinforcement Learning instrumenting bettercap for WiFI pwning.',
       author='evilsocket && the dev team',
       author_email='evilsocket@gmail.com',

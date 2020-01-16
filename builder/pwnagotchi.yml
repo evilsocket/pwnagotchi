@@ -218,7 +218,7 @@
 
   - name: fetch pwnagotchi version
     set_fact:
-      pwnagotchi_version: "{{ lookup('file', '/usr/local/src/pwnagotchi/pwnagotchi/__init__.py') | replace('\n', ' ') | regex_replace('.*version.*=.*''([0-9]+\\.[0-9]+\\.[0-9]+[A-Za-z0-9]*)''.*', '\\1') }}"
+      pwnagotchi_version: "{{ lookup('file', '/usr/local/src/pwnagotchi/pwnagotchi/_version.py') | regex_replace('.*__version__.*=.*''([0-9]+\\.[0-9]+\\.[0-9]+[A-Za-z0-9]*)''.*', '\\1') }}"
 
   - name: pwnagotchi version found
     debug:
