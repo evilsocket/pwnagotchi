@@ -32,9 +32,7 @@ def keys_to_str(data):
     if isinstance(data,list):
         converted_list = list()
         for item in data:
-            if isinstance(item,dict):
-                converted_list.append(keys_to_str(item))
-            elif isinstance(item,list):
+            if isinstance(item,list) or isinstance(item,dict):
                 converted_list.append(keys_to_str(item))
             else:
                 converted_list.append(item)
