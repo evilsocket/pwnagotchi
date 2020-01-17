@@ -6,7 +6,7 @@ import re
 import pwnagotchi.ui.view as view
 import pwnagotchi
 
-version = '1.4.3'
+from _version import __version__
 
 _name = None
 

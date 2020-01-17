@@ -115,7 +115,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.version:
-        print(pwnagotchi.version)
+        print(pwnagotchi.__version__)
         sys.exit(0)
 
     config = utils.load_config(args)

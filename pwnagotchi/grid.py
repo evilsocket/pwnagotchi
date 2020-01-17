@@ -85,7 +85,7 @@ def update_data(last_session):
         },
         'uname': subprocess.getoutput("uname -a"),
         'brain': brain,
-        'version': pwnagotchi.version
+        'version': pwnagotchi.__version__
     }
 
     logging.debug("updating grid data: %s" % data)

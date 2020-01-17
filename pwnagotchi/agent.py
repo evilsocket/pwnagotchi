@@ -49,7 +49,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         if not os.path.exists(config['bettercap']['handshakes']):
             os.makedirs(config['bettercap']['handshakes'])
 
-        logging.info("%s@%s (v%s)", pwnagotchi.name(), self.fingerprint(), pwnagotchi.version)
+        logging.info("%s@%s (v%s)", pwnagotchi.name(), self.fingerprint(), pwnagotchi.__version__)
         for _, plugin in plugins.loaded.items():
             logging.debug("plugin '%s' v%s", plugin.__class__.__name__, plugin.__version__)
 
