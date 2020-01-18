@@ -3,10 +3,10 @@
   <meta http-equiv="Content-Type" content="text/xml; charset=utf-8" />
   <title>GPS MAP</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>
-  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
-  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
   <script type='text/javascript' src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-  <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js'></script>
+  <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js'></script>
   <style type="text/css">
     /* for map */
     html, body {   height: 100%; width: 100%; margin:0; background-color:#000;}
@@ -270,16 +270,18 @@
       positionsLoaded = true;
       drawPositions();
     });
-    // get current position and set marker in interval
-    var myLocationMarker = {};
-    function onLocationFound(e) {
-      if (myLocationMarker != undefined) {
-        mymap.removeLayer(myLocationMarker);
-      };
-      myLocationMarker = L.marker(e.latlng).addTo(mymap);
-      setTimeout(function(){ mymap.locate(); }, 30000);
+    // get current position and set marker in interval if https request
+    if (location.protocol === 'https:') {
+      var myLocationMarker = {};
+      function onLocationFound(e) {
+        if (myLocationMarker != undefined) {
+          mymap.removeLayer(myLocationMarker);
+        };
+        myLocationMarker = L.marker(e.latlng).addTo(mymap);
+        setTimeout(function(){ mymap.locate(); }, 30000);
+      }
+      mymap.on('locationfound', onLocationFound);
+      mymap.locate({setView: true});
     }
-    mymap.on('locationfound', onLocationFound);
-    mymap.locate({setView: true});
   </script>
 </body></html>
