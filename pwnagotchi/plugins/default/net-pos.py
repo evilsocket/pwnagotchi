@@ -7,17 +7,17 @@ import time
 import pwnagotchi.plugins as plugins
 from pwnagotchi.utils import StatusFile
 
-MOZILLA_API_URL = 'https://location.services.mozilla.com/v1/geolocate?key={api}'
-
 
 class NetPos(plugins.Plugin):
     __author__ = 'zenzen san'
-    __version__ = '2.0.2'
+    __version__ = '2.0.3'
     __license__ = 'GPL3'
     __description__ = """Saves a json file with the access points with more signal
                          whenever a handshake is captured.
                          When internet is available the files are converted in geo locations
                          using Mozilla LocationService """
+
+    API_URL = 'https://location.services.mozilla.com/v1/geolocate?key={api}'
 
     def __init__(self):
         self.report = StatusFile('/root/.net_pos_saved', data_format='json')
@@ -29,9 +29,11 @@ class NetPos(plugins.Plugin):
         if 'api_key' not in self.options or ('api_key' in self.options and not self.options['api_key']):
             logging.error("NET-POS: api_key isn't set. Can't use mozilla's api.")
             return
-
+        if 'api_url' in self.options:
+            self.API_URL = self.options['api_url']
         self.ready = True
         logging.info("net-pos plugin loaded.")
+        logging.debug(f"net-pos: use api_url: {self.API_URL}");
 
     def _append_saved(self, path):
         to_save = list()
@@ -124,7 +126,7 @@ class NetPos(plugins.Plugin):
         return netpos
 
     def _get_geo_data(self, path, timeout=30):
-        geourl = MOZILLA_API_URL.format(api=self.options['api_key'])
+        geourl = self.API_URL.format(api=self.options['api_key'])
 
         try:
             with open(path, "r") as json_file:
