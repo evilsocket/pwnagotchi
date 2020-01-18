@@ -53,6 +53,7 @@
           - wpa_supplicant
           - nfs-common
         install:
+          - rsync
           - vim
           - screen
           - golang
