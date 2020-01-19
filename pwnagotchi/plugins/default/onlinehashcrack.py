@@ -2,6 +2,7 @@ import os
 import logging
 import re
 import requests
+from datetime import datetime
 from threading import Lock
 from pwnagotchi.utils import StatusFile
 import pwnagotchi.plugins as plugins
@@ -71,6 +72,24 @@ class OnlineHashCrack(plugins.Plugin):
                 logging.error(f"OHC: Got an exception while uploading {path} -> {e}")
                 raise e
 
+    def _download_cracked(self, save_file, timeout=120):
+        """
+        Downloads the cracked passwords and saves them
+
+        returns the number of downloaded passwords
+        """
+        try:
+            s = requests.Session()
+            dashboard = s.get(self.options['dashboard'], timeout=timeout)
+            result = s.get('https://www.onlinehashcrack.com/wpa-exportcsv', timeout=timeout)
+            result.raise_for_status()
+            with open(save_file, 'wt') as output_file:
+                output_file.write(result.content)
+        except requests.exceptions.RequestException as req_e:
+            raise req_e
+        except OSError as os_e:
+            raise os_e
+
     def on_internet_available(self, agent):
         """
         Called in manual mode when there's internet connectivity
@@ -112,3 +131,19 @@ class OnlineHashCrack(plugins.Plugin):
                             self.skip.append(handshake)
                             logging.error("OHC: %s", os_e)
                             continue
+
+                if 'dashboard' in self.options and self.options['dashboard']:
+                    cracked_file = os.path.join(handshake_dir, 'onlinehashcrack.cracked')
+                    if os.path.exists(cracked_file):
+                        last_check = datetime.fromtimestamp(os.path.getmtime(cracked_file))
+                        if last_check is not None and ((datetime.now() - last_check).seconds / (60 * 60)) < 1:
+                            return
+
+                    try:
+                        self._download_cracked(cracked_file)
+                        logging.info("OHC: Downloaded cracked passwords.")
+                    except requests.exceptions.RequestException as req_e:
+                        logging.debug("OHC: %s", req_e)
+                    except OSError as os_e:
+                        logging.debug("OHC: %s", os_e)
+

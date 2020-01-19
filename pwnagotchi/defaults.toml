@@ -36,6 +36,7 @@ main.plugins.webgpsmap.enabled = false
 
 main.plugins.onlinehashcrack.enabled = false
 main.plugins.onlinehashcrack.email = ""
+main.plugins.onlinehashcrack.dashboard = ""
 
 main.plugins.wpa-sec.enabled = false
 main.plugins.wpa-sec.api_key = ""
