@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+from distutils.util import strtobool
 import os
 import glob
 import shutil
@@ -54,7 +55,8 @@ def version(version_file):
     return None
 
 
-installer()
+if strtobool(os.environ.get("PWNAGOTCHI_ENABLE_INSTALLER", "1")):
+    installer()
 
 with open('requirements.txt') as fp:
     required = [line.strip() for line in fp if line.strip() != ""]
