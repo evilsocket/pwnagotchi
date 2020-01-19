@@ -177,7 +177,7 @@ msgstr "太酷了, 我们抓到了{num}新的猎物{plural}!"
 msgid "You have {count} new message{plural}!"
 msgstr "主人，有{count}新消息{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "行动,额等等有点小问题... 重启ing ..."
 
 #, python-brace-format

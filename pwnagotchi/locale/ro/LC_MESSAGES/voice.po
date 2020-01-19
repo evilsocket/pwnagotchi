@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the pwnagotchi package.
 # FIRST AUTHOR <radu.ungureanu@techie.com>, 2019.
 #
-#, 
+#,
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
@@ -199,7 +199,7 @@ msgstr "Șmecher, avem {num} de handshake-uri noi!"
 msgid "You have {count} new message{plural}!"
 msgstr "Ai {count} mesaj(e) nou/noi!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "OOps, ceva s-a întamplat... Îmi dau reboot...+"
 
 #, python-brace-format

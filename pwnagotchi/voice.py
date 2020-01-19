@@ -157,7 +157,7 @@ class Voice:
         return self._('You have {count} new message{plural}!').format(count=count, plural=s)
 
     def on_rebooting(self):
-        return self._("Ops, something went wrong ... Rebooting ...")
+        return self._("Oops, something went wrong ... Rebooting ...")
 
     def on_last_session_data(self, last_session):
         status = self._('Kicked {num} stations\n').format(num=last_session.deauthed)

@@ -18,7 +18,7 @@ class PawGPS(plugins.Plugin):
     def on_loaded(self):
         logging.info("PAW-GPS loaded")
         if 'ip' not in self.options or ('ip' in self.options and self.options['ip'] is None):
-            logging.info("PAW-GPS: No IP Address in the config file is defined, it uses the default (192.168.44.1)")
+            logging.info("PAW-GPS: No IP Address in the config file is defined, it uses the default (192.168.44.1:8080)")
 
     def on_handshake(self, agent, filename, access_point, client_station):
         if 'ip' not in self.options or ('ip' in self.options and self.options['ip'] is None):

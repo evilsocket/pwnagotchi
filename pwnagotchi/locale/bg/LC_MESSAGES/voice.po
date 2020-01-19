@@ -177,7 +177,7 @@ msgstr "Супер, имаме {num} нови handshake{plural}!"
 msgid "You have {count} new message{plural}!"
 msgstr "Имате {count} нови съобщения!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Упс, нещо се обърка ... Рестартиране ..."
 
 #, python-brace-format

@@ -177,7 +177,7 @@ msgstr "Отакої, у нас є {num} нових рукостискань!"
 msgid "You have {count} new message{plural}!"
 msgstr "Нових повідомлень: {count}"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Ой, щось пішло не так ... Перезавантажуюсь ..."
 
 #, python-brace-format

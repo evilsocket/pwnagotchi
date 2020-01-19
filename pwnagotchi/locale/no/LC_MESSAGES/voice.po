@@ -198,7 +198,7 @@ msgstr "Fett, vi fikk {num} nye håndtrykk!"
 msgid "You have {count} new message{plural}!"
 msgstr "Du har {count} melding{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Oi, noe gikk helt skakk ... Rebooter ..."
 
 #, python-brace-format

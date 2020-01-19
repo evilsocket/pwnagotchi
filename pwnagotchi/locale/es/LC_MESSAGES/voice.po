@@ -163,7 +163,7 @@ msgstr "Expulsando y banneando a {mac}!"
 msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Genial, obtuvimos {num} nuevo{plural} handshake{plural}!"
 
-msgid "Ops, something went wrong ... Rebooting ..."
+msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Oops, algo salió mal ... Reiniciándo ..."
 
 #, python-brace-format

@@ -39,6 +39,7 @@ class OnlineHashCrack(plugins.Plugin):
         self.options['whitelist'] = set(map(lambda x: re.sub(r'[^a-zA-Z0-9]', '', x), self.options['whitelist']))
 
         self.ready = True
+        logging.info("OHC: OnlineHashCrack plugin loaded.")
 
     def _filter_handshake_file(self, handshake_filename):
         try:
@@ -92,7 +93,7 @@ class OnlineHashCrack(plugins.Plugin):
                 handshake_new = set(handshake_paths) - set(reported) - set(self.skip)
 
                 if handshake_new:
-                    logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onelinehashcrack.com")
+                    logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onlinehashcrack.com")
 
                     for idx, handshake in enumerate(handshake_new):
                         display.set('status',
