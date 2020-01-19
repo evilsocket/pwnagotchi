@@ -105,6 +105,7 @@ main.plugins.led.patterns.peer_detected = "oo  oo  oo oo  oo  oo  oo"
 main.plugins.led.patterns.peer_lost = "oo  oo  oo oo  oo  oo  oo"
 
 main.plugins.session-stats.enabled = true
+main.plugins.session-stats.save_directory = "/var/tmp/pwnagotchi/sessions/"
 
 main.log.path = "/var/log/pwnagotchi.log"
 main.log.rotation.enabled = true
