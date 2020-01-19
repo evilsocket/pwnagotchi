@@ -28,6 +28,24 @@ def merge_config(user, default):
                 user[k] = merge_config(user[k], v)
     return user
 
+def keys_to_str(data):
+    if isinstance(data,list):
+        converted_list = list()
+        for item in data:
+            if isinstance(item,list) or isinstance(item,dict):
+                converted_list.append(keys_to_str(item))
+            else:
+                converted_list.append(item)
+        return converted_list
+
+    converted_dict = dict()
+    for key, value in data.items():
+        if isinstance(value, list) or isinstance(value, dict):
+            converted_dict[str(key)] = keys_to_str(value)
+        else:
+            converted_dict[str(key)] = value
+
+    return converted_dict
 
 def load_config(args):
     default_config_path = os.path.dirname(args.config)
@@ -83,6 +101,8 @@ def load_config(args):
             logging.info('Old yaml-config found. Converting to toml...')
             with open(args.user_config, 'w') as toml_file, open(yaml_name) as yaml_file:
                 user_config = yaml.safe_load(yaml_file)
+                # convert int/float keys to str
+                user_config = keys_to_str(user_config)
                 # convert to toml but use loaded yaml
                 toml.dump(user_config, toml_file)
         elif os.path.exists(args.user_config):
