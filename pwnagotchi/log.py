@@ -215,11 +215,6 @@ class LastSession(object):
 
 def setup_logging(args, config):
     cfg = config['main']['log']
-    memory_cfg = config['fs']['memory']
-    log_to_memory = memory_cfg['enabled'] and \
-        memory_cfg['files']['logs']['enabled']
-    memory_log_levels = memory_cfg['files']['logs']['levels'] \
-                            if log_to_memory else None
     filename = cfg['path']
 
     formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s")
