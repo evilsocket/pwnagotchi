@@ -5,6 +5,7 @@ import time
 import yaml
 import signal
 import sys
+import toml
 
 import pwnagotchi
 import pwnagotchi.grid as grid
