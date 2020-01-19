@@ -8,14 +8,15 @@ import sys
 import toml
 
 import pwnagotchi
-import pwnagotchi.grid as grid
-import pwnagotchi.utils as utils
-import pwnagotchi.plugins as plugins
-
+from pwnagotchi import grid
+from pwnagotchi import utils
+from pwnagotchi import plugins
+from pwnagotchi import log
 from pwnagotchi.identity import KeyPair
 from pwnagotchi.agent import Agent
 from pwnagotchi.ui.display import Display
 from pwnagotchi import restart
+from pwnagotchi import fs
 
 
 def do_clear(display):
@@ -124,7 +125,8 @@ if __name__ == '__main__':
         print(toml.dumps(config))
         sys.exit(0)
 
-    utils.setup_logging(args, config)
+    fs.setup_mounts(config)
+    log.setup_logging(args, config)
 
     pwnagotchi.set_name(config['main']['name'])
 

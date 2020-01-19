@@ -204,3 +204,18 @@ bettercap.silence = [
   "wifi.ap.lost",
   "mod.started"
 ]
+
+fs.memory.enabled = false
+fs.memory.mounts.log.enabled = false
+fs.memory.mounts.log.mount = "/var/log"
+fs.memory.mounts.log.size = "50M"
+fs.memory.mounts.log.sync = 60
+fs.memory.mounts.log.zram = true
+fs.memory.mounts.log.rsync = true
+
+fs.memory.mounts.data.enabled = false
+fs.memory.mounts.data.mount = "/var/tmp/pwnagotchi"
+fs.memory.mounts.data.size = "10M"
+fs.memory.mounts.data.sync = 3600
+fs.memory.mounts.data.zram = false
+fs.memory.mounts.data.rsync = true

@@ -6,6 +6,7 @@ import re
 import pwnagotchi.ui.view as view
 import pwnagotchi
 
+from pwnagotchi import fs
 from pwnagotchi._version import __version__
 
 _name = None
@@ -99,6 +100,11 @@ def temperature(celsius=True):
 
 
 def shutdown():
+    logging.warning("syncing...")
+
+    for m in fs.mounts:
+        m.sync()
+
     logging.warning("shutting down ...")
     if view.ROOT:
         view.ROOT.on_shutdown()
