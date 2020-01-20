@@ -84,7 +84,7 @@ class OnlineHashCrack(plugins.Plugin):
             dashboard = s.get(self.options['dashboard'], timeout=timeout)
             result = s.get('https://www.onlinehashcrack.com/wpa-exportcsv', timeout=timeout)
             result.raise_for_status()
-            with open(save_file, 'wt') as output_file:
+            with open(save_file, 'wb') as output_file:
                 output_file.write(result.content)
         except requests.exceptions.RequestException as req_e:
             raise req_e
