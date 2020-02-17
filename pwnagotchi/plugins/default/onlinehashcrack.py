@@ -153,7 +153,7 @@ class OnlineHashCrack(plugins.Plugin):
                         with open(cracked_file, 'r') as cracked_list:
                             for row in csv.DictReader(cracked_list):
                                 if row['password']:
-                                    filename = row['ESSID'].replace('-','').replace(' ','') + '_' + row['BSSID'].replace(':','')
+                                    filename = re.sub(r'[^a-zA-Z0-9]', '', row['ESSID']) + '_' + row['BSSID'].replace(':','')
                                     if os.path.exists( os.path.join(handshake_dir, filename+'.pcap') ):
                                         with open(os.path.join(handshake_dir, filename+'.pcap.cracked'), 'w') as f:
                                             f.write(row['password'])
