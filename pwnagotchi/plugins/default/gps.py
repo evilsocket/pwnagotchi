@@ -59,10 +59,9 @@ class GPS(plugins.Plugin):
             lon_pos = (125, 80)
             alt_pos = (130, 90)
         elif ui.is_inky():
-            # guessed values, add tested ones if you can
-            lat_pos = (112, 30)
-            lon_pos = (112, 49)
-            alt_pos = (87, 63)
+            lat_pos = (127, 60)
+            lon_pos = (127, 70)
+            alt_pos = (127, 80)
         elif ui.is_waveshare144lcd():
             # guessed values, add tested ones if you can
             lat_pos = (67, 73)
