@@ -1,0 +1,249 @@
+# Hungarian translation.
+# Copyright (C) 2020
+# This file is distributed under the same license as the PACKAGE package.
+# Skeleton022 <skeleton022.pwnagotchi@gmail.com>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.4.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-01-07 20:00+0100\n"
+"PO-Revision-Date: 2020-03-23 0:10+0100\n"
+"Last-Translator: Skeleton022\n"
+"Language-Team: Skeleton022\n"
+"Language: hungarian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ZzzzZZzzzzZzzz"
+msgstr "ZzzzZZzzzzZzzz"
+
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "Hali, Pwnagotchi vagyok! Indítás ..."
+
+msgid "New day, new hunt, new pwns!"
+msgstr "Új nap, új vadászat, új hálózatok!"
+
+msgid "Hack the Planet!"
+msgstr "Törd meg a bolygót!"
+
+msgid "AI ready."
+msgstr "MI kész."
+
+msgid "The neural network is ready."
+msgstr "A neurális hálózat készen áll."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "Kulcspár generálása, ne kapcsold ki az eszközt ..."
+
+#, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr "A {channel}. számú csatorna üres! Az AP-d meg fogja köszönni."
+
+msgid "Reading last session logs ..."
+msgstr ""
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "Az utolsó munkamenet logjainak olvasása ..."
+
+msgid "I'm bored ..."
+msgstr "Unatkozom ..."
+
+msgid "Let's go for a walk!"
+msgstr "Menjünk sétálni!"
+
+msgid "This is the best day of my life!"
+msgstr "Ez a legjobb nap az életemben!"
+
+msgid "Shitty day :/"
+msgstr "Szar egy nap :/"
+
+msgid "I'm extremely bored ..."
+msgstr "Nagyon unatkozom ..."
+
+msgid "I'm very sad ..."
+msgstr "Nagyon szomorú vagyok ..."
+
+msgid "I'm sad"
+msgstr "Szomorú vagyok"
+
+msgid "Leave me alone ..."
+msgstr "Hagyj békén ..."
+
+msgid "I'm mad at you!"
+msgstr "Mérges vagyok rád!"
+
+msgid "I'm living the life!"
+msgstr "Élvezem az életet!"
+
+msgid "I pwn therefore I am."
+msgstr "Hackelek, tehát vagyok."
+
+msgid "So many networks!!!"
+msgstr "Rengeteg hálózat!!!"
+
+msgid "I'm having so much fun!"
+msgstr "Nagyon jól érzem magam!"
+
+msgid "My crime is that of curiosity ..."
+msgstr "Kíváncsiság a bűnöm ..."
+
+#, python-brace-format
+msgid "Hello {name}! Nice to meet you."
+msgstr "Hali {name}! Örülök, hogy találkoztunk."
+
+#, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr "Hé {name}! Mizu?"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Hé {name} hogy vagy?"
+
+#, python-brace-format
+msgid "Unit {name} is nearby!"
+msgstr "A {name} nevű egység a közelben van!"
+
+#, python-brace-format
+msgid "Uhm ... goodbye {name}"
+msgstr "Ömm ... ég veled {name}"
+
+#, python-brace-format
+msgid "{name} is gone ..."
+msgstr "{name} eltűnt ..."
+
+#, python-brace-format
+msgid "Whoops ... {name} is gone."
+msgstr "Whoops ... {name} eltűnt."
+
+#, python-brace-format
+msgid "{name} missed!"
+msgstr "{name} elhibázva!"
+
+msgid "Missed!"
+msgstr "Elvesztettem!"
+
+msgid "Good friends are a blessing!"
+msgstr "A jó barátok áldás az életben!"
+
+msgid "I love my friends!"
+msgstr "Szeretem a barátaimat!"
+
+msgid "Nobody wants to play with me ..."
+msgstr "Senki sem akar játszani velem ..."
+
+msgid "I feel so alone ..."
+msgstr "Egyedül vagyok ..."
+
+msgid "Where's everybody?!"
+msgstr "Hol vagytok?!"
+
+#, python-brace-format
+msgid "Napping for {secs}s ..."
+msgstr "{secs} másodpercig szundikálok ..."
+
+msgid "Zzzzz"
+msgstr "Zzzzz"
+
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr "ZzzZzzz ({secs}msp)"
+
+msgid "Good night."
+msgstr "Jó éjszakát."
+
+msgid "Zzz"
+msgstr "Zzz"
+
+#, python-brace-format
+msgid "Waiting for {secs}s ..."
+msgstr "Várok {secs} másodpercig ..."
+
+#, python-brace-format
+msgid "Looking around ({secs}s)"
+msgstr "Körbenézek {secs} másodpercig"
+
+#, python-brace-format
+msgid "Hey {what} let's be friends!"
+msgstr "Hey {what} legyünk barátok!"
+
+#, python-brace-format
+msgid "Associating to {what}"
+msgstr "Társítás {what} -hoz/-hez"
+
+#, python-brace-format
+msgid "Yo {what}!"
+msgstr "Hé {what}!"
+
+#, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "Úgydöntöttem, hogy {mac}-nek nem kell WiFi!"
+
+#, python-brace-format
+msgid "Deauthenticating {mac}"
+msgstr "Kirúgom {mac}-et"
+
+#, python-brace-format
+msgid "Kickbanning {mac}!"
+msgstr "{mac} kirúgva és kitiltva!"
+
+#, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Király, kaptunk {num} új üzenetet!"
+
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "{count} új üzeneted van!"
+
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Ops, valami rosszul sikerült ... Újraindítás ..."
+
+#, python-brace-format
+msgid "Kicked {num} stations\n"
+msgstr "Kirúgva {num} állomás\n"
+
+#, python-brace-format
+msgid "Made {num} new friends\n"
+msgstr "{num} új barátot\ntaláltam\n"
+
+#, python-brace-format
+msgid "Got {num} handshakes\n"
+msgstr "{num} kézfogást szereztem\n"
+
+msgid "Met 1 peer"
+msgstr "1 Társsal találkoztam"
+
+#, python-brace-format
+msgid "Met {num} peers"
+msgstr "Találkoztam {num} társsal"
+
+#, python-brace-format
+msgid ""
+"I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+"Már {duration} ideje dolgozom, kirúgtam {deauthed} klienst! Találkoztam még"
+"{associated} új baráttal és elfogtam {handshakes} kézfogást! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr "óra"
+
+msgid "minutes"
+msgstr "perc"
+
+msgid "seconds"
+msgstr "másodperc"
+
+msgid "hour"
+msgstr "óra"
+
+msgid "minute"
+msgstr "perc"
+
+msgid "second"
+msgstr "másodperc"
+
