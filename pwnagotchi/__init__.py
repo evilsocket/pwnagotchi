@@ -76,18 +76,27 @@ def mem_usage():
     return 0
 
 
-def cpu_load():
+def _cpu_stat():
+    """
+    Returns the splitted first line of the /proc/stat file
+    """
     with open('/proc/stat', 'rt') as fp:
-        for line in fp:
-            line = line.strip()
-            if line.startswith('cpu '):
-                parts = list(map(int, line.split()[1:]))
-                user_n = parts[0]
-                sys_n = parts[2]
-                idle_n = parts[3]
-                tot = user_n + sys_n + idle_n
-                return (user_n + sys_n) / tot
-    return 0
+        return list(map(int,fp.readline().split()[1:]))
+
+
+def cpu_load():
+    """
+    Returns the current cpuload
+    """
+    parts0 = _cpu_stat()
+    time.sleep(0.1)
+    parts1 = _cpu_stat()
+    parts_diff = [p1 - p0 for (p0, p1) in zip(parts0, parts1)]
+    user, nice, sys, idle, iowait, irq, softirq, steal, _guest, _guest_nice = parts_diff
+    idle_sum = idle + iowait
+    non_idle_sum = user + nice + sys + irq + softirq + steal
+    total = idle_sum + non_idle_sum
+    return non_idle_sum / total
 
 
 def temperature(celsius=True):
