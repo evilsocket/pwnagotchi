@@ -66,8 +66,6 @@ def mem_usage():
                 kb_mem_total = int(line.split()[1])
             if line.startswith("MemFree:"):
                 kb_mem_free = int(line.split()[1])
-            if line.startswith("MemAvailable:"):
-                kb_mem_available = int(line.split()[1])
             if line.startswith("Buffers:"):
                 kb_main_buffers = int(line.split()[1])
             if line.startswith("Cached:"):
