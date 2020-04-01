@@ -17,3 +17,4 @@ dist
 pwnagotchi.egg-info
 *backup*.tgz
 *backup*.gz
+.vscode
