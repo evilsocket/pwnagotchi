@@ -4,8 +4,8 @@ import _thread
 import threading
 import importlib, importlib.util
 import logging
+import pwnagotchi
 from pwnagotchi.ui import view
-from pwnagotchi import config
 from pwnagotchi.utils import save_config
 
 
@@ -39,11 +39,11 @@ def toggle_plugin(name, enable=True):
 
     returns True if changed, otherwise False
     """
-    global loaded, database, config
+    global loaded, database
 
-    if config:
-        config['main']['plugins'][name] = enable
-        save_config(config, '/etc/pwnagotchi/config.toml')
+    if pwnagotchi.config:
+        pwnagotchi.config['main']['plugins'][name]['enabled'] = enable
+        save_config(pwnagotchi.config, '/etc/pwnagotchi/config.toml')
 
     if not enable and name in loaded:
         if getattr(loaded[name], 'on_unload', None):
