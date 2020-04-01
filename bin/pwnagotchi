@@ -17,6 +17,7 @@ from pwnagotchi.agent import Agent
 from pwnagotchi.ui.display import Display
 from pwnagotchi import restart
 from pwnagotchi import fs
+from pwnagotchi.utils import DottedTomlEncoder
 
 
 def do_clear(display):
@@ -122,9 +123,10 @@ if __name__ == '__main__':
 
     config = utils.load_config(args)
     if args.print_config:
-        print(toml.dumps(config))
+        print(toml.dumps(config, encoder=DottedTomlEncoder()))
         sys.exit(0)
 
+    pwnagotchi.config = config
     fs.setup_mounts(config)
     log.setup_logging(args, config)
 

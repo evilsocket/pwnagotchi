@@ -2,8 +2,8 @@ import logging
 import json
 import toml
 import _thread
-import pwnagotchi.plugins as plugins
-from pwnagotchi import restart
+from pwnagotchi import restart, plugins
+from pwnagotchi.utils import save_config
 from flask import abort
 from flask import render_template_string
 
@@ -500,9 +500,8 @@ class WebConfig(plugins.Plugin):
             if path == "save-config":
                 try:
                     parsed_toml = toml.loads(request.get_json())
-                    with open('/etc/pwnagotchi/config.toml') as config_file:
-                        toml.dump(parsed_toml, config_file)
-
+                    save_config(parsed_toml, '/etc/pwnagotchi/config.toml')
+                    
                     _thread.start_new_thread(restart, (self.mode,))
                     return "success"
                 except Exception as ex:

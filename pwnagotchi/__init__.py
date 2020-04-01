@@ -10,6 +10,7 @@ from pwnagotchi import fs
 from pwnagotchi._version import __version__
 
 _name = None
+config = None
 
 
 def set_name(new_name):
