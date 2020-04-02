@@ -25,7 +25,7 @@ class DFRobot(DisplayImpl):
     self._layout['mode'] = (225, 109)
     self._layout['status'] = {
         'pos': (125, 20),
-        'font': fonts.Medium,
+        'font': fonts.status_font(fonts.Medium),
         'max': 20
     }
     return self._layout

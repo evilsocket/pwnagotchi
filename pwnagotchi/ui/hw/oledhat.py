@@ -26,7 +26,7 @@ class OledHat(DisplayImpl):
         self._layout['mode'] = (103, 10)
         self._layout['status'] = {
             'pos': (30, 18),
-            'font': fonts.Small,
+            'font': fonts.status_font(fonts.Small),
             'max': 18
         }
         return self._layout

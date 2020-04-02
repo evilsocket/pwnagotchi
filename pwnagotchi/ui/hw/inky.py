@@ -26,7 +26,7 @@ class Inky(DisplayImpl):
         self._layout['mode'] = (187, 93)
         self._layout['status'] = {
             'pos': (102, 18),
-            'font': fonts.Small,
+            'font': fonts.status_font(fonts.Small),
             'max': 20
         }
         return self._layout

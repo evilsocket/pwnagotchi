@@ -27,7 +27,7 @@ class Spotpear24inch(DisplayImpl):
         self._layout['mode'] = (280, 220)
         self._layout['status'] = {
             'pos': (80, 160),
-            'font': fonts.Medium,
+            'font': fonts.status_font(fonts.Medium),
             'max': 20
         }
 

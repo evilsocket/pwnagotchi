@@ -26,7 +26,7 @@ class LcdHat(DisplayImpl):
         self._layout['mode'] = (215, 109)
         self._layout['status'] = {
             'pos': (125, 20),
-            'font': fonts.Medium,
+            'font': fonts.status_font(fonts.Medium),
             'max': 20
         }
 

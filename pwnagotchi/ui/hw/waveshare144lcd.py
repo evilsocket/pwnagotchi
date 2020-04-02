@@ -26,7 +26,7 @@ class Waveshare144lcd(DisplayImpl):
         self._layout['mode'] = (0, 117)
         self._layout['status'] = {
             'pos': (65, 26),
-            'font': fonts.Small,
+            'font': fonts.status_font(fonts.Small),
             'max': 12
         }
         return self._layout

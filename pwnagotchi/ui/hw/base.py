@@ -22,7 +22,7 @@ class DisplayImpl(object):
             # status is special :D
             'status': {
                 'pos': (0, 0),
-                'font': fonts.Medium,
+                'font': fonts.status_font(fonts.Medium),
                 'max': 20
             }
         }
