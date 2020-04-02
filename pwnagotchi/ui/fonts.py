@@ -24,15 +24,15 @@ def init(config):
 
 def status_font(old_font):
     global STATUS_FONT_NAME, SIZE_OFFSET
-    return old_font.font_variant(font=STATUS_FONT_NAME, size=old_font.size + SIZE_OFFSET)
+    return ImageFont.truetype(STATUS_FONT_NAME, size=old_font.size + SIZE_OFFSET)
 
 
 def setup(bold, bold_small, medium, huge, bold_big, small):
     global Bold, BoldSmall, Medium, Huge, BoldBig, Small, FONT_NAME
 
-    Small = ImageFont.truetype("%s.ttf" % FONT_NAME, small)
-    Medium = ImageFont.truetype("%s.ttf" % FONT_NAME, medium)
-    BoldSmall = ImageFont.truetype("%s-Bold.ttf" % FONT_NAME, bold_small)
-    Bold = ImageFont.truetype("%s-Bold.ttf" % FONT_NAME, bold)
-    BoldBig = ImageFont.truetype("%s-Bold.ttf" % FONT_NAME, bold_big)
-    Huge = ImageFont.truetype("%s-Bold.ttf" % FONT_NAME, huge)
+    Small = ImageFont.truetype(FONT_NAME, small)
+    Medium = ImageFont.truetype(FONT_NAME, medium)
+    BoldSmall = ImageFont.truetype("%s-Bold" % FONT_NAME, bold_small)
+    Bold = ImageFont.truetype("%s-Bold" % FONT_NAME, bold)
+    BoldBig = ImageFont.truetype("%s-Bold" % FONT_NAME, bold_big)
+    Huge = ImageFont.truetype("%s-Bold" % FONT_NAME, huge)

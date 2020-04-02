@@ -26,7 +26,7 @@ class Waveshare29inch(DisplayImpl):
         self._layout['mode'] = (268, 114)
         self._layout['status'] = {
             'pos': (130, 25),
-            'font': fonts.status_font(fonts.Medium)
+            'font': fonts.status_font(fonts.Medium),
             'max': 28
         }
         return self._layout
