@@ -10,7 +10,7 @@ class Inky(DisplayImpl):
         self._display = None
 
     def layout(self):
-        fonts.setup(10, 8, 10, 28)
+        fonts.setup(10, 8, 10, 28, 25, 9)
         self._layout['width'] = 212
         self._layout['height'] = 104
         self._layout['face'] = (0, 37)

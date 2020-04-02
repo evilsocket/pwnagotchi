@@ -10,7 +10,7 @@ class OledHat(DisplayImpl):
         self._display = None
 
     def layout(self):
-        fonts.setup(8, 8, 8, 8)
+        fonts.setup(8, 8, 8, 8, 25, 9)
         self._layout['width'] = 128
         self._layout['height'] = 64
         self._layout['face'] = (0, 32)

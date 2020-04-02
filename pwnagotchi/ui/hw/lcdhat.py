@@ -10,7 +10,7 @@ class LcdHat(DisplayImpl):
         self._display = None
 
     def layout(self):
-        fonts.setup(10, 9, 10, 35)
+        fonts.setup(10, 9, 10, 35, 25, 9)
         self._layout['width'] = 240
         self._layout['height'] = 240
         self._layout['face'] = (0, 40)

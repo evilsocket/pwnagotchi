@@ -104,6 +104,7 @@
           - python3-flask
           - python3-flask-cors
           - python3-flaskext.wtf
+          - fonts-ipaexfont-gothic
 
   tasks:
   - name: change hostname

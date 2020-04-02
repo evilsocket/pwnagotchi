@@ -14,6 +14,7 @@ from pwnagotchi import plugins
 from pwnagotchi import log
 from pwnagotchi.identity import KeyPair
 from pwnagotchi.agent import Agent
+from pwnagotchi.ui import fonts
 from pwnagotchi.ui.display import Display
 from pwnagotchi import restart
 from pwnagotchi import fs
@@ -129,6 +130,7 @@ if __name__ == '__main__':
     pwnagotchi.config = config
     fs.setup_mounts(config)
     log.setup_logging(args, config)
+    fonts.init(config)
 
     pwnagotchi.set_name(config['main']['name'])
 

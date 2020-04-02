@@ -148,6 +148,7 @@ personality.sad_num_epochs = 25
 personality.bond_encounters_factor = 20000
 
 ui.fps = 0.0
+ui.font = "DejaVuSansMono" # for japanese: fonts-japanese-gothic
 
 ui.faces.look_r = "( ⚆_⚆)"
 ui.faces.look_l = "(☉_☉ )"
