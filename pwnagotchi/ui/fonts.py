@@ -22,11 +22,10 @@ def init(config):
 
 
 def setup(bold, bold_small, medium, huge, bold_big, small):
-    global Bold, BoldSmall, Medium, Huge, BoldBig, Small, FaceHuge, FaceBold,
-           FONT_NAME, SIZE_OFFSET
+    global Bold, BoldSmall, Medium, Huge, BoldBig, Small, FaceHuge, FaceBold, FONT_NAME, FONT_NAME_FACES, SIZE_OFFSET
 
     Small = ImageFont.truetype("%s.ttf" % FONT_NAME, small + SIZE_OFFSET)
-    Medium = ImageFont.truetype("%s.ttf" % FONT_NAME, medium, + SIZE_OFFSET)
+    Medium = ImageFont.truetype("%s.ttf" % FONT_NAME, medium + SIZE_OFFSET)
     FaceHuge = ImageFont.truetype("%s-Bold.ttf" % FONT_NAME_FACES, huge)
     FaceBold = ImageFont.truetype("%s-Bold.ttf" % FONT_NAME_FACES, bold)
 
