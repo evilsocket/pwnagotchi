@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR 24534649+wytshadow@users.noreply.github.com, 2019.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-16 15:05+0200\n"
+"POT-Creation-Date: 2020-01-25 21:57+0900\n"
 "PO-Revision-Date: 2019-10-16 15:05+0200\n"
 "Last-Translator: wytshadow <24534649+wytshadow@users.noreply.github.com>\n"
 "Language-Team: pwnagotchi <24534649+wytshadow@users.noreply.github.com>\n"
@@ -21,170 +20,207 @@ msgid "ZzzzZZzzzzZzzz"
 msgstr "すやすや〜"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "こんにちは、ポウナゴッチです！始めている。。。"
+msgstr "僕、 ポーナゴッチです！"
 
 msgid "New day, new hunt, new pwns!"
-msgstr ""
+msgstr "ポーンしようよ。"
 
 msgid "Hack the Planet!"
 msgstr "ハックザプラネット！"
 
 msgid "AI ready."
-msgstr "人工知能の準備ができました。"
+msgstr "AIの準備ができました。"
 
 msgid "The neural network is ready."
-msgstr "ニューラルネットワークの準備ができました。"
+msgstr "ニューラルネットワークの\n準備ができました。"
+
+msgid "Generating keys, do not turn off ..."
+msgstr "鍵生成をしてます。\n電源を落とさないでね。"
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "ねえ、チャンネル{channel}は無料です！ キミのAPは感謝を言います。"
+msgstr "チャンネル\n {channel} \nはfreeだよ。ありがとうね。"
+
+msgid "Reading last session logs ..."
+msgstr "session log を読んでます。"
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "{lines_so_far} 行目長いよぉ。"
 
 msgid "I'm bored ..."
-msgstr "退屈です。。。"
+msgstr "退屈だぁ。。。"
 
 msgid "Let's go for a walk!"
-msgstr "散歩に行きましょう！"
+msgstr "散歩に行こうよ！"
 
 msgid "This is the best day of my life!"
-msgstr "今日は私の人生で最高の日です！"
+msgstr "人生最高の日だよ！"
 
 msgid "Shitty day :/"
-msgstr ""
+msgstr "がっかりな日だよ。orz"
 
 msgid "I'm extremely bored ..."
-msgstr "とても退屈です。"
+msgstr "退屈だね。"
 
 msgid "I'm very sad ..."
-msgstr "とても悲しいです。。。"
+msgstr "あ～悲しいよぉ。"
 
 msgid "I'm sad"
-msgstr "悲しいです。"
+msgstr "悲しいね。"
+
+msgid "Leave me alone ..."
+msgstr "ひとりぼっちだよ。"
+
+msgid "I'm mad at you!"
+msgstr "怒っちゃうよ。"
 
 msgid "I'm living the life!"
-msgstr "人生を生きている！"
+msgstr "わくわくするね。"
 
 msgid "I pwn therefore I am."
-msgstr ""
+msgstr "ポーンしてこそのオレ。"
 
 msgid "So many networks!!!"
-msgstr "たくさんネットワークがある！！！"
+msgstr "たくさん\nWiFiが飛んでるよ！"
 
 msgid "I'm having so much fun!"
-msgstr "とても楽しんでいます！"
+msgstr "楽しいよぉ！"
 
 msgid "My crime is that of curiosity ..."
-msgstr ""
+msgstr "APに興味津々..."
 
 #, python-brace-format
-msgid "Hello {name}! Nice to meet you. {name}"
-msgstr "こんにちは{name}！初めまして。{name}"
+msgid "Hello {name}! Nice to meet you."
+msgstr "こんにちは{name}！\n初めまして。{name}"
 
 #, python-brace-format
-msgid "Unit {name} is nearby! {name}"
-msgstr ""
+msgid "Yo {name}! Sup?"
+msgstr "ねぇねぇ、\n{name} どうしたの？"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "{name} こんにちは"
+
+#, python-brace-format
+msgid "Unit {name} is nearby!"
+msgstr "{name} が近くにいるよ。"
 
 #, python-brace-format
 msgid "Uhm ... goodbye {name}"
-msgstr "ええと。。。さようなら{name}"
+msgstr "じゃあね、さようなら {name}"
 
 #, python-brace-format
 msgid "{name} is gone ..."
-msgstr "{name}がなくなった。。。"
+msgstr "{name}\nがいなくなったよ。"
 
 #, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "おっと。。。{name}がなくなった。"
+msgstr "あらら、\n{name}\nがいなくなったね。"
 
 #, python-brace-format
 msgid "{name} missed!"
-msgstr "{name}逃した！"
+msgstr "{name} が逃げた！"
 
 msgid "Missed!"
-msgstr "逃した！"
+msgstr "残念、逃した！"
+
+msgid "Good friends are a blessing!"
+msgstr "良い仲間にめぐりあえたよ。"
+
+msgid "I love my friends!"
+msgstr "友達は大好きだよ。"
 
 msgid "Nobody wants to play with me ..."
-msgstr "誰も僕と一緒にプレーしたくない。。。"
+msgstr "誰も僕と一緒に\nあそんでくれない。"
 
 msgid "I feel so alone ..."
-msgstr "僕は孤独を感じる。。。"
+msgstr "ひとりぼっちだよ。"
 
 msgid "Where's everybody?!"
-msgstr "みんなどこ？！"
+msgstr "みんなどこにいるの？！"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "{secs}寝ている。"
+msgstr "{secs}秒 寝ます。"
 
 msgid "Zzzzz"
-msgstr "すや〜"
+msgstr "ぐぅ〜"
 
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
-msgstr "すやすや〜　({secs})"
+msgstr "すやすや〜 ({secs}秒)"
 
 msgid "Good night."
-msgstr "お休みなさい。"
+msgstr "おやすみなさい。"
 
 msgid "Zzz"
-msgstr "す〜"
+msgstr "ぐぅ～"
 
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr "{secs}を待っている。。。"
+msgstr "{secs}秒 待ちです。"
 
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "{secs}を探している。"
+msgstr "{secs}秒 探してます。"
 
 #, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr "ちょっと{what}友だちになりましょう！"
+msgstr "ねぇねぇ\n{what} \n友だちになろうよ。"
 
 #, python-brace-format
 msgid "Associating to {what}"
-msgstr ""
+msgstr "{what} \nとつながるかな？"
 
 #, python-brace-format
 msgid "Yo {what}!"
-msgstr "よー{what}!"
+msgstr "ねぇねぇ\n{what}"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr ""
+msgstr "{mac}\nはWiFiじゃないのね。"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
-msgstr ""
+msgstr "{mac}\nの認証取得中..."
 
 #, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr ""
+msgstr "{mac}\nに拒否られた。"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "よし、{num}新しいハンドシェイクがある！"
+msgstr "おぉ、\n{num}回\nハンドシェイクがあったよ！"
 
-msgid "Oops, something went wrong ... Rebooting ..."
-msgstr "おっと！何かが間違っていた。。。リブートしている。。。"
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "おぉ、\n{count}個メッセージがあるよ！"
+
+msgid "Ops, something went wrong ... Rebooting ..."
+msgstr "何か間違った。\nリブートしている。"
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr ""
+msgstr "{num}回拒否された。\n"
+
+msgid "Made >999 new friends\n"
+msgstr "1000人以上友達ができた。\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "{num}人の新しい友達を作りました\n"
+msgstr "{num}人友達ができた。\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "{num}ハンドシェイクがある。\n"
+msgstr "{num}回ハンドシェイクした。\n"
 
 msgid "Met 1 peer"
-msgstr "1人の仲間を会いました。"
+msgstr "1人 仲間に会いました。"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "{num}人の仲間を会いました。"
+msgstr "{num}人 仲間に会いました。"
 
 #, python-brace-format
 msgid ""
@@ -192,6 +228,9 @@ msgid ""
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
+"{duration}中{deauted}のAPに拒否されたけど、{associated}回チャンスがあって"
+"{handshakes}回ハンドシェイクがあったよ。。 #pownagotchi #pwnlog #pwnlife "
+"#hacktheplanet #skynet"
 
 msgid "hours"
 msgstr "時間"
@@ -203,7 +242,7 @@ msgid "seconds"
 msgstr "秒"
 
 msgid "hour"
-msgstr "時間"
+msgstr "時"
 
 msgid "minute"
 msgstr "分"
