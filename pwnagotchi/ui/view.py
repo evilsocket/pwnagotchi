@@ -138,6 +138,7 @@ class View(object):
     def on_starting(self):
         self.set('status', self._voice.on_starting() + ("\n(v%s)" % pwnagotchi.__version__))
         self.set('face', faces.AWAKE)
+        self.update()
 
     def on_ai_ready(self):
         self.set('mode', '  AI')

@@ -44,9 +44,15 @@ class GPS(plugins.Plugin):
             self.coordinates = info["gps"]
             gps_filename = filename.replace(".pcap", ".gps.json")
 
-            logging.info(f"saving GPS to {gps_filename} ({self.coordinates})")
-            with open(gps_filename, "w+t") as fp:
-                json.dump(self.coordinates, fp)
+            if self.coordinates and all([
+                # avoid 0.000... measurements
+                self.coordinates["Latitude"], self.coordinates["Longitude"]
+            ]):
+                logging.info(f"saving GPS to {gps_filename} ({self.coordinates})")
+                with open(gps_filename, "w+t") as fp:
+                    json.dump(self.coordinates, fp)
+            else:
+                logging.info("not saving GPS. Couldn't find location.")
 
     def on_ui_setup(self, ui):
         # add coordinates for other displays

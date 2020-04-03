@@ -10,7 +10,7 @@ class Waveshare154inch(DisplayImpl):
         self._display = None
 
     def layout(self):
-        fonts.setup(10, 9, 10, 35)
+        fonts.setup(10, 9, 10, 35, 25, 9)
         self._layout['width'] = 200
         self._layout['height'] = 200
         self._layout['face'] = (0, 40)
@@ -26,7 +26,7 @@ class Waveshare154inch(DisplayImpl):
         self._layout['mode'] = (170, 187)
         self._layout['status'] = {
             'pos': (5, 90),
-            'font': fonts.Medium,
+            'font': fonts.status_font(fonts.Medium),
             'max': 20
         }
         return self._layout
