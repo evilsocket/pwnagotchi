@@ -10,12 +10,12 @@ from dateutil.parser import parse
 
 '''
     webgpsmap shows existing position data stored in your /handshakes/ directory
-    
+
     the plugin does the following:
         - search for *.pcap files in your /handshakes/ dir
             - for every found .pcap file it looks for a .geo.json or .gps.json or .paw-gps.json file with
               latitude+longitude data inside and shows this position on the map
-            - if also an .cracked file with a plaintext password inside exist, it reads the content and shows the 
+            - if also an .cracked file with a plaintext password inside exist, it reads the content and shows the
               position as green instead of red and the password inside the infopox of the position
     special:
         you can save the html-map as one file for offline use or host on your own webspace with "/plugins/webgpsmap/offlinemap"
@@ -35,8 +35,8 @@ class Webgpsmap(plugins.Plugin):
     def __init__(self):
         self.ready = False
 
-    def on_ready(self, agent):
-        self.config = agent.config()
+    def on_config_changed(self, config):
+        self.config = config
         self.ready = True
 
     def on_loaded(self):

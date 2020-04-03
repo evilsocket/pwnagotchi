@@ -1,5 +1,8 @@
+import json
 import logging
 import requests
+import websockets
+
 from requests.auth import HTTPBasicAuth
 
 
@@ -25,15 +28,25 @@ class Client(object):
         self.username = username
         self.password = password
         self.url = "%s://%s:%d/api" % (scheme, hostname, port)
+        self.websocket = "ws://%s:%s@%s:%d/api" % (username, password, hostname, port)
         self.auth = HTTPBasicAuth(username, password)
 
     def session(self):
         r = requests.get("%s/session" % self.url, auth=self.auth)
         return decode(r)
 
-    def events(self):
-        r = requests.get("%s/events" % self.url, auth=self.auth)
-        return decode(r)
+    async def start_websocket(self, consumer):
+        s = "%s/events" % self.websocket
+        while True:
+            try:
+                async with websockets.connect(s, ping_interval=60, ping_timeout=90) as ws:
+                    async for msg in ws:
+                        try:
+                            await consumer(msg)
+                        except Exception as ex:
+                            logging.debug("Error while parsing event (%s)", ex)
+            except websockets.exceptions.ConnectionClosedError:
+                logging.debug("Lost websocket connection. Reconnecting...")
 
     def run(self, command, verbose_errors=True):
         r = requests.post("%s/session" % self.url, auth=self.auth, json={'cmd': command})

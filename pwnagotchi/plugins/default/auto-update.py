@@ -6,12 +6,11 @@ import requests
 import platform
 import shutil
 import glob
-import pkg_resources
 from threading import Lock
 
 import pwnagotchi
 import pwnagotchi.plugins as plugins
-from pwnagotchi.utils import StatusFile
+from pwnagotchi.utils import StatusFile, parse_version as version_to_tuple
 
 
 def check(version, repo, native=True):
@@ -30,8 +29,8 @@ def check(version, repo, native=True):
     info['available'] = latest_ver = latest['tag_name'].replace('v', '')
     is_arm = info['arch'].startswith('arm')
 
-    local = pkg_resources.parse_version(info['current'])
-    remote = pkg_resources.parse_version(latest_ver)
+    local = version_to_tuple(info['current'])
+    remote = version_to_tuple(latest_ver)
     if remote > local:
         if not native:
             info['url'] = "https://github.com/%s/archive/%s.zip" % (repo, latest['tag_name'])
@@ -161,6 +160,9 @@ class AutoUpdate(plugins.Plugin):
         logging.info("[update] plugin loaded.")
 
     def on_internet_available(self, agent):
+        if self.lock.locked():
+            return
+
         with self.lock:
             logging.debug("[update] internet connectivity is available (ready %s)" % self.ready)
 

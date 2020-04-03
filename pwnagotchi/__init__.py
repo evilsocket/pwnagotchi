@@ -3,10 +3,8 @@ import logging
 import time
 import re
 
-import pwnagotchi.ui.view as view
-import pwnagotchi
 
-from pwnagotchi import fs
+
 from pwnagotchi._version import __version__
 
 _name = None
@@ -110,10 +108,13 @@ def temperature(celsius=True):
 def shutdown():
     logging.warning("syncing...")
 
+    from pwnagotchi import fs
     for m in fs.mounts:
         m.sync()
 
     logging.warning("shutting down ...")
+
+    from pwnagotchi.ui import view
     if view.ROOT:
         view.ROOT.on_shutdown()
         # give it some time to refresh the ui
@@ -141,6 +142,7 @@ def reboot(mode=None):
     else:
         logging.warning("rebooting ...")
 
+    from pwnagotchi.ui import view
     if view.ROOT:
         view.ROOT.on_rebooting()
         # give it some time to refresh the ui

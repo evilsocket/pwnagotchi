@@ -7,6 +7,7 @@ import re
 import pwnagotchi.grid as grid
 import pwnagotchi.plugins as plugins
 from pwnagotchi.utils import StatusFile, WifiInfo, extract_from_pcap
+from threading import Lock
 
 
 def parse_pcap(filename):
@@ -54,6 +55,7 @@ class Grid(plugins.Plugin):
 
         self.unread_messages = 0
         self.total_messages = 0
+        self.lock = Lock()
 
     def is_excluded(self, what):
         for skip in self.options['exclude']:
@@ -122,21 +124,25 @@ class Grid(plugins.Plugin):
     def on_internet_available(self, agent):
         logging.debug("internet available")
 
-        try:
-            grid.update_data(agent.last_session)
-        except Exception as e:
-            logging.error("error connecting to the pwngrid-peer service: %s" % e)
-            logging.debug(e, exc_info=True)
+        if self.lock.locked():
             return
 
-        try:
-            self.check_inbox(agent)
-        except Exception as e:
-            logging.error("[grid] error while checking inbox: %s" % e)
-            logging.debug(e, exc_info=True)
+        with self.lock:
+            try:
+                grid.update_data(agent.last_session)
+            except Exception as e:
+                logging.error("error connecting to the pwngrid-peer service: %s" % e)
+                logging.debug(e, exc_info=True)
+                return
 
-        try:
-            self.check_handshakes(agent)
-        except Exception as e:
-            logging.error("[grid] error while checking pcaps: %s" % e)
-            logging.debug(e, exc_info=True)
+            try:
+                self.check_inbox(agent)
+            except Exception as e:
+                logging.error("[grid] error while checking inbox: %s" % e)
+                logging.debug(e, exc_info=True)
+
+            try:
+                self.check_handshakes(agent)
+            except Exception as e:
+                logging.error("[grid] error while checking pcaps: %s" % e)
+                logging.debug(e, exc_info=True)

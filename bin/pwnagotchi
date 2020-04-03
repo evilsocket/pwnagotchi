@@ -2,20 +2,14 @@
 import logging
 import argparse
 import time
-import yaml
 import signal
 import sys
 import toml
 
 import pwnagotchi
-from pwnagotchi import grid
 from pwnagotchi import utils
-from pwnagotchi import plugins
+from pwnagotchi.plugins import cmd as plugins_cmd
 from pwnagotchi import log
-from pwnagotchi.identity import KeyPair
-from pwnagotchi.agent import Agent
-from pwnagotchi.ui import fonts
-from pwnagotchi.ui.display import Display
 from pwnagotchi import restart
 from pwnagotchi import fs
 from pwnagotchi.utils import DottedTomlEncoder
@@ -89,11 +83,12 @@ def do_auto_mode(agent):
                 plugins.on('internet_available', agent)
 
         except Exception as e:
-            logging.exception("main loop exception")
+            logging.exception("main loop exception (%s)", e)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser = plugins_cmd.add_parsers(parser)
 
     parser.add_argument('-C', '--config', action='store', dest='config', default='/etc/pwnagotchi/default.toml',
                         help='Main configuration file.')
@@ -118,14 +113,29 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+
+    if plugins_cmd.used_plugin_cmd(args):
+      config = utils.load_config(args)
+      log.setup_logging(args, config)
+      rc = plugins_cmd.handle_cmd(args, config)
+      sys.exit(rc)
+
     if args.version:
         print(pwnagotchi.__version__)
         sys.exit(0)
 
     config = utils.load_config(args)
+
     if args.print_config:
         print(toml.dumps(config, encoder=DottedTomlEncoder()))
         sys.exit(0)
+
+    from pwnagotchi.identity import KeyPair
+    from pwnagotchi.agent import Agent
+    from pwnagotchi.ui import fonts
+    from pwnagotchi.ui.display import Display
+    from pwnagotchi import grid
+    from pwnagotchi import plugins
 
     pwnagotchi.config = config
     fs.setup_mounts(config)

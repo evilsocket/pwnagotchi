@@ -49,6 +49,8 @@ class NetPos(plugins.Plugin):
                 saved_file.write(x + "\n")
 
     def on_internet_available(self, agent):
+        if self.lock.locked():
+            return
         with self.lock:
             if self.ready:
                 config = agent.config()

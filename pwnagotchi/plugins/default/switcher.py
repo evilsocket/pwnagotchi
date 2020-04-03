@@ -139,7 +139,7 @@ class Switcher(plugins.Plugin):
                    'bored', 'sad', 'excited', 'lonely', 'rebooting', 'wait',
                    'sleep', 'wifi_update', 'unfiltered_ap_list', 'association',
                    'deauthentication', 'channel_hop', 'handshake', 'epoch',
-                   'peer_detected', 'peer_lost']
+                   'peer_detected', 'peer_lost', 'config_changed']
 
         for m in methods:
             setattr(Switcher, 'on_%s' % m, partial(self.trigger, m))

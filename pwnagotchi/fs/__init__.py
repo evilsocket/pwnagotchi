@@ -11,6 +11,7 @@ from distutils.dir_util import copy_tree
 
 mounts = list()
 
+
 @contextlib.contextmanager
 def ensure_write(filename, mode='w'):
     path = os.path.dirname(filename)
@@ -25,18 +26,27 @@ def ensure_write(filename, mode='w'):
 
 
 def size_of(path):
+    """
+    Calculate the sum of all the files in path
+    """
     total = 0
-    for root, dirs, files in os.walk(path):
+    for root, _, files in os.walk(path):
         for f in files:
             total += os.path.getsize(os.path.join(root, f))
     return total
 
 
 def is_mountpoint(path):
+    """
+    Checks if path is mountpoint
+    """
     return os.system(f"mountpoint -q {path}") == 0
 
 
 def setup_mounts(config):
+    """
+    Sets up all the configured mountpoints
+    """
     global mounts
     fs_cfg = config['fs']['memory']
     if not fs_cfg['enabled']:
@@ -82,6 +92,7 @@ def setup_mounts(config):
 
         mounts.append(m)
 
+
 class MemoryFS:
     @staticmethod
     def zram_install():
@@ -90,10 +101,12 @@ class MemoryFS:
             return os.system("modprobe zram") == 0
         return True
 
+
     @staticmethod
     def zram_dev():
         logging.debug("[FS] Adding zram device")
         return open("/sys/class/zram-control/hot_add", "rt").read().strip("\n")
+
 
     def __init__(self, mount, disk, size="40M",
                  zram=True, zram_alg="lz4", zram_disk_size="100M",
@@ -108,6 +121,7 @@ class MemoryFS:
         self.zdev = None
         self.rsync = True
         self._setup()
+
 
     def _setup(self):
         if self.zram and MemoryFS.zram_install():

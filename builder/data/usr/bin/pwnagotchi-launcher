@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 source /usr/bin/pwnlib
 
+# we need to decrypt something
+if is_crypted_mode; then
+  while ! is_decrypted; do
+    echo "Waiting for decryption..."
+    sleep 1
+  done
+fi
+
 # blink 10 times to signal ready state
 blink_led 10 &
 

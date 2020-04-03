@@ -1,5 +1,6 @@
 main.name = ""
 main.lang = "en"
+main.confd = "/etc/pwnagotchi/conf.d/"
 main.custom_plugins = ""
 main.iface = "mon0"
 main.mon_start_cmd = "/usr/bin/monstart"
@@ -13,7 +14,6 @@ main.whitelist = [
   "fo:od:ba"
 ]
 main.filter = ""
-
 
 main.plugins.grid.enabled = true
 main.plugins.grid.report = false
@@ -38,14 +38,17 @@ main.plugins.onlinehashcrack.enabled = false
 main.plugins.onlinehashcrack.email = ""
 main.plugins.onlinehashcrack.dashboard = ""
 main.plugins.onlinehashcrack.single_files = false
+main.plugins.onlinehashcrack.whitelist = []
 
 main.plugins.wpa-sec.enabled = false
 main.plugins.wpa-sec.api_key = ""
 main.plugins.wpa-sec.api_url = "https://wpa-sec.stanev.org"
 main.plugins.wpa-sec.download_results = false
+main.plugins.wpa-sec.whitelist = []
 
 main.plugins.wigle.enabled = false
 main.plugins.wigle.api_key = ""
+main.plugins.wigle.whitelist = []
 
 main.plugins.bt-tether.enabled = false
 
@@ -105,6 +108,8 @@ main.plugins.led.patterns.handshake = "oo  oo  oo oo  oo  oo  oo"
 main.plugins.led.patterns.epoch = "oo  oo  oo oo  oo  oo  oo"
 main.plugins.led.patterns.peer_detected = "oo  oo  oo oo  oo  oo  oo"
 main.plugins.led.patterns.peer_lost = "oo  oo  oo oo  oo  oo  oo"
+
+main.plugins.logtail.enabled = false
 
 main.plugins.session-stats.enabled = true
 main.plugins.session-stats.save_directory = "/var/tmp/pwnagotchi/sessions/"

@@ -120,14 +120,14 @@ class Automata(object):
                 logging.warning("agent missed %d interactions -> lonely", did_miss)
                 self.set_lonely()
         # after X times being bored, the status is set to sad or angry
-        elif self._epoch.inactive_for >= self._config['personality']['sad_num_epochs']:
+        elif self._epoch.sad_for:
             factor = self._epoch.inactive_for / self._config['personality']['sad_num_epochs']
             if factor >= 2.0:
                 self.set_angry(factor)
             else:
                 self.set_sad()
         # after X times being inactive, the status is set to bored
-        elif self._epoch.inactive_for >= self._config['personality']['bored_num_epochs']:
+        elif self._epoch.bored_for:
             self.set_bored()
         # after X times being active, the status is set to happy / excited
         elif self._epoch.active_for >= self._config['personality']['excited_num_epochs']:

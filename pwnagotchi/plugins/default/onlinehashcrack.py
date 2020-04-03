@@ -5,7 +5,7 @@ import re
 import requests
 from datetime import datetime
 from threading import Lock
-from pwnagotchi.utils import StatusFile
+from pwnagotchi.utils import StatusFile, remove_whitelisted
 import pwnagotchi.plugins as plugins
 from json.decoder import JSONDecodeError
 
@@ -20,7 +20,7 @@ class OnlineHashCrack(plugins.Plugin):
         self.ready = False
         try:
             self.report = StatusFile('/root/.ohc_uploads', data_format='json')
-        except JSONDecodeError as json_err:
+        except JSONDecodeError:
             os.remove('/root/.ohc_uploads')
             self.report = StatusFile('/root/.ohc_uploads', data_format='json')
         self.skip = list()
@@ -35,25 +35,11 @@ class OnlineHashCrack(plugins.Plugin):
             return
 
         if 'whitelist' not in self.options:
-            self.options['whitelist'] = []
-
-        # remove special characters from whitelist APs to match on-disk format
-        self.options['whitelist'] = set(map(lambda x: re.sub(r'[^a-zA-Z0-9]', '', x), self.options['whitelist']))
+            self.options['whitelist'] = list()
 
         self.ready = True
         logging.info("OHC: OnlineHashCrack plugin loaded.")
 
-    def _filter_handshake_file(self, handshake_filename):
-        try:
-            basename = os.path.basename(handshake_filename)
-            ssid, bssid = basename.split('_')
-            # remove the ".pcap" from the bssid (which is really just the end of the filename)
-            bssid = bssid[:-5]
-        except:
-            # something failed in our parsing of the filename. let the file through
-            return True
-
-        return ssid not in self.options['whitelist'] and bssid not in self.options['whitelist']
 
     def _upload_to_ohc(self, path, timeout=30):
         """
@@ -96,64 +82,59 @@ class OnlineHashCrack(plugins.Plugin):
         """
         Called in manual mode when there's internet connectivity
         """
+
+        if not self.ready or self.lock.locked():
+            return
+
         with self.lock:
-            if self.ready:
-                display = agent.view()
-                config = agent.config()
-                reported = self.report.data_field_or('reported', default=list())
-
-                handshake_dir = config['bettercap']['handshakes']
-                handshake_filenames = os.listdir(handshake_dir)
-                handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames if
-                                   filename.endswith('.pcap')]
-
-                # pull out whitelisted APs
-                handshake_paths = filter(lambda path: self._filter_handshake_file(path), handshake_paths)
-
-                handshake_new = set(handshake_paths) - set(reported) - set(self.skip)
-
-                if handshake_new:
-                    logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onlinehashcrack.com")
-
-                    for idx, handshake in enumerate(handshake_new):
-                        display.set('status',
-                                    f"Uploading handshake to onlinehashcrack.com ({idx + 1}/{len(handshake_new)})")
-                        display.update(force=True)
-                        try:
-                            self._upload_to_ohc(handshake)
-                            if handshake not in reported:
-                                reported.append(handshake)
-                                self.report.update(data={'reported': reported})
-                                logging.info(f"OHC: Successfully uploaded {handshake}")
-                        except requests.exceptions.RequestException as req_e:
-                            self.skip.append(handshake)
-                            logging.error("OHC: %s", req_e)
-                            continue
-                        except OSError as os_e:
-                            self.skip.append(handshake)
-                            logging.error("OHC: %s", os_e)
-                            continue
-
-                if 'dashboard' in self.options and self.options['dashboard']:
-                    cracked_file = os.path.join(handshake_dir, 'onlinehashcrack.cracked')
-                    if os.path.exists(cracked_file):
-                        last_check = datetime.fromtimestamp(os.path.getmtime(cracked_file))
-                        if last_check is not None and ((datetime.now() - last_check).seconds / (60 * 60)) < 1:
-                            return
-
+            display = agent.view()
+            config = agent.config()
+            reported = self.report.data_field_or('reported', default=list())
+            handshake_dir = config['bettercap']['handshakes']
+            handshake_filenames = os.listdir(handshake_dir)
+            handshake_paths = [os.path.join(handshake_dir, filename) for filename in handshake_filenames if
+                               filename.endswith('.pcap')]
+            # pull out whitelisted APs
+            handshake_paths = remove_whitelisted(handshake_paths, self.options['whitelist'])
+            handshake_new = set(handshake_paths) - set(reported) - set(self.skip)
+            if handshake_new:
+                logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onlinehashcrack.com")
+                for idx, handshake in enumerate(handshake_new):
+                    display.set('status',
+                                f"Uploading handshake to onlinehashcrack.com ({idx + 1}/{len(handshake_new)})")
+                    display.update(force=True)
                     try:
-                        self._download_cracked(cracked_file)
-                        logging.info("OHC: Downloaded cracked passwords.")
+                        self._upload_to_ohc(handshake)
+                        if handshake not in reported:
+                            reported.append(handshake)
+                            self.report.update(data={'reported': reported})
+                            logging.info(f"OHC: Successfully uploaded {handshake}")
                     except requests.exceptions.RequestException as req_e:
-                        logging.debug("OHC: %s", req_e)
+                        self.skip.append(handshake)
+                        logging.error("OHC: %s", req_e)
+                        continue
                     except OSError as os_e:
-                        logging.debug("OHC: %s", os_e)
-
-                    if 'single_files' in self.options and self.options['single_files']:
-                        with open(cracked_file, 'r') as cracked_list:
-                            for row in csv.DictReader(cracked_list):
-                                if row['password']:
-                                    filename = re.sub(r'[^a-zA-Z0-9]', '', row['ESSID']) + '_' + row['BSSID'].replace(':','')
-                                    if os.path.exists( os.path.join(handshake_dir, filename+'.pcap') ):
-                                        with open(os.path.join(handshake_dir, filename+'.pcap.cracked'), 'w') as f:
-                                            f.write(row['password'])
+                        self.skip.append(handshake)
+                        logging.error("OHC: %s", os_e)
+                        continue
+            if 'dashboard' in self.options and self.options['dashboard']:
+                cracked_file = os.path.join(handshake_dir, 'onlinehashcrack.cracked')
+                if os.path.exists(cracked_file):
+                    last_check = datetime.fromtimestamp(os.path.getmtime(cracked_file))
+                    if last_check is not None and ((datetime.now() - last_check).seconds / (60 * 60)) < 1:
+                        return
+                try:
+                    self._download_cracked(cracked_file)
+                    logging.info("OHC: Downloaded cracked passwords.")
+                except requests.exceptions.RequestException as req_e:
+                    logging.debug("OHC: %s", req_e)
+                except OSError as os_e:
+                    logging.debug("OHC: %s", os_e)
+                if 'single_files' in self.options and self.options['single_files']:
+                    with open(cracked_file, 'r') as cracked_list:
+                        for row in csv.DictReader(cracked_list):
+                            if row['password']:
+                                filename = re.sub(r'[^a-zA-Z0-9]', '', row['ESSID']) + '_' + row['BSSID'].replace(':','')
+                                if os.path.exists( os.path.join(handshake_dir, filename+'.pcap') ):
+                                    with open(os.path.join(handshake_dir, filename+'.pcap.cracked'), 'w') as f:
+                                        f.write(row['password'])

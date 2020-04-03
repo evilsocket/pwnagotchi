@@ -101,10 +101,8 @@
           - bc
           - fonts-freefont-ttf
           - fbi
-          - python3-flask
-          - python3-flask-cors
-          - python3-flaskext.wtf
           - fonts-ipaexfont-gothic
+          - cryptsetup
 
   tasks:
   - name: change hostname
@@ -217,6 +215,16 @@
       repo: https://github.com/evilsocket/pwnagotchi.git
       dest: /usr/local/src/pwnagotchi
     register: pwnagotchigit
+
+  - name: create /usr/local/share/pwnagotchi/ folder
+    file:
+      path: /usr/local/share/pwnagotchi/
+      state: directory
+
+  - name: clone pwnagotchi plugins repository
+    git:
+      repo: https://github.com/evilsocket/pwnagotchi-plugins-contrib.git
+      dest: /usr/local/share/pwnagotchi/availaible-plugins
 
   - name: fetch pwnagotchi version
     set_fact:
