@@ -11,7 +11,7 @@ class WaveshareV1(DisplayImpl):
 
     def layout(self):
         if self.config['color'] == 'black':
-            fonts.setup(10, 9, 10, 35)
+            fonts.setup(10, 9, 10, 35, 25, 9)
             self._layout['width'] = 250
             self._layout['height'] = 122
             self._layout['face'] = (0, 40)
@@ -27,11 +27,11 @@ class WaveshareV1(DisplayImpl):
             self._layout['mode'] = (225, 109)
             self._layout['status'] = {
                 'pos': (125, 20),
-                'font': fonts.Medium,
+                'font': fonts.status_font(fonts.Medium),
                 'max': 20
             }
         else:
-            fonts.setup(10, 8, 10, 25)
+            fonts.setup(10, 8, 10, 25, 25, 9)
             self._layout['width'] = 212
             self._layout['height'] = 104
             self._layout['face'] = (0, 26)
@@ -47,7 +47,7 @@ class WaveshareV1(DisplayImpl):
             self._layout['mode'] = (187, 93)
             self._layout['status'] = {
                 'pos': (91, 15),
-                'font': fonts.Medium,
+                'font': fonts.status_font(fonts.Medium),
                 'max': 20
             }
         return self._layout

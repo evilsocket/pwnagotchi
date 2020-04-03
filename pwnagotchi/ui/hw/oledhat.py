@@ -10,7 +10,7 @@ class OledHat(DisplayImpl):
         self._display = None
 
     def layout(self):
-        fonts.setup(8, 8, 8, 8)
+        fonts.setup(8, 8, 8, 8, 25, 9)
         self._layout['width'] = 128
         self._layout['height'] = 64
         self._layout['face'] = (0, 32)
@@ -26,7 +26,7 @@ class OledHat(DisplayImpl):
         self._layout['mode'] = (103, 10)
         self._layout['status'] = {
             'pos': (30, 18),
-            'font': fonts.Small,
+            'font': fonts.status_font(fonts.Small),
             'max': 18
         }
         return self._layout

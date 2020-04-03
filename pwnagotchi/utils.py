@@ -10,9 +10,41 @@ import json
 import shutil
 import toml
 import sys
+import re
 
 import pwnagotchi
+from toml.encoder import TomlEncoder, _dump_str
 from pwnagotchi.fs import ensure_write
+
+
+class DottedTomlEncoder(TomlEncoder):
+    """
+    Dumps the toml into the dotted-key format
+    """
+
+    def __init__(self, _dict=dict):
+        super(DottedTomlEncoder, self).__init__(_dict)
+
+    def dump_sections(self, o, sup):
+        retstr = ""
+        pre = ""
+
+        if sup:
+            pre = sup + "."
+
+        for section, value in o.items():
+            section = str(section)
+            qsection = section
+            if not re.match(r'^[A-Za-z0-9_-]+$', section):
+                qsection = _dump_str(section)
+            if value is not None:
+                if isinstance(value, dict):
+                    toadd, _ = self.dump_sections(value, pre + qsection)
+                    retstr += toadd
+                else:
+                    retstr += (pre + qsection + " = " +
+                                str(self.dump_value(value)) + '\n')
+        return (retstr, self._dict())
 
 
 # https://stackoverflow.com/questions/823196/yaml-merge-in-python
@@ -43,6 +75,11 @@ def keys_to_str(data):
             converted_dict[str(key)] = value
 
     return converted_dict
+
+def save_config(config, target):
+    with open(target, 'wt') as fp:
+        fp.write(toml.dumps(config, encoder=DottedTomlEncoder()))
+    return True
 
 def load_config(args):
     default_config_path = os.path.dirname(args.config)

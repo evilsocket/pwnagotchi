@@ -11,7 +11,7 @@ class Papirus(DisplayImpl):
         self._display = None
 
     def layout(self):
-        fonts.setup(10, 8, 10, 23)
+        fonts.setup(10, 8, 10, 23, 25, 9)
         self._layout['width'] = 200
         self._layout['height'] = 96
         self._layout['face'] = (0, 24)
@@ -27,7 +27,7 @@ class Papirus(DisplayImpl):
         self._layout['mode'] = (175, 86)
         self._layout['status'] = {
             'pos': (85, 14),
-            'font': fonts.Medium,
+            'font': fonts.status_font(fonts.Medium),
             'max': 16
         }
         return self._layout

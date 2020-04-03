@@ -11,7 +11,7 @@ class Spotpear24inch(DisplayImpl):
         self._display = None
 
     def layout(self):
-        fonts.setup(12, 10, 12, 70)
+        fonts.setup(12, 10, 12, 70, 25, 9)
         self._layout['width'] = 320
         self._layout['height'] = 240
         self._layout['face'] = (35, 50)
@@ -27,7 +27,7 @@ class Spotpear24inch(DisplayImpl):
         self._layout['mode'] = (280, 220)
         self._layout['status'] = {
             'pos': (80, 160),
-            'font': fonts.Medium,
+            'font': fonts.status_font(fonts.Medium),
             'max': 20
         }
 

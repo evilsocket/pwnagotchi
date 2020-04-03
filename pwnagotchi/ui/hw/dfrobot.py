@@ -9,7 +9,7 @@ class DFRobot(DisplayImpl):
     self._display = None
 
   def layout(self):
-    fonts.setup(10, 9, 10, 35)
+    fonts.setup(10, 9, 10, 35, 25, 9)
     self._layout['width'] = 250
     self._layout['height'] = 122
     self._layout['face'] = (0, 40)
@@ -25,7 +25,7 @@ class DFRobot(DisplayImpl):
     self._layout['mode'] = (225, 109)
     self._layout['status'] = {
         'pos': (125, 20),
-        'font': fonts.Medium,
+        'font': fonts.status_font(fonts.Medium),
         'max': 20
     }
     return self._layout
