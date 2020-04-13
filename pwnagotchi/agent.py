@@ -3,6 +3,7 @@ import json
 import os
 import re
 import logging
+import asyncio
 import _thread
 
 import pwnagotchi
@@ -68,7 +69,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         for tag in self._config['bettercap']['silence']:
             try:
                 self.run('events.ignore %s' % tag, verbose_errors=False)
-            except Exception as e:
+            except Exception:
                 pass
 
     def _reset_wifi_settings(self):
@@ -121,9 +122,9 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
     def _wait_bettercap(self):
         while True:
             try:
-                s = self.session()
+                _s = self.session()
                 return
-            except:
+            except Exception:
                 logging.info("waiting for bettercap API to be available ...")
                 time.sleep(1)
 
@@ -134,6 +135,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self.set_starting()
         self.start_monitor_mode()
         self.start_event_polling()
+        self.start_session_fetcher()
         # print initial stats
         self.next_epoch()
         self.set_ready()
@@ -158,7 +160,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             try:
                 self.run('wifi.recon.channel %s' % ','.join(map(str, channels)))
             except Exception as e:
-                logging.exception("error")
+                logging.exception("Error while setting wifi.recon.channels (%s)", e)
 
         self.wait_for(recon_time, sleeping=False)
 
@@ -188,7 +190,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
                     if self._filter_included(ap):
                         aps.append(ap)
         except Exception as e:
-            logging.exception("error")
+            logging.exception("Error while getting acces points (%s)", e)
 
         aps.sort(key=lambda ap: ap['channel'])
         return self.set_access_points(aps)
@@ -303,60 +305,67 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             if not no_exceptions:
                 raise
 
-    def _event_poller(self):
-        self._load_recovery_data()
 
+    def start_session_fetcher(self):
+        _thread.start_new_thread(self._fetch_stats, ()) 
+
+
+    def _fetch_stats(self):
+        while True:
+            s = self.session()
+            self._update_uptime(s)
+            self._update_advertisement(s)
+            self._update_peers()
+            self._update_counters()
+            self._update_handshakes(0)
+            time.sleep(1)
+
+    async def _on_event(self, msg):
+        found_handshake = False
+        jmsg = json.loads(msg)
+        
+        if jmsg['tag'] == 'wifi.client.handshake':
+            filename = jmsg['data']['file']
+            sta_mac = jmsg['data']['station']
+            ap_mac = jmsg['data']['ap']
+            key = "%s -> %s" % (sta_mac, ap_mac)
+            if key not in self._handshakes:
+                self._handshakes[key] = jmsg
+                ap_and_station = self._find_ap_sta_in(sta_mac, ap_mac, s)
+                if ap_and_station is None:
+                    logging.warning("!!! captured new handshake: %s !!!", key)
+                    self._last_pwnd = ap_mac
+                    plugins.on('handshake', self, filename, ap_mac, sta_mac)
+                else:
+                    (ap, sta) = ap_and_station
+                    self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
+                        'hostname'] != '<hidden>' else ap_mac
+                    logging.warning(
+                        "!!! captured new handshake on channel %d, %d dBm: %s (%s) -> %s [%s (%s)] !!!",
+                            ap['channel'],
+                            ap['rssi'],
+                            sta['mac'], sta['vendor'],
+                            ap['hostname'], ap['mac'], ap['vendor'])
+                    plugins.on('handshake', self, filename, ap, sta)
+                found_handshake = True
+            self._update_handshakes(1 if found_handshake else 0)
+
+    def _event_poller(self, loop):
+        self._load_recovery_data()
         self.run('events.clear')
 
         while True:
-            time.sleep(1)
-
-            new_shakes = 0
-
             logging.debug("polling events ...")
-
             try:
-                s = self.session()
-                self._update_uptime(s)
-
-                self._update_advertisement(s)
-                self._update_peers()
-                self._update_counters()
-
-                for h in [e for e in self.events() if e['tag'] == 'wifi.client.handshake']:
-                    filename = h['data']['file']
-                    sta_mac = h['data']['station']
-                    ap_mac = h['data']['ap']
-                    key = "%s -> %s" % (sta_mac, ap_mac)
-
-                    if key not in self._handshakes:
-                        self._handshakes[key] = h
-                        new_shakes += 1
-                        ap_and_station = self._find_ap_sta_in(sta_mac, ap_mac, s)
-                        if ap_and_station is None:
-                            logging.warning("!!! captured new handshake: %s !!!", key)
-                            self._last_pwnd = ap_mac
-                            plugins.on('handshake', self, filename, ap_mac, sta_mac)
-                        else:
-                            (ap, sta) = ap_and_station
-                            self._last_pwnd = ap['hostname'] if ap['hostname'] != '' and ap[
-                                'hostname'] != '<hidden>' else ap_mac
-                            logging.warning(
-                                "!!! captured new handshake on channel %d, %d dBm: %s (%s) -> %s [%s (%s)] !!!",
-                                    ap['channel'],
-                                    ap['rssi'],
-                                    sta['mac'], sta['vendor'],
-                                    ap['hostname'], ap['mac'], ap['vendor'])
-                            plugins.on('handshake', self, filename, ap, sta)
-
-            except Exception as e:
-                logging.error("error: %s", e)
-
-            finally:
-                self._update_handshakes(new_shakes)
+                loop.create_task(self.start_websocket(self._on_event))
+                loop.run_forever()
+            except Exception as ex:
+                logging.debug("Error while polling via websocket (%s)", ex)
 
     def start_event_polling(self):
-        _thread.start_new_thread(self._event_poller, ())
+        # start a thread and pass in the mainloop
+        _thread.start_new_thread(self._event_poller, (asyncio.new_event_loop(),))
+
 
     def is_module_running(self, module):
         s = self.session()
@@ -465,4 +474,4 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
                 plugins.on('channel_hop', self, channel)
 
             except Exception as e:
-                logging.error("error: %s", e)
+                logging.error("Error while setting channel (%s)", e)

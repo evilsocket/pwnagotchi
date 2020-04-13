@@ -1,37 +1,26 @@
 <!DOCTYPE html>
 <html>
+{% block head %}
 <head>
+    {% block meta %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock %}
 
     <title>
         {% block title %}
         {% endblock %}
     </title>
 
+    {% block styles %}
     <link rel="stylesheet" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-    {% block styles %}
     {% endblock %}
 
-    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
-    <script type="text/javascript" src="/js/jquery-qrcode-0.17.0.min.js"></script>
-    {% block scripts %}
-    {% endblock %}
-
-    <script type="text/javascript">
-        $.mobile.ajaxEnabled = false;
-
-        jQuery(document).ready(function() {
-          jQuery("time.timeago").timeago();
-        });
-
-        {% block script %}
-        {% endblock %}
-    </script>
 </head>
+{% endblock %}
+
+{% block body %}
 <body>
 <div data-role="page">
 
@@ -72,6 +61,23 @@
     {% endblock %}
 
 </div>
+{% block scripts %}
+<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" src="/js/jquery.timeago.js"></script>
+<script type="text/javascript" src="/js/jquery-qrcode-0.17.0.min.js"></script>
+<script type="text/javascript">
+    $.mobile.ajaxEnabled = false;
+    $.mobile.pushStateEnabled = false;
 
+    jQuery(document).ready(function() {
+      jQuery("time.timeago").timeago();
+    });
+
+    {% block script %}
+    {% endblock %}
+</script>
+{% endblock %}
 </body>
+{% endblock %}
 </html>

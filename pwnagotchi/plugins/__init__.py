@@ -4,9 +4,7 @@ import _thread
 import threading
 import importlib, importlib.util
 import logging
-import pwnagotchi
-from pwnagotchi.ui import view
-from pwnagotchi.utils import save_config
+
 
 
 default_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "default")
@@ -39,6 +37,10 @@ def toggle_plugin(name, enable=True):
 
     returns True if changed, otherwise False
     """
+    import pwnagotchi
+    from pwnagotchi.ui import view
+    from pwnagotchi.utils import save_config
+
     global loaded, database
 
     if pwnagotchi.config:
@@ -55,6 +57,8 @@ def toggle_plugin(name, enable=True):
     if enable and name in database and name not in loaded:
         load_from_file(database[name])
         one(name, 'loaded')
+        if pwnagotchi.config:
+            one(name, 'config_changed', pwnagotchi.config)
         one(name, 'ui_setup', view.ROOT)
         one(name, 'ready', view.ROOT._agent)
         return True
@@ -63,7 +67,7 @@ def toggle_plugin(name, enable=True):
 
 
 def on(event_name, *args, **kwargs):
-    for plugin_name, plugin in loaded.items():
+    for plugin_name in loaded.keys():
         one(plugin_name, event_name, *args, **kwargs)
 
 
@@ -136,3 +140,4 @@ def load(config):
         plugin.options = config['main']['plugins'][name]
 
     on('loaded')
+    on('config_changed', config)

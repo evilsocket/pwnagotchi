@@ -8,174 +8,183 @@ from flask import abort
 from flask import render_template_string
 
 INDEX = """
-<html>
-    <head>
-        <meta name="viewport" content="width=device-width, user-scalable=0" />
-        <title>
-            webcfg
-        </title>
-        <style>
-            #divTop {
-                position: -webkit-sticky;
-                position: sticky;
-                top: 0px;
-                width: 100%;
-                font-size: 16px;
-                padding: 5px;
-                border: 1px solid #ddd;
-                margin-bottom: 5px;
-            }
+{% extends "base.html" %}
+{% set active_page = "plugins" %}
+{% block title %}
+    Webcfg
+{% endblock %}
 
-            #searchText {
-                width: 100%;
-            }
+{% block meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=0" />
+{% endblock %}
 
-            table {
-                table-layout: auto;
-                width: 100%;
-            }
+{% block styles %}
+{{ super() }}
+<style>
+    #divTop {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0px;
+        width: 100%;
+        font-size: 16px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        margin-bottom: 5px;
+    }
 
-            table, th, td {
-              border: 1px solid black;
-              border-collapse: collapse;
-            }
+    #searchText {
+        width: 100%;
+    }
 
-            th, td {
-              padding: 15px;
-              text-align: left;
-            }
+    table {
+        table-layout: auto;
+        width: 100%;
+    }
 
-            table tr:nth-child(even) {
-              background-color: #eee;
-            }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
 
-            table tr:nth-child(odd) {
-             background-color: #fff;
-            }
+    th, td {
+      padding: 15px;
+      text-align: left;
+    }
 
-            table th {
-              background-color: black;
-              color: white;
-            }
+    table tr:nth-child(even) {
+      background-color: #eee;
+    }
 
-            .remove {
-                background-color: #f44336;
-                color: white;
-                border: 2px solid #f44336;
-                padding: 4px 8px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 12px;
-                margin: 4px 2px;
-                -webkit-transition-duration: 0.4s; /* Safari */
-                transition-duration: 0.4s;
-                cursor: pointer;
-            }
+    table tr:nth-child(odd) {
+     background-color: #fff;
+    }
 
-            .remove:hover {
-                background-color: white;
-                color: black;
-            }
+    table th {
+      background-color: black;
+      color: white;
+    }
 
-            #btnSave {
-                position: -webkit-sticky;
-                position: sticky;
-                bottom: 0px;
-                width: 100%;
-                background-color: #0061b0;
-                border: none;
-                color: white;
-                padding: 15px 32px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                cursor: pointer;
-                float: right;
-            }
+    .remove {
+        background-color: #f44336;
+        color: white;
+        border: 2px solid #f44336;
+        padding: 4px 8px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
 
-            #divTop {
-                display: table;
-                width: 100%;
-            }
-            #divTop > * {
-                display: table-cell;
-            }
-            #divTop > span {
-                width: 1%;
-            }
-            #divTop > input {
-                width: 100%;
-            }
+    .remove:hover {
+        background-color: white;
+        color: black;
+    }
 
-            @media screen and (max-width:700px) {
-                table, tr, td {
-                    padding:0;
-                    border:1px solid black;
-                }
+    #btnSave {
+        position: -webkit-sticky;
+        position: sticky;
+        bottom: 0px;
+        width: 100%;
+        background-color: #0061b0;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        float: right;
+    }
 
-                table {
-                    border:none;
-                }
+    #divTop {
+        display: table;
+        width: 100%;
+    }
+    #divTop > * {
+        display: table-cell;
+    }
+    #divTop > span {
+        width: 1%;
+    }
+    #divTop > input {
+        width: 100%;
+    }
 
-                tr:first-child, thead, th {
-                    display:none;
-                    border:none;
-                }
+    @media screen and (max-width:700px) {
+        table, tr, td {
+            padding:0;
+            border:1px solid black;
+        }
 
-                tr {
-                    float: left;
-                    width: 100%;
-                    margin-bottom: 2em;
-                }
+        table {
+            border:none;
+        }
 
-                table tr:nth-child(odd) {
-                    background-color: #eee;
-                }
+        tr:first-child, thead, th {
+            display:none;
+            border:none;
+        }
 
-                td {
-                    float: left;
-                    width: 100%;
-                    padding:1em;
-                }
+        tr {
+            float: left;
+            width: 100%;
+            margin-bottom: 2em;
+        }
 
-                td::before {
-                    content:attr(data-label);
-                    word-wrap: break-word;
-                    background: #eee;
-                    border-right:2px solid black;
-                    width: 20%;
-                    float:left;
-                    padding:1em;
-                    font-weight: bold;
-                    margin:-1em 1em -1em -1em;
-                }
+        table tr:nth-child(odd) {
+            background-color: #eee;
+        }
 
-                .del_btn_wrapper {
-                    content:attr(data-label);
-                    word-wrap: break-word;
-                    background: #eee;
-                    border-right:2px solid black;
-                    width: 20%;
-                    float:left;
-                    padding:1em;
-                    font-weight: bold;
-                    margin:-1em 1em -1em -1em;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div id="divTop">
-            <input type="text" id="searchText" onkeyup="filterTable()" placeholder="Search for options ..." title="Type an option name">
-            <span><select id="selAddType"><option value="text">Text</option><option value="number">Number</option></select></span>
-            <span><button id="btnAdd" type="button" onclick="addOption()">+</button></span>
-        </div>
-        <div id="content"></div>
-        <button id="btnSave" type="button" onclick="saveConfig()">Save</button>
-    </body>
-    <script type="text/javascript">
+        td {
+            float: left;
+            width: 100%;
+            padding:1em;
+        }
+
+        td::before {
+            content:attr(data-label);
+            word-wrap: break-word;
+            background: #eee;
+            border-right:2px solid black;
+            width: 20%;
+            float:left;
+            padding:1em;
+            font-weight: bold;
+            margin:-1em 1em -1em -1em;
+        }
+
+        .del_btn_wrapper {
+            content:attr(data-label);
+            word-wrap: break-word;
+            background: #eee;
+            border-right:2px solid black;
+            width: 20%;
+            float:left;
+            padding:1em;
+            font-weight: bold;
+            margin:-1em 1em -1em -1em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div id="divTop">
+        <input type="text" id="searchText" placeholder="Search for options ..." title="Type an option name">
+        <span><select id="selAddType"><option value="text">Text</option><option value="number">Number</option></select></span>
+        <span><button id="btnAdd" type="button" onclick="addOption()">+</button></span>
+    </div>
+    <button id="btnSave" type="button" onclick="saveConfig()">Save and restart</button>
+    <div id="content"></div>
+{% endblock %}
+
+{% block script %}
         function addOption() {
           var input, table, tr, td, divDelBtn, btnDel, selType, selTypeVal;
           input = document.getElementById("searchText");
@@ -231,11 +240,10 @@ INDEX = """
                 });
             }
         }
-
-        function filterTable(){
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("searchText");
-            filter = input.value.toUpperCase();
+        var searchInput = document.getElementById("searchText");
+        searchInput.onkeyup = function() {
+            var filter, table, tr, td, i, txtValue;
+            filter = searchInput.value.toUpperCase();
             table = document.getElementById("tableOptions");
             if (table) {
                 tr = table.getElementsByTagName("tr");
@@ -446,8 +454,7 @@ INDEX = """
             divContent.innerHTML = "";
             divContent.appendChild(table);
         });
-    </script>
-</html>
+{% endblock %}
 """
 
 def serializer(obj):
@@ -463,16 +470,17 @@ class WebConfig(plugins.Plugin):
 
     def __init__(self):
         self.ready = False
+        self.mode = 'MANU'
+
+    def on_config_changed(self, config):
+        self.config = config
+        self.ready = True
 
     def on_ready(self, agent):
-        self.config = agent.config()
-        self.mode = "MANU" if agent.mode == "manual" else "AUTO"
-        self.ready = True
+        self.mode = 'MANU' if agent.mode == 'manual' else 'AUTO'
 
     def on_internet_available(self, agent):
-        self.config = agent.config()
-        self.mode = "MANU" if agent.mode == "manual" else "AUTO"
-        self.ready = True
+        self.mode = 'MANU' if agent.mode == 'manual' else 'AUTO'
 
     def on_loaded(self):
         """

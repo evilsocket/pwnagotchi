@@ -5,6 +5,7 @@ import os
 import logging
 import shutil
 import gzip
+import warnings
 from datetime import datetime
 
 from pwnagotchi.voice import Voice
@@ -235,11 +236,18 @@ def setup_logging(args, config):
     console_handler.setFormatter(formatter)
     root.addHandler(console_handler)
 
-    # https://stackoverflow.com/questions/24344045/how-can-i-completely-remove-any-logging-from-requests-module-in-python?noredirect=1&lq=1
-    logging.getLogger("urllib3").propagate = False
-    requests_log = logging.getLogger("requests")
-    requests_log.addHandler(logging.NullHandler())
-    requests_log.propagate = False
+    if not args.debug:
+        # disable scapy and tensorflow logging
+        logging.getLogger("scapy").disabled = True
+        logging.getLogger('tensorflow').disabled = True
+        # https://stackoverflow.com/questions/15777951/how-to-suppress-pandas-future-warning
+        warnings.simplefilter(action='ignore', category=FutureWarning)
+        warnings.simplefilter(action='ignore', category=DeprecationWarning)
+        # https://stackoverflow.com/questions/24344045/how-can-i-completely-remove-any-logging-from-requests-module-in-python?noredirect=1&lq=1
+        logging.getLogger("urllib3").propagate = False
+        requests_log = logging.getLogger("requests")
+        requests_log.addHandler(logging.NullHandler())
+        requests_log.prpagate = False
 
 
 def log_rotation(filename, cfg):

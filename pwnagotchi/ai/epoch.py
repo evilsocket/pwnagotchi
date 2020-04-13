@@ -19,6 +19,10 @@ class Epoch(object):
         self.active_for = 0
         # number of epochs with no visible access points
         self.blind_for = 0
+        # number of epochs in sad state
+        self.sad_for = 0
+        # number of epochs in bored state
+        self.bored_for = 0
         # did deauth in this epoch in the current channel?
         self.did_deauth = False
         # number of deauths in this epoch
@@ -99,13 +103,13 @@ class Epoch(object):
             try:
                 aps_per_chan[ch_idx] += 1.0
                 sta_per_chan[ch_idx] += len(ap['clients'])
-            except IndexError as e:
+            except IndexError:
                 logging.error("got data on channel %d, we can store %d channels" % (ap['channel'], wifi.NumChannels))
 
         for peer in peers:
             try:
                 peers_per_chan[peer.last_channel - 1] += 1.0
-            except IndexError as e:
+            except IndexError:
                 logging.error(
                     "got peer data on channel %d, we can store %d channels" % (peer.last_channel, wifi.NumChannels))
 
@@ -157,6 +161,20 @@ class Epoch(object):
         else:
             self.active_for += 1
             self.inactive_for = 0
+            self.sad_for = 0
+            self.bored_for = 0
+
+        if self.inactive_for >= self.config['personality']['sad_num_epochs']:
+            # sad > bored; cant be sad and bored
+            self.bored_for = 0
+            self.sad_for += 1
+        elif self.inactive_for >= self.config['personality']['bored_num_epochs']:
+            # sad_treshhold > inactive > bored_treshhold; cant be sad and bored
+            self.sad_for = 0
+            self.bored_for += 1
+        else:
+            self.sad_for = 0
+            self.bored_for = 0
 
         now = time.time()
         cpu = pwnagotchi.cpu_load()
@@ -172,6 +190,8 @@ class Epoch(object):
             'blind_for_epochs': self.blind_for,
             'inactive_for_epochs': self.inactive_for,
             'active_for_epochs': self.active_for,
+            'sad_for_epochs': self.sad_for,
+            'bored_for_epochs': self.bored_for,
             'missed_interactions': self.num_missed,
             'num_hops': self.num_hops,
             'num_peers': self.num_peers,
@@ -188,13 +208,15 @@ class Epoch(object):
         self._epoch_data['reward'] = self._reward(self.epoch + 1, self._epoch_data)
         self._epoch_data_ready.set()
 
-        logging.info("[epoch %d] duration=%s slept_for=%s blind=%d inactive=%d active=%d peers=%d tot_bond=%.2f "
+        logging.info("[epoch %d] duration=%s slept_for=%s blind=%d sad=%d bored=%d inactive=%d active=%d peers=%d tot_bond=%.2f "
                      "avg_bond=%.2f hops=%d missed=%d deauths=%d assocs=%d handshakes=%d cpu=%d%% mem=%d%% "
                      "temperature=%dC reward=%s" % (
                          self.epoch,
                          utils.secs_to_hhmmss(self.epoch_duration),
                          utils.secs_to_hhmmss(self.num_slept),
                          self.blind_for,
+                         self.sad_for,
+                         self.bored_for,
                          self.inactive_for,
                          self.active_for,
                          self.num_peers,

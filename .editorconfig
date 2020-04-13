@@ -1,7 +1,31 @@
-# top-most EditorConfig file
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# editorconfig.org
+
 root = true
 
-# Matches the exact files either package.json or .travis.yml
-[{*.yml,*.yaml,config.yml,defaults.yml}]
+[*]
 indent_style = space
 indent_size = 2
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[Makefile]
+indent_style = tab
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.json]
+insert_final_newline = ignore
+
+[*.js]
+indent_style = ignore
+insert_final_newline = ignore
+
+[*.{md,txt}]
+indent_size = 4
+trim_trailing_whitespace = false

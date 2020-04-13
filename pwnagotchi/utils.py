@@ -1,20 +1,20 @@
-from datetime import datetime
-from enum import Enum
+
 import logging
 import glob
 import os
 import time
 import subprocess
-import yaml
+
 import json
 import shutil
 import toml
 import sys
 import re
 
-import pwnagotchi
 from toml.encoder import TomlEncoder, _dump_str
-from pwnagotchi.fs import ensure_write
+from zipfile import ZipFile
+from datetime import datetime
+from enum import Enum
 
 
 class DottedTomlEncoder(TomlEncoder):
@@ -24,6 +24,19 @@ class DottedTomlEncoder(TomlEncoder):
 
     def __init__(self, _dict=dict):
         super(DottedTomlEncoder, self).__init__(_dict)
+
+    def dump_list(self, v):
+        retval = "["
+        # 1 line if its just 1 item; therefore no newline
+        if len(v) > 1:
+            retval += "\n"
+        for u in v:
+            retval += " " + str(self.dump_value(u)) + ",\n"
+        # 1 line if its just 1 item; remove newline
+        if len(v) <= 1:
+            retval = retval.rstrip("\n")
+        retval += "]"
+        return retval
 
     def dump_sections(self, o, sup):
         retstr = ""
@@ -41,10 +54,69 @@ class DottedTomlEncoder(TomlEncoder):
                 if isinstance(value, dict):
                     toadd, _ = self.dump_sections(value, pre + qsection)
                     retstr += toadd
+                    # separte sections
+                    if not retstr.endswith('\n\n'):
+                        retstr += '\n'
                 else:
                     retstr += (pre + qsection + " = " +
                                 str(self.dump_value(value)) + '\n')
         return (retstr, self._dict())
+
+
+def parse_version(version):
+    """
+    Converts a version str to tuple, so that versions can be compared
+    """
+    return tuple(version.split('.'))
+
+
+def remove_whitelisted(list_of_handshakes, list_of_whitelisted_strings, valid_on_error=True):
+    """
+    Removes a given list of whitelisted handshakes from a path list
+    """
+    filtered = list()
+    def normalize(name):
+        """
+        Only allow alpha/nums
+        """
+        return str.lower(''.join(c for c in name if c.isalnum()))
+
+    for handshake in list_of_handshakes:
+        try:
+            normalized_handshake = normalize(os.path.basename(handshake).rstrip('.pcap'))
+            for whitelist in list_of_whitelisted_strings:
+                normalized_whitelist = normalize(whitelist)
+                if normalized_whitelist in normalized_handshake:
+                    break
+            else:
+                filtered.append(handshake)
+        except Exception:
+            if valid_on_error:
+                filtered.append(handshake)
+    return filtered
+
+
+
+def download_file(url, destination, chunk_size=128):
+    import requests
+    resp = requests.get(url)
+    resp.raise_for_status()
+
+    with open(destination, 'wb') as fd:
+        for chunk in resp.iter_content(chunk_size):
+            fd.write(chunk)
+
+def unzip(file, destination, strip_dirs=0):
+    os.makedirs(destination, exist_ok=True)
+    with ZipFile(file, 'r') as zip:
+        if strip_dirs:
+            for info in zip.infolist():
+                new_filename = info.filename.split('/', maxsplit=strip_dirs)[strip_dirs]
+                if new_filename:
+                    info.filename = new_filename
+                    zip.extract(info, destination)
+        else:
+            zip.extractall(destination)
 
 
 # https://stackoverflow.com/questions/823196/yaml-merge-in-python
@@ -86,6 +158,7 @@ def load_config(args):
     if not os.path.exists(default_config_path):
         os.makedirs(default_config_path)
 
+    import pwnagotchi
     ref_defaults_file = os.path.join(os.path.dirname(pwnagotchi.__file__), 'defaults.toml')
     ref_defaults_data = None
 
@@ -134,6 +207,7 @@ def load_config(args):
             # no toml found; convert yaml
             logging.info('Old yaml-config found. Converting to toml...')
             with open(args.user_config, 'w') as toml_file, open(yaml_name) as yaml_file:
+                import yaml
                 user_config = yaml.safe_load(yaml_file)
                 # convert int/float keys to str
                 user_config = keys_to_str(user_config)
@@ -148,6 +222,15 @@ def load_config(args):
     except Exception as ex:
         logging.error("There was an error processing the configuration file:\n%s ",ex)
         sys.exit(1)
+
+    # dropins
+    dropin = config['main']['confd']
+    if dropin and os.path.isdir(dropin):
+        dropin += '*.toml' if dropin.endswith('/') else '/*.toml' # only toml here; yaml is no more
+        for conf in glob.glob(dropin):
+            with open(conf) as toml_file:
+                additional_config = toml.load(toml_file)
+                config = merge_config(additional_config, config)
 
     # the very first step is to normalize the display name so we don't need dozens of if/elif around
     if config['ui']['display']['type'] in ('inky', 'inkyphat'):
@@ -226,7 +309,7 @@ def led(on=True):
 
 
 def blink(times=1, delay=0.3):
-    for t in range(0, times):
+    for _ in range(0, times):
         led(True)
         time.sleep(delay)
         led(False)
@@ -247,6 +330,18 @@ class WifiInfo(Enum):
 
 class FieldNotFoundError(Exception):
     pass
+
+
+def md5(fname):
+    """
+    https://stackoverflow.com/questions/3431825/generating-an-md5-checksum-of-a-file
+    """
+    import hashlib
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
 
 def extract_from_pcap(path, fields):
@@ -361,6 +456,7 @@ class StatusFile(object):
         return self._updated is not None and (datetime.now() - self._updated).days < days
 
     def update(self, data=None):
+        from pwnagotchi.fs import ensure_write
         self._updated = datetime.now()
         self.data = data
         with ensure_write(self._path, 'w') as fp:

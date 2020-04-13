@@ -176,7 +176,7 @@ class AsyncTrainer(object):
                         self.set_training(True, epochs_per_episode)
                         self._model.learn(total_timesteps=epochs_per_episode, callback=self.on_ai_training_step)
                     except Exception as e:
-                        logging.exception("[ai] error while training")
+                        logging.exception("[ai] error while training (%s)", e)
                     finally:
                         self.set_training(False)
                         obs = self._model.env.reset()

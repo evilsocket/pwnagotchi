@@ -85,3 +85,79 @@ is_auto_mode_no_delete() {
   # no override, but none of the interfaces is up -> AUTO
   return 0
 }
+
+# check if we need to decrypt something
+is_crypted_mode() {
+  if [ -f /root/.pwnagotchi-crypted ]; then
+    return 0
+  fi
+  return 1
+}
+
+# decryption loop
+is_decrypted() {
+  while read -r mapping container mount; do
+    # mapping   = name the device or file will be mapped to
+    # container = the luks encrypted device or file
+    # mount     = the mountpoint
+
+    # fail if not mounted
+    if ! mountpoint -q "$mount" >/dev/null 2>&1; then
+      if [ -f /tmp/.pwnagotchi-secret ]; then
+        </tmp/.pwnagotchi-secret read -r SECRET
+        if ! test -b /dev/disk/by-id/dm-uuid-*"$(cryptsetup luksUUID "$container" | tr -d -)"*; then
+          if echo -n "$SECRET" | cryptsetup luksOpen -d- "$container" "$mapping" >/dev/null 2>&1; then
+            echo "Container decrypted!"
+
+          fi
+        fi
+
+        if mount /dev/mapper/"$mapping" "$mount" >/dev/null 2>&1; then
+            echo "Mounted /dev/mapper/$mapping to $mount"
+            continue
+        fi
+      fi
+
+      if ! ip -4 addr show wlan0 | grep inet >/dev/null 2>&1; then
+        >/dev/null 2>&1 ip addr add 192.168.0.10/24 dev wlan0
+      fi
+
+      if ! pgrep -f decryption-webserver >/dev/null 2>&1; then
+        >/dev/null 2>&1 decryption-webserver &
+      fi
+
+      if ! pgrep wpa_supplicant >/dev/null 2>&1; then
+        >/tmp/wpa_supplicant.conf cat <<EOF
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+ap_scan=2
+
+network={
+    ssid="DECRYPT-ME"
+    mode=2
+    key_mgmt=WPA-PSK
+    psk="pwnagotchi"
+    frequency=2437
+}
+EOF
+        >/dev/null 2>&1 wpa_supplicant -D nl80211 -i wlan0 -c /tmp/wpa_supplicant.conf &
+      fi
+
+      if ! pgrep dnsmasq >/dev/null 2>&1; then
+        >/dev/null 2>&1 dnsmasq -k -p 53 -h -O "6,192.168.0.10" -A "/#/192.168.0.10" -i wlan0 -K -F 192.168.0.50,192.168.0.60,255.255.255.0,24h &
+      fi
+
+      return 1
+    fi
+  done </root/.pwnagotchi-crypted
+
+  # overwrite password
+  >/tmp/.pwnagotchi-secret python3 -c 'print("A"*4096)'
+  sync # flush
+
+  pkill wpa_supplicant
+  pkill dnsmasq
+  kill "$(pgrep -f "decryption-webserver")"
+
+  return 0
+}

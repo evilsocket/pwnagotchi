@@ -1,12 +1,9 @@
 import os
 import time
-import warnings
 import logging
 
 # https://stackoverflow.com/questions/40426502/is-there-a-way-to-suppress-the-messages-tensorflow-prints/40426709
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
-# https://stackoverflow.com/questions/15777951/how-to-suppress-pandas-future-warning
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def load(config, agent, epoch, from_disk=True):
@@ -59,7 +56,7 @@ def load(config, agent, epoch, from_disk=True):
 
         return a2c
     except Exception as e:
-        logging.exception("error while starting AI")
+        logging.exception("error while starting AI (%s)", e)
 
     logging.warning("[ai] AI not loaded!")
     return False

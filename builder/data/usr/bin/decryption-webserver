@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+
+HTML_FORM = """
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Decryption</title>
+  <style>
+    body { text-align: center; padding: 150px; }
+    h1 { font-size: 50px; }
+    body { font: 20px Helvetica, sans-serif; color: #333; }
+    article { display: block; text-align: center; width: 650px; margin: 0 auto;}
+    input {
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+    input[type=password] {
+      width: 75%;
+      font-size: 24px;
+    }
+    input[type=submit] {
+      cursor: pointer;
+      width: 75%;
+    }
+    input[type=submit]:hover {
+      background-color: #d9d9d9;
+    }
+  </style>
+</head>
+<body>
+  <article>
+      <h1>Decryption</h1>
+      <p>Some of your files are encrypted.</p>
+      <p>Please provide the decryption password.</p>
+      <div>
+        <form action="/set-password" method="POST">
+          <input type="password" id="password" name="password" value=""><br>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+  </article>
+</body>
+</html>
+"""
+
+
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(HTML_FORM.encode())
+
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        body = self.rfile.read(content_length)
+        self.send_response(200)
+        self.end_headers()
+        password = body.decode('UTF-8').split('=')[1]
+
+        with open('/tmp/.pwnagotchi-secret', 'wt') as pwfile:
+          pwfile.write(password)
+
+
+httpd = HTTPServer(('0.0.0.0', 80), SimpleHTTPRequestHandler)
+httpd.serve_forever()

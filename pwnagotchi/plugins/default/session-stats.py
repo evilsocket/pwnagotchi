@@ -16,11 +16,22 @@ TEMPLATE = """
 {% endblock %}
 
 {% block styles %}
+    {{ super() }}
     <link rel="stylesheet" href="/css/jquery.jqplot.min.css"/>
     <link rel="stylesheet" href="/css/jquery.jqplot.css"/>
+    <style>
+        div.chart {
+            height: 400px;
+            width: 100%;
+        }
+        div#session {
+            width: 100%;
+        }
+    </style>
 {% endblock %}
 
 {% block scripts %}
+    {{ super() }}
      <script type="text/javascript" src="/js/jquery.jqplot.min.js"></script>
      <script type="text/javascript" src="/js/jquery.jqplot.js"></script>
      <script type="text/javascript" src="/js/plugins/jqplot.mobile.js"></script>
@@ -83,7 +94,6 @@ TEMPLATE = """
                 tickOptions:{formatString:'%H:%M:%S'}
             },
             yaxis:{
-                min: 0,
                 tickOptions:{formatString:'%.2f'}
             }
         },
@@ -102,7 +112,6 @@ TEMPLATE = """
                 tickOptions:{formatString:'%H:%M:%S'}
             },
             yaxis:{
-                min: 0,
                 tickOptions:{formatString:'%.2f'}
             }
         }
@@ -121,8 +130,9 @@ TEMPLATE = """
         var session = x.options[x.selectedIndex].text;
         loadData('/plugins/session-stats/os' + '?session=' + session, 'chart_os', 'OS', false)
         loadData('/plugins/session-stats/temp' + '?session=' + session, 'chart_temp', 'Temp', false)
-        loadData('/plugins/session-stats/nums' + '?session=' + session, 'chart_nums', 'Wifi', true)
+        loadData('/plugins/session-stats/wifi' + '?session=' + session, 'chart_wifi', 'Wifi', true)
         loadData('/plugins/session-stats/duration' + '?session=' + session, 'chart_duration', 'Sleeping', true)
+        loadData('/plugins/session-stats/reward' + '?session=' + session, 'chart_reward', 'Reward', false)
         loadData('/plugins/session-stats/epoch' + '?session=' + session, 'chart_epoch', 'Epochs', false)
     }
 
@@ -134,14 +144,15 @@ TEMPLATE = """
 {% endblock %}
 
 {% block content %}
-    <select id="session" style="width:100%;">
+    <select id="session">
         <option selected>Current</option>
     </select>
-    <div id="chart_os" style="height:400px;width:100%; "></div>
-    <div id="chart_temp" style="height:400px;width:100%; "></div>
-    <div id="chart_nums" style="height:400px;width:100%; "></div>
-    <div id="chart_duration" style="height:400px;width:100%; "></div>
-    <div id="chart_epoch" style="height:400px;width:100%; "></div>
+    <div id="chart_os" class="chart"></div>
+    <div id="chart_temp" class="chart"></div>
+    <div id="chart_wifi" class="chart"></div>
+    <div id="chart_duration" class="chart"></div>
+    <div id="chart_reward" class="chart"></div>
+    <div id="chart_epoch" class="chart"></div>
 {% endblock %}
 """
 
@@ -189,9 +200,6 @@ class SessionStats(plugins.Plugin):
                                   data_format='json')
         logging.info("Session-stats plugin loaded.")
 
-    def on_unloaded(self, ui):
-        pass
-
     def on_epoch(self, agent, epoch, epoch_data):
         """
         Save the epoch_data to self.stats
@@ -220,7 +228,7 @@ class SessionStats(plugins.Plugin):
             extract_keys = ['cpu_load','mem_usage',]
         elif path == "temp":
             extract_keys = ['temperature']
-        elif path == "nums":
+        elif path == "wifi":
             extract_keys = [
                 'missed_interactions',
                 'num_hops',
@@ -236,10 +244,13 @@ class SessionStats(plugins.Plugin):
                 'duration_secs',
                 'slept_for_secs',
             ]
+        elif path == "reward":
+            extract_keys = [
+                'reward',
+            ]
         elif path == "epoch":
             extract_keys = [
                 'active_for_epochs',
-                'blind_for_epochs',
             ]
         elif path == "session":
             return jsonify({'files': os.listdir(self.options['save_directory'])})
