@@ -103,6 +103,7 @@
           - fbi
           - fonts-ipaexfont-gothic
           - cryptsetup
+          - dnsmasq
 
   tasks:
   - name: change hostname
