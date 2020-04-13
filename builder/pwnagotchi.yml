@@ -35,7 +35,7 @@
         - ifup@wlan0.service
     packages:
       bettercap:
-        url: "https://github.com/bettercap/bettercap/releases/download/v2.26.1/bettercap_linux_armhf_v2.26.1.zip"
+        url: "https://github.com/bettercap/bettercap/releases/download/v2.27.1/bettercap_linux_armhf_v2.27.1.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
         url: "https://github.com/evilsocket/pwngrid/releases/download/v1.10.1/pwngrid_linux_armhf_v1.10.1.zip"
