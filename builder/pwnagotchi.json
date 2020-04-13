@@ -98,6 +98,7 @@
     {
       "type": "ansible-local",
       "playbook_file": "pwnagotchi.yml",
+      "extra_arguments": [ "--extra-vars \"ansible_python_interpreter=/usr/bin/python3\"" ],
       "command": "ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 PWN_VERSION={{user `pwn_version`}} PWN_HOSTNAME={{user `pwn_hostname`}} ansible-playbook"
     },
     {
