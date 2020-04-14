@@ -20,6 +20,7 @@ while getopts "hb:n:u:" arg; do
 			UNIT_USERNAME=$OPTARG
 			;;
 		*)
+			usage
 			exit 1
 	esac
 done
