@@ -44,6 +44,8 @@ def toggle_plugin(name, enable=True):
     global loaded, database
 
     if pwnagotchi.config:
+        if not name in pwnagotchi.config['main']['plugins']:
+            pwnagotchi.config['main']['plugins'][name] = dict()
         pwnagotchi.config['main']['plugins'][name]['enabled'] = enable
         save_config(pwnagotchi.config, '/etc/pwnagotchi/config.toml')
 
