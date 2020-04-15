@@ -273,7 +273,6 @@ class Logtail(plugins.Plugin):
         if path == 'stream':
             def generate():
                 with open(self.config['main']['log']['path']) as f:
-                    yield f.read()
                     while True:
                         yield f.readline()
 
