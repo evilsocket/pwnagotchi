@@ -1,6 +1,7 @@
 import os
 import logging
 import threading
+from itertools import islice
 from time import sleep
 from datetime import datetime,timedelta
 from pwnagotchi import plugins
@@ -273,6 +274,10 @@ class Logtail(plugins.Plugin):
         if path == 'stream':
             def generate():
                 with open(self.config['main']['log']['path']) as f:
+                    # https://stackoverflow.com/questions/39549426/read-multiple-lines-from-a-file-batch-by-batch/39549901#39549901
+                    n = 1024
+                    for n_lines in iter(lambda: ''.join(islice(f, n)), ''):
+                        yield n_lines
                     while True:
                         yield f.readline()
 
