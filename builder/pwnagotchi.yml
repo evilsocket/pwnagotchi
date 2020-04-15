@@ -376,7 +376,7 @@
         I'm managed by systemd. Here are some basic commands.
 
         If you want to know what I'm doing, you can check my logs with the command
-        journalctl -fu pwnagotchi
+        tail -f /var/log/pwnagotchi.log
 
         If you want to know if I'm running, you can use
         systemctl status pwnagotchi
