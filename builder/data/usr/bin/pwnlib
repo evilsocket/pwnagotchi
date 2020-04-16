@@ -12,9 +12,23 @@ blink_led() {
   sleep 0.3
 }
 
+# check if brcm is stuck
+check_brcm() {
+  if [[ "$(journalctl -b0 -k --no-pager | tail -10 | grep -c 'brcmf_cfg80211_nexmon_set_channel.*Set Channel failed')" -ge 3 ]]; then
+    return 1
+  fi
+  return 0
+}
+
+# reload mod
+reload_brcm() {
+  rmmod brcmfmac
+  modprobe brcmfmac
+}
+
 # starts mon0
 start_monitor_interface() {
-  iw phy phy0 interface add mon0 type monitor && ifconfig mon0 up
+  iw phy "$(iw phy | head -1 | cut -d" " -f2)" interface add mon0 type monitor && ifconfig mon0 up
 }
 
 # stops mon0

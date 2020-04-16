@@ -9,6 +9,12 @@ if is_crypted_mode; then
   done
 fi
 
+# check if wifi driver is bugged
+if ! check_brcm; then
+  reload_brcm
+  sleep 10
+fi
+
 # start mon0
 start_monitor_interface
 
