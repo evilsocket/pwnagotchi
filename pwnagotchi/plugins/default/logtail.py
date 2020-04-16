@@ -1,6 +1,7 @@
 import os
 import logging
 import threading
+from itertools import islice
 from time import sleep
 from datetime import datetime,timedelta
 from pwnagotchi import plugins
@@ -90,7 +91,7 @@ TEMPLATE = """
 {% endblock %}
 
 {% block script %}
-    var content = document.getElementById('content');
+    var table = document.getElementById('table');
     var filter = document.getElementById('filter');
     var filterVal = filter.value.toUpperCase();
 
@@ -154,10 +155,10 @@ TEMPLATE = """
             tr.className = colorClass;
 
             if (filterVal.length > 0 && value.toUpperCase().indexOf(filterVal) == -1) {
-                tr.style.visibility = "collapse";
+                tr.style.display = "none";
             }
 
-            content.appendChild(tr);
+            table.appendChild(tr);
         });
         position = messages.length - 1;
     }
@@ -193,25 +194,15 @@ TEMPLATE = """
 
     function doneTyping() {
         document.body.style.cursor = 'progress';
-        var table, tr, tds, td, i, txtValue;
+        var tr, tds, td, i, txtValue;
         filterVal = filter.value.toUpperCase();
-        table = document.getElementById("content");
         tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            tds = tr[i].getElementsByTagName("td");
-            if (tds) {
-                for (l = 0; l < tds.length; l++) {
-                    td = tds[l];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filterVal) > -1) {
-                            tr[i].style.visibility = "visible";
-                            break;
-                        } else {
-                            tr[i].style.visibility = "collapse";
-                        }
-                    }
-                }
+        for (i = 1; i < tr.length; i++) {
+            txtValue = tr[i].textContent || tr[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filterVal) > -1) {
+                tr[i].style.display = "table-row";
+            } else {
+                tr[i].style.display = "none";
             }
         }
         document.body.style.cursor = 'default';
@@ -225,7 +216,7 @@ TEMPLATE = """
         <span><input checked type="checkbox" id="autoscroll"></span>
         <span><label for="autoscroll"> Autoscroll to bottom</label><br></span>
     </div>
-    <table id="content">
+    <table id="table">
         <thead>
             <th>
                 Time
@@ -273,7 +264,10 @@ class Logtail(plugins.Plugin):
         if path == 'stream':
             def generate():
                 with open(self.config['main']['log']['path']) as f:
-                    yield f.read()
+                    # https://stackoverflow.com/questions/39549426/read-multiple-lines-from-a-file-batch-by-batch/39549901#39549901
+                    n = 1024
+                    for n_lines in iter(lambda: ''.join(islice(f, n)), ''):
+                        yield n_lines
                     while True:
                         yield f.readline()
 

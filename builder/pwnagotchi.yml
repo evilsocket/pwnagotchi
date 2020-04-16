@@ -311,21 +311,17 @@
 
   - name: check if user configuration exists
     stat:
-      path: /etc/pwnagotchi/config.yml
+      path: /etc/pwnagotchi/config.toml
     register: user_config
 
-  - name: create /etc/pwnagotchi/config.yml
+  - name: create /etc/pwnagotchi/config.toml
     copy:
-      dest: /etc/pwnagotchi/config.yml
+      dest: /etc/pwnagotchi/config.toml
       content: |
-        # Add your configuration overrides on this file any configuration changes done to default.yml will be lost!
+        # Add your configuration overrides on this file any configuration changes done to default.toml will be lost!
         # Example:
-        #
-        # ui:
-        #   display:
-        #     type: 'inkyphat'
-        #     color: 'black'
-        #
+        # ui.display.enabled = true
+        # ui.display.type = "waveshare_2"
     when: not user_config.stat.exists
 
   - name: enable ssh on boot
@@ -372,15 +368,15 @@
         Hi! I'm a pwnagotchi, please take good care of me!
         Here are some basic things you need to know to raise me properly!
 
-        If you want to change my configuration, use /etc/pwnagotchi/config.yml
+        If you want to change my configuration, use /etc/pwnagotchi/config.toml
 
-        All the configuration options can be found on /etc/pwnagotchi/default.yml,
+        All the configuration options can be found on /etc/pwnagotchi/default.toml,
         but don't change this file because I will recreate it every time I'm restarted!
 
         I'm managed by systemd. Here are some basic commands.
 
         If you want to know what I'm doing, you can check my logs with the command
-        journalctl -fu pwnagotchi
+        tail -f /var/log/pwnagotchi.log
 
         If you want to know if I'm running, you can use
         systemctl status pwnagotchi

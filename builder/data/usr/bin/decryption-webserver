@@ -1,35 +1,36 @@
 #!/usr/bin/env python3
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import parse_qsl
 
 
-HTML_FORM = """
+_HTML_FORM_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
   <title>Decryption</title>
   <style>
-    body { text-align: center; padding: 150px; }
-    h1 { font-size: 50px; }
-    body { font: 20px Helvetica, sans-serif; color: #333; }
-    article { display: block; text-align: center; width: 650px; margin: 0 auto;}
-    input {
+    body {{ text-align: center; padding: 150px; }}
+    h1 {{ font-size: 50px; }}
+    body {{ font: 20px Helvetica, sans-serif; color: #333; }}
+    article {{ display: block; text-align: center; width: 650px; margin: 0 auto;}}
+    input {{
       padding: 12px 20px;
       margin: 8px 0;
       box-sizing: border-box;
       border: 1px solid #ccc;
-    }
-    input[type=password] {
+    }}
+    input[type=password] {{
       width: 75%;
       font-size: 24px;
-    }
-    input[type=submit] {
+    }}
+    input[type=submit] {{
       cursor: pointer;
       width: 75%;
-    }
-    input[type=submit]:hover {
+    }}
+    input[type=submit]:hover {{
       background-color: #d9d9d9;
-    }
+    }}
   </style>
 </head>
 <body>
@@ -39,7 +40,7 @@ HTML_FORM = """
       <p>Please provide the decryption password.</p>
       <div>
         <form action="/set-password" method="POST">
-          <input type="password" id="password" name="password" value=""><br>
+          {password_fields}
           <input type="submit" value="Submit">
         </form>
       </div>
@@ -48,6 +49,55 @@ HTML_FORM = """
 </html>
 """
 
+POST_RESPONSE = """
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* Center the loader */
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+</style>
+</head>
+<body style="margin:0;">
+
+<div id="loader"></div>
+
+</body>
+</html>
+"""
+
+HTML_FORM = None
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
@@ -59,13 +109,19 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
+        for mapping, password in parse_qsl(body.decode('UTF-8')):
+            with open('/tmp/.pwnagotchi-secret-{}'.format(mapping), 'wt') as pwfile:
+                pwfile.write(password)
         self.send_response(200)
         self.end_headers()
-        password = body.decode('UTF-8').split('=')[1]
+        self.wfile.write(POST_RESPONSE.encode())
 
-        with open('/tmp/.pwnagotchi-secret', 'wt') as pwfile:
-          pwfile.write(password)
 
+with open('/root/.pwnagotchi-crypted') as crypted_file:
+    mappings = [line.split()[0] for line in crypted_file.readlines()]
+    fields = ''.join(['<label for="{m}">Passphrase for {m}:</label>\n<input type="password" id="{m}" name="{m}" value=""><br>'.format(m=m)
+              for m in mappings])
+    HTML_FORM = _HTML_FORM_TEMPLATE.format(password_fields=fields)
 
 httpd = HTTPServer(('0.0.0.0', 80), SimpleHTTPRequestHandler)
 httpd.serve_forever()

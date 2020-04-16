@@ -103,12 +103,11 @@ is_decrypted() {
 
     # fail if not mounted
     if ! mountpoint -q "$mount" >/dev/null 2>&1; then
-      if [ -f /tmp/.pwnagotchi-secret ]; then
-        </tmp/.pwnagotchi-secret read -r SECRET
+      if [ -f /tmp/.pwnagotchi-secret-"$mapping" ]; then
+        </tmp/.pwnagotchi-secret-"$mapping" read -r SECRET
         if ! test -b /dev/disk/by-id/dm-uuid-*"$(cryptsetup luksUUID "$container" | tr -d -)"*; then
           if echo -n "$SECRET" | cryptsetup luksOpen -d- "$container" "$mapping" >/dev/null 2>&1; then
             echo "Container decrypted!"
-
           fi
         fi
 
@@ -151,8 +150,10 @@ EOF
     fi
   done </root/.pwnagotchi-crypted
 
-  # overwrite password
-  >/tmp/.pwnagotchi-secret python3 -c 'print("A"*4096)'
+  # overwrite passwords
+  python3 -c 'print("A"*4096)' | tee /tmp/.pwnagotchi-secret-* >/dev/null
+  # delete
+  rm /tmp/.pwnagotchi-secret-*
   sync # flush
 
   pkill wpa_supplicant
