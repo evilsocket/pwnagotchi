@@ -307,7 +307,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
 
 
     def start_session_fetcher(self):
-        _thread.start_new_thread(self._fetch_stats, ()) 
+        _thread.start_new_thread(self._fetch_stats, ())
 
 
     def _fetch_stats(self):
@@ -323,7 +323,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
     async def _on_event(self, msg):
         found_handshake = False
         jmsg = json.loads(msg)
-        
+
         if jmsg['tag'] == 'wifi.client.handshake':
             filename = jmsg['data']['file']
             sta_mac = jmsg['data']['station']
@@ -331,6 +331,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             key = "%s -> %s" % (sta_mac, ap_mac)
             if key not in self._handshakes:
                 self._handshakes[key] = jmsg
+                s = self.session()
                 ap_and_station = self._find_ap_sta_in(sta_mac, ap_mac, s)
                 if ap_and_station is None:
                     logging.warning("!!! captured new handshake: %s !!!", key)
