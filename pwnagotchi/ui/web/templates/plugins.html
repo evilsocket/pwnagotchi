@@ -58,7 +58,7 @@ $(function(){
 {% endblock %}
 {% block content %}
 <div id="container">
-    {% for name in database.keys() %}
+    {% for name in database.keys() | sort %}
         {% set has_info = name in loaded and loaded[name].__description__ is defined %}
         <div class="plugins-box">
           <div class="tooltip">
