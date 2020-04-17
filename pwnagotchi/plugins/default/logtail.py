@@ -207,12 +207,12 @@ TEMPLATE = """
         }
         document.body.style.cursor = 'default';
     }
-
 {% endblock %}
 
 {% block content %}
     <div class="sticky">
         <input type="text" id="filter" placeholder="Search for ..." title="Type in a filter">
+        <span><input type="button" id="clear" value="Clear"></span>
         <span><input checked type="checkbox" id="autoscroll"></span>
         <span><label for="autoscroll"> Autoscroll to bottom</label><br></span>
     </div>
@@ -254,6 +254,7 @@ class Logtail(plugins.Plugin):
         """
         logging.info("Logtail plugin loaded.")
 
+
     def on_webhook(self, path, request):
         if not self.ready:
             return "Plugin not ready"
@@ -266,7 +267,7 @@ class Logtail(plugins.Plugin):
                 with open(self.config['main']['log']['path']) as f:
                     # https://stackoverflow.com/questions/39549426/read-multiple-lines-from-a-file-batch-by-batch/39549901#39549901
                     n = 1024
-                    for n_lines in iter(lambda: ''.join(islice(f, n)), ''):
+                    for n_lines in iter(lambda: ''.join(islice(list(f)[-self.options.get('max-lines', 10000):], n)), ''):
                         yield n_lines
                     while True:
                         yield f.readline()
