@@ -58,7 +58,8 @@ def toggle_plugin(name, enable=True):
 
     if enable and name in database and name not in loaded:
         load_from_file(database[name])
-        loaded[name].options = pwnagotchi.config['main']['plugins'][name]
+        if name in loaded and pwnagotchi.config and name in pwnagotchi.config['main']['plugins']:
+            loaded[name].options = pwnagotchi.config['main']['plugins'][name]
         one(name, 'loaded')
         if pwnagotchi.config:
             one(name, 'config_changed', pwnagotchi.config)
