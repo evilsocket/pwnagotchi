@@ -22,8 +22,13 @@ check_brcm() {
 
 # reload mod
 reload_brcm() {
-  rmmod brcmfmac
-  modprobe brcmfmac
+  if ! modprobe -r brcmfmac; then
+    return 1
+  fi
+  if ! modprobe brcmfmac; then
+    return 1
+  fi
+  return 0
 }
 
 # starts mon0

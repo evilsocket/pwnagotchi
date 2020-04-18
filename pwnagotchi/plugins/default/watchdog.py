@@ -28,7 +28,7 @@ class Watchdog(plugins.Plugin):
                                                 stdout=subprocess.PIPE).stdout))[-10:])
         if len(self.pattern.findall(last_lines)) >= 3:
             display = agent.view()
-            display.set('status', 'Blind-Bug detected. Restarting bettercap.')
+            display.set('status', 'Blind-Bug detected. Restarting.')
             display.update(force=True)
             logging.info('[WATCHDOG] Blind-Bug detected. Restarting.')
             mode = 'MANU' if agent.mode == 'manual' else 'AUTO'
