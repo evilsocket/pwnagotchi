@@ -4,7 +4,7 @@ _show_complete()
     all_options="
 pwnagotchi -h --help -C --config -U --user-config --manual --skip-session --clear --debug --version --print-config {plugins}
 pwnagotchi plugins -h --help {list,install,enable,disable,uninstall,update,upgrade}
-pwnagotchi plugins list -i -h --help
+pwnagotchi plugins list -i --installed -h --help
 pwnagotchi plugins install -h --help
 pwnagotchi plugins uninstall -h --help
 pwnagotchi plugins enable -h --help
