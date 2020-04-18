@@ -26,7 +26,7 @@ class Watchdog(plugins.Plugin):
         # get last 10 lines
         last_lines = ''.join(list(TextIOWrapper(subprocess.Popen(['journalctl','-n10','-k'],
                                                 stdout=subprocess.PIPE).stdout))[-10:])
-        if len(self.pattern.findall(last_lines)) >= 3:
+        if len(self.pattern.findall(last_lines)) >= 5:
             display = agent.view()
             display.set('status', 'Blind-Bug detected. Restarting.')
             display.update(force=True)
