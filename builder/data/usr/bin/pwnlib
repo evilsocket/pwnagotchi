@@ -177,7 +177,8 @@ EOF
 
   pkill wpa_supplicant
   pkill dnsmasq
-  kill "$(pgrep -f "decryption-webserver")"
+  pid="$(pgrep -f "decryption-webserver")"
+  [[ -n "$pid" ]] && kill "$pid"
 
   return 0
 }
