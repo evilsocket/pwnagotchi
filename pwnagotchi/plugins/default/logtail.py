@@ -264,10 +264,7 @@ class Logtail(plugins.Plugin):
         if path == 'stream':
             def generate():
                 with open(self.config['main']['log']['path']) as f:
-                    # https://stackoverflow.com/questions/39549426/read-multiple-lines-from-a-file-batch-by-batch/39549901#39549901
-                    n = 1024
-                    for n_lines in iter(lambda: ''.join(islice(list(f)[-self.options.get('max-lines', 10000):], n)), ''):
-                        yield n_lines
+                    yield ''.join(f.readlines()[-self.options.get('max-lines', 4096):])
                     while True:
                         yield f.readline()
 
