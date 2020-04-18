@@ -55,9 +55,9 @@ class OnlineHashCrack(plugins.Plugin):
                                        files=payload,
                                        timeout=timeout)
                 if 'already been sent' in result.text:
-                    logging.warning(f"{path} was already uploaded.")
+                    logging.debug(f"{path} was already uploaded.")
             except requests.exceptions.RequestException as e:
-                logging.error(f"OHC: Got an exception while uploading {path} -> {e}")
+                logging.debug(f"OHC: Got an exception while uploading {path} -> {e}")
                 raise e
 
     def _download_cracked(self, save_file, timeout=120):
@@ -118,14 +118,14 @@ class OnlineHashCrack(plugins.Plugin):
                         if handshake not in reported:
                             reported.append(handshake)
                             self.report.update(data={'reported': reported})
-                            logging.info(f"OHC: Successfully uploaded {handshake}")
+                            logging.debug(f"OHC: Successfully uploaded {handshake}")
                     except requests.exceptions.RequestException as req_e:
                         self.skip.append(handshake)
-                        logging.error("OHC: %s", req_e)
+                        logging.debug("OHC: %s", req_e)
                         continue
                     except OSError as os_e:
                         self.skip.append(handshake)
-                        logging.error("OHC: %s", os_e)
+                        logging.debug("OHC: %s", os_e)
                         continue
             if 'dashboard' in self.options and self.options['dashboard']:
                 cracked_file = os.path.join(handshake_dir, 'onlinehashcrack.cracked')
