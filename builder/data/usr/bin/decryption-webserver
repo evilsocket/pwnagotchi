@@ -91,15 +91,13 @@ POST_RESPONSE = """
 <script type="text/javascript">
 
 function checkPwnagotchi() {
+    var target = 'http://' + document.location.hostname + ':8080/';
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', document.location.hostname + ':8080/');
-    xhr.onload = function () {
-    console.log('DONE: ', xhr.status);
-    };
+    xhr.open('GET', target);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                window.location.replace("http://" + document.location.hostname + ':8080/');
+            if (xhr.status == 200 || xhr.status == 401) {
+                window.location.replace(target);
             }else{
                 setTimeout(checkPwnagotchi, 1000);
             }
