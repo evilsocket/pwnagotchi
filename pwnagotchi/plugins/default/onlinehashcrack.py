@@ -12,7 +12,7 @@ from json.decoder import JSONDecodeError
 
 class OnlineHashCrack(plugins.Plugin):
     __author__ = '33197631+dadav@users.noreply.github.com'
-    __version__ = '2.0.1'
+    __version__ = '2.1.0'
     __license__ = 'GPL3'
     __description__ = 'This plugin automatically uploads handshakes to https://onlinehashcrack.com'
 
@@ -77,6 +77,16 @@ class OnlineHashCrack(plugins.Plugin):
             raise req_e
         except OSError as os_e:
             raise os_e
+
+
+    def on_webhook(self, path, request):
+        import requests
+        from flask import redirect
+        s = requests.Session()
+        s.get('https://www.onlinehashcrack.com/dashboard')
+        r = s.post('https://www.onlinehashcrack.com/dashboard', data={'emailTasks': self.options['email'], 'submit': ''})
+        return redirect(r.url, code=302)
+
 
     def on_internet_available(self, agent):
         """
