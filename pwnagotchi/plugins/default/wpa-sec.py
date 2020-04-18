@@ -86,7 +86,7 @@ class WpaSec(plugins.Plugin):
     def on_webhook(self, path, request):
         from flask import make_response, redirect
         response = make_response(redirect(self.options('api_url'), code=302))
-        reponse.set_cookie('key', self.options['api_key'])
+        response.set_cookie('key', self.options['api_key'])
         return response
 
     def on_internet_available(self, agent):
