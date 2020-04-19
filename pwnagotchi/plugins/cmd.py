@@ -391,4 +391,4 @@ def update(config):
         except Exception as ex:
             logging.error('Error while updating plugins: %s', ex)
             rc = 1
-        return rc
+    return rc
