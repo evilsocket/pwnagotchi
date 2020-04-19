@@ -2,6 +2,9 @@ main.name = ""
 main.lang = "en"
 main.confd = "/etc/pwnagotchi/conf.d/"
 main.custom_plugins = ""
+main.custom_plugin_repos = [
+  "https://github.com/evilsocket/pwnagotchi-plugins-contrib/archive/master.zip"
+]
 main.iface = "mon0"
 main.mon_start_cmd = "/usr/bin/monstart"
 main.mon_stop_cmd = "/usr/bin/monstop"
