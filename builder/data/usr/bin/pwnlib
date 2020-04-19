@@ -14,7 +14,7 @@ blink_led() {
 
 # check if brcm is stuck
 check_brcm() {
-  if [[ "$(journalctl -n10 -k --since '5 minutes ago' | grep -c 'brcmf_cfg80211_nexmon_set_channel.*Set Channel failed')" -ge 5 ]]; then
+  if [[ "$(journalctl -n10 -k --since -5m | grep -c 'brcmf_cfg80211_nexmon_set_channel.*Set Channel failed')" -ge 5 ]]; then
     return 1
   fi
   return 0
