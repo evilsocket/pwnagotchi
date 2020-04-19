@@ -359,8 +359,8 @@ def update(config):
         return 1
 
     rc = 0
-    DEST = os.path.join(SAVE_DIR, 'plugins.zip')
-    for REPO_URL in urls:
+    for idx, REPO_URL in enumerate(urls):
+        DEST = os.path.join(SAVE_DIR, 'plugins%d.zip' % idx)
         logging.info('Downloading plugins from %s to %s', REPO_URL, DEST)
 
         try:
