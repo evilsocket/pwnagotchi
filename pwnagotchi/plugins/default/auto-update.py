@@ -238,7 +238,7 @@ class AutoUpdate(plugins.Plugin):
 
                 logging.info("[update] done")
 
-                self.status.update()
+                self.status.update(data=self.status.data)
 
                 if num_installed > 0:
                     display.update(force=True, new_data={'status': 'Rebooting ...'})
