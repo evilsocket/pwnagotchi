@@ -39,7 +39,7 @@ class WpaSec(plugins.Plugin):
                                        files=payload,
                                        timeout=timeout)
                 if ' already submitted' in result.text:
-                    logging.warning("%s was already submitted.", path)
+                    logging.debug("%s was already submitted.", path)
             except requests.exceptions.RequestException as req_e:
                 raise req_e
 
@@ -83,6 +83,12 @@ class WpaSec(plugins.Plugin):
 
         self.ready = True
 
+    def on_webhook(self, path, request):
+        from flask import make_response, redirect
+        response = make_response(redirect(self.options['api_url'], code=302))
+        response.set_cookie('key', self.options['api_key'])
+        return response
+
     def on_internet_available(self, agent):
         """
         Called in manual mode when there's internet connectivity
@@ -110,13 +116,13 @@ class WpaSec(plugins.Plugin):
                         self._upload_to_wpasec(handshake)
                         reported.append(handshake)
                         self.report.update(data={'reported': reported})
-                        logging.info("WPA_SEC: Successfully uploaded %s", handshake)
+                        logging.debug("WPA_SEC: Successfully uploaded %s", handshake)
                     except requests.exceptions.RequestException as req_e:
                         self.skip.append(handshake)
-                        logging.error("WPA_SEC: %s", req_e)
+                        logging.debug("WPA_SEC: %s", req_e)
                         continue
                     except OSError as os_e:
-                        logging.error("WPA_SEC: %s", os_e)
+                        logging.debug("WPA_SEC: %s", os_e)
                         continue
 
             if 'download_results' in self.options and self.options['download_results']:

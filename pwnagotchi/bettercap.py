@@ -47,6 +47,8 @@ class Client(object):
                             logging.debug("Error while parsing event (%s)", ex)
             except websockets.exceptions.ConnectionClosedError:
                 logging.debug("Lost websocket connection. Reconnecting...")
+            except websockets.exceptions.WebSocketException as wex:
+                logging.debug("Websocket exception (%s)", wex)
 
     def run(self, command, verbose_errors=True):
         r = requests.post("%s/session" % self.url, auth=self.auth, json={'cmd': command})

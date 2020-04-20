@@ -12,9 +12,28 @@ blink_led() {
   sleep 0.3
 }
 
+# check if brcm is stuck
+check_brcm() {
+  if [[ "$(journalctl -n10 -k --since -5m | grep -c 'brcmf_cfg80211_nexmon_set_channel.*Set Channel failed')" -ge 5 ]]; then
+    return 1
+  fi
+  return 0
+}
+
+# reload mod
+reload_brcm() {
+  if ! modprobe -r brcmfmac; then
+    return 1
+  fi
+  if ! modprobe brcmfmac; then
+    return 1
+  fi
+  return 0
+}
+
 # starts mon0
 start_monitor_interface() {
-  iw phy phy0 interface add mon0 type monitor && ifconfig mon0 up
+  iw phy "$(iw phy | head -1 | cut -d" " -f2)" interface add mon0 type monitor && ifconfig mon0 up
 }
 
 # stops mon0
@@ -158,7 +177,8 @@ EOF
 
   pkill wpa_supplicant
   pkill dnsmasq
-  kill "$(pgrep -f "decryption-webserver")"
+  pid="$(pgrep -f "decryption-webserver")"
+  [[ -n "$pid" ]] && kill "$pid"
 
   return 0
 }

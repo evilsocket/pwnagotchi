@@ -1,6 +1,5 @@
 # Handles the commandline stuff
 
-import sys
 import os
 import logging
 import glob
@@ -11,7 +10,6 @@ from pwnagotchi.utils import download_file, unzip, save_config, parse_version, m
 from pwnagotchi.plugins import default_path
 
 
-REPO_URL = 'https://github.com/evilsocket/pwnagotchi-plugins-contrib/archive/master.zip'
 SAVE_DIR = '/usr/local/share/pwnagotchi/availaible-plugins/'
 DEFAULT_INSTALL_PATH = '/usr/local/share/pwnagotchi/installed-plugins/'
 
@@ -75,7 +73,7 @@ def handle_cmd(args, config):
     Parses the arguments and does the thing the user wants
     """
     if args.plugincmd == 'update':
-        return update()
+        return update(config)
     elif args.plugincmd == 'search':
         args.installed = True # also search in installed plugins
         return list_plugins(args, config, args.pattern)
@@ -349,41 +347,48 @@ def _analyse_dir(path):
     return results
 
 
-def update():
+def update(config):
     """
     Updates the database
     """
-    global REPO_URL, SAVE_DIR
+    global SAVE_DIR
 
-    DEST = os.path.join(SAVE_DIR, 'plugins.zip')
-    logging.info('Downloading plugins to %s', DEST)
-
-    try:
-        os.makedirs(SAVE_DIR, exist_ok=True)
-        before_update = _analyse_dir(SAVE_DIR)
-
-        download_file(REPO_URL, os.path.join(SAVE_DIR, DEST))
-
-        logging.info('Unzipping...')
-        unzip(DEST, SAVE_DIR, strip_dirs=1)
-
-        after_update = _analyse_dir(SAVE_DIR)
-
-        b_len = len(before_update)
-        a_len = len(after_update)
-
-        if a_len > b_len:
-            logging.info('Found %d new file(s).', a_len - b_len)
-
-        changed = 0
-        for filename, filehash in after_update.items():
-            if filename in before_update and filehash != before_update[filename]:
-                changed += 1
-
-        if changed:
-            logging.info('%d file(s) were changed.', changed)
-
-        return 0
-    except Exception as ex:
-        logging.error('Error while updating plugins %s', ex)
+    urls = config['main']['custom_plugin_repos']
+    if not urls:
+        logging.info('No plugin repositories configured.')
         return 1
+
+    rc = 0
+    for idx, REPO_URL in enumerate(urls):
+        DEST = os.path.join(SAVE_DIR, 'plugins%d.zip' % idx)
+        logging.info('Downloading plugins from %s to %s', REPO_URL, DEST)
+
+        try:
+            os.makedirs(SAVE_DIR, exist_ok=True)
+            before_update = _analyse_dir(SAVE_DIR)
+
+            download_file(REPO_URL, os.path.join(SAVE_DIR, DEST))
+
+            logging.info('Unzipping...')
+            unzip(DEST, SAVE_DIR, strip_dirs=1)
+
+            after_update = _analyse_dir(SAVE_DIR)
+
+            b_len = len(before_update)
+            a_len = len(after_update)
+
+            if a_len > b_len:
+                logging.info('Found %d new file(s).', a_len - b_len)
+
+            changed = 0
+            for filename, filehash in after_update.items():
+                if filename in before_update and filehash != before_update[filename]:
+                    changed += 1
+
+            if changed:
+                logging.info('%d file(s) were changed.', changed)
+
+        except Exception as ex:
+            logging.error('Error while updating plugins: %s', ex)
+            rc = 1
+    return rc

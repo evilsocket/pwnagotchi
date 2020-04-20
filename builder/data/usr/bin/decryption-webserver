@@ -88,6 +88,27 @@ POST_RESPONSE = """
   text-align: center;
 }
 </style>
+<script type="text/javascript">
+
+function checkPwnagotchi() {
+    var target = 'http://' + document.location.hostname + ':8080/';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', target);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200 || xhr.status == 401) {
+                window.location.replace(target);
+            }else{
+                setTimeout(checkPwnagotchi, 1000);
+            }
+        }
+    };
+    xhr.send();
+}
+
+setTimeout(checkPwnagotchi, 1000);
+
+</script>
 </head>
 <body style="margin:0;">
 

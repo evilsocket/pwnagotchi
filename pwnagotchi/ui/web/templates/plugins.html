@@ -5,6 +5,37 @@
 Plugins
 {% endblock %}
 
+{% block styles %}
+  {{ super() }}
+  <style>
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #3388cc;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid black;
+    padding: 20px 0;
+
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -100px;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+
+  </style>
+{% endblock %}
+
 {% block script %}
 $(function(){
     $('input[type=checkbox]').change(function(e) {
@@ -27,11 +58,19 @@ $(function(){
 {% endblock %}
 {% block content %}
 <div id="container">
-    {% for name in database.keys() %}
+    {% for name in database.keys() | sort %}
+        {% set has_info = name in loaded and loaded[name].__description__ is defined %}
         <div class="plugins-box">
-          <h4>
-            <a {% if name in loaded and loaded[name].on_webhook is defined %} href="/plugins/{{name}}" {% endif %}>{{name}}</a>
-          </h4>
+          <div class="tooltip">
+            <h4>
+              <a {% if name in loaded and loaded[name].on_webhook is defined %} href="/plugins/{{name}}" {% endif %}>{{name}}</a>
+            </h4>
+            {% if has_info %}
+              <span class="tooltiptext">{{ loaded[name].__description__ }}</span>
+            {% else %}
+              <span class="tooltiptext">Description can't be loaded yet.</span>
+            {% endif %}
+          </div>
           <form method="POST" action="/plugins/toggle">
             <input type="checkbox" data-role="flipswitch" name="enabled" id="flip-checkbox-{{name}}" data-on-text="Enabled" data-off-text="Disabled" data-wrapper-class="custom-size-flipswitch" {% if name in loaded %} checked {% endif %}>
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>

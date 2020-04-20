@@ -230,7 +230,7 @@ class Webgpsmap(plugins.Plugin):
                     }
 
                 # get ap password if exist
-                check_for = os.path.basename(pos_file[:-9]) + ".pcap.cracked"
+                check_for = os.path.basename(pos_file).split(".")[0] + ".pcap.cracked"
                 if check_for in all_files:
                     gps_data[ssid + "_" + mac]["pass"] = pos.password()
 

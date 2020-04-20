@@ -9,6 +9,15 @@ if is_crypted_mode; then
   done
 fi
 
+# check if wifi driver is bugged
+if ! check_brcm; then
+  if ! reload_brcm; then
+    echo "Could not reload wifi driver. Reboot"
+    reboot
+  fi
+  sleep 10
+fi
+
 # start mon0
 start_monitor_interface
 

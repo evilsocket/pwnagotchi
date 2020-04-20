@@ -257,8 +257,11 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('lcdhat',):
         config['ui']['display']['type'] = 'lcdhat'
 
-    elif config['ui']['display']['type'] in ('dfrobot', 'df'):
-        config['ui']['display']['type'] = 'dfrobot'
+    elif config['ui']['display']['type'] in ('dfrobot_1', 'df1'):
+        config['ui']['display']['type'] = 'dfrobot_1'
+
+    elif config['ui']['display']['type'] in ('dfrobot_2', 'df2'):
+        config['ui']['display']['type'] = 'dfrobot_2'
 
     elif config['ui']['display']['type'] in ('ws_154inch', 'ws154inch', 'waveshare_154inch', 'waveshare154inch'):
         config['ui']['display']['type'] = 'waveshare154inch'

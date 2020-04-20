@@ -419,15 +419,19 @@ class Device:
 
 class BTTether(plugins.Plugin):
     __author__ = '33197631+dadav@users.noreply.github.com'
-    __version__ = '1.0.0'
+    __version__ = '1.1.0'
     __license__ = 'GPL3'
     __description__ = 'This makes the display reachable over bluetooth'
+
 
     def __init__(self):
         self.ready = False
         self.options = dict()
         self.devices = dict()
         self.lock = Lock()
+        self.running = True
+        self.status = '-'
+
 
     def on_loaded(self):
         # new config
@@ -449,7 +453,7 @@ class BTTether(plugins.Plugin):
         if 'mac' in self.options:
             for opt in ['share_internet', 'mac', 'ip', 'netmask', 'interval']:
                 if opt not in self.options or self.options[opt] is None:
-                    logging.error("BT-TETHER: Please specify the %s in your config.yml.", opt)
+                    logging.error("BT-TETHER: Please specify the %s in your config.toml.", opt)
                     return
 
             self.devices['legacy'] = Device(name='legacy', **self.options)
@@ -466,22 +470,10 @@ class BTTether(plugins.Plugin):
                 return
 
         logging.info("BT-TETHER: Successfully loaded ...")
-        self.ready = True
 
-    def on_unload(self, ui):
-        with ui._lock:
-            ui.remove_element('bluetooth')
+        while self.running:
+            time.sleep(1)
 
-    def on_ui_setup(self, ui):
-        with ui._lock:
-            ui.add_element('bluetooth', LabeledValue(color=BLACK, label='BT', value='-', position=(ui.width() / 2 - 15, 0),
-                           label_font=fonts.Bold, text_font=fonts.Medium))
-
-    def on_ui_update(self, ui):
-        if not self.ready:
-            return
-
-        with self.lock:
             devices_to_try = list()
             connected_priorities = list()
             any_device_connected = False # if this is true, last status on screen should be C
@@ -508,11 +500,11 @@ class BTTether(plugins.Plugin):
                     dev_remote = bt.wait_for_device(timeout=device.scantime)
                     if dev_remote is None:
                         logging.debug('BT-TETHER: Could not find %s, try again in %d minutes.', device.name, device.interval)
-                        ui.set('bluetooth', 'NF')
+                        self.status = 'NF'
                         continue
                 except Exception as bt_ex:
                     logging.error(bt_ex)
-                    ui.set('bluetooth', 'NF')
+                    self.status = 'NF'
                     continue
 
                 paired = bt.is_paired()
@@ -521,7 +513,7 @@ class BTTether(plugins.Plugin):
                         logging.debug('BT-TETHER: Paired with %s.', device.name)
                     else:
                         logging.debug('BT-TETHER: Pairing with %s failed ...', device.name)
-                        ui.set('bluetooth', 'PE')
+                        self.status = 'PE'
                         continue
                 else:
                     logging.debug('BT-TETHER: Already paired.')
@@ -539,17 +531,17 @@ class BTTether(plugins.Plugin):
                         continue
 
                     if interface is None:
-                        ui.set('bluetooth', 'BE')
+                        self.status = 'BE'
                         logging.debug('BT-TETHER: Could not establish nap connection with %s', device.name)
                         continue
 
                     logging.debug('BT-TETHER: Created interface (%s)', interface)
-                    ui.set('bluetooth', 'C')
+                    self.status = 'C'
                     any_device_connected = True
                     device.tries = 0 # reset tries
                 else:
                     logging.debug('BT-TETHER: Could not establish nap connection with %s', device.name)
-                    ui.set('bluetooth', 'NF')
+                    self.status = 'NF'
                     continue
 
                 addr = f"{device.ip}/{device.netmask}"
@@ -561,7 +553,7 @@ class BTTether(plugins.Plugin):
                 wrapped_interface = IfaceWrapper(interface)
                 logging.debug('BT-TETHER: Add ip to %s', interface)
                 if not wrapped_interface.set_addr(addr):
-                    ui.set('bluetooth', 'AE')
+                    self.status = 'AE'
                     logging.debug("BT-TETHER: Could not add ip to %s", interface)
                     continue
 
@@ -580,4 +572,20 @@ class BTTether(plugins.Plugin):
                                 resolv.write(nameserver + 'nameserver 9.9.9.9\n')
 
             if any_device_connected:
-                ui.set('bluetooth', 'C')
+                self.status = 'C'
+
+
+    def on_unload(self, ui):
+        self.running = False
+        with ui._lock:
+            ui.remove_element('bluetooth')
+
+
+    def on_ui_setup(self, ui):
+        with ui._lock:
+            ui.add_element('bluetooth', LabeledValue(color=BLACK, label='BT', value='-', position=(ui.width() / 2 - 15, 0),
+                           label_font=fonts.Bold, text_font=fonts.Medium))
+
+
+    def on_ui_update(self, ui):
+        ui.set('bluetooth', self.status)
