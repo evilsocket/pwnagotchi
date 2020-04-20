@@ -140,17 +140,29 @@ def parse_version(cmd):
     raise Exception('could not parse version from "%s": output=\n%s' % (cmd, out))
 
 
+def fetch_last_commit(repo, branch='master', is_tag=False):
+    url = "https://api.github.com/repos/{}/git/refs/{}/{}".format(
+        repo,
+        'tags' if is_tag else 'heads',
+        branch
+    )
+    r = requests.get(url)
+    r.raise_for_status()
+    return r.json()['object']['sha']
+
+
 class AutoUpdate(plugins.Plugin):
     __author__ = 'evilsocket@gmail.com'
-    __version__ = '1.1.1'
+    __version__ = '1.2.0'
     __name__ = 'auto-update'
     __license__ = 'GPL3'
     __description__ = 'This plugin checks when updates are available and applies them when internet is available.'
 
     def __init__(self):
         self.ready = False
-        self.status = StatusFile('/root/.auto-update')
+        self.status = StatusFile('/root/.auto-update', data_format='json')
         self.lock = Lock()
+        self.done_caplets_check = False # only check once
 
     def on_loaded(self):
         if 'interval' not in self.options or ('interval' in self.options and not self.options['interval']):
@@ -208,6 +220,21 @@ class AutoUpdate(plugins.Plugin):
                                 num_installed += 1
                     else:
                         prev_status = '%d new update%c available!' % (num_updates, 's' if num_updates > 1 else '')
+
+                if not self.done_caplets_check:
+                    prev_commit = self.status.data_field_or('caplets_version', '')
+                    try:
+                        logging.info('[update] Checking for new caplets.')
+                        current_commit = fetch_last_commit('bettercap/caplets')
+                        if prev_commit != current_commit:
+                            logging.info('[update] Updating caplets.')
+                            rc = os.system('bettercap -eval "caplets.update;q"')
+                            if rc == 0:
+                                self.status.update(data={'caplets_version': current_commit})
+                    except Exception as ex:
+                        logging.error(ex)
+                    finally:
+                        self.done_caplets_check = True
 
                 logging.info("[update] done")
 
