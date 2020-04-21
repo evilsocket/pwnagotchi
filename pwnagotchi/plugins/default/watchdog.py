@@ -26,7 +26,7 @@ class Watchdog(plugins.Plugin):
         logging.info("Watchdog plugin loaded.")
 
     def on_epoch(self, agent, epoch, epoch_data):
-        if not self.status.newer_then_minutes(5):
+        if self.status.newer_then_minutes(5):
             return
         # get last 10 lines
         last_lines = ''.join(list(TextIOWrapper(subprocess.Popen(['journalctl','-n10','-k', '--since', '-5m'],
