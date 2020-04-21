@@ -1,22 +1,23 @@
-import os
 import logging
 import threading
-from itertools import islice
-from time import sleep
-from datetime import datetime,timedelta
 from pwnagotchi import plugins
-from pwnagotchi.utils import StatusFile
 from flask import render_template_string
-from flask import jsonify
 from flask import abort
 from flask import Response
 
 
 TEMPLATE = """
 {% extends "base.html" %}
+
 {% set active_page = "plugins" %}
+
 {% block title %}
     Logtail
+{% endblock %}
+
+{% block meta %}
+    {{ super() }}
+    <meta name="viewport" content="width=1000">
 {% endblock %}
 
 {% block styles %}
@@ -30,7 +31,6 @@ TEMPLATE = """
             font-size: 16px;
             padding: 12px 20px 12px 40px;
             border: 1px solid #ddd;
-            margin-bottom: 12px;
         }
         table {
             border-collapse: collapse;
@@ -55,18 +55,21 @@ TEMPLATE = """
         div.sticky {
             position: -webkit-sticky;
             position: sticky;
+            margin: 0 0.3em;
             top: 0;
-            display: table;
+            display: flex;
             width: 100%;
-        }
-        div.sticky > * {
-            display: table-cell;
         }
         div.sticky > span {
             width: 1%;
         }
-        div.sticky > input {
-            width: 100%;
+        div.sticky>div:nth-of-type(1) {
+          margin-right: 0.5em;
+          width: 100%;
+        }
+        div.sticky>div:nth-of-type(2) {
+          min-width: 14em;
+
         }
         tr.default {
             color: black;
@@ -211,9 +214,18 @@ TEMPLATE = """
 
 {% block content %}
     <div class="sticky">
-        <input type="text" id="filter" placeholder="Search for ..." title="Type in a filter">
-        <span><input checked type="checkbox" id="autoscroll"></span>
-        <span><label for="autoscroll"> Autoscroll to bottom</label><br></span>
+        <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+            <input data-role="none" type="text" id="filter" placeholder="Search for ..." title="Type in a filter">
+        </div>
+
+        <div class="ui-checkbox">
+            <div class="checkbox-wrapper">
+                <label for="autoscroll" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-on"> Autoscroll to bottom</label>
+                <input data-role="none" checked="" type="checkbox" id="autoscroll">
+            </div>
+        </div>
+
+        <span><br></span>
     </div>
     <table id="table">
         <thead>
