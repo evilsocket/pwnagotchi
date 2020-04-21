@@ -40,7 +40,10 @@ TEMPLATE = """
         th, td {
             text-align: left;
             padding: 12px;
-            width: 1px;
+            width: auto;
+        }
+        td.min {
+            width: 1%;
             white-space: nowrap;
         }
         td:nth-child(2) {
@@ -150,7 +153,9 @@ TEMPLATE = """
             var td3 = document.createElement('td');
 
             td1.textContent = time;
+            td1.className += 'min';
             td2.textContent = level;
+            td2.className += 'min';
             td3.textContent = msg;
 
             tr.appendChild(td1);
