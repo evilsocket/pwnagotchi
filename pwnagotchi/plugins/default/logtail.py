@@ -221,7 +221,7 @@ TEMPLATE = """
         <div class="ui-checkbox">
             <div class="checkbox-wrapper">
                 <label for="autoscroll" class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-on"> Autoscroll to bottom</label>
-                <input data-role="none" checked="" type="checkbox" id="autoscroll">
+                <input checked="" type="checkbox" id="autoscroll">
             </div>
         </div>
 
