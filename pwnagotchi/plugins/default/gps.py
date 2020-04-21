@@ -73,6 +73,10 @@ class GPS(plugins.Plugin):
             lat_pos = (67, 73)
             lon_pos = (62, 83)
             alt_pos = (67, 93)
+        elif ui.is_dfrobot_v2: 
+            lat_pos = (127, 75)
+            lon_pos = (122, 84)
+            alt_pos = (127, 94)
         else:
             # guessed values, add tested ones if you can
             lat_pos = (127, 51)
