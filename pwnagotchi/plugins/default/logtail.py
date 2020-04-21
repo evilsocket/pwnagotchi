@@ -17,7 +17,7 @@ TEMPLATE = """
 
 {% block meta %}
     {{ super() }}
-    <meta name="viewport" content="width=1000">
+    <meta name="viewport" content="width=1000, initial-scale=0.1">
 {% endblock %}
 
 {% block styles %}
