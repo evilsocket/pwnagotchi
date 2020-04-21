@@ -65,11 +65,13 @@ TEMPLATE = """
         }
         div.sticky>div:nth-of-type(1) {
           margin-right: 0.5em;
+          height: 100%;
           width: 100%;
         }
         div.sticky>div:nth-of-type(2) {
           min-width: 14em;
-
+          margin: 0.2em 0;
+          height: 100%;
         }
         tr.default {
             color: black;
