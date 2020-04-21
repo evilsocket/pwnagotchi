@@ -4,6 +4,7 @@ import re
 import subprocess
 from io import TextIOWrapper
 from pwnagotchi import plugins
+from pwnagotchi.utils import StatusFile
 
 
 class Watchdog(plugins.Plugin):
@@ -15,6 +16,8 @@ class Watchdog(plugins.Plugin):
     def __init__(self):
         self.options = dict()
         self.pattern = re.compile(r'brcmf_cfg80211_nexmon_set_channel.*?Set Channel failed')
+        self.status = StatusFile('/root/.pwnagotchi-watchdog')
+        self.status.update()
 
     def on_loaded(self):
         """
@@ -23,6 +26,8 @@ class Watchdog(plugins.Plugin):
         logging.info("Watchdog plugin loaded.")
 
     def on_epoch(self, agent, epoch, epoch_data):
+        if not self.status.newer_then_minutes(5):
+            return
         # get last 10 lines
         last_lines = ''.join(list(TextIOWrapper(subprocess.Popen(['journalctl','-n10','-k', '--since', '-5m'],
                                                 stdout=subprocess.PIPE).stdout))[-10:])
