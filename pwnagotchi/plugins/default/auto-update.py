@@ -117,10 +117,10 @@ def install(display, update):
             return False
 
         logging.info("[update] stopping %s ..." % update['service'])
-        os.system("service %s stop" % update['service'])
+        os.system("systemctl stop %s" % update['service'])
         os.system("mv %s %s" % (source_path, dest_path))
         logging.info("[update] restarting %s ..." % update['service'])
-        os.system("service %s start" % update['service'])
+        os.system("systemctl start %s" % update['service'])
     else:
         if not os.path.exists(source_path):
             source_path = "%s-%s" % (source_path, update['available'])
