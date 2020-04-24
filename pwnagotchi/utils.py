@@ -15,6 +15,7 @@ from toml.encoder import TomlEncoder, _dump_str
 from zipfile import ZipFile
 from datetime import datetime
 from enum import Enum
+from json.decoder import JSONDecodeError
 
 
 class DottedTomlEncoder(TomlEncoder):
@@ -440,7 +441,10 @@ class StatusFile(object):
             self._updated = datetime.fromtimestamp(os.path.getmtime(path))
             with open(path) as fp:
                 if data_format == 'json':
-                    self.data = json.load(fp)
+                    try:
+                        self.data = json.load(fp)
+                    except JSONDecodeError:
+                        self.data = dict()
                 else:
                     self.data = fp.read()
 
