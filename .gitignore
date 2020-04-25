@@ -2,6 +2,7 @@
 *.img.bmap
 *.pcap
 *.po~
+*.log
 preview.png
 __pycache__
 _backups
@@ -18,3 +19,4 @@ pwnagotchi.egg-info
 *backup*.tgz
 *backup*.gz
 .vscode
+.vagrant

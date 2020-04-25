@@ -9,7 +9,7 @@ install:
 	unzip /tmp/packer.zip -d /tmp
 	sudo mv /tmp/packer /usr/bin/packer
 	git clone https://github.com/solo-io/packer-builder-arm-image /tmp/packer-builder-arm-image
-	cd /tmp/packer-builder-arm-image && go get -d ./... && go build
+	cd /tmp/packer-builder-arm-image && go mod download && go build
 	sudo cp /tmp/packer-builder-arm-image/packer-builder-arm-image /usr/bin
 
 image:
