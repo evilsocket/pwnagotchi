@@ -197,7 +197,7 @@ class AutoUpdate(plugins.Plugin):
                 to_check = [
                     ('bettercap/bettercap', parse_version('bettercap -version'), True, 'bettercap'),
                     ('evilsocket/pwngrid', parse_version('pwngrid -version'), True, 'pwngrid-peer'),
-                    ('evilsocket/pwnagotchi', pwnagotchi.__version__, False, 'pwnagotchi')
+                    ('dadav/pwnagotchi', pwnagotchi.__version__, False, 'pwnagotchi')
                 ]
 
                 for repo, local_version, is_native, svc_name in to_check:
