@@ -154,7 +154,7 @@ class MemoryFS:
         source, dest = (self.disk, self.mountpoint) if to_ram else (self.mountpoint, self.disk)
         needed, actually_free = size_of(source), shutil.disk_usage(dest)[2]
         if actually_free >= needed:
-            logging.debug("[FS] Syning %s -> %s", source,dest)
+            logging.debug("[FS] Syncing %s -> %s", source,dest)
             if self.rsync:
                 os.system(f"rsync -aXv --inplace --no-whole-file --delete-after {source}/ {dest}/ >/dev/null 2>&1")
             else:
