@@ -106,12 +106,6 @@ def temperature(celsius=True):
 
 
 def shutdown():
-    logging.warning("syncing...")
-
-    from pwnagotchi import fs
-    for m in fs.mounts:
-        m.sync()
-
     logging.warning("shutting down ...")
 
     from pwnagotchi.ui import view
@@ -119,6 +113,13 @@ def shutdown():
         view.ROOT.on_shutdown()
         # give it some time to refresh the ui
         time.sleep(10)
+
+    logging.warning("syncing...")
+
+    from pwnagotchi import fs
+    for m in fs.mounts:
+        m.sync()
+ 
     os.system("sync")
     os.system("halt")
 
