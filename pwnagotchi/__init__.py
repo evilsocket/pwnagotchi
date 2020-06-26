@@ -153,5 +153,11 @@ def reboot(mode=None):
     elif mode == 'MANU':
         os.system("touch /root/.pwnagotchi-manual")
 
+    logging.warning("syncing...")
+
+    from pwnagotchi import fs
+    for m in fs.mounts:
+        m.sync()
+
     os.system("sync")
     os.system("shutdown -r now")
