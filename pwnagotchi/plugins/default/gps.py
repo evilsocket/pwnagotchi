@@ -77,6 +77,10 @@ class GPS(plugins.Plugin):
             lat_pos = (127, 75)
             lon_pos = (122, 84)
             alt_pos = (127, 94)
+        elif ui.is_waveshare27inch():
+            lat_pos = (6,120)
+            lon_pos = (1,135)
+            alt_pos = (6,150)
         else:
             # guessed values, add tested ones if you can
             lat_pos = (127, 51)
