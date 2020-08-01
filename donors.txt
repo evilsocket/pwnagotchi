@@ -1,0 +1,174 @@
+• Stable 
+  "-//W3C//DTD 
+  HTML 
+• Stable 
+  
+  
+• Stable 
+  
+  
+• Stable 
+  
+  of 
+• Stable 
+  
+  
+• Stable 
+  
+  
+• Stable 
+  
+  of 
+• Stable 
+  
+  
+• Stable 
+  alt="[ICO]">   valign="top"> • Stable 
+  
+  colspan="5">
+
+
+• Stable 
+  alt="[PARENTDIR]">   valign="top"> • Stable 
+  alt="[ 
+  valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  
+  colspan="5">
+
+
+• Stable 
+  
+  
+• Stable 
+  at 
+  (Ubuntu) 
+• Stable 
+  
+  
+• Stable 
+  "-//W3C//DTD 
+  HTML 
+• Stable 
+  
+  
+• Stable 
+  
+  
+• Stable 
+  
+  of 
+• Stable 
+  
+  
+• Stable 
+  
+  
+• Stable 
+  
+  of 
+• Stable 
+  
+  
+• Stable 
+  alt="[ICO]">   valign="top"> • Stable 
+  
+  colspan="5">
+
+
+• Stable 
+  alt="[PARENTDIR]">   valign="top"> • Stable 
+  alt="[ 
+  valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  
+  colspan="5">
+
+
+• Stable 
+  
+  
+• Stable 
+  at 
+  (Ubuntu) 
+• Stable 
+  
+  
+• Stable 
+  "-//W3C//DTD 
+  HTML 
+• Stable 
+  
+  
+• Stable 
+  
+  
+• Stable 
+  
+  of 
+• Stable 
+  
+  
+• Stable 
+  
+  
+• Stable 
+  
+  of 
+• Stable 
+  
+  
+• Stable 
+  alt="[ICO]">   valign="top"> • Stable 
+  
+  colspan="5">
+
+
+• Stable 
+  alt="[PARENTDIR]">   valign="top"> • Stable 
+  alt="[ 
+  valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  alt="[DIR]">   valign="top"> • Stable 
+  
+  colspan="5">
+
+
+• Stable 
+  
+  
+• Stable 
+  at 
+  (Ubuntu) 
+• Stable 
+  
+  
+ Download  
+
+
+Recent Donors 
+• Trimble 
+• RIPE NCC 
+• Meinberg Funkuhren 
+• Iron Systems 
+• ISC The RADclock project (formerly known under the name ‘TSCclock’) aims to provide a new method for network timing. We are developing alternatives to NTP clients and servers based on new principles, in particular the need to distinguish between difference clocks and absolute clocks. The term RADclock, ‘Robust Absolute and Difference Clock’, stems from this. The RADclock difference clock, for example, can measure RTTs to under a microsecond, and the RADclock absolute clock can keep accurate time even if connectivity to its time server is lost for over a week!
+The RADclock software is available now and can be used as an alternative to the ntpd daemon to provide convenient system clock synchronisation for systems running FreeBSD and Linux. In terms of local hardware, it exploits the availability of counters such as the HPET counter or the TSC (Time-Stamp-Counter) commonly found in PC architectures.
+More information and some developer blogging about the project is available at the SyncLab.org website, and you can support the RADclock project by joining and participating in Network Time Foundation’s RADclock Consortium.
+Complete list

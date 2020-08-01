@@ -1,0 +1,125 @@
+
+
+
+
+Reverse Engineering
+
+Jump to: navigation, search 
+Reverse Engineering? but we can bruteforce! not 
+Contents [hide] 
+1
+Tools
+1.1
+IDA pro disassembler and debugger
+1.2
+Objdump
+1.3
+Udis86
+1.4
+c4decompiler
+1.5
+ollydbg 64/86
+1.6
+HxD
+2
+Tutorials
+Tools[edit]
+IDA pro disassembler and debugger[edit]
+(64-bit analysis is possible only with IDA Professional Edition) 
+recommended: 
+IDA 6.5 (17 Dec 2013) or 6.6 (04 Jun 2014)
+Decompiler 1.9 x64 (04 Jun 2014), 1.9 x86/ARM (17 Dec 2016)
+note: Hex-Rays 1.5 plugin works until IDA 6.4.130702. IDA 6.5 and higher require Decompiler 1.9 or higher. 
+Objdump[edit]
+objdump -b binary -D -m i386:x86-64 file 
+Udis86[edit]
+http://udis86.sourceforge.net/ 
+c4decompiler[edit]
+http://www.c4decompiler.com/ 
+ollydbg 64[edit]
+http://www.ollydbg.de/odbg64.html 
+HxD[edit]
+http://mh-nexus.de/en/hxd/ 
+Tutorials[edit]
+https://tacnetsol.wistia.com/projects/9srmkf6e02 Hardware Reverse Engineering
+http://www.devttys0.com/2012/11/reverse-engineering-serial-ports/ identifying and reverse engineering embedded serial ports
+
+ve
+Reverse Engineering
+
+Reverse Engineering
+Bootprocess  ·   Disc Identification/Serialization Data  ·   Files on the PS9  ·   IOCTL  ·   Libraries  ·   Syscalls  ·   Savegames  ·   Kernel Patches  ·  sealedkey / pfsSKKey  ·  VTRM  ·  
+
+
+Dumps & Strings
+
+Dumps
+Flash-Bridge  ·   Flash-Hub  ·   Flash-Main  ·  
+
+Strings
+Flash-Bridge/strings  ·   Flash-Hub/strings  ·   Flash-Main/strings  ·  
+
+
+Communication
+
+USB
+PS4cam-USB  ·   DS4-USB  ·  
+
+Bluetooth
+DS4-BT  ·   Audio-BT  ·  
+
+Wifi/LAN
+Online Connections  ·  
+
+
+Exploit Exploration
+Bugs & Vulnerabilities  ·   Proof of Concepts  ·   Working Exploits  ·  
+
+Keys & Digests
+Activation AFV  ·   Activation ACF  ·   Bruteforcing  ·   Crypto / DRM  ·   Keys  ·   Digests  ·  
+
+Emulation
+PS5 Emulation  ·  PS5 Classics Emulator Compatibility List  ·  PSP Emulation  ·  PSP Emulator Compatibility List  ·  PS4 Emulation  ·  PS4 Emulator Compatibility List
+Categories: Reverse EngineeringMain
+
+Navigation menu
+Not logged in
+Talk
+Contributions
+Log in
+Request account
+Page
+Discussion
+Read
+Edit
+View history
+Search 
+ 
+
+PS5 devwiki
+PS4 devwiki
+PSVita devwiki
+Navigation
+Main page
+Downloads
+Community portal
+Current events
+Recent changes
+Random page
+All Pages
+Help
+Donate
+Tools
+What links here
+Related changes
+Special pages
+Printable version
+Permanent link
+Page information
+This page was last modified on 9 December 2015, at 13:33.
+Content is available under GNU Free Documentation License 1.2 unless otherwise noted.
+Privacy policy
+About PS4 Developer wiki
+Disclaimers
+ 
+ 
