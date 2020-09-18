@@ -57,7 +57,7 @@ class GPS(plugins.Plugin):
     def on_ui_setup(self, ui):
         # add coordinates for other displays
         if ui.is_waveshare_v2():
-            lat_pos = (127, 75)
+            lat_pos = (127, 74)
             lon_pos = (122, 84)
             alt_pos = (127, 94)
         elif ui.is_waveshare_v1():
@@ -66,21 +66,21 @@ class GPS(plugins.Plugin):
             alt_pos = (130, 90)
         elif ui.is_inky():
             lat_pos = (127, 60)
-            lon_pos = (127, 70)
+            lon_pos = (122, 70)
             alt_pos = (127, 80)
         elif ui.is_waveshare144lcd():
             # guessed values, add tested ones if you can
             lat_pos = (67, 73)
             lon_pos = (62, 83)
             alt_pos = (67, 93)
-        elif ui.is_dfrobot_v2: 
-            lat_pos = (127, 75)
+        elif ui.is_dfrobot_v2():
+            lat_pos = (127, 74)
             lon_pos = (122, 84)
             alt_pos = (127, 94)
         elif ui.is_waveshare27inch():
-            lat_pos = (6,120)
-            lon_pos = (1,135)
-            alt_pos = (6,150)
+            lat_pos = (6, 120)
+            lon_pos = (1, 135)
+            alt_pos = (6, 150)
         else:
             # guessed values, add tested ones if you can
             lat_pos = (127, 51)
@@ -126,7 +126,6 @@ class GPS(plugins.Plugin):
             ),
         )
 
-
     def on_unload(self, ui):
         with ui._lock:
             ui.remove_element('latitude')
@@ -141,5 +140,5 @@ class GPS(plugins.Plugin):
             # last char is sometimes not completely drawn ¯\_(ツ)_/¯
             # using an ending-whitespace as workaround on each line
             ui.set("latitude", f"{self.coordinates['Latitude']:.4f} ")
-            ui.set("longitude", f" {self.coordinates['Longitude']:.4f} ")
-            ui.set("altitude", f" {self.coordinates['Altitude']:.1f}m ")
+            ui.set("longitude", f"{self.coordinates['Longitude']:.4f} ")
+            ui.set("altitude", f"{self.coordinates['Altitude']:.1f}m ")
