@@ -10,7 +10,7 @@ from pwnagotchi.ui.view import BLACK
 
 class GPS(plugins.Plugin):
     __author__ = "evilsocket@gmail.com"
-    __version__ = "1.0.0"
+    __version__ = "1.0.1"
     __license__ = "GPL3"
     __description__ = "Save GPS coordinates whenever an handshake is captured."
 
