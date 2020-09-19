@@ -1,6 +1,6 @@
 # memtemp shows memory infos and cpu temperature
 #
-# mem usage, cpu load, cpu temp
+# mem usage, cpu load, cpu temp, cpu frequency
 #
 ###############################################################
 #
@@ -16,6 +16,13 @@
 # - Added CPU load
 # - Added horizontal and vertical orientation
 #
+# 19-09-2020 by crahan <crahan@n00.be>
+# - Added CPU frequency
+# - Made field types and order configurable (max 3 fields)
+# - Made line spacing and position configurable
+# - Refactored to dynamically generate UI elements
+# - Changed horizontal UI elements to Text
+# - Updated to version 1.0.2
 ###############################################################
 from pwnagotchi.ui.components import LabeledValue, Text
 from pwnagotchi.ui.view import BLACK
@@ -31,129 +38,27 @@ class MemTemp(plugins.Plugin):
     __license__ = 'GPL3'
     __description__ = 'A plugin that will display memory/cpu usage and temperature'
 
+    ALLOWED_FIELDS = {
+        'mem': 'mem_usage',
+        'cpu': 'cpu_load',
+        'temp': 'cpu_temp',
+        'freq': 'cpu_freq'
+    }
+    DEFAULT_FIELDS = ['mem', 'cpu', 'temp']
+    LINE_SPACING = 10
+    LABEL_SPACING = 0
+    FIELD_WIDTH = 4
+
     def on_loaded(self):
         logging.info("memtemp plugin loaded.")
 
     def mem_usage(self):
-        return int(pwnagotchi.mem_usage() * 100)
+        return f"{int(pwnagotchi.mem_usage() * 100)}%"
 
     def cpu_load(self):
-        return int(pwnagotchi.cpu_load() * 100)
+        return f"{int(pwnagotchi.cpu_load() * 100)}%"
 
-    @staticmethod
-    def pad_text(width, data, symbol):
-        data = str(data) + symbol
-        return " " * (width - len(data)) + data
-
-    def on_ui_setup(self, ui):
-        if ui.is_waveshare_v2():
-            h_pos_line1 = (178, 84)
-            h_pos_line2 = (178, 94)
-            v_pos_line1 = (202, 74)  # (127, 75)
-            v_pos_line2 = (202, 84)  # (122, 84)
-            v_pos_line3 = (197, 94)  # (127, 94)
-        elif ui.is_waveshare_v1():
-            h_pos_line1 = (170, 80)
-            h_pos_line2 = (170, 90)
-            v_pos_line1 = (170, 61)  # (130, 70)
-            v_pos_line2 = (170, 71)  # (125, 80)
-            v_pos_line3 = (165, 81)  # (130, 90)
-        elif ui.is_waveshare144lcd():
-            h_pos_line1 = (53, 77)
-            h_pos_line2 = (53, 87)
-            v_pos_line1 = (78, 67)  # (67, 73)
-            v_pos_line2 = (78, 77)  # (62, 83)
-            v_pos_line3 = (73, 87)  # (67, 93)
-        elif ui.is_inky():
-            h_pos_line1 = (140, 68)
-            h_pos_line2 = (140, 78)
-            v_pos_line1 = (165, 54)  # (127, 60)
-            v_pos_line2 = (165, 64)  # (122, 70)
-            v_pos_line3 = (160, 74)  # (127, 80)
-        elif ui.is_waveshare27inch():
-            h_pos_line1 = (192, 138)
-            h_pos_line2 = (192, 148)
-            v_pos_line1 = (216, 122)  # (6,120)
-            v_pos_line2 = (216, 132)  # (1,135)
-            v_pos_line3 = (211, 142)  # (6,150)
-        else:
-            h_pos_line1 = (155, 76)
-            h_pos_line2 = (155, 86)
-            v_pos_line1 = (180, 61)  # (127, 51)
-            v_pos_line2 = (180, 71)  # (127, 56)
-            v_pos_line3 = (175, 81)  # (102, 71)
-
-        label_spacing = 0
-
-        if self.options['orientation'] == "vertical":
-            ui.add_element(
-                'memtemp_line1',
-                LabeledValue(
-                    color=BLACK,
-                    label='mem:',
-                    value='-',
-                    position=v_pos_line1,
-                    label_font=fonts.Small,
-                    text_font=fonts.Small,
-                    label_spacing=label_spacing,
-                )
-            )
-            ui.add_element(
-                'memtemp_line2',
-                LabeledValue(
-                    color=BLACK,
-                    label='cpu:',
-                    value='-',
-                    position=v_pos_line2,
-                    label_font=fonts.Small,
-                    text_font=fonts.Small,
-                    label_spacing=label_spacing,
-                )
-            )
-            ui.add_element(
-                'memtemp_line3',
-                LabeledValue(
-                    color=BLACK,
-                    label='temp:',
-                    value='-',
-                    position=v_pos_line3,
-                    label_font=fonts.Small,
-                    text_font=fonts.Small,
-                    label_spacing=label_spacing,
-                )
-            )
-        else:
-            # default to horizontal
-            ui.add_element(
-                'memtemp_line1',
-                Text(
-                    color=BLACK,
-                    value=' mem  cpu temp',
-                    position=h_pos_line1,
-                    font=fonts.Small,
-                )
-            )
-            ui.add_element(
-                'memtemp_line2',
-                Text(
-                    color=BLACK,
-                    value='   -    -    -',
-                    position=h_pos_line2,
-                    font=fonts.Small,
-                )
-            )
-
-    def on_unload(self, ui):
-        with ui._lock:
-            if self.options['orientation'] == "vertical":
-                ui.remove_element('memtemp_line1')
-                ui.remove_element('memtemp_line2')
-                ui.remove_element('memtemp_line3')
-            else:
-                ui.remove_element('memtemp_line1')
-                ui.remove_element('memtemp_line2')
-
-    def on_ui_update(self, ui):
+    def cpu_temp(self):
         if self.options['scale'] == "fahrenheit":
             temp = (pwnagotchi.temperature() * 9 / 5) + 32
             symbol = "f"
@@ -164,16 +69,116 @@ class MemTemp(plugins.Plugin):
             # default to celsius
             temp = pwnagotchi.temperature()
             symbol = "c"
+        return f"{temp}{symbol}"
+
+    def cpu_freq(self):
+        with open('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq', 'rt') as fp:
+            return f"{round(float(fp.readline())/1000000, 1)}G"
+
+    def pad_text(self, data):
+        return " " * (self.FIELD_WIDTH - len(data)) + data
+
+    def on_ui_setup(self, ui):
+        try:
+            # Configure field list
+            self.fields = self.options['fields'].split(',')
+            self.fields = [x.strip() for x in self.fields if x.strip() in self.ALLOWED_FIELDS.keys()]
+            self.fields = self.fields[:3]  # limit to the first 3 fields
+        except Exception:
+            # Set default value
+            self.fields = self.DEFAULT_FIELDS
+
+        try:
+            # Configure line_spacing
+            line_spacing = int(self.options['linespacing'])
+        except Exception:
+            # Set default value
+            line_spacing = self.LINE_SPACING
+
+        try:
+            # Configure position
+            pos = self.options['position'].split(',')
+            pos = [int(x.strip()) for x in pos]
+            if self.options['orientation'] == "vertical":
+                v_pos = (pos[0], pos[1])
+            else:
+                h_pos = (pos[0], pos[1])
+        except Exception:
+            # Set default position based on screen type
+            if ui.is_waveshare_v2():
+                h_pos = (178, 84)
+                v_pos = (197, 74)
+            elif ui.is_waveshare_v1():
+                h_pos = (170, 80)
+                v_pos = (165, 61)
+            elif ui.is_waveshare144lcd():
+                h_pos = (53, 77)
+                v_pos = (73, 67)
+            elif ui.is_inky():
+                h_pos = (140, 68)
+                v_pos = (160, 54)
+            elif ui.is_waveshare27inch():
+                h_pos = (192, 138)
+                v_pos = (211, 122)
+            else:
+                h_pos = (155, 76)
+                v_pos = (175, 61)
 
         if self.options['orientation'] == "vertical":
-            ui.set('memtemp_line1', f"{self.mem_usage()}%")
-            ui.set('memtemp_line2', f"{self.cpu_load()}%")
-            ui.set('memtemp_line3', f"{temp}{symbol}")
+            for idx, field in enumerate(self.fields):
+                v_pos_x = v_pos[0]
+                v_pos_y = v_pos[1] + ((len(self.fields) - 3) * -1 * line_spacing)
+                ui.add_element(
+                    f"memtemp_{field}",
+                    LabeledValue(
+                        color=BLACK,
+                        label=f"{self.pad_text(field)}:",
+                        value="-",
+                        position=(v_pos_x, v_pos_y + (idx * line_spacing)),
+                        label_font=fonts.Small,
+                        text_font=fonts.Small,
+                        label_spacing=self.LABEL_SPACING,
+                    )
+                )
+                logging.info(f"memtemp: created '{field}'")
         else:
             # default to horizontal
-            ui.set(
-                'memtemp_line2',
-                self.pad_text(4, self.mem_usage(), "%") +
-                self.pad_text(5, self.cpu_load(), "%") +
-                self.pad_text(5, temp, symbol)
+            h_pos_x = h_pos[0]
+            h_pos_y = h_pos[1]
+            ui.add_element(
+                'memtemp_header',
+                Text(
+                    color=BLACK,
+                    value=" ".join([self.pad_text(x) for x in self.fields]),
+                    position=(h_pos_x, h_pos_y),
+                    font=fonts.Small,
+                )
             )
+            ui.add_element(
+                'memtemp_data',
+                Text(
+                    color=BLACK,
+                    value=" ".join([self.pad_text("-") for x in self.fields]),
+                    position=(h_pos_x, h_pos_y + line_spacing),
+                    font=fonts.Small,
+                )
+            )
+
+    def on_unload(self, ui):
+        with ui._lock:
+            if self.options['orientation'] == "vertical":
+                for idx, field in enumerate(self.fields):
+                    ui.remove_element(f"memtemp_{field}")
+            else:
+                # default to horizontal
+                ui.remove_element('memtemp_header')
+                ui.remove_element('memtemp_data')
+
+    def on_ui_update(self, ui):
+        if self.options['orientation'] == "vertical":
+            for idx, field in enumerate(self.fields):
+                ui.set(f"memtemp_{field}", getattr(self, self.ALLOWED_FIELDS[field])())
+        else:
+            # default to horizontal
+            data = " ".join([self.pad_text(getattr(self, self.ALLOWED_FIELDS[x])()) for x in self.fields])
+            ui.set('memtemp_data', data)
