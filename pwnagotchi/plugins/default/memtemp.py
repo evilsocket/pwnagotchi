@@ -143,7 +143,7 @@ class MemTemp(plugins.Plugin):
                 )
         else:
             # default to horizontal
-            h_pos_x = h_pos[0]
+            h_pos_x = h_pos[0] + ((len(self.fields) - 3) * -1 * 25)
             h_pos_y = h_pos[1]
             ui.add_element(
                 'memtemp_header',
