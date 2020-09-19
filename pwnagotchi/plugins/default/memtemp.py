@@ -20,7 +20,7 @@
 # - Added CPU frequency
 # - Made field types and order configurable (max 3 fields)
 # - Made line spacing and position configurable
-# - Refactored to dynamically generate UI elements
+# - Updated code to dynamically generate UI elements
 # - Changed horizontal UI elements to Text
 # - Updated to version 1.0.2
 ###############################################################
