@@ -125,6 +125,7 @@ class MemTemp(plugins.Plugin):
                 v_pos = (175, 61)
 
         if self.options['orientation'] == "vertical":
+            # Dynamically create the required LabeledValue objects
             for idx, field in enumerate(self.fields):
                 v_pos_x = v_pos[0]
                 v_pos_y = v_pos[1] + ((len(self.fields) - 3) * -1 * line_spacing)
