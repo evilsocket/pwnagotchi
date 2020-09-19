@@ -141,7 +141,6 @@ class MemTemp(plugins.Plugin):
                         label_spacing=self.LABEL_SPACING,
                     )
                 )
-                logging.info(f"memtemp: created '{field}'")
         else:
             # default to horizontal
             h_pos_x = h_pos[0]
