@@ -69,9 +69,9 @@ class GPS(plugins.Plugin):
             # Configure position
             pos = self.options['position'].split(',')
             pos = [int(x.strip()) for x in pos]
-            lat_pos = (pos[0], pos[1])
+            lat_pos = (pos[0] + 5, pos[1])
             lon_pos = (pos[0], pos[1] + line_spacing)
-            alt_pos = (pos[0], pos[1] + (2 * line_spacing))
+            alt_pos = (pos[0] + 5, pos[1] + (2 * line_spacing))
         except Exception:
             # Set default value based on display type
             if ui.is_waveshare_v2():
