@@ -84,8 +84,8 @@ class GPS(plugins.Plugin):
         else:
             # guessed values, add tested ones if you can
             lat_pos = (127, 51)
-            lon_pos = (127, 56)
-            alt_pos = (102, 71)
+            lon_pos = (122, 61)
+            alt_pos = (127, 71)
 
         label_spacing = 0
 
