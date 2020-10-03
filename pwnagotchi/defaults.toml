@@ -52,6 +52,7 @@ main.plugins.wpa-sec.whitelist = []
 main.plugins.wigle.enabled = false
 main.plugins.wigle.api_key = ""
 main.plugins.wigle.whitelist = []
+main.plugins.wigle.donate = true
 
 main.plugins.bt-tether.enabled = false
 
