@@ -178,7 +178,7 @@
       chdir: /usr/local/src/gratis
       target: rpi
       params:
-        EPD_IO: epd_io.h
+        EPD_IO: epd_io_free_uart.h
         PANEL_VERSION: 'V231_G2'
     when: gratisgit.changed
 
@@ -187,7 +187,7 @@
       chdir: /usr/local/src/gratis
       target: rpi-install
       params:
-        EPD_IO: epd_io.h
+        EPD_IO: epd_io_free_uart.h
         PANEL_VERSION: 'V231_G2'
     when: gratisgit.changed
 
