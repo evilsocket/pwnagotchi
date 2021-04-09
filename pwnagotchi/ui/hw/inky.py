@@ -42,6 +42,12 @@ class Inky(DisplayImpl):
             from pwnagotchi.ui.hw.libs.inkyphat.inkyphatfast import InkyPHATFast
             self._display = InkyPHATFast('black')
             self._display.set_border(InkyPHATFast.BLACK)
+        elif self.config['color'] == 'auto':
+            from inky.auto import auto
+            self._display = auto()
+            self._display.set_border(self._display.BLACK)
+            self._layout['width'] = self._display.WIDTH
+            self._layout['height'] = self._display.HEIGHT
         else:
             from inky import InkyPHAT
             self._display = InkyPHAT(self.config['color'])
