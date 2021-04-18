@@ -23,7 +23,7 @@ msgid "Hi, I'm Pwnagotchi! Starting ..."
 msgstr "Hola, soy Pwnagotchi! Empezando ..."
 
 msgid "New day, new hunt, new pwns!"
-msgstr "Nuevo día, nueva cazería, nuevos pwns!"
+msgstr "Nuevo día, nueva caceria, nuevos pwns!"
 
 msgid "Hack the Planet!"
 msgstr "Hackea el planeta!"
@@ -51,7 +51,7 @@ msgid "Shitty day :/"
 msgstr "Día de mierda :/"
 
 msgid "I'm extremely bored ..."
-msgstr "Estoy extremadamente aburrido ..."
+msgstr "Estoy muy aburrido ..."
 
 msgid "I'm very sad ..."
 msgstr "Estoy muy triste ..."
@@ -63,7 +63,7 @@ msgid "I'm living the life!"
 msgstr "Estoy viviendo la vida!"
 
 msgid "I pwn therefore I am."
-msgstr "Pwneo, por lo tanto, existo"
+msgstr "Pwneo y luego existo"
 
 msgid "So many networks!!!"
 msgstr "Cuantas redes!!!"
@@ -112,7 +112,7 @@ msgstr "Dónde está todo el mundo?"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "Tomándo una siesta por {secs}s ..."
+msgstr "Descansando durante {secs}s ..."
 
 msgid "Zzzzz"
 msgstr "Zzzzz"
@@ -164,7 +164,7 @@ msgid "Cool, we got {num} new handshake{plural}!"
 msgstr "Genial, obtuvimos {num} nuevo{plural} handshake{plural}!"
 
 msgid "Oops, something went wrong ... Rebooting ..."
-msgstr "Oops, algo salió mal ... Reiniciándo ..."
+msgstr "Oops, algo salió mal ... Reiniciando ..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
@@ -172,11 +172,11 @@ msgstr "Expulsamos {num} estaciones\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "Hicimos {num} nuevos amigos\n"
+msgstr "Hice {num} nuevos amigos\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Obtuvimos {num} handshakes\n"
+msgstr "Consegui {num} handshakes\n"
 
 msgid "Met 1 peer"
 msgstr "Conocí 1 igual"
