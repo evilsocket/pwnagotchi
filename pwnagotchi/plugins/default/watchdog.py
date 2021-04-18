@@ -33,4 +33,4 @@ class Watchdog(plugins.Plugin):
             logging.info('[WATCHDOG] Blind-Bug detected. Restarting.')
             mode = 'MANU' if agent.mode == 'manual' else 'AUTO'
             import pwnagotchi
-            pwnagotchi.restart(mode=mode)
+            pwnagotchi.reboot(mode=mode)
