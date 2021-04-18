@@ -12,12 +12,13 @@
 import logging
 import struct
 
+import RPi.GPIO as GPIO
+
+import pwnagotchi
+import pwnagotchi.plugins as plugins
+import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
-import pwnagotchi.ui.fonts as fonts
-import pwnagotchi.plugins as plugins
-import pwnagotchi
-import RPi.GPIO as GPIO
 
 
 # TODO: add enable switch in config.yml an cleanup all to the best place
@@ -50,12 +51,9 @@ class UPS:
         try:
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(4, GPIO.IN)
-            if (GPIO.input(4) == GPIO.HIGH):
-                return '⚡'
-            if (GPIO.input(4) == GPIO.LOW):
-                return '%'
+            return '+' if GPIO.input(4) == GPIO.HIGH else '-'
         except:
-            return '%'
+            return '-'
 
 
 class UPSLite(plugins.Plugin):
