@@ -4,6 +4,12 @@ PWN_VERSION=master
 
 all: clean install image
 
+langs:
+	@for lang in pwnagotchi/locale/*/; do\
+		echo "compiling language: $$lang ..."; \
+		./scripts/language.sh compile $$(basename $$lang); \
+    done
+
 install:
 	curl https://releases.hashicorp.com/packer/$(PACKER_VERSION)/packer_$(PACKER_VERSION)_linux_amd64.zip -o /tmp/packer.zip
 	unzip /tmp/packer.zip -d /tmp
