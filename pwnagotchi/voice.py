@@ -1,6 +1,6 @@
-import random
 import gettext
 import os
+import random
 
 
 class Voice:
@@ -158,6 +158,9 @@ class Voice:
 
     def on_rebooting(self):
         return self._("Oops, something went wrong ... Rebooting ...")
+
+    def on_uploading(self, to):
+        return self._("Uploading data to {to} ...").format(to=to)
 
     def on_last_session_data(self, last_session):
         status = self._('Kicked {num} stations\n').format(num=last_session.deauthed)

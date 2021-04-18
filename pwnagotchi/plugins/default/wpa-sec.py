@@ -111,8 +111,8 @@ class WpaSec(plugins.Plugin):
             if handshake_new:
                 logging.info("WPA_SEC: Internet connectivity detected. Uploading new handshakes to wpa-sec.stanev.org")
                 for idx, handshake in enumerate(handshake_new):
-                    display.set('status', f"Uploading handshake to wpa-sec.stanev.org ({idx + 1}/{len(handshake_new)})")
-                    display.update(force=True)
+                    display.on_uploading(f"wpa-sec.stanev.org ({idx + 1}/{len(handshake_new)})")
+
                     try:
                         self._upload_to_wpasec(handshake)
                         reported.append(handshake)
@@ -125,6 +125,8 @@ class WpaSec(plugins.Plugin):
                     except OSError as os_e:
                         logging.debug("WPA_SEC: %s", os_e)
                         continue
+
+                display.on_normal()
 
             if 'download_results' in self.options and self.options['download_results']:
                 cracked_file = os.path.join(handshake_dir, 'wpa-sec.cracked.potfile')

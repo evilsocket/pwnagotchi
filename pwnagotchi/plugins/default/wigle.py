@@ -180,8 +180,8 @@ class Wigle(plugins.Plugin):
                 csv_entries.append(new_entry)
                 no_err_entries.append(gps_file)
             if csv_entries:
-                display.set('status', "Uploading gps-data to wigle.net ...")
-                display.update(force=True)
+                display.on_uploading('wigle.net')
+
                 try:
                     _send_to_wigle(csv_entries, self.options['api_key'], donate=self.options['donate'])
                     reported += no_err_entries
@@ -193,3 +193,5 @@ class Wigle(plugins.Plugin):
                 except OSError as os_e:
                     self.skip += no_err_entries
                     logging.debug("WIGLE: Got the following error: %s", os_e)
+
+                display.on_normal()

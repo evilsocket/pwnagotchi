@@ -244,3 +244,7 @@ msgstr ""
 
 msgid "second"
 msgstr ""
+
+#, python-brace-format
+msgid "Uploading data to {to} ..."
+msgstr ""
