@@ -7,14 +7,18 @@
 # For Raspberry Pi Zero Ups Power Expansion Board with Integrated Serial Port S3U4
 # https://www.ebay.de/itm/For-Raspberry-Pi-Zero-Ups-Power-Expansion-Board-with-Integrated-Serial-Port-S3U4/323873804310
 # https://www.aliexpress.com/item/32888533624.html
+#
+# To display external power supply status you need to bridge the necessary pins on the UPS-Lite board. See instructions in the UPS-Lite repo.
 import logging
 import struct
 
+import RPi.GPIO as GPIO
+
+import pwnagotchi
+import pwnagotchi.plugins as plugins
+import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
-import pwnagotchi.ui.fonts as fonts
-import pwnagotchi.plugins as plugins
-import pwnagotchi
 
 
 # TODO: add enable switch in config.yml an cleanup all to the best place
@@ -43,6 +47,14 @@ class UPS:
         except:
             return 0.0
 
+    def charging(self):
+        try:
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(4, GPIO.IN)
+            return '+' if GPIO.input(4) == GPIO.HIGH else '-'
+        except:
+            return '-'
+
 
 class UPSLite(plugins.Plugin):
     __author__ = 'evilsocket@gmail.com'
@@ -66,7 +78,8 @@ class UPSLite(plugins.Plugin):
 
     def on_ui_update(self, ui):
         capacity = self.ups.capacity()
-        ui.set('ups', "%2i%%" % capacity)
+        charging = self.ups.charging()
+        ui.set('ups', "%2i%s" % (capacity, charging))
         if capacity <= self.options['shutdown']:
             logging.info('[ups_lite] Empty battery (<= %s%%): shuting down' % self.options['shutdown'])
             ui.update(force=True, new_data={'status': 'Battery exhausted, bye ...'})

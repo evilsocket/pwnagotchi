@@ -52,6 +52,7 @@ main.plugins.wpa-sec.whitelist = []
 main.plugins.wigle.enabled = false
 main.plugins.wigle.api_key = ""
 main.plugins.wigle.whitelist = []
+main.plugins.wigle.donate = true
 
 main.plugins.bt-tether.enabled = false
 
@@ -183,6 +184,9 @@ ui.faces.angry = "(-_-')"
 ui.faces.friend = "(♥‿‿♥)"
 ui.faces.broken = "(☓‿‿☓)"
 ui.faces.debug = "(#__#)"
+ui.faces.upload = "(1__0)"
+ui.faces.upload1 = "(1__1)"
+ui.faces.upload2 = "(0__1)"
 
 ui.web.enabled = true
 ui.web.address = "0.0.0.0"

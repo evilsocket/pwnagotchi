@@ -8,25 +8,26 @@ msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-09 17:42+0200\n"
-"PO-Revision-Date: 2019-10-09 21:07+0000\n"
-"Last-Translator: diegopastor <dpastor29@alumnos.uaq.mx>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: spanish\n"
+"PO-Revision-Date: 2020-08-25 23:06+0200\n"
+"Last-Translator: Sergio Ruiz <serginator@gmail.com>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.4.1\n"
 
 msgid "ZzzzZZzzzzZzzz"
 msgstr "ZzzzZZzzzzZzzz"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "Hola, soy Pwnagotchi! Empezando ..."
+msgstr "¡Hola, soy Pwnagotchi! Empezando ..."
 
 msgid "New day, new hunt, new pwns!"
-msgstr "Nuevo día, nueva cazería, nuevos pwns!"
+msgstr "Nuevo día, nueva caceria, nuevos pwns!"
 
 msgid "Hack the Planet!"
-msgstr "Hackea el planeta!"
+msgstr "¡Hackea el planeta!"
 
 msgid "AI ready."
 msgstr "IA lista."
@@ -36,51 +37,51 @@ msgstr "La red neuronal está lista."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "Oye, el canal {channel} está libre! Tú AP lo agradecerá."
+msgstr "¡Oye, el canal {channel} está libre! Tu AP lo agradecerá."
 
 msgid "I'm bored ..."
 msgstr "Estoy aburrido ..."
 
 msgid "Let's go for a walk!"
-msgstr "Vamos por un paseo!"
+msgstr "¡Vamos por un paseo!"
 
 msgid "This is the best day of my life!"
-msgstr "Este es el mejor día de mi vida!"
+msgstr "¡Este es el mejor día de mi vida!"
 
 msgid "Shitty day :/"
 msgstr "Día de mierda :/"
 
 msgid "I'm extremely bored ..."
-msgstr "Estoy extremadamente aburrido ..."
+msgstr "Estoy muy aburrido ..."
 
 msgid "I'm very sad ..."
 msgstr "Estoy muy triste ..."
 
 msgid "I'm sad"
-msgstr "Estoy triste."
+msgstr "Estoy triste"
 
 msgid "I'm living the life!"
-msgstr "Estoy viviendo la vida!"
+msgstr "¡Estoy viviendo la vida!"
 
 msgid "I pwn therefore I am."
-msgstr "Pwneo, por lo tanto, existo"
+msgstr "Pwneo, luego existo."
 
 msgid "So many networks!!!"
-msgstr "Cuantas redes!!!"
+msgstr "¡¡¡Cuántas redes!!!"
 
 msgid "I'm having so much fun!"
-msgstr "Me estoy divirtiendo mucho!"
+msgstr "¡Me estoy divirtiendo mucho!"
 
 msgid "My crime is that of curiosity ..."
-msgstr "Mi único crimen es la curiosidad ..."
+msgstr "Mi crimen es la curiosidad ..."
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you. {name}"
-msgstr "Hola {name}! encantado de conocerte."
+msgstr "¡Hola {name}! Encantado de conocerte. {name}"
 
 #, python-brace-format
 msgid "Unit {name} is nearby! {name}"
-msgstr "La unidad {name} está cerca!"
+msgstr "¡La unidad {name} está cerca! {name}"
 
 #, python-brace-format
 msgid "Uhm ... goodbye {name}"
@@ -92,14 +93,14 @@ msgstr "{name} se fue ..."
 
 #, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "Uy ... {name} se fue"
+msgstr "Ups ... {name} se fue."
 
 #, python-brace-format
 msgid "{name} missed!"
-msgstr "{name} perdido!"
+msgstr "¡{name} perdido!"
 
 msgid "Missed!"
-msgstr "Perdido!"
+msgstr "¡Perdido!"
 
 msgid "Nobody wants to play with me ..."
 msgstr "Nadie quiere jugar conmigo ..."
@@ -108,11 +109,11 @@ msgid "I feel so alone ..."
 msgstr "Me siento tan solo ..."
 
 msgid "Where's everybody?!"
-msgstr "Dónde está todo el mundo?"
+msgstr "¡¿Dónde está todo el mundo?!"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "Tomándo una siesta por {secs}s ..."
+msgstr "Descansando durante {secs}s ..."
 
 msgid "Zzzzz"
 msgstr "Zzzzz"
@@ -133,23 +134,23 @@ msgstr "Esperando {secs}s .."
 
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "Mirando al rededor ({secs}s)"
+msgstr "Mirando alrededor ({secs}s)"
 
 #, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr "Oye {what} seamos amigos!"
+msgstr "¡Oye {what} seamos amigos!"
 
 #, python-brace-format
 msgid "Associating to {what}"
-msgstr "Asociando a {what}"
+msgstr "Asociándome a {what}"
 
 #, python-brace-format
 msgid "Yo {what}!"
-msgstr "Ey {what}!"
+msgstr "¡Ey {what}!"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "Acabo de decidir que {mac} no necesita WiFi!"
+msgstr "¡Acabo de decidir que {mac} no necesita WiFi!"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
@@ -157,14 +158,14 @@ msgstr "Desautenticando a {mac}"
 
 #, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr "Expulsando y banneando a {mac}!"
+msgstr "¡Expulsando y baneando a {mac}!"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "Genial, obtuvimos {num} nuevo{plural} handshake{plural}!"
+msgstr "¡Genial, obtuvimos {num} nuevo{plural} handshake{plural}!"
 
 msgid "Oops, something went wrong ... Rebooting ..."
-msgstr "Oops, algo salió mal ... Reiniciándo ..."
+msgstr "Oops, algo salió mal ... Reiniciando ..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
@@ -172,27 +173,27 @@ msgstr "Expulsamos {num} estaciones\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "Hicimos {num} nuevos amigos\n"
+msgstr "Hice {num} nuevos amigos\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Obtuvimos {num} handshakes\n"
+msgstr "Consegui {num} handshakes\n"
 
 msgid "Met 1 peer"
-msgstr "Conocí 1 igual"
+msgstr "Conocí 1 colega"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "Conocí {num} iguales"
+msgstr "Conocí {num} colegas"
 
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
-"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
-"#pwnlog #pwnlife #hacktheplanet #skynet"
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi #pwnlog "
+"#pwnlife #hacktheplanet #skynet"
 msgstr ""
-"He estado pwneando por {duration} y expulsé {deauthed} clientes! También conocí"
-"{associated} nuevos amigos y me comí {handshakes} handshakes! #pwnagotchi "
+"¡He estado pwneando por {duration} y expulsé {deauthed} clientes! También "
+"conocí {associated} nuevos amigos y comí {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"

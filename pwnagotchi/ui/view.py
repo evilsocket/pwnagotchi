@@ -1,20 +1,20 @@
 import _thread
-from threading import Lock
-import time
 import logging
 import random
+import time
+from threading import Lock
+
 from PIL import ImageDraw
 
 import pwnagotchi
-import pwnagotchi.utils as utils
 import pwnagotchi.plugins as plugins
-from pwnagotchi.voice import Voice
-
-import pwnagotchi.ui.web as web
-import pwnagotchi.ui.fonts as fonts
 import pwnagotchi.ui.faces as faces
+import pwnagotchi.ui.fonts as fonts
+import pwnagotchi.ui.web as web
+import pwnagotchi.utils as utils
 from pwnagotchi.ui.components import *
 from pwnagotchi.ui.state import State
+from pwnagotchi.voice import Voice
 
 WHITE = 0xff
 BLACK = 0x00
@@ -344,6 +344,11 @@ class View(object):
         self.set('status', self._voice.on_unread_messages(count, total))
         self.update()
         time.sleep(5.0)
+
+    def on_uploading(self, to):
+        self.set('face', random.choice((faces.UPLOAD, faces.UPLOAD1, faces.UPLOAD2)))
+        self.set('status', self._voice.on_uploading(to))
+        self.update(force=True)
 
     def on_rebooting(self):
         self.set('face', faces.BROKEN)

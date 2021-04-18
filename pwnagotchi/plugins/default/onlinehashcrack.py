@@ -110,9 +110,8 @@ class OnlineHashCrack(plugins.Plugin):
             if handshake_new:
                 logging.info("OHC: Internet connectivity detected. Uploading new handshakes to onlinehashcrack.com")
                 for idx, handshake in enumerate(handshake_new):
-                    display.set('status',
-                                f"Uploading handshake to onlinehashcrack.com ({idx + 1}/{len(handshake_new)})")
-                    display.update(force=True)
+                    display.on_uploading(f"onlinehashcrack.com ({idx + 1}/{len(handshake_new)})")
+
                     try:
                         self._upload_to_ohc(handshake)
                         if handshake not in reported:
@@ -127,6 +126,9 @@ class OnlineHashCrack(plugins.Plugin):
                         self.skip.append(handshake)
                         logging.debug("OHC: %s", os_e)
                         continue
+
+                display.on_normal()
+
             if 'dashboard' in self.options and self.options['dashboard']:
                 cracked_file = os.path.join(handshake_dir, 'onlinehashcrack.cracked')
                 if os.path.exists(cracked_file):
