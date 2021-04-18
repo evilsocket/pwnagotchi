@@ -9,6 +9,7 @@ from datetime import datetime
 from pwnagotchi.utils import WifiInfo, FieldNotFoundError, extract_from_pcap, StatusFile, remove_whitelisted
 from threading import Lock
 from pwnagotchi import plugins
+from pwnagotchi._version import __version__ as __pwnagotchi_version__
 
 
 def _extract_gps_data(path):
@@ -34,14 +35,14 @@ def _format_auth(data):
     return out
 
 
-def _transform_wigle_entry(gps_data, pcap_data):
+def _transform_wigle_entry(gps_data, pcap_data, plugin_version):
     """
     Transform to wigle entry in file
     """
     dummy = StringIO()
     # write kismet header
     dummy.write(
-        "WigleWifi-1.4,appRelease=20190201,model=Kismet,release=2019.02.01.{},device=kismet,display=kismet,board=kismet,brand=kismet\n")
+        "WigleWifi-1.4,appRelease={},model=pwnagotchi,release={},device=pwnagotchi,display=kismet,board=kismet,brand=pwnagotchi\n".format(plugin_version, __pwnagotchi_version__))
     dummy.write(
         "MAC,SSID,AuthMode,FirstSeen,Channel,RSSI,CurrentLatitude,CurrentLongitude,AltitudeMeters,AccuracyMeters,Type")
 
@@ -62,7 +63,7 @@ def _transform_wigle_entry(gps_data, pcap_data):
     return dummy.getvalue()
 
 
-def _send_to_wigle(lines, api_key, timeout=30):
+def _send_to_wigle(lines, api_key, donate=True, timeout=30):
     """
     Uploads the file to wigle-net
     """
@@ -76,7 +77,7 @@ def _send_to_wigle(lines, api_key, timeout=30):
 
     headers = {'Authorization': f"Basic {api_key}",
                'Accept': 'application/json'}
-    data = {'donate': 'false'}
+    data = {'donate': 'on' if donate else 'false'}
     payload = {'file': dummy, 'type': 'text/csv'}
 
     try:
@@ -111,6 +112,9 @@ class Wigle(plugins.Plugin):
 
         if not 'whitelist' in self.options:
             self.options['whitelist'] = list()
+
+        if not 'donate' in self.options:
+            self.options['donate'] = True
 
         self.ready = True
 
@@ -172,14 +176,14 @@ class Wigle(plugins.Plugin):
                     logging.debug("WIGLE: %s", sc_e)
                     self.skip.append(gps_file)
                     continue
-                new_entry = _transform_wigle_entry(gps_data, pcap_data)
+                new_entry = _transform_wigle_entry(gps_data, pcap_data, self.__version__)
                 csv_entries.append(new_entry)
                 no_err_entries.append(gps_file)
             if csv_entries:
                 display.set('status', "Uploading gps-data to wigle.net ...")
                 display.update(force=True)
                 try:
-                    _send_to_wigle(csv_entries, self.options['api_key'])
+                    _send_to_wigle(csv_entries, self.options['api_key'], donate=self.options['donate'])
                     reported += no_err_entries
                     self.report.update(data={'reported': reported})
                     logging.info("WIGLE: Successfully uploaded %d files", len(no_err_entries))

@@ -1,213 +1,215 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <511225068@qq.com>, 2019.
-# 还有很多未翻译和翻译不准确，后期希望大家加入进来一起翻译！
-# 翻译可以联系QQ群：959559103 找 名字叫 初九 的 管理员
+# FIRST AUTHOR <shark_shaking@hotmail.com>, 2020.
+# 有很多翻譯不到味，如果有繁體愛好者，歡迎之後大家一起翻譯！
+
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 20:56+0200\n"
-"PO-Revision-Date: 2019-11-02 10:00+0008\n"
-"Last-Translator: 极客之眼-初九 <511225068@qq.com>\n"
+"POT-Creation-Date: 2020-10-21 15:56+0200\n"
+"PO-Revision-Date: 2020-10-22 10:00+0008\n"
+"Last-Translator: ShaqKSmith <shark_shaking@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: chinese\n"
+"Language: traditional chinese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "ZzzzZZzzzzZzzz"
-msgstr ""
+msgstr "ZzzzZZzzzzZzzz"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "主人，你好.我是WiFi狩猎兽..."
+msgstr "HI!我是Pwnagotchi!\n程式啟動..."
 
 msgid "New day, new hunt, new pwns!"
-msgstr "美好的一天，狩猎开始!"
+msgstr "新的一天!\n新的狩獵!新的入侵!"
 
 msgid "Hack the Planet!"
-msgstr "我要入侵整个地球!"
+msgstr "我要駭入\n地球的所有人!"
 
 msgid "AI ready."
-msgstr "人工智能已启动."
+msgstr "人工智慧已啟動."
 
 msgid "The neural network is ready."
-msgstr "神经元网络已启动."
+msgstr "神經網路已啟動."
 
 msgid "Generating keys, do not turn off ..."
-msgstr "创建密钥中, 请勿断电..."
+msgstr "產生金鑰中,\n請勿關閉..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "嘿，频道{channel}是免费的！你的AP会说谢谢。"
+msgstr "嘿,{channel}很順暢!\n你的WIFI會感謝你的."
 
 msgid "I'm bored ..."
-msgstr "我无聊了..."
+msgstr "我好無聊..."
 
 msgid "Let's go for a walk!"
-msgstr "主人带我出门走走吧!"
+msgstr "我們出去走走吧!"
 
 msgid "This is the best day of my life!"
-msgstr "这是我生命中最美好的一天!"
+msgstr "這是我生命中最美好的一天!"
 
 msgid "Shitty day :/"
-msgstr "今天不开心 :/"
+msgstr "糟糕的一天 :/"
 
 msgid "I'm extremely bored ..."
-msgstr "主人，找点事做吧 ..."
+msgstr "我超無聊的..."
 
 msgid "I'm very sad ..."
-msgstr "我很伤心..."
+msgstr "我好難過..."
 
 msgid "I'm sad"
-msgstr "我伤心了"
+msgstr "傷心。"
 
 msgid "I'm living the life!"
-msgstr ""
+msgstr "真是充實的一生!"
 
 msgid "I pwn therefore I am."
-msgstr ""
+msgstr "我駭故我在."
 
 msgid "So many networks!!!"
-msgstr "哇，好多猎物!!!"
+msgstr "好多網路啊！！！"
 
 msgid "I'm having so much fun!"
-msgstr "我玩的好开心!"
+msgstr "我玩的超級開心!"
 
 msgid "My crime is that of curiosity ..."
-msgstr "我最大的缺点就是好奇..."
+msgstr "我的缺點就是\n太好奇了..."
 
 #, python-brace-format
 msgid "Hello {name}! Nice to meet you."
-msgstr "你好{name}!很高兴认识你."
+msgstr "Hello{name}!\n很高興認識你."
 
 #, python-brace-format
 msgid "Unit {name} is nearby!"
-msgstr "小队{name}就在附近！"
+msgstr "{name}\n就在附近!"
 
 #, python-brace-format
 msgid "Uhm ... goodbye {name}"
-msgstr "额 ... 再见{name}"
+msgstr "啊 ... \n拜拜{name}"
 
 #, python-brace-format
 msgid "{name} is gone ..."
-msgstr "{name} 它走了 ..."
+msgstr "{name}\n不見了 ..."
 
 #, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "哎呀... {name} 离开了."
+msgstr "歐哦...\n{name}\n不見了."
 
 #, python-brace-format
 msgid "{name} missed!"
-msgstr "刚刚错过了{name}!"
+msgstr "我剛剛錯過了{name}!"
 
 msgid "Missed!"
-msgstr "刚刚错过了一个对的它"
+msgstr "又錯過了!"
 
 msgid "Good friends are a blessing!"
-msgstr "有个好朋友就是福气"
+msgstr "有個好朋友\n真幸福!"
 
 msgid "I love my friends!"
-msgstr "我爱我的朋友!"
+msgstr "我喜歡\n我的朋友!"
 
 msgid "Nobody wants to play with me ..."
-msgstr "没有人愿意和我玩耍..."
+msgstr "沒人想跟我玩..."
 
 msgid "I feel so alone ..."
-msgstr "我可能是天煞孤星..."
+msgstr "我感覺好孤單..."
 
 msgid "Where's everybody?!"
-msgstr "朋友们都去哪里了?!"
+msgstr "大家都去哪裡了?!"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "小憩{secs}s ..."
+msgstr "我想瞇{secs}秒一下..."
 
 msgid "Zzzzz"
-msgstr ""
+msgstr "Zzzzz"
 
 #, python-brace-format
 msgid "ZzzZzzz ({secs}s)"
-msgstr ""
+msgstr "ZzzZzzz({secs}秒)"
 
 msgid "Good night."
-msgstr "晚安宝贝."
+msgstr "晚安."
 
 msgid "Zzz"
-msgstr ""
+msgstr "Zzz"
 
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr "等待{secs}s ..."
+msgstr "等我{secs}秒..."
 
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "追踪四周猎物({secs}s)"
+msgstr "環顧四周({secs}秒)"
 
 #, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr "嗨{what}我们做朋友吧!"
+msgstr "嗨\n{what}\n讓我我們來當朋友吧!"
 
 #, python-brace-format
 msgid "Associating to {what}"
-msgstr "正在连接到{what}"
+msgstr "正在連接\n{what}"
 
 #, python-brace-format
 msgid "Yo {what}!"
-msgstr "追踪到你了{what}!"
+msgstr "喲,\n{what}!"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "猎物{mac}不需要联网，我们给它断开!"
+msgstr "我要讓\n{mac}\n斷線!\n他不需要上網!"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
-msgstr "开始攻击猎物{mac}"
+msgstr "解除\n{mac}\n的授權中"
 
 #, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr "已捕获{mac}!"
+msgstr "把\n{mac}\n踢出中!"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "太酷了, 我们抓到了{num}新的猎物{plural}!"
+msgstr "酷哦,我們抓到{num}個\n新的握手包{plural}!"
 
 #, python-brace-format
 msgid "You have {count} new message{plural}!"
-msgstr "主人，有{count}新消息{plural}!"
+msgstr "你有{count}個新訊息{plural}!"
 
 msgid "Oops, something went wrong ... Rebooting ..."
-msgstr "行动,额等等有点小问题... 重启ing ..."
+msgstr "喔歐,有些地方出錯了...\n重新啟動中..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "限制了{num}个猎物\n"
+msgstr "踢了 {num} 個設備\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "交了{num}新朋友\n"
+msgstr "交了 {num} 個新朋友\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "捕获了{num}握手包\n"
+msgstr "捕獲了 {num} 個握手包\n"
 
-msgid "Met 1 peer"
-msgstr "有{num}同龄人"
+msgid "Met 1 peer 同好"
+msgstr "遇到了 １ 個"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr ""
+msgstr "遇到了 {num} 個同好"
 
 #, python-brace-format
 msgid ""
 "I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
-msgstr ""
+msgstr "我花了{duration}的時間\n駭入和踢了{deauthed}好多設備.\n"
+"我還交了好多{associated}新朋友,\n而且抓到了{handshakes}握手包!"
+"#pwnagotchi#入侵日志 #駭客人生 #入侵整個星球 #天網"
 
 msgid "hours"
-msgstr "时"
+msgstr "時"
 
 msgid "minutes"
 msgstr "分"
@@ -216,7 +218,7 @@ msgid "seconds"
 msgstr "秒"
 
 msgid "hour"
-msgstr "时"
+msgstr "時"
 
 msgid "minute"
 msgstr "分"

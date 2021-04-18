@@ -82,6 +82,7 @@ class WpaSec(plugins.Plugin):
             self.options['whitelist'] = list()
 
         self.ready = True
+        logging.info("WPA_SEC: plugin loaded")
 
     def on_webhook(self, path, request):
         from flask import make_response, redirect

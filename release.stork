@@ -1,0 +1,7 @@
+#!/usr/bin/env stork -f
+
+version:parser "__version__\\s*=\\s*['\"]([\\d\\.ab]+)[\"']"
+version:file "pwnagotchi/_version.py"
+version:from_user
+
+git:create_tag $VERSION
