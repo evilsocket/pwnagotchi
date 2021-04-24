@@ -46,7 +46,14 @@ FILES_TO_BACKUP="/root/brain.nn \
   /var/log/pwnagotchi*.gz \
   /home/pi/.ssh \
   /home/pi/.bashrc \
-  /home/pi/.profile"
+  /home/pi/.profile \
+  /root/.api-report.json \
+  /root/.auto-update \
+  /root/.bt-tether* \
+  /root/.net_pos_saved \
+  /root/.ohc_uploads \
+  /root/.wigle_uploads \
+  /root/.wpa_sec_uploads"
 
 ping -c 1 "${UNIT_HOSTNAME}" > /dev/null 2>&1 || {
   echo "@ unit ${UNIT_HOSTNAME} can't be reached, make sure it's connected and a static IP assigned to the USB interface."
