@@ -33,6 +33,7 @@
         - bluetooth.service
         - triggerhappy.service
         - ifup@wlan0.service
+        - dnsmasq.service
     packages:
       bettercap:
         url: "https://github.com/bettercap/bettercap/releases/download/v2.31.0/bettercap_linux_armhf_v2.31.0.zip"
