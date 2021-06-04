@@ -83,8 +83,13 @@ def do_auto_mode(agent):
                 plugins.on('internet_available', agent)
 
         except Exception as e:
-            logging.exception("main loop exception (%s)", e)
-
+            if str(e).find("wifi.interface not set") > 0:
+                logging.exception("main loop exception due to unavailable wifi device, likely programmatically disabled (%s)", e)
+                logging.info("sleeping 60 seconds then advancing to next epoch to allow for cleanup code to trigger")
+                time.sleep(60)
+                agent.next_epoch()
+            else:
+                logging.exception("main loop exception (%s)", e)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
