@@ -275,6 +275,9 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('ws_213bc', 'ws213bc', 'waveshare_213bc', 'waveshare213bc'):
         config['ui']['display']['type'] = 'waveshare213bc'
 
+    elif config['ui']['display']['type'] in ('waveshare35lcd'):
+        config['ui']['display']['type'] = 'waveshare35lcd'
+
     elif config['ui']['display']['type'] in ('spotpear24inch'):
         config['ui']['display']['type'] = 'spotpear24inch'
 
