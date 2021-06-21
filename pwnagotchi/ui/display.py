@@ -67,6 +67,9 @@ class Display(View):
     def is_waveshare213bc(self):
         return self._implementation.name == 'waveshare213bc'
 
+    def is_waveshare35lcd(self):
+        return self._implementation.name == 'waveshare35lcd'
+
     def is_spotpear24inch(self):
         return self._implementation.name == 'spotpear24inch'
 
