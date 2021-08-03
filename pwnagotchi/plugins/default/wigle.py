@@ -20,14 +20,8 @@ def _extract_gps_data(path):
     """
 
     try:
-        if path.endswith('.geo.json'):
-            with open(path, 'r') as json_file:
-                tempJson = json.load(json_file)
-                d = datetime.utcfromtimestamp(int(tempJson["ts"]))
-                return {"Latitude": tempJson["location"]["lat"], "Longitude": tempJson["location"]["lng"], "Altitude": 10, "Updated": d.strftime('%Y-%m-%dT%H:%M:%S.%f')}
-        else:
-            with open(path, 'r') as json_file:
-                return json.load(json_file)
+        with open(path, 'r') as json_file:
+            return json.load(json_file)
     except OSError as os_err:
         raise os_err
     except json.JSONDecodeError as json_err:
@@ -74,8 +68,6 @@ def _send_to_wigle(lines, api_key, donate=True, timeout=30):
     Uploads the file to wigle-net
     """
 
-    logging.info(lines)
-
     dummy = StringIO()
 
     for line in lines:
@@ -87,7 +79,7 @@ def _send_to_wigle(lines, api_key, donate=True, timeout=30):
                'Accept': 'application/json'}
     data = {'donate': 'on' if donate else 'false'}
     payload = {'file': dummy, 'type': 'text/csv'}
-    logging.info(dummy.getvalue())
+
     try:
         res = requests.post('https://api.wigle.net/api/v2/file/upload',
                             data=data,
@@ -125,14 +117,12 @@ class Wigle(plugins.Plugin):
             self.options['donate'] = True
 
         self.ready = True
-        logging.info("WIGLE: ready")
 
     def on_internet_available(self, agent):
         """
         Called in manual mode when there's internet connectivity
         """
         if not self.ready or self.lock.locked():
-            logging.info("WIGLE: error with api key")
             return
 
         from scapy.all import Scapy_Exception
@@ -144,7 +134,7 @@ class Wigle(plugins.Plugin):
         all_files = os.listdir(handshake_dir)
         all_gps_files = [os.path.join(handshake_dir, filename)
                          for filename in all_files
-                         if filename.endswith('.gps.json') or filename.endswith('.paw-gps.json') or filename.endswith('.geo.json')]
+                         if filename.endswith('.gps.json')]
 
         all_gps_files = remove_whitelisted(all_gps_files, self.options['whitelist'])
         new_gps_files = set(all_gps_files) - set(reported) - set(self.skip)
@@ -153,12 +143,7 @@ class Wigle(plugins.Plugin):
             csv_entries = list()
             no_err_entries = list()
             for gps_file in new_gps_files:
-                if gps_file.endswith('.gps.json'):
-                    pcap_filename = gps_file.replace('.gps.json', '.pcap')
-                if gps_file.endswith('.paw-gps.json'):
-                    pcap_filename = gps_file.replace('.paw-gps.json', '.pcap')
-                if gps_file.endswith('.geo.json'):
-                    pcap_filename = gps_file.replace('.geo.json', '.pcap')
+                pcap_filename = gps_file.replace('.gps.json', '.pcap')
                 if not os.path.exists(pcap_filename):
                     logging.debug("WIGLE: Can't find pcap for %s", gps_file)
                     self.skip.append(gps_file)
