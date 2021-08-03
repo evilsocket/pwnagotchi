@@ -74,8 +74,6 @@ def _send_to_wigle(lines, api_key, donate=True, timeout=30):
     Uploads the file to wigle-net
     """
 
-    logging.info(lines)
-
     dummy = StringIO()
 
     for line in lines:
@@ -87,7 +85,6 @@ def _send_to_wigle(lines, api_key, donate=True, timeout=30):
                'Accept': 'application/json'}
     data = {'donate': 'on' if donate else 'false'}
     payload = {'file': dummy, 'type': 'text/csv'}
-    logging.info(dummy.getvalue())
     try:
         res = requests.post('https://api.wigle.net/api/v2/file/upload',
                             data=data,
@@ -132,7 +129,6 @@ class Wigle(plugins.Plugin):
         Called in manual mode when there's internet connectivity
         """
         if not self.ready or self.lock.locked():
-            logging.info("WIGLE: error with api key")
             return
 
         from scapy.all import Scapy_Exception
