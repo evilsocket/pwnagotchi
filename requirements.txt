@@ -12,7 +12,7 @@ file-read-backwards==2.0.0
 numpy==1.20.2
 inky==1.2.0
 smbus2==0.3.0
-Pillow==5.4.1
+Pillow==8.3.2
 spidev==3.4
 gast==0.2.2
 flask==1.0.2
