@@ -32,11 +32,13 @@ class GPS(plugins.Plugin):
             try:
                 agent.run("gps off")
             except Exception:
+                logging.info(f"bettercap gps module was already off")
                 pass
 
             agent.run(f"set gps.device {self.options['device']}")
             agent.run(f"set gps.baudrate {self.options['speed']}")
             agent.run("gps on")
+            logging.info(f"bettercap gps module enabled on {self.options['device']}")
             self.running = True
         else:
             logging.warning("no GPS detected")
