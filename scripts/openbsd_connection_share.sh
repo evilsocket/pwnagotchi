@@ -10,6 +10,6 @@ if [ "${USB_IFACE}" == "urndis0" ]; then
 	echo "match out on egress inet from ${USB_IFACE}:network to any nat-to (egress:0)" | pfctl -f -
 	echo "sharing connecting from upstream interface to usb interface ${USB_IFACE} ..."
 else
-	echo "can't find usb interface with ip $USB_IP"
+	echo "can't find usb interface with ip ${USB_IFACE}"
 	exit 1
 fi
