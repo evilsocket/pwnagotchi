@@ -307,3 +307,5 @@ def do_rotate(filename, stats, cfg):
     with open(log_filename, 'rb') as src:
         with gzip.open(archive_filename, 'wb') as dst:
             dst.writelines(src)
+
+    os.remove(log_filename)
