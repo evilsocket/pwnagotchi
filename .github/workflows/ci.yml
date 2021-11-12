@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: build image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: install qemu
+        run: apt-get -y update && apt-get -y install qemu-system-arm qemu-user-static binfmt-support bmap-tools kpartx && update-binfmts --display
+      - name: install from 'make install'
+        run: make install
+      - name: create image
+        run: make image -e PWN_HOSTNAME=pwnagotchi PWN_VERSION=0.0.1
