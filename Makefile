@@ -15,7 +15,7 @@ image:
 	docker run \
 		--rm \
 		--privileged \
-		-v ${PWD}:/build \
+		-v ${PWD}/builder:/build \
 		ghcr.io/solo-io/packer-plugin-arm-image build /build/pwnagotchi.json
 	mv builder/output-pwnagotchi/image pwnagotchi-raspbian-lite-$(PWN_VERSION).img
 	sha256sum pwnagotchi-raspbian-lite-$(PWN_VERSION).img > pwnagotchi-raspbian-lite-$(PWN_VERSION).sha256
