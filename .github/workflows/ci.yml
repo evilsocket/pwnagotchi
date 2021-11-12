@@ -11,7 +11,5 @@ jobs:
         uses: actions/checkout@v2
       - name: install qemu
         run: sudo apt-get -y update && sudo apt-get -y install qemu-system-arm qemu-user-static binfmt-support bmap-tools kpartx && sudo update-binfmts --display
-      - name: install from 'make install'
-        run: make install
       - name: create image
         run: make image -e PWN_HOSTNAME=pwnagotchi PWN_VERSION=0.0.1

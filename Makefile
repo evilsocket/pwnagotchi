@@ -10,21 +10,18 @@ langs:
 		./scripts/language.sh compile $$(basename $$lang); \
     done
 
-install:
-	curl https://releases.hashicorp.com/packer/$(PACKER_VERSION)/packer_$(PACKER_VERSION)_linux_amd64.zip -o /tmp/packer.zip
-	unzip /tmp/packer.zip -d /tmp
-	sudo mv /tmp/packer /usr/bin/packer
-	git clone https://github.com/solo-io/packer-plugin-arm-image  /tmp/packer-plugin-arm-image
-	cd /tmp/packer-plugin-arm-image
-	go mod download
-	go build
-	sudo packer-builder-arm-image /usr/bin
-
 image:
-	cd builder && sudo /usr/bin/packer build -var "pwn_hostname=$(PWN_HOSTNAME)" -var "pwn_version=$(PWN_VERSION)" pwnagotchi.json
-	sudo mv builder/output-pwnagotchi/image pwnagotchi-raspbian-lite-$(PWN_VERSION).img
-	sudo sha256sum pwnagotchi-raspbian-lite-$(PWN_VERSION).img > pwnagotchi-raspbian-lite-$(PWN_VERSION).sha256
-	sudo zip pwnagotchi-raspbian-lite-$(PWN_VERSION).zip pwnagotchi-raspbian-lite-$(PWN_VERSION).sha256 pwnagotchi-raspbian-lite-$(PWN_VERSION).img
+	cd builder && \
+	docker run \
+		--rm \
+		--privileged \
+		-v ${PWD}:/build:ro \
+		-v ${PWD}/packer_cache:/build/packer_cache \
+		-v ${PWD}/output-arm-image:/build/output-arm-image \
+		ghcr.io/solo-io/packer-plugin-arm-image build -var "pwn_hostname=$(PWN_HOSTNAME)" -var "pwn_version=$(PWN_VERSION)" pwnagotchi.json
+	mv builder/output-pwnagotchi/image pwnagotchi-raspbian-lite-$(PWN_VERSION).img
+	sha256sum pwnagotchi-raspbian-lite-$(PWN_VERSION).img > pwnagotchi-raspbian-lite-$(PWN_VERSION).sha256
+	zip pwnagotchi-raspbian-lite-$(PWN_VERSION).zip pwnagotchi-raspbian-lite-$(PWN_VERSION).sha256 pwnagotchi-raspbian-lite-$(PWN_VERSION).img
 
 clean:
 	rm -rf /tmp/packer-builder-arm-image
