@@ -16,7 +16,7 @@ image:
 		--rm \
 		--privileged \
 		-v ${PWD}:/build \
-		ghcr.io/solo-io/packer-plugin-arm-image build -var "pwn_hostname=$(PWN_HOSTNAME)" -var "pwn_version=$(PWN_VERSION)" /build/pwnagotchi.json
+		ghcr.io/solo-io/packer-plugin-arm-image build /build/pwnagotchi.json
 	mv builder/output-pwnagotchi/image pwnagotchi-raspbian-lite-$(PWN_VERSION).img
 	sha256sum pwnagotchi-raspbian-lite-$(PWN_VERSION).img > pwnagotchi-raspbian-lite-$(PWN_VERSION).sha256
 	zip pwnagotchi-raspbian-lite-$(PWN_VERSION).zip pwnagotchi-raspbian-lite-$(PWN_VERSION).sha256 pwnagotchi-raspbian-lite-$(PWN_VERSION).img
