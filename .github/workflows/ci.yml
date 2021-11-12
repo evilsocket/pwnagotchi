@@ -10,7 +10,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: install qemu
-        run: apt-get -y update && apt-get -y install qemu-system-arm qemu-user-static binfmt-support bmap-tools kpartx && update-binfmts --display
+        run: sudo apt-get -y update && sudo apt-get -y install qemu-system-arm qemu-user-static binfmt-support bmap-tools kpartx && sudo update-binfmts --display
       - name: install from 'make install'
         run: make install
       - name: create image
