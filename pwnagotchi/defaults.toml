@@ -85,6 +85,9 @@ main.plugins.memtemp.orientation = "horizontal"
 main.plugins.paw-gps.enabled = false
 main.plugins.paw-gps.ip = ""
 
+main.plugins.ups_lite.enabled = false
+main.plugins.ups_lite.shutdown = 2
+
 main.plugins.gpio_buttons.enabled = false
 
 main.plugins.led.enabled = true
