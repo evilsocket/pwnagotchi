@@ -14,8 +14,8 @@
       "inline": [
         "sed -i 's/^\\([^#]\\)/#\\1/g' /etc/ld.so.preload",
         "dpkg-architecture",
-        "apt-get -y update",
-        "apt-get install -y ansible"
+        "apt -y update --allow-releaseinfo-change",
+        "apt install -y ansible"
       ]
     },
     {
