@@ -105,6 +105,7 @@
           - fonts-ipaexfont-gothic
           - cryptsetup
           - dnsmasq
+          - python3-numpy
 
   tasks:
   - name: change hostname
