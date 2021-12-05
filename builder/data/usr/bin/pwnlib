@@ -158,7 +158,7 @@ network={
     frequency=2437
 }
 EOF
-        >/dev/null 2>&1 wpa_supplicant -D nl80211 -i wlan0 -c /tmp/wpa_supplicant.conf &
+        >/dev/null 2>&1 wpa_supplicant -u -s -O -D nl80211 -i wlan0 -c /tmp/wpa_supplicant.conf &
       fi
 
       if ! pgrep dnsmasq >/dev/null 2>&1; then
