@@ -256,13 +256,13 @@
   - name: install opencv-python
     pip:
       name: "https://www.piwheels.org/simple/opencv-python/opencv_python-3.4.3.18-cp37-cp37m-linux_armv7l.whl"
-      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
+      extra_args: "--no-deps --no-cache-dir --platform=linux_armv7l --only-binary=:all: --target={{ pip_target.stdout }}"
     when: (pip_packages['opencv-python'] is undefined) or (pip_packages['opencv-python'] != '3.4.3.18')
 
   - name: install tensorflow
     pip:
       name: "https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv7l.whl"
-      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
+      extra_args: "--no-deps --no-cache-dir --platform=linux_armv7l --only-binary=:all: --target={{ pip_target.stdout }}"
     when: (pip_packages['tensorflow'] is undefined) or (pip_packages['tensorflow'] != '1.13.1')
 
   - name: install pwnagotchi wheel and dependencies
