@@ -261,9 +261,9 @@
 
   - name: install tensorflow
     pip:
-      name: "https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
+      name: "https://www.piwheels.org/simple/tensorflow/tensorflow-1.14.0-cp37-none-linux_armv6l.whl"
       extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
-    when: (pip_packages['tensorflow'] is undefined) or (pip_packages['tensorflow'] != '1.13.1')
+    when: (pip_packages['tensorflow'] is undefined) or (pip_packages['tensorflow'] != '1.14.0')
 
   - name: install pwnagotchi wheel and dependencies
     pip:
