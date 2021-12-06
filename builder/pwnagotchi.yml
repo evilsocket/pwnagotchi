@@ -167,7 +167,7 @@
 
   - name: upgrade apt distro
     apt:
-      upgrade: dist
+      upgrade: full
 
   - name: install packages
     apt:
