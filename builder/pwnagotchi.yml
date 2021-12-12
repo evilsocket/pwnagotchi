@@ -115,7 +115,7 @@
       mode: 0644
       owner: root
       content: |
-        line pwnagotchi
+        pwnagotchi
 
   - name: create hosts file
     copy:
@@ -123,12 +123,11 @@
       mode: 0644
       owner: root
       content: |
-        line 127.0.0.1       localhost
-        line ::1             localhost ip6-localhost ip6-loopback
-        line ff02::1         ip6-allnodes
-        line ff02::2         ip6-allrouters
-        line
-        line 127.0.1.1       pwnagotchi
+        127.0.0.1       localhost
+        ::1             localhost ip6-localhost ip6-loopback
+        ff02::1         ip6-allnodes
+        ff02::2         ip6-allrouters
+        127.0.1.1       pwnagotchi
 
   - name: disable sap plugin for bluetooth.service
     lineinfile:
