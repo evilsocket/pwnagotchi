@@ -69,8 +69,8 @@
           - libopenmpi-dev
           - libatlas-base-dev
           - libjasper-dev
-          - libqtgui4
-          - libqt4-test
+          - libqt5gui5
+          - libqt5test5
           - libopenjp2-7
           - libtiff5
           - tcpdump
