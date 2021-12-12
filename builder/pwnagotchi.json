@@ -3,8 +3,8 @@
     {
       "name": "pwnagotchi",
       "type": "arm-image",
-      "iso_url": "https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip",
-      "iso_checksum": "9e5cf24ce483bb96e7736ea75ca422e3560e7b455eee63dd28f66fa1825db70e",
+      "iso_url": "https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-11-08/2021-10-30-raspios-bullseye-armhf-lite.zip",
+      "iso_checksum": "008d7377b8c8b853a6663448a3f7688ba98e2805949127a1d9e8859ff96ee1a9",
       "target_image_size": 6442450944
     }
   ],
