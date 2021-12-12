@@ -109,11 +109,13 @@
           - python3-rpi.gpio
 
   tasks:
-  - name: change hostname
-    hostname:
-      name: "{{pwnagotchi.hostname}}"
-    when: lookup('file', '/etc/hostname') == "raspberrypi"
-    register: hostname
+  - name: Create hostname
+    copy:
+      dest: "/etc/hostname"
+      mode: 0644
+      owner: root
+      content: |
+        line pwnagotchi
 
   - name: add hostname to /etc/hosts
     lineinfile:
