@@ -69,14 +69,14 @@
           - libopenmpi-dev
           - libatlas-base-dev
           - libjasper-dev
-          - libqt5gui5
-          - libqt5test5
+          - libqtgui4
+          - libqt4-test
           - libopenjp2-7
           - libtiff5
           - tcpdump
           - lsof
-          - libilmbase25
-          - libopenexr25
+          - libilmbase23
+          - libopenexr23
           - libgstreamer1.0-0
           - libavcodec58
           - libavformat58
@@ -109,25 +109,19 @@
           - python3-rpi.gpio
 
   tasks:
-  - name: Create hostname file
-    copy:
-      dest: "/etc/hostname"
-      mode: 0644
-      owner: root
-      content: |
-        pwnagotchi
+  - name: change hostname
+    hostname:
+      name: "{{pwnagotchi.hostname}}"
+    when: lookup('file', '/etc/hostname') == "raspberrypi"
+    register: hostname
 
-  - name: create hosts file
-    copy:
-      dest: "/etc/hosts"
-      mode: 0644
-      owner: root
-      content: |
-        127.0.0.1       localhost
-        ::1             localhost ip6-localhost ip6-loopback
-        ff02::1         ip6-allnodes
-        ff02::2         ip6-allrouters
-        127.0.1.1       pwnagotchi
+  - name: add hostname to /etc/hosts
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^127\.0\.1\.1[ \t]+raspberrypi'
+      line: "127.0.1.1\t{{pwnagotchi.hostname}}"
+      state: present
+    when: hostname.changed
 
   - name: disable sap plugin for bluetooth.service
     lineinfile:
