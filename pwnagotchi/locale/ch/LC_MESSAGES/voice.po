@@ -40,7 +40,7 @@ msgstr "创建密钥中, 请勿断电..."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "嘿，频道{channel}是免费的！你的AP会说谢谢。"
+msgstr "嘿，信道{channel}是开放的！你的AP会说谢谢。"
 
 msgid "I'm bored ..."
 msgstr "我无聊了..."
@@ -64,10 +64,10 @@ msgid "I'm sad"
 msgstr "我伤心了"
 
 msgid "I'm living the life!"
-msgstr ""
+msgstr "好兴奋啊。"
 
 msgid "I pwn therefore I am."
-msgstr ""
+msgstr "破解是我的工作。"
 
 msgid "So many networks!!!"
 msgstr "哇，好多猎物!!!"
@@ -193,11 +193,11 @@ msgid "Got {num} handshakes\n"
 msgstr "捕获了{num}握手包\n"
 
 msgid "Met 1 peer"
-msgstr "有{num}同龄人"
+msgstr "遇到1位同行"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr ""
+msgstr "遇到{num}位同行"
 
 #, python-brace-format
 msgid ""
@@ -205,6 +205,8 @@ msgid ""
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
+"虽然被{duration}中的{deauthed}的AP拒绝了!"
+"我遇见了{associated}位新朋友和吃了{handshakes}个握手包!"
 
 msgid "hours"
 msgstr "时"
