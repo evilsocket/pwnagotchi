@@ -182,7 +182,7 @@
 
   - name: clone papirus repository
     git:
-      repo: https://github.com/repaper/gratis.git
+      repo: https://github.com/scifijunk/gratis.git
       dest: /usr/local/src/gratis
     register: gratisgit
 
