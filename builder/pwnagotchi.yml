@@ -182,7 +182,7 @@
 
   - name: clone papirus repository
     git:
-      repo: https://github.com/scifijunk/gratis.git
+      repo: https://github.com/repaper/gratis.git
       dest: /usr/local/src/gratis
     register: gratisgit
 
@@ -226,7 +226,7 @@
 
   - name: clone pwnagotchi repository
     git:
-      repo: https://github.com/scifijunk/pwnagotchi.git
+      repo: https://github.com/evilsocket/pwnagotchi.git
       dest: /usr/local/src/pwnagotchi
     register: pwnagotchigit
 
