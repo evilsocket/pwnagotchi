@@ -107,6 +107,7 @@
           - cryptsetup
           - dnsmasq
           - python3-rpi.gpio
+          - firmware-ralink
 
   tasks:
   - name: change hostname
