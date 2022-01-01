@@ -7,7 +7,10 @@
       hostname: "{{ lookup('env', 'PWN_HOSTNAME') | default('pwnagotchi', true) }}"
       version: "{{ lookup('env', 'PWN_VERSION') | default('master', true) }}"
     system:
-      boot_options:
+      boot_options4:
+        - "dtoverlay=disable-wifi"
+        - "arm_freq=800"
+      boot_optionsall:
         - "dtoverlay=dwc2"
         - "dtoverlay=spi1-3cs"
         - "dtparam=spi=on"
@@ -342,8 +345,15 @@
     file:
       path: /boot/ssh
       state: touch
+      
+  - name: adjust [pi4]  /boot/config.txt
+    lineinfile:
+      dest: /boot/config.txt
+      insertafter: max_framebuffers=2
+      line: '{{ item }}'
+    with_items: "{{system.boot_options4}}"
 
-  - name: adjust /boot/config.txt
+  - name: adjust [all] /boot/config.txt
     lineinfile:
       dest: /boot/config.txt
       insertafter: EOF
