@@ -230,7 +230,7 @@
 
   - name: clone pwnagotchi repository
     git:
-      repo: https://github.com/scifijunk/pwnagotchi.git
+      repo: https://github.com/evilsocket/pwnagotchi.git
       dest: /usr/local/src/pwnagotchi
     register: pwnagotchigit
 
