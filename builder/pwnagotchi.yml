@@ -358,7 +358,7 @@
       dest: /boot/config.txt
       insertafter: EOF
       line: '{{ item }}'
-    with_items: "{{system.boot_options}}"
+    with_items: "{{system.boot_optionsall}}"
 
   - name: adjust /etc/modules
     lineinfile:
