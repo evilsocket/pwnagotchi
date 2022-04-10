@@ -20,9 +20,9 @@ ANGRY = "(-_-')"
 FRIEND = '(♥‿‿♥)'
 BROKEN = '(☓‿‿☓)'
 DEBUG = '(#__#)'
-UPLOAD = '(1__0)'
-UPLOAD1 = '(1__1)'
-UPLOAD2 = '(0__1)'
+UPLOAD = '( ¹_⁰)'
+UPLOAD1 = '( ¹_¹)'
+UPLOAD2 = '( ⁰_¹)'
 
 def load_from_config(config):
     for face_name, face_value in config.items():
