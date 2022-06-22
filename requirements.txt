@@ -9,7 +9,7 @@ tensorflow==1.13.1
 tensorflow-estimator==1.14.0
 tweepy==3.7.0
 file-read-backwards==2.0.0
-numpy==1.20.2
+numpy==1.22.0
 inky==1.2.0
 smbus2==0.3.0
 Pillow==5.4.1
