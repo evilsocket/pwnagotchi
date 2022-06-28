@@ -1,0 +1,22 @@
+name: Makefile CI/CD
+on:
+  push:
+    branches: [ "github-actions" ]
+  pull_request:
+    branches: [ "github-actions" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Languages
+      run: make langs
+      
+    - name: Install
+      run: make install
+      
+    - name: Image
+      run: make image
