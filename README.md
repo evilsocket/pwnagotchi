@@ -1,4 +1,5 @@
 # Pwnagotchi
+[![Makefile CI/CD](https://github.com/incyi/pwnagotchi2/actions/workflows/makefile.yml/badge.svg)](https://github.com/incyi/pwnagotchi2/actions/workflows/makefile.yml)
 
 <p align="center">
     <a href="https://github.com/evilsocket/pwnagotchi/releases/latest"><img alt="Release" src="https://img.shields.io/github/release/evilsocket/pwnagotchi.svg?style=flat-square"></a>
