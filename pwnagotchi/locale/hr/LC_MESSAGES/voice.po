@@ -1,0 +1,253 @@
+# Croatian translation
+# Copyright (C) 2021
+# This file is distributed under the same license as the pwnagotchi package.
+# FIRST AUTHOR dbukovac <37124354+dbukovac@users.noreply.github.com>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-29 21:50+0100\n"
+"PO-Revision-Date: 2021-07-16 00:20+0100\n"
+"Last-Translator: dbukovac <37124354+dbukovac@users.noreply.github.com>\n"
+"Language-Team: HR <37124354+dbukovac@users.noreply.github.com>\n"
+"Language: Croatian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ZzzzZZzzzzZzzz"
+msgstr "ZzzzZZzzzzZzzz"
+
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "Zdravo, ja sam Pwnagotchi! Pokrećem se ..."
+
+msgid "New day, new hunt, new pwns!"
+msgstr "Novi dan, novi lov, nove pobjede!"
+
+msgid "Hack the Planet!"
+msgstr "Hakiraj planet!"
+
+msgid "AI ready."
+msgstr "UI spremna."
+
+msgid "The neural network is ready."
+msgstr "Neuralna mreža je spremna."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "Generiram ključeve, nemoj me gasiti ..."
+
+#, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr "Hej, kanal {channel} je slobodan! Tvoj AP ti zahvaljuje."
+
+msgid "Reading last session logs ..."
+msgstr "Čitam logove zadnje sesije ..."
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "Pročitao {lines_so_far} linija loga zasad ..."
+
+msgid "I'm bored ..."
+msgstr "Dosadno mi je ..."
+
+msgid "Let's go for a walk!"
+msgstr "Ajmo u šetnju!"
+
+msgid "This is the best day of my life!"
+msgstr "Ovo je najbolji dan u mom životu!"
+
+msgid "Shitty day :/"
+msgstr "Usrani dan :/"
+
+msgid "I'm extremely bored ..."
+msgstr "Strašno mi je dosadno ..."
+
+msgid "I'm very sad ..."
+msgstr "Jako sam tužan ..."
+
+msgid "I'm sad"
+msgstr "Tužan sam ..."
+
+msgid "Leave me alone ..."
+msgstr "Pusti me na miru ..."
+
+msgid "I'm mad at you!"
+msgstr "Ljut sam na tebe!"
+
+msgid "I'm living the life!"
+msgstr "To se zove život!"
+
+msgid "I pwn therefore I am."
+msgstr "Pwnam dakle postojim."
+
+msgid "So many networks!!!"
+msgstr "Toliko mreža!!!"
+
+msgid "I'm having so much fun!"
+msgstr "Super se zabavljam!"
+
+msgid "My crime is that of curiosity ..."
+msgstr "Znatiželja je moja jedina mana ..."
+
+#, python-brace-format
+msgid "Hello {name}! Nice to meet you."
+msgstr "Bok {name}! Drago mi je da smo se upoznali. "
+
+#, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr "Di si {name}! Šta ima?"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Bok {name} kako ide?"
+
+#, python-brace-format
+msgid "Unit {name} is nearby!"
+msgstr "Jedinica {name} je u blizini!"
+
+#, python-brace-format
+msgid "Uhm ... goodbye {name}"
+msgstr "Uhm ... doviđenja {name}"
+
+#, python-brace-format
+msgid "{name} is gone ..."
+msgstr "{name} je nestao ..."
+
+#, python-brace-format
+msgid "Whoops ... {name} is gone."
+msgstr "Ups ... {name} je nestao."
+
+#, python-brace-format
+msgid "{name} missed!"
+msgstr "{name} mi nedostaje!"
+
+msgid "Missed!"
+msgstr "Nedostaje mi!"
+
+msgid "Good friends are a blessing!"
+msgstr "Imati dobre prijatelje je blagoslov!"
+
+msgid "I love my friends!"
+msgstr "Volim svoj prijatelje!"
+
+msgid "Nobody wants to play with me ..."
+msgstr "Nitko se ne želi igrati samnom ..."
+
+msgid "I feel so alone ..."
+msgstr "Tako sam usamljen ..."
+
+msgid "Where's everybody?!"
+msgstr "Gdje su svi nestali?!"
+
+#, python-brace-format
+msgid "Napping for {secs}s ..."
+msgstr "Pajkim {secs}s ..."
+
+msgid "Zzzzz"
+msgstr "Zzzzz"
+
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr "ZzzZzzz ({secs}s)"
+
+msgid "Good night."
+msgstr "Laku noć."
+
+msgid "Zzz"
+msgstr "Zzz"
+
+#, python-brace-format
+msgid "Waiting for {secs}s ..."
+msgstr "Čekam {secs}s ..."
+
+#, python-brace-format
+msgid "Looking around ({secs}s)"
+msgstr "Gledam uokolo {secs}s ..."
+
+#, python-brace-format
+msgid "Hey {what} let's be friends!"
+msgstr "Bok {what} ajmo biti prijatelji!"
+
+#, python-brace-format
+msgid "Associating to {what}"
+msgstr "Asociram se sa {what}"
+
+#, python-brace-format
+msgid "Yo {what}!"
+msgstr "Šta ima {what}!"
+
+#, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "Upravo sam odlučio da {mac} ne treba WiFI!"
+
+#, python-brace-format
+msgid "Deauthenticating {mac}"
+msgstr "Deautenticiram {mac}"
+
+#, python-brace-format
+msgid "Kickbanning {mac}!"
+msgstr "Kickbannam {mac}!"
+
+#, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Fora, imamo {num} novih handshakeova!"
+
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "Imate {count} novih poruka!"
+
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Ups, nešto je krepalo ... Rebooting ..."
+
+#, python-brace-format
+msgid "Kicked {num} stations\n"
+msgstr "Šutnuo {num} stanica\n"
+
+#, python-brace-format
+msgid "Made {num} new friends\n"
+msgstr "Upoznao {num} novih prijatelja\n"
+
+#, python-brace-format
+msgid "Got {num} handshakes\n"
+msgstr "Pokupio {num} handshakeova\n"
+
+msgid "Met 1 peer"
+msgstr "Sreo 1 novog druga"
+
+#, python-brace-format
+msgid "Met {num} peers"
+msgstr "Sreo {num} druga"
+
+#, python-brace-format
+msgid ""
+"I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+"Pwnam {duration} vremena i šutnuo sam {deauthed} klijenata! Sreo sam"
+"{associated} novih prijatelja i pojeo {handshakes} handshakeova! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr "sati"
+
+msgid "minutes"
+msgstr "minuta"
+
+msgid "seconds"
+msgstr "sekundi"
+
+msgid "hour"
+msgstr "sat"
+
+msgid "minute"
+msgstr "minuta"
+
+msgid "second"
+msgstr "sekunda"
+
+#, python-brace-format
+msgid "Uploading data to {to} ..."
+msgstr "Šaljem podatke na {to} ..."
