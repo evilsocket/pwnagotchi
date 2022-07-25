@@ -21,8 +21,5 @@ jobs:
     - name: Install
       run: make install
       
-    - name: Ignore warning repo name changed
-      run: sudo apt update --allow-releaseinfo-change
-      
     - name: Image
       run: make image
