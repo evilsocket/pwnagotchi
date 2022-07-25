@@ -18,8 +18,8 @@ jobs:
     - name: Languages
       run: make langs
       
-#    - name: Install
-#      run: make install
+    - name: Install
+      run: make install
       
 #    - name: Image
 #      run: make image
