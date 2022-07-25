@@ -1,9 +1,6 @@
 name: Makefile CI/CD
-on:
-  push:
-    branches: [ "github-actions" ]
-  pull_request:
-    branches: [ "github-actions" ]
+
+on: [push, pull_request]
 
 jobs:
   build:
