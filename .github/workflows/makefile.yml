@@ -14,12 +14,15 @@ jobs:
 
     - name: Install language dependencies
       run: sudo apt-get install -y gettext
-
+      
     - name: Languages
       run: make langs
       
     - name: Install
       run: make install
       
-#    - name: Image
-#      run: make image
+    - name: Ignore warning repo name changed
+      run: sudo apt update --allow-releaseinfo-change
+      
+    - name: Image
+      run: make image
