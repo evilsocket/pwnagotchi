@@ -83,7 +83,7 @@ main.plugins.memtemp.scale = "celsius"
 main.plugins.memtemp.orientation = "horizontal"
 
 main.plugins.paw-gps.enabled = false
-main.plugins.paw-gps.ip = ""
+main.plugins.paw-gps.ip = "192.168.44.1:8080"
 
 main.plugins.ups_lite.enabled = false
 main.plugins.ups_lite.shutdown = 2
