@@ -36,8 +36,6 @@ class DisplayHatMini(DisplayImpl):
         logging.info("initializing hatmini display")
         from pwnagotchi.ui.hw.libs.pimoroni.displayhatmini.ST7789 import ST7789
         self._display = ST7789(0,1,9,13)
-      #  self.reset()
-      #  self._display.clear()
 
     def render(self, canvas):
         self._display.display(canvas)
