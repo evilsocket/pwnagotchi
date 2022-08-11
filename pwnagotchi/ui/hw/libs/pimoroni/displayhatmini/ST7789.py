@@ -90,8 +90,8 @@ ST7789_PWCTR6 = 0xFC
 class ST7789(object):
     """Representation of an ST7789 TFT LCD."""
 
-    def __init__(self, port, cs, dc, backlight=None, rst=None, width=240,
-                 height=240, rotation=90, invert=True, spi_speed_hz=4000000,
+    def __init__(self, port, cs, dc, backlight=None, rst=None, width=320,
+                 height=240, rotation=0, invert=True, spi_speed_hz=4000000,
                  offset_left=0,
                  offset_top=0):
         """Create an instance of the display using SPI communication.
