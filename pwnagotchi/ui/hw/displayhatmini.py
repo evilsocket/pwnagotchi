@@ -4,7 +4,7 @@ import pwnagotchi.ui.fonts as fonts
 from pwnagotchi.ui.hw.base import DisplayImpl
 
 
-class HatMini(DisplayImpl):
+class DisplayHatMini(DisplayImpl):
     def __init__(self, config):
         super(DisplayHatMini, self).__init__(config, 'displayhatmini')
         self._display = None
