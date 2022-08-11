@@ -68,3 +68,6 @@ def display_for(config):
 
     elif config['ui']['display']['type'] == 'spotpear24inch':
         return Spotpear24inch(config)
+    
+    elif config['ui']['display']['type'] == 'displayhatmini':
+        return DisplayHatMini(config)
