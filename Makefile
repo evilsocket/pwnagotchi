@@ -1,7 +1,7 @@
 PACKER_VERSION := 1.8.3
 PWN_HOSTNAME := pwnagotchi
 PWN_VERSION := master
-PWN_RELEASE := pwnagotchi-raspbian-lite-$(PWN_VERSION)
+PWN_RELEASE := pwnagotchi-raspios-lite-$(PWN_VERSION)
 
 MACHINE_TYPE := $(shell uname -m)
 ifneq (,$(filter x86_64,$(MACHINE_TYPE)))

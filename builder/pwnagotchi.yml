@@ -53,6 +53,12 @@
           - triggerhappy
           - wpa_supplicant
           - nfs-common
+          # Remove libraspberrypi so we can reinstall them from the kali-pi repo instead.
+          # This prevents kalipi-bootloader conflicts with raspberrypi-bootloader.
+          - libraspberrypi0
+          - libraspberrypi-dev
+          - libraspberrypi-doc
+          - libraspberrypi-bin
         install:
           - rsync
           - vim
