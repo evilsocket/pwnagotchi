@@ -130,7 +130,8 @@
 
   - name: Add re4son-kernel repo key
     apt_key:
-      url: https://re4son-kernel.com/keys/http/archive-key.asc
+      id: "11764EE8AC24832F"
+      keyserver: "keyserver.ubuntu.com"
       state: present
 
   - name: Add re4son-kernel repository
