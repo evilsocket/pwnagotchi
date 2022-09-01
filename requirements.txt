@@ -22,3 +22,24 @@ dbus-python==1.2.12
 toml==0.10.0
 python-dateutil==2.8.1
 websockets==8.1
+
+# flask==1.0.2 requires:
+#   Jinja2>=2.10
+#   Werkzeug>=0.14
+#   itsdangerous>=0.24
+
+# Jinja2 v2.1.0 requires MarkupSafe>=0.23 for `soft_unicode`
+# but the function was removed in MarkupSafe v2.1.0.
+# Jinja2 v3.0.0 fixed this issue but flask doesn't support it until v2.0.
+MarkupSafe<2.1.0
+
+# Werkzeug v2.2.0 adds a requirement of MarkupSafe>=2.1.1
+# which triggers the `soft_unicode` issue in Jinja2.
+# Werkzeug v2.1.0 removes `safe_str_cmp` which breaks flask-wtf.
+# flask-wtf fixes this in v0.15.
+Werkzeug<2.1.0
+
+# flask requires itsdangerous>=0.24 for its `json` module
+# but the module was removed in v2.1.0.
+# flask fixed this issue in v2.X.
+itsdangerous<2.1.0
