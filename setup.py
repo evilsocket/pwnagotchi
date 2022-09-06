@@ -69,7 +69,11 @@ def version(version_file):
     return None
 
 with open('requirements.txt') as fp:
-    required = [line.strip() for line in fp if line.strip() != ""]
+    required = [
+        line.strip()
+        for line in fp
+        if line.strip() and not line.startswith("--")
+    ]
 
 VERSION_FILE = 'pwnagotchi/_version.py'
 pwnagotchi_version = version(VERSION_FILE)
