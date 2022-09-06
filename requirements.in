@@ -1,45 +1,87 @@
-pycryptodome==3.9.4
-requests==2.21.0
-PyYAML==5.3.1
-scapy==2.4.3
-gym==0.14.0
-scipy==1.3.1
-stable-baselines==2.7.0
-tensorflow==1.13.1
-tensorflow-estimator==1.14.0
-tweepy==3.7.0
-file-read-backwards==2.0.0
-numpy==1.20.2
-inky==1.2.0
-smbus2==0.3.0
-Pillow==5.4.1
-spidev==3.4
-gast==0.2.2
-flask==1.0.2
-flask-cors==3.0.7
-flask-wtf==0.14.3
-dbus-python==1.2.12
-toml==0.10.0
-python-dateutil==2.8.1
-websockets==8.1
+# If you get "error: no such option: --prefer-binary" then you need to run:
+#   pip3 install --upgrade "pip>=20.2"
+--prefer-binary
+--extra-index-url "https://www.piwheels.org/simple"
 
-# flask==1.0.2 requires:
-#   Jinja2>=2.10
-#   Werkzeug>=0.14
-#   itsdangerous>=0.24
+# Used for bluetooth tethering plugin.
+dbus-python~=1.2
 
-# Jinja2 v2.1.0 requires MarkupSafe>=0.23 for `soft_unicode`
-# but the function was removed in MarkupSafe v2.1.0.
-# Jinja2 v3.0.0 fixed this issue but flask doesn't support it until v2.0.
+# Used for parsing LastSession logs in manual mode.
+file-read-backwards~=2.0
+
+# Only using basic Flask and Flask plugin features.
+# Should be kept up-to-date as Flask is notorious for breaking
+# environments with their extremely loose dependency definitions.
+flask-cors~=3.0
+flask-wtf~=1.0
+flask~=1.0
+
+# Used for modeling AI parameters.
+# NOTE: stable-baselines wants gym[atari,classic_control] but we
+# can't satisfy the "atari" extra because it requires ale-py
+# which has no source distributions or RasPi wheels.
+# Using pip's new backtracking resolver from pip>=20.3 is required
+# as it improves handling of extras required by indirect dependencies.
+# NOTE: gym v0.22 modified the gym.Env API.
+gym~=0.14,<0.22
+
+# Used for Inky pHAT and wHAT displays.
+inky~=1.2
+
+# Used in the AI and UI layers.
+# Only using basic numpy features.
+numpy~=1.20
+
+# Used in the UI layer.
+# Only using core PIL features (Image, ImageFont, ImageDraw).
+# Very stable library, should be safe to upgrade.
+Pillow>=5.4
+
+# Used for pwngrid identity verification (PKCS1, RSA, SHA256).
+# Very stable library, should be safe to upgrade.
+pycryptodome~=3.9
+
+# Used for GPS plugin to parse a GPS datetime string.
+python-dateutil~=2.8
+
+# Used exclusively to convert legacy YAML configs to TOML.
+PyYAML>=5.3
+
+# Used for HTTP requests with bettercap, pwngrid, and plugins.
+# Only using core library features (GET, POST, Sessions).
+# Very stable library, should be safe to upgrade.
+requests~=2.21
+
+# Used for WiFi pwnage and WiGLE plugin.
+scapy~=2.4
+
+# I2C/SPI communication with displays, also used by some plugins.
+smbus2~=0.4
+spidev~=3.5
+
+# Primary AI library.  Safe to upgrade as v3 is a different package.
+# Upgrading to stable-baselines3 is currently impossible because
+# it depends on PyTorch which requires a 64-bit processor.
+stable-baselines~=2.7
+
+# stable-baselines made a mistake.
+# stable-baselines has a tensorflow requirement of ">=1.8.0,<2.0.0",
+# but the requirement is the result of a calculation during setup.
+# As a result, the requirement is entirely missing from the wheel file.
+# Furthermore, "<2.0.0" will fail because tensorflow v1.14 contains
+# breaking API changes in preparation for their v2.X release.
+tensorflow>=1.8.0,<1.14.0
+
+# Used for loading and writing configs.
+toml~=0.10
+
+# Used for communicating with bettercap.
+websockets~=8.1
+
+# WARNING: conflict prevention hack!
+# flask v1.X requires "Jinja2 >= 2.10, < 3.0"
+# Jinja2 v2.X requires "MarkupSafe >= 0.23" for a deprecated
+# function that was later removed in MarkupSafe v2.1.0.
+# Jinja2 v3.0 no longer uses the deprecated function but
+# falls outside the version range requested by flask.
 MarkupSafe<2.1.0
-
-# Werkzeug v2.2.0 adds a requirement of MarkupSafe>=2.1.1
-# which triggers the `soft_unicode` issue in Jinja2.
-# Werkzeug v2.1.0 removes `safe_str_cmp` which breaks flask-wtf.
-# flask-wtf fixes this in v0.15.
-Werkzeug<2.1.0
-
-# flask requires itsdangerous>=0.24 for its `json` module
-# but the module was removed in v2.1.0.
-# flask fixed this issue in v2.X.
-itsdangerous<2.1.0
