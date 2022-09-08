@@ -375,9 +375,14 @@
         You learn more about me at https://pwnagotchi.ai/
     when: hostname.changed
 
+  # Ansible's apt module has an "autoclean" option but it only removes packages
+  # that can no longer be downloaded.  Ansible v2.13 added the "clean" option
+  # which actually purges the apt cache, but that's newer than what we can
+  # install from the RasPiOS repos.  Instead, we'll manually clean the cache.
   - name: clean apt cache
-    apt:
-      autoclean: yes
+    command: "apt-get clean"
+    args:
+      warn: false
 
   - name: remove dependencies that are no longer required
     apt:
