@@ -13,86 +13,24 @@
     {
       "type": "shell",
       "inline": [
-        "sed -i 's/^\\([^#]\\)/#\\1/g' /etc/ld.so.preload",
+        "mv /etc/ld.so.preload /etc/ld.so.preload.DISABLED",
+        "uname -a",
         "dpkg-architecture",
-        "apt-get -y --allow-releaseinfo-change update",
-        "apt-get install -y ansible"
+        "mkdir -p /usr/local/src/pwnagotchi"
       ]
     },
     {
       "type": "file",
-      "source": "data/usr/bin/pwnlib",
-      "destination": "/usr/bin/pwnlib"
-    },
-    {
-      "type": "file",
-      "source": "data/usr/bin/bettercap-launcher",
-      "destination": "/usr/bin/bettercap-launcher"
-    },
-    {
-      "type": "file",
-      "source": "data/usr/bin/pwnagotchi-launcher",
-      "destination": "/usr/bin/pwnagotchi-launcher"
-    },
-    {
-      "type": "file",
-      "source": "data/usr/bin/monstop",
-      "destination": "/usr/bin/monstop"
-    },
-    {
-      "type": "file",
-      "source": "data/usr/bin/monstart",
-      "destination": "/usr/bin/monstart"
-    },
-    {
-      "type": "file",
-      "source": "data/usr/bin/hdmion",
-      "destination": "/usr/bin/hdmion"
-    },
-    {
-      "type": "file",
-      "source": "data/usr/bin/hdmioff",
-      "destination": "/usr/bin/hdmioff"
-    },
-    {
-      "type": "file",
-      "source": "data/etc/network/interfaces.d/lo-cfg",
-      "destination": "/etc/network/interfaces.d/lo-cfg"
-    },
-    {
-      "type": "file",
-      "source": "data/etc/network/interfaces.d/wlan0-cfg",
-      "destination": "/etc/network/interfaces.d/wlan0-cfg"
-    },
-    {
-      "type": "file",
-      "source": "data/etc/network/interfaces.d/usb0-cfg",
-      "destination": "/etc/network/interfaces.d/usb0-cfg"
-    },
-    {
-      "type": "file",
-      "source": "data/etc/network/interfaces.d/eth0-cfg",
-      "destination": "/etc/network/interfaces.d/eth0-cfg"
-    },
-    {
-      "type": "file",
-      "source": "data/etc/systemd/system/pwngrid-peer.service",
-      "destination": "/etc/systemd/system/pwngrid-peer.service"
-    },
-    {
-      "type": "file",
-      "source": "data/etc/systemd/system/pwnagotchi.service",
-      "destination": "/etc/systemd/system/pwnagotchi.service"
-    },
-    {
-      "type": "file",
-      "source": "data/etc/systemd/system/bettercap.service",
-      "destination": "/etc/systemd/system/bettercap.service"
+      "sources": [
+        "../dist/pwnagotchi-{{user `pwn_version`}}.tar.gz"
+      ],
+      "destination": "/usr/local/src/pwnagotchi/"
     },
     {
       "type": "shell",
       "inline": [
-        "chmod +x /usr/bin/*"
+        "apt-get -y --allow-releaseinfo-change update",
+        "apt-get install -y --no-install-recommends ansible"
       ]
     },
     {
@@ -104,7 +42,7 @@
     {
       "type": "shell",
       "inline": [
-        "sed -i 's/^#\\(.+\\)/\\1/g' /etc/ld.so.preload"
+        "mv /etc/ld.so.preload.DISABLED /etc/ld.so.preload"
       ]
     }
   ]

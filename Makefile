@@ -1,6 +1,6 @@
 PACKER_VERSION := 1.8.3
 PWN_HOSTNAME := pwnagotchi
-PWN_VERSION := master
+PWN_VERSION := $(shell cut -d"'" -f2 < pwnagotchi/_version.py)
 PWN_RELEASE := pwnagotchi-raspios-lite-$(PWN_VERSION)
 
 MACHINE_TYPE := $(shell uname -m)
@@ -43,11 +43,15 @@ $(PACKER):
 	rm $(PACKER).zip
 	chmod +x $@
 
+SDIST := dist/pwnagotchi-$(PWN_VERSION).tar.gz
+$(SDIST): setup.py pwnagotchi
+	python3 setup.py sdist
+
 # Building the image requires packer, but don't rebuild the image just because packer updated.
 $(PWN_RELEASE).img: | $(PACKER)
 
 # If the packer or ansible files are updated, rebuild the image.
-$(PWN_RELEASE).img: builder/pwnagotchi.json builder/pwnagotchi.yml $(shell find builder/data -type f)
+$(PWN_RELEASE).img: $(SDIST) builder/pwnagotchi.json builder/pwnagotchi.yml $(shell find builder/data -type f)
 	sudo $(PACKER) plugins install github.com/solo-io/arm-image
 	cd builder && sudo $(UNSHARE) $(PACKER) build -var "pwn_hostname=$(PWN_HOSTNAME)" -var "pwn_version=$(PWN_VERSION)" pwnagotchi.json
 	sudo chown -R $$USER:$$USER builder/output-pwnagotchi
@@ -65,6 +69,10 @@ $(PWN_RELEASE).zip: $(PWN_RELEASE).img $(PWN_RELEASE).sha256
 image: $(PWN_RELEASE).zip
 
 clean:
-	rm -f $(PACKER)
-	rm -f $(PWN_RELEASE).*
-	sudo rm -rf builder/output-pwnagotchi builder/packer_cache
+	- python3 setup.py clean --all
+	- rm -rf dist pwnagotchi.egg-info
+	- rm -f $(PACKER)
+	- rm -f $(PWN_RELEASE).*
+	- sudo rm -rf builder/output-pwnagotchi builder/packer_cache
+
+
