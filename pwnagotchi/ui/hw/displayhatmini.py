@@ -33,7 +33,7 @@ class DisplayHatMini(DisplayImpl):
         return self._layout
 
     def initialize(self):
-        logging.info("initializing hatmini display")
+        logging.info("initializing Display Hat Mini")
         from pwnagotchi.ui.hw.libs.pimoroni.displayhatmini.ST7789 import ST7789
         self._display = ST7789(0,1,9,13)
 
