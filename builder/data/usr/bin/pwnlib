@@ -33,12 +33,13 @@ reload_brcm() {
 
 # starts mon0
 start_monitor_interface() {
-  iw phy "$(iw phy | head -1 | cut -d" " -f2)" interface add mon0 type monitor && ifconfig mon0 up
+  airmon-ng check kill
+  ifconfig wlan0 up && airmon-ng start wlan0
 }
 
 # stops mon0
 stop_monitor_interface() {
-  ifconfig mon0 down && iw dev mon0 del
+  airmon-ng stop wlan0mon
 }
 
 # returns 0 if the specificed network interface is up
