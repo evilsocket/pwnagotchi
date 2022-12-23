@@ -86,7 +86,7 @@ markupsafe~=2.0.1
     #   wtforms
 matplotlib==3.5.3
     # via stable-baselines
-numpy==1.21.4
+numpy~=1.21.4
     # via
     #   -r requirements.in
     #   atari-py

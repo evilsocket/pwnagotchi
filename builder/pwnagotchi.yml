@@ -112,6 +112,11 @@
           - fonts-ipaexfont-gothic
           - cryptsetup
           - dnsmasq
+          - bison       # nexmon
+          - flex        # nexmon
+          - qpdf        # nexmon
+          - libgmp3-dev # nexmon
+          - texinfo     # nexmon
 
   tasks:
   - name: change hostname

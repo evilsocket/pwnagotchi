@@ -30,7 +30,7 @@ inky~=1.2
 
 # Used in the AI and UI layers.
 # Only using basic numpy features.
-numpy~=1.20
+numpy~=1.21.4 # Moved to 1.21.4 from 1.20
 
 # Used in the UI layer.
 # Only using core PIL features (Image, ImageFont, ImageDraw).
