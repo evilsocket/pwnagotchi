@@ -284,6 +284,12 @@
       remote_src: yes
       mode: 0755
 
+  # - name: clone nexmon repository
+  #   git:
+  #     repo: https://github.com/seemoo-lab/nexmon.git
+  #     dest: /usr/local/src/nexmon
+  #   register: nexmongit
+
   - name: add HDMI powersave to rc.local
     blockinfile:
       path: /etc/rc.local
