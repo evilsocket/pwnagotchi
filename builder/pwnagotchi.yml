@@ -343,6 +343,34 @@
   #     state: absent
   #     path: /usr/local/src/nexmon/
 
+  # Install screenrc configuration
+  - name: clone screenrc repository
+    git:
+      repo: https://github.com/aluminum-ice/screenrc.git
+      dest: /usr/local/src/screenrc
+    register: screenrcgit
+
+  - name: create /home/pi/.screenrc
+    copy:
+      src: /usr/local/src/screenrc/.screenrc
+      dest: /home/pi/.screenrc
+      owner: pi
+      group: pi
+      mode: '0644'
+    when: screenrcgit.changed
+
+  - name: Delete screenrc content & directory
+    file:
+      state: absent
+      path: /usr/local/src/screenrc/
+    when screenrcgit.changed
+
+  - name: install bettercap caplets
+    make:
+      chdir: /tmp/caplets
+      target: install
+    when: capletsgit.changed
+
   - name: add HDMI powersave to rc.local
     blockinfile:
       path: /etc/rc.local
