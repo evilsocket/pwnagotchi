@@ -284,11 +284,64 @@
       remote_src: yes
       mode: 0755
 
-  # - name: clone nexmon repository
-  #   git:
-  #     repo: https://github.com/seemoo-lab/nexmon.git
-  #     dest: /usr/local/src/nexmon
-  #   register: nexmongit
+  # Install nexmon to fix wireless scanning (takes 2.5G of space)
+  - name: clone nexmon repository
+    git:
+      repo: https://github.com/seemoo-lab/nexmon.git
+      dest: /usr/local/src/nexmon
+    register: nexmongit
+
+  - name: configure libisl
+    command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ ./configure
+
+  - name: make libisl
+    command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ make
+
+  - name: install libisl
+    command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ make install
+
+  - name: link libisl
+    command: ln -s /usr/local/lib/libisl.so /usr/lib/arm-linux-gnueabihf/libisl.so.10
+
+  - name: autoreconf libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ autoreconf -f -i
+
+  - name: configure libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ ./configure
+
+  - name: make libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ make
+
+  - name: install libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ make install
+
+  - name: link libmpfr
+    command: ln -s /usr/local/lib/libmpfr.so /usr/lib/arm-linux-gnueabihf/libmpfr.so.4
+
+  - name: make firemware
+    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
+    args:
+      executable: /bin/bash
+
+  # - name: make firemware patch
+  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
+
+  # - name: make firemware patch
+  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+  #   args:
+  #     executable: /bin/bash
+
+  # - name: backup original firmware
+  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
+
+  # - name: install new firmware
+  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make install-firmware
+
+  # To shrink the final image, remove the nexmon directory (takes 2.5G of space) post build and installation
+  # - name: Delete nexmon content & directory
+  #   file:
+  #     state: absent
+  #     path: /usr/local/src/nexmon/
 
   - name: add HDMI powersave to rc.local
     blockinfile:
