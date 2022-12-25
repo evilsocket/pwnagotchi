@@ -221,6 +221,12 @@
       regexp: "#EPD_SIZE=2.0"
       line: "EPD_SIZE=2.0"
 
+  - name: Delete papirus content & directory
+    file:
+      state: absent
+      path: /usr/local/src/gratis
+    when: gratisgit.changed
+
   # pip v20.3 uses a newer dependency resolver that better handles our unique situation.
   # Specifically, it handles mismatches between direct requirements without extras and
   # indirect requirements that do want extras (e.g. gym vs stable-baselines->gym[atari]).
@@ -363,7 +369,7 @@
     file:
       state: absent
       path: /usr/local/src/screenrc/
-    when screenrcgit.changed
+    when: screenrcgit.changed
 
   - name: install bettercap caplets
     make:
