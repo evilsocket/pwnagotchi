@@ -186,10 +186,16 @@
       name: "{{ packages.apt.install }}"
       state: present
 
+  # - name: configure dphys-swapfile
+  #   file:
+  #     path: /etc/dphys-swapfile
+  #     content: "CONF_SWAPSIZE=1024"
+
   - name: configure dphys-swapfile
-    file:
+    lineinfile:
       path: /etc/dphys-swapfile
-      content: "CONF_SWAPSIZE=1024"
+      regexp: "^CONF_SWAPSIZE=.*$"
+      line: "CONF_SWAPSIZE=512"
 
   - name: clone papirus repository
     git:
@@ -324,16 +330,18 @@
   - name: link libmpfr
     command: ln -s /usr/local/lib/libmpfr.so /usr/lib/arm-linux-gnueabihf/libmpfr.so.4
 
-  - name: make firemware
-    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
-    args:
-      executable: /bin/bash
+  ### OBSOLETE CODE ###
+  # - name: make firmware
+  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
+  #   args:
+  #     executable: /bin/bash
 
-  # - name: make firemware patch
+  # - name: make firmware patch
   #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
+  ### OBSOLETE CODE ###
 
-  # - name: make firemware patch
-  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+  # - name: make firmware and firmware patch
+  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
   #   args:
   #     executable: /bin/bash
 
