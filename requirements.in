@@ -1,3 +1,5 @@
+# To convert into requirements.txt use 'pip-compile --resolver=backtracking --strip-extras  --output-file=requirements.txt requirements.in'
+
 # If you get "error: no such option: --prefer-binary" then you need to run:
 #   pip3 install --upgrade "pip>=20.2"
 --prefer-binary
