@@ -36,7 +36,8 @@
         - dnsmasq.service
     packages:
       bettercap:
-        url: "https://github.com/bettercap/bettercap/releases/download/v2.31.0/bettercap_linux_armhf_v2.31.0.zip"
+        # We will install bettercap v2.32 from source
+        # url: "https://github.com/bettercap/bettercap/releases/download/v2.31.0/bettercap_linux_armhf_v2.31.0.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
         url: "https://github.com/evilsocket/pwngrid/releases/download/v1.10.3/pwngrid_linux_armhf_v1.10.3.zip"
@@ -59,11 +60,12 @@
           - libraspberrypi-dev
           - libraspberrypi-doc
           - libraspberrypi-bin
+          # Remove every golang package because we will install go-1.19.4
+          - golang*
         install:
           - rsync
           - vim
           - screen
-          - golang
           - git
           - build-essential
           - python3-pip
@@ -112,11 +114,11 @@
           - fonts-ipaexfont-gothic
           - cryptsetup
           - dnsmasq
-          - bison       # nexmon
-          - flex        # nexmon
-          - qpdf        # nexmon
-          - libgmp3-dev # nexmon
-          - texinfo     # nexmon
+          # - bison       # nexmon
+          # - flex        # nexmon
+          # - qpdf        # nexmon
+          # - libgmp3-dev # nexmon
+          # - texinfo     # nexmon
 
   tasks:
   - name: change hostname
@@ -185,11 +187,6 @@
     apt:
       name: "{{ packages.apt.install }}"
       state: present
-
-  # - name: configure dphys-swapfile
-  #   file:
-  #     path: /etc/dphys-swapfile
-  #     content: "CONF_SWAPSIZE=1024"
 
   - name: configure dphys-swapfile
     lineinfile:
@@ -267,15 +264,43 @@
       remote_src: yes
       mode: 0755
 
-  - name: download and install bettercap
+  # Install go-1.19.4
+  - name: Install go-1.19.4
     unarchive:
-      src: "{{ packages.bettercap.url }}"
-      dest: /usr/bin
+      src: https://go.dev/dl/go1.19.4.linux-armv6l.tar.gz
+      dest: /usr/local
       remote_src: yes
-      exclude:
-        - README.md
-        - LICENSE.md
-      mode: 0755
+    register: golang
+
+  - name: Update .bashrc for go-1.19.4
+    blockinfile:
+      dest: /home/pi/.bashrc
+      state: present
+      block: |
+        export GOPATH=$HOME/go
+        export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin
+      insertafter: EOF
+    when: golang.changed
+
+  - name: Install bettercap v2.32
+    shell: "export GOPATH=$HOME/go && export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin && go env -w GO111MODULE=off && go get github.com/bettercap/bettercap && cd $GOPATH/src/github.com/bettercap/bettercap && make build && make install"
+    args:
+      executable: /bin/bash
+    register: bettercap
+
+  - name: Link bettercap v2.32
+    command: ln -s /usr/local/bin/bettercap /usr/bin/bettercap 
+    when: bettercap.changed
+
+  # - name: download and install bettercap
+  #   unarchive:
+  #     src: "{{ packages.bettercap.url }}"
+  #     dest: /usr/bin
+  #     remote_src: yes
+  #     exclude:
+  #       - README.md
+  #       - LICENSE.md
+  #     mode: 0755
 
   - name: clone bettercap caplets
     git:
