@@ -36,7 +36,8 @@
         - dnsmasq.service
     packages:
       bettercap:
-        url: "https://github.com/bettercap/bettercap/releases/download/v2.31.0/bettercap_linux_armhf_v2.31.0.zip"
+        # We will install bettercap v2.32 from source
+        # url: "https://github.com/bettercap/bettercap/releases/download/v2.31.0/bettercap_linux_armhf_v2.31.0.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
         url: "https://github.com/evilsocket/pwngrid/releases/download/v1.10.3/pwngrid_linux_armhf_v1.10.3.zip"
@@ -59,11 +60,12 @@
           - libraspberrypi-dev
           - libraspberrypi-doc
           - libraspberrypi-bin
+          # Remove every golang package because we will install go-1.19.4
+          - golang*
         install:
           - rsync
           - vim
           - screen
-          - golang
           - git
           - build-essential
           - python3-pip
@@ -187,9 +189,10 @@
       state: present
 
   - name: configure dphys-swapfile
-    file:
+    lineinfile:
       path: /etc/dphys-swapfile
-      content: "CONF_SWAPSIZE=1024"
+      regexp: "^CONF_SWAPSIZE=.*$"
+      line: "CONF_SWAPSIZE=512"
 
   - name: clone papirus repository
     git:
@@ -220,6 +223,12 @@
       dest: /etc/default/epd-fuse
       regexp: "#EPD_SIZE=2.0"
       line: "EPD_SIZE=2.0"
+
+  - name: Delete papirus content & directory
+    file:
+      state: absent
+      path: /usr/local/src/gratis
+    when: gratisgit.changed
 
   # pip v20.3 uses a newer dependency resolver that better handles our unique situation.
   # Specifically, it handles mismatches between direct requirements without extras and
@@ -255,15 +264,43 @@
       remote_src: yes
       mode: 0755
 
-  - name: download and install bettercap
+  # Install go-1.19.4
+  - name: Install go-1.19.4
     unarchive:
-      src: "{{ packages.bettercap.url }}"
-      dest: /usr/bin
+      src: https://go.dev/dl/go1.19.4.linux-armv6l.tar.gz
+      dest: /usr/local
       remote_src: yes
-      exclude:
-        - README.md
-        - LICENSE.md
-      mode: 0755
+    register: golang
+
+  - name: Update .bashrc for go-1.19.4
+    blockinfile:
+      dest: /home/pi/.bashrc
+      state: present
+      block: |
+        export GOPATH=$HOME/go
+        export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin
+      insertafter: EOF
+    when: golang.changed
+
+  - name: Install bettercap v2.32
+    shell: "export GOPATH=$HOME/go && export PATH=/usr/local/go/bin:$PATH:$GOPATH/bin && go env -w GO111MODULE=off && go get github.com/bettercap/bettercap && cd $GOPATH/src/github.com/bettercap/bettercap && make build && make install"
+    args:
+      executable: /bin/bash
+    register: bettercap
+
+  - name: Link bettercap v2.32
+    command: ln -s /usr/local/bin/bettercap /usr/bin/bettercap 
+    when: bettercap.changed
+
+  # - name: download and install bettercap
+  #   unarchive:
+  #     src: "{{ packages.bettercap.url }}"
+  #     dest: /usr/bin
+  #     remote_src: yes
+  #     exclude:
+  #       - README.md
+  #       - LICENSE.md
+  #     mode: 0755
 
   - name: clone bettercap caplets
     git:
@@ -284,11 +321,94 @@
       remote_src: yes
       mode: 0755
 
+  # # Install nexmon to fix wireless scanning (takes 2.5G of space)
   # - name: clone nexmon repository
   #   git:
   #     repo: https://github.com/seemoo-lab/nexmon.git
   #     dest: /usr/local/src/nexmon
   #   register: nexmongit
+
+  # - name: configure libisl
+  #   command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ ./configure
+
+  # - name: make libisl
+  #   command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ make
+
+  # - name: install libisl
+  #   command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ make install
+
+  # - name: link libisl
+  #   command: ln -s /usr/local/lib/libisl.so /usr/lib/arm-linux-gnueabihf/libisl.so.10
+
+  # - name: autoreconf libmpfr
+  #   command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ autoreconf -f -i
+
+  # - name: configure libmpfr
+  #   command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ ./configure
+
+  # - name: make libmpfr
+  #   command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ make
+
+  # - name: install libmpfr
+  #   command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ make install
+
+  # - name: link libmpfr
+  #   command: ln -s /usr/local/lib/libmpfr.so /usr/lib/arm-linux-gnueabihf/libmpfr.so.4
+
+  ### OBSOLETE CODE ###
+  # - name: make firmware
+  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
+  #   args:
+  #     executable: /bin/bash
+
+  # - name: make firmware patch
+  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
+  ### OBSOLETE CODE ###
+
+  # - name: make firmware and firmware patch
+  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+  #   args:
+  #     executable: /bin/bash
+
+  # - name: backup original firmware
+  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
+
+  # - name: install new firmware
+  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make install-firmware
+
+  # To shrink the final image, remove the nexmon directory (takes 2.5G of space) post build and installation
+  # - name: Delete nexmon content & directory
+  #   file:
+  #     state: absent
+  #     path: /usr/local/src/nexmon/
+
+  # Install screenrc configuration
+  - name: clone screenrc repository
+    git:
+      repo: https://github.com/aluminum-ice/screenrc.git
+      dest: /usr/local/src/screenrc
+    register: screenrcgit
+
+  - name: create /home/pi/.screenrc
+    copy:
+      src: /usr/local/src/screenrc/.screenrc
+      dest: /home/pi/.screenrc
+      owner: pi
+      group: pi
+      mode: '0644'
+    when: screenrcgit.changed
+
+  - name: Delete screenrc content & directory
+    file:
+      state: absent
+      path: /usr/local/src/screenrc/
+    when: screenrcgit.changed
+
+  - name: install bettercap caplets
+    make:
+      chdir: /tmp/caplets
+      target: install
+    when: capletsgit.changed
 
   - name: add HDMI powersave to rc.local
     blockinfile:
