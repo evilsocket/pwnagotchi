@@ -3,9 +3,9 @@
     {
       "name": "pwnagotchi",
       "type": "arm-image",
-      "iso_url": "https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2022-09-26/2022-09-22-raspios-buster-armhf-lite.img.xz",
-      "iso_checksum": "3ce91885bc2226127daeac3221fbdc20dd26f8dcc0a5ab0465cb543e845e83ae",
-      "target_image_size": 5368709120,
+      "iso_url": "https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2023-02-22/2023-02-21-raspios-buster-armhf-lite.img.xz",
+      "iso_checksum": "10ee74e3e80789d37e7190701a809c85466adae8f9a1a035cbc171e61f9ccbb5",
+      "target_image_size": 5568709120,
       "qemu_args": ["-cpu", "arm1176"]
     }
   ],

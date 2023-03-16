@@ -119,6 +119,7 @@
           - qpdf        # nexmon
           - libgmp3-dev # nexmon
           - texinfo     # nexmon
+          - binutils
 
   tasks:
   - name: change hostname
@@ -230,6 +231,32 @@
       path: /usr/local/src/gratis
     when: gratisgit.changed
 
+  - name: clone hannadiamond repository
+    git:
+      repo: https://github.com/hannadiamond/pwnagotchi-plugins.git
+      dest: /usr/local/src/hannadiamond
+    register: hannadiamondgit
+
+  - name: Creates custom plugin directory
+    file:
+      path: /usr/local/share/pwnagotchi/custom-plugins/
+      state: directory
+    when: hannadiamondgit.changed
+
+  - name: Copy ups_hat_c.py
+    copy:
+      src: /usr/local/src/hannadiamond/plugins/ups_hat_c.py
+      dest: /usr/local/share/pwnagotchi/custom-plugins/ups_hat_c.py
+      owner: root
+      group: root
+      mode: '644'
+
+  - name: Delete hannadiamond content & directory
+    file:
+      state: absent
+      path: /usr/local/src/hannadiamond
+    when: hannadiamondgit.changed
+
   # pip v20.3 uses a newer dependency resolver that better handles our unique situation.
   # Specifically, it handles mismatches between direct requirements without extras and
   # indirect requirements that do want extras (e.g. gym vs stable-baselines->gym[atari]).
@@ -264,15 +291,16 @@
       remote_src: yes
       mode: 0755
 
-  # Install go-1.19.4
-  - name: Install go-1.19.4
+  # Install go-1.20.2
+  - name: Install go-1.20.2
     unarchive:
-      src: https://go.dev/dl/go1.19.4.linux-armv6l.tar.gz
+#      src: https://go.dev/dl/go1.19.4.linux-armv6l.tar.gz
+      src: https://go.dev/dl/go1.20.2.linux-armv6l.tar.gz
       dest: /usr/local
       remote_src: yes
     register: golang
 
-  - name: Update .bashrc for go-1.19.4
+  - name: Update .bashrc for go-1.20.2
     blockinfile:
       dest: /home/pi/.bashrc
       state: present
@@ -404,6 +432,12 @@
       path: /usr/local/src/screenrc/
     when: screenrcgit.changed
 
+  - name: Add pwnlog alias
+    lineinfile:
+      dest: /home/pi/.bashrc
+      line: "\nalias pwnlog='tail -f -n300 /var/log/pwn*.log | sed --unbuffered \"s/,[[:digit:]]\\{3\\}\\]//g\" | cut -d \" \" -f 2-'"
+      insertafter: EOF
+
   - name: install bettercap caplets
     make:
       chdir: /tmp/caplets
@@ -438,6 +472,18 @@
         # ui.display.enabled = true
         # ui.display.type = "waveshare_2"
     when: not user_config.stat.exists
+
+  - name: configure pwnagotchi for the custom plugin directory
+    lineinfile:
+      dest: /etc/pwnagotchi/config.toml
+      line: "main.custom_plugins = \"/usr/local/share/pwnagotchi/custom-plugins/\""
+      insertafter: EOF
+
+#  - name: append commented out parameters for usb_hat_c.py
+#    lineinfile:
+#      dest: /etc/pwnagotchi/config.toml
+#      line: "# main.plugins.ups_hat_c.enabled = true\n# main.plugins.ups_hat_c.label_on = true  # show BAT label or just percentage\n# main.plugins.ups_hat_c.shutdown = 5  # battery percent at which the device will turn off\n# main.plugins.ups_hat_c.bat_x_coord = 140\n# main.plugins.ups_hat_c.bat_y_coord = 0"
+#      insertafter: EOF
 
   - name: enable ssh on boot
     file:
