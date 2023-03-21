@@ -119,6 +119,9 @@
           - qpdf        # nexmon
           - libgmp3-dev # nexmon
           - texinfo     # nexmon
+          - autoconf    # nexmon
+          - libtool     # nexmon
+          - make        # nexmon
           - binutils
 
   tasks:
@@ -294,7 +297,6 @@
   # Install go-1.20.2
   - name: Install go-1.20.2
     unarchive:
-#      src: https://go.dev/dl/go1.19.4.linux-armv6l.tar.gz
       src: https://go.dev/dl/go1.20.2.linux-armv6l.tar.gz
       dest: /usr/local
       remote_src: yes
@@ -393,16 +395,28 @@
   #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
   ### OBSOLETE CODE ###
 
+  ### Divided this into two steps below ###
   # - name: make firmware and firmware patch
   #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
   #   args:
   #     executable: /bin/bash
+  ### OBSOLETE CODE ###
 
-  # - name: backup original firmware
-  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
+#  - name: make firmware
+#    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
+#    args:
+#      executable: /bin/bash
 
-  # - name: install new firmware
-  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make install-firmware
+#  - name: make firmware patch
+#    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+#    args:
+#      executable: /bin/bash
+
+#  - name: backup original firmware
+#    command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
+
+#  - name: install new firmware
+#    command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make install-firmware
 
   # To shrink the final image, remove the nexmon directory (takes 2.5G of space) post build and installation
   # - name: Delete nexmon content & directory
