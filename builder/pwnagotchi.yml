@@ -56,10 +56,10 @@
           - nfs-common
           # Remove libraspberrypi so we can reinstall them from the kali-pi repo instead.
           # This prevents kalipi-bootloader conflicts with raspberrypi-bootloader.
-          - libraspberrypi0
-          - libraspberrypi-dev
-          - libraspberrypi-doc
-          - libraspberrypi-bin
+#          - libraspberrypi0
+#          - libraspberrypi-dev
+#          - libraspberrypi-doc
+#          - libraspberrypi-bin
           # Remove every golang package because we will install go-1.19.4
           - golang*
         install:
@@ -94,10 +94,10 @@
           - libnetfilter-queue-dev
           - libopenmpi3
           - dphys-swapfile
-          - kalipi-kernel
-          - kalipi-bootloader
-          - kalipi-re4son-firmware
-          - kalipi-kernel-headers
+ #         - kalipi-kernel
+ #         - kalipi-bootloader
+ #         - kalipi-re4son-firmware
+ #         - kalipi-kernel-headers
           - libraspberrypi0
           - libraspberrypi-dev
           - libraspberrypi-doc
@@ -152,20 +152,20 @@
       keyserver: "keyserver.ubuntu.com"
       state: present
 
-  - name: Add re4son-kernel repository
-    apt_repository:
-      repo: deb http://http.re4son-kernel.com/re4son/ kali-pi main
-      state: present
+#  - name: Add re4son-kernel repository
+#    apt_repository:
+#      repo: deb http://http.re4son-kernel.com/re4son/ kali-pi main
+#      state: present
 
-  - name: create /etc/apt/preferences.d/kali.pref
-    copy:
-      dest: /etc/apt/preferences.d/kali.pref
-      force: yes
-      content: |
+#  - name: create /etc/apt/preferences.d/kali.pref
+#    copy:
+#      dest: /etc/apt/preferences.d/kali.pref
+#      force: yes
+#      content: |
         # ensure kali packages that are installed take precedence
-        Package: *
-        Pin: release n=kali-pi
-        Pin-Priority: 999
+#        Package: *
+#        Pin: release n=kali-pi
+#        Pin-Priority: 999
 
   - name: add firmware packages to hold
     dpkg_selections:
