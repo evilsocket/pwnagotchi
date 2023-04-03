@@ -5,10 +5,9 @@
 3. Deploy [DrSchottky's fork of nexmon](https://github.com/DrSchottky/nexmon)
 4. Update to Go v1.20.2
 5. Update to BetterCap v2.32
-6. Install all dependencies needed to recompile nexmon directly on the Pi Zero 2 W (if needed) 
-7. Install pwnagotchi plugin for the Waveshare UPS hat
-8. Install screenrc and my preferred configuration for it
-9. Patch (temporary fix) for an error that causes the BRCM firmware to crash during packet injection (e.g., deauth attach)
+6. Install pwnagotchi plugin for the Waveshare UPS hat
+7. Install screenrc and my preferred configuration for it
+8. Patch (temporary fix) for an error that causes the BRCM firmware to crash during packet injection (e.g., deauth attach)
 
 
 # Pwnagotchi
