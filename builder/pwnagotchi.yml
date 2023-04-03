@@ -54,13 +54,7 @@
           - triggerhappy
           - wpa_supplicant
           - nfs-common
-          # Remove libraspberrypi so we can reinstall them from the kali-pi repo instead.
-          # This prevents kalipi-bootloader conflicts with raspberrypi-bootloader.
-#          - libraspberrypi0
-#          - libraspberrypi-dev
-#          - libraspberrypi-doc
-#          - libraspberrypi-bin
-          # Remove every golang package because we will install go-1.19.4
+          # Remove every golang package because we will install go-1.20.2
           - golang*
         install:
           - rsync
@@ -94,10 +88,6 @@
           - libnetfilter-queue-dev
           - libopenmpi3
           - dphys-swapfile
- #         - kalipi-kernel
- #         - kalipi-bootloader
- #         - kalipi-re4son-firmware
- #         - kalipi-kernel-headers
           - libraspberrypi0
           - libraspberrypi-dev
           - libraspberrypi-doc
@@ -122,7 +112,11 @@
           - autoconf    # nexmon
           - libtool     # nexmon
           - make        # nexmon
+          - libgmp3-dev # nexmon
+          - raspberrypi-kernel-headers
+          - gcc-arm-none-eabi #nexmon
           - binutils
+          - aircrack-ng
 
   tasks:
   - name: change hostname
@@ -145,27 +139,6 @@
       regexp: '^ExecStart=/usr/lib/bluetooth/bluetoothd$'
       line: 'ExecStart=/usr/lib/bluetooth/bluetoothd --noplugin=sap'
       state: present
-
-  - name: Add re4son-kernel repo key
-    apt_key:
-      id: "11764EE8AC24832F"
-      keyserver: "keyserver.ubuntu.com"
-      state: present
-
-#  - name: Add re4son-kernel repository
-#    apt_repository:
-#      repo: deb http://http.re4son-kernel.com/re4son/ kali-pi main
-#      state: present
-
-#  - name: create /etc/apt/preferences.d/kali.pref
-#    copy:
-#      dest: /etc/apt/preferences.d/kali.pref
-#      force: yes
-#      content: |
-        # ensure kali packages that are installed take precedence
-#        Package: *
-#        Pin: release n=kali-pi
-#        Pin-Priority: 999
 
   - name: add firmware packages to hold
     dpkg_selections:
