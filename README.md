@@ -16,7 +16,8 @@
 5. Update to BetterCap v2.32
 6. Install pwnagotchi plugin for the Waveshare UPS hat
 7. Install screenrc and my preferred configuration for it
-8. Temporary fix for a firmware bug that causes the BRCM firmware to crash during packet injection (e.g., deauth attack)
+8. Install aircrack-ng
+9. Temporary fix for a firmware bug that causes the BRCM firmware to crash during packet injection (e.g., deauth attack)
 
 ---
 
