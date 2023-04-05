@@ -44,10 +44,11 @@ stop_monitor_interface() {
 
 # returns 0 if the specificed network interface is up
 is_interface_up() {
-  if grep -qi 'up' /sys/class/net/$1/operstate; then
+  if [[ $(ip a show $1 up) ]]; then
     return 0
+  else
+    return 1
   fi
-  return 1
 }
 
 # returns 0 if conditions for AUTO mode are met
