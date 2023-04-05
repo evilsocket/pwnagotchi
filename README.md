@@ -1,14 +1,25 @@
 # Pwnagotchi
 
 <p align="center">
-    <a href="https://github.com/evilsocket/pwnagotchi/releases/latest"><img alt="Release" src="https://img.shields.io/github/release/evilsocket/pwnagotchi.svg?style=flat-square"></a>
+    <a href="https://github.com/aluminum-ice/pwnagotchi/releases/latest"><img alt="Release" src="https://img.shields.io/github/release/aluminum-ice/pwnagotchi.svg?style=flat-square"></a>
     <a href="https://github.com/evilsocket/pwnagotchi/blob/master/LICENSE.md"><img alt="Software License" src="https://img.shields.io/badge/license-GPL3-brightgreen.svg?style=flat-square"></a>
-    <a href="https://github.com/evilsocket/pwnagotchi/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/evilsocket/pwnagotchi"/></a>
-    <a href="https://travis-ci.org/evilsocket/pwnagotchi"><img alt="Travis" src="https://img.shields.io/travis/evilsocket/pwnagotchi/master.svg?style=flat-square"></a>
-    <a href="https://invite.pwnagotchi.ai/"><img alt="Slack" src="https://invite.pwnagotchi.ai/badge.svg"></a>
-    <a href="https://community.pwnagotchi.ai/"><img alt="Forum" src="https://img.shields.io/discourse/posts?server=https%3A%2F%2Fcommunity.pwnagotchi.ai%2F&style=flat-square"></a>
+    <a href="https://github.com/evilsocket/aluminum-ice/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/aluminum-ice/pwnagotchi"/></a>
     <a href="https://twitter.com/intent/follow?screen_name=pwnagotchi"><img src="https://img.shields.io/twitter/follow/pwnagotchi?style=social&logo=twitter" alt="follow on Twitter"></a>
 </p>
+
+**NOTE:** This is a fork of the [original pwnagotchi project](https://github.com/evilsocket/pwnagotchi). I have heavily updated my fork to enable pwnagotchi to run well on a Raspberry Pi Zero 2 W. These changes might break functionality I do not care about but it does improve the core functionality especially on the Pi Zero 2 W. Major changes include:
+
+1. Update to Old Stable Buster Lite 2023-02-22
+2. Remove all dependency on Kali-Pi (causes more problems than it fixes)
+3. Deploy [DrSchottky's fork of nexmon](https://github.com/DrSchottky/nexmon)
+4. Update to Go v1.20.2
+5. Update to BetterCap v2.32
+6. Install pwnagotchi plugin for the Waveshare UPS hat
+7. Install screenrc and my preferred configuration for it
+8. Install aircrack-ng
+9. Temporary fix for a firmware bug that causes the BRCM firmware to crash during packet injection (e.g., deauth attack)
+
+---
 
 [Pwnagotchi](https://pwnagotchi.ai/) is an [A2C](https://hackernoon.com/intuitive-rl-intro-to-advantage-actor-critic-a2c-4ff545978752)-based "AI" leveraging [bettercap](https://www.bettercap.org/) that learns from its surrounding WiFi environment to maximize the crackable WPA key material it captures (either passively, or by performing authentication and association attacks). This material is collected as PCAP files containing any form of handshake supported by [hashcat](https://hashcat.net/hashcat/), including [PMKIDs](https://www.evilsocket.net/2019/02/13/Pwning-WiFi-networks-with-bettercap-and-the-PMKID-client-less-attack/), 
 full and half WPA handshakes.
