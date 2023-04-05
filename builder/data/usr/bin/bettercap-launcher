@@ -19,7 +19,12 @@ if ! check_brcm; then
 fi
 
 # start mon0
-start_monitor_interface
+if ! is_interface_up 'mon0'; then
+  start_monitor_interface
+else
+  stop_monitor_interface
+  start_monitor_interface
+fi
 
 if is_auto_mode_no_delete; then
   /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0

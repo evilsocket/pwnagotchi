@@ -34,20 +34,22 @@ reload_brcm() {
 # starts mon0
 start_monitor_interface() {
   rfkill unblock all
-  ifconfig wlan0 up && iw phy "$(iw phy | head -1 | cut -d" " -f2)" interface add mon0 type monitor && ifconfig mon0 up
+  iw dev wlan0 set power_save off
+  ifconfig wlan0 up && iw phy "$(iw phy | head -1 | cut -d" " -f2)" interface add mon0 type monitor && ifconfig mon0 up && ifconfig wlan0 down
 }
 
 # stops mon0
 stop_monitor_interface() {
-  ifconfig mon0 down && iw dev mon0 del
+  ifconfig mon0 down && iw dev mon0 del && ifconfig wlan0 up
 }
 
 # returns 0 if the specificed network interface is up
 is_interface_up() {
-  if grep -qi 'up' /sys/class/net/$1/operstate; then
+  if [[ $(ip a show $1 up) ]]; then
     return 0
+  else
+    return 1
   fi
-  return 1
 }
 
 # returns 0 if conditions for AUTO mode are met
