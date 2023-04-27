@@ -36,7 +36,7 @@
         - dnsmasq.service
     packages:
       bettercap:
-        url: "https://github.com/bettercap/bettercap/releases/download/v2.31.0/bettercap_linux_armhf_v2.31.0.zip"
+        url: "https://github.com/bettercap/bettercap/archive/refs/tags/v2.32.0.zip"
         ui: "https://github.com/bettercap/ui/releases/download/v1.3.0/ui.zip"
       pwngrid:
         url: "https://github.com/evilsocket/pwngrid/releases/download/v1.10.3/pwngrid_linux_armhf_v1.10.3.zip"
@@ -127,26 +127,6 @@
       regexp: '^ExecStart=/usr/lib/bluetooth/bluetoothd$'
       line: 'ExecStart=/usr/lib/bluetooth/bluetoothd --noplugin=sap'
       state: present
-
-  - name: Add re4son-kernel repo key
-    apt_key:
-      url: https://re4son-kernel.com/keys/http/archive-key.asc
-      state: present
-
-  - name: Add re4son-kernel repository
-    apt_repository:
-      repo: deb http://http.re4son-kernel.com/re4son/ kali-pi main
-      state: present
-
-  - name: create /etc/apt/preferences.d/kali.pref
-    copy:
-      dest: /etc/apt/preferences.d/kali.pref
-      force: yes
-      content: |
-        # ensure kali packages that are installed take precedence
-        Package: *
-        Pin: release n=kali-pi
-        Pin-Priority: 999
 
   - name: add firmware packages to hold
     dpkg_selections:
