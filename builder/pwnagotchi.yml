@@ -104,8 +104,16 @@
           - fonts-ipaexfont-gothic
           - cryptsetup
           - dnsmasq
-          - raspberrypi-kernel-headers
           - aircrack-ng
+          - raspberrypi-kernel-headers
+          - libgmp3-dev
+          - qpdf
+          - bison
+          - flex
+          - make
+          - autoconf
+          - libtool
+          - texinfo
           - binutils
 
   tasks:
