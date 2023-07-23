@@ -257,15 +257,15 @@
       remote_src: yes
       mode: 0755
 
-  # Install go-1.20.2
-  - name: Install go-1.20.2
+  # Install go-1.20.6
+  - name: Install go-1.20.6
     unarchive:
-      src: https://go.dev/dl/go1.20.2.linux-armv6l.tar.gz
+      src: https://go.dev/dl/go1.20.6.linux-armv6l.tar.gz
       dest: /usr/local
       remote_src: yes
     register: golang
 
-  - name: Update .bashrc for go-1.20.2
+  - name: Update .bashrc for go-1.20.6
     blockinfile:
       dest: /home/pi/.bashrc
       state: present
@@ -304,20 +304,81 @@
       remote_src: yes
       mode: 0755
 
-  - name: clone nexmon-pi-zero-2w repository
+  # - name: clone nexmon-pi-zero-2w repository
+  #   git:
+  #     repo: https://github.com/aluminum-ice/nexmon-pi-zero-2w.git
+  #     dest: /usr/local/src/nexmon-pi-zero-2w
+  #   register: nexmongit
+
+  # - name: Execute deployment script
+  #   command: chdir=/usr/local/src/nexmon-pi-zero-2w/bin ./deploy.sh
+
+  # - name: Delete nexmon-pi-zero-2w content & directory
+  #   file:
+  #     state: absent
+  #     path: /usr/local/src/nexmon-pi-zero-2w
+  #   when: nexmongit.changed
+
+  # Install nexmon to fix wireless scanning (takes 2.5G of space)
+  - name: clone nexmon repository
     git:
-      repo: https://github.com/aluminum-ice/nexmon-pi-zero-2w.git
-      dest: /usr/local/src/nexmon-pi-zero-2w
+      repo: https://github.com/seemoo-lab/nexmon.git
+      dest: /usr/local/src/nexmon
     register: nexmongit
 
-  - name: Execute deployment script
-    command: chdir=/usr/local/src/nexmon-pi-zero-2w/bin ./deploy.sh
+  - name: configure libisl
+    command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ ./configure
 
-  - name: Delete nexmon-pi-zero-2w content & directory
+  - name: make libisl
+    command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ make
+
+  - name: install libisl
+    command: chdir=/usr/local/src/nexmon/buildtools/isl-0.10/ make install
+
+  - name: link libisl
+    command: ln -s /usr/local/lib/libisl.so /usr/lib/arm-linux-gnueabihf/libisl.so.10
+
+  - name: autoreconf libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ autoreconf -f -i
+
+  - name: configure libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ ./configure
+
+  - name: make libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ make
+
+  - name: install libmpfr
+    command: chdir=/usr/local/src/nexmon/buildtools/mpfr-3.1.4/ make install
+
+  - name: link libmpfr
+    command: ln -s /usr/local/lib/libmpfr.so /usr/lib/arm-linux-gnueabihf/libmpfr.so.4
+
+  - name: make firmware
+    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
+    args:
+      executable: /bin/bash
+
+  - name: make firmware patch
+    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+    args:
+      executable: /bin/bash
+
+  - name: backup original firmware
+    command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
+
+  - name: install new firmware
+    command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make install-firmware
+
+  - name: make nexutil
+    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/utilities/nexutil/ && make && make install"
+    args:
+      executable: /bin/bash
+
+  # To shrink the final image, remove the nexmon directory (takes 2.5G of space) post build and installation
+  - name: Delete nexmon content & directory
     file:
       state: absent
-      path: /usr/local/src/nexmon-pi-zero-2w
-    when: nexmongit.changed
+      path: /usr/local/src/nexmon/
 
   # Install screenrc configuration
   - name: clone screenrc repository
