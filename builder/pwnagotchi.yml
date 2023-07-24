@@ -366,14 +366,14 @@
     args:
       executable: /bin/bash
 
-- name: Get uptime information
-  shell: "shell uname -r | sed 's/\([0-9]\+\.[0-9]\+\)\..*/\1/'"
-  register: result
+  - name: Get uptime information
+    shell: "shell uname -r | sed 's/\([0-9]\+\.[0-9]\+\)\..*/\1/'"
+    register: result
 
-- name: Print return information from the previous task
-  ansible.builtin.debug:
-    var: result
-    verbosity: 2
+  - name: Print return information from the previous task
+    debug:
+      var: result
+      verbosity: 2
 
   - name: make firmware patch
     shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
