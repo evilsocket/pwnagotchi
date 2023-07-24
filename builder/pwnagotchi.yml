@@ -371,7 +371,7 @@
     replace:
       dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
       backup: no
-      regexp: "KERNEL_VERSION = $(shell uname -r | sed 's/\([0-9]\+\.[0-9]\+\)\..*/\1/')"
+      regexp: "KERNEL_VERSION = .*$"
       replace: "KERNEL_VERSION = 5.10"
 
   - name: make firmware patch
