@@ -362,17 +362,19 @@
     command: ln -s /usr/local/lib/libmpfr.so /usr/lib/arm-linux-gnueabihf/libmpfr.so.4
 
   - name: make firmware
-    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
+    shell: "source ./setup_env.sh && make"
     args:
       executable: /bin/bash
+      chdir: /usr/local/src/nexmon/ 
+
+  - name: make firmware patch
+    shell: "source /.setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+    args:
+      executable: /bin/bash
+      chdir: /usr/local/src/nexmon/
 
   # - name: make firmware patch
-  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
-  #   args:
-  #     executable: /bin/bash
-
-  - name: make patch
-    command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
+  #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
 
   - name: backup original firmware
     command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
