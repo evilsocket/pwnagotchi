@@ -375,7 +375,7 @@
       replace: "KERNEL_VERSION = 5.10"
 
   - name: make firmware patch
-    shell: "source /.setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+    shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
