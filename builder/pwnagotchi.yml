@@ -362,14 +362,23 @@
     command: ln -s /usr/local/lib/libmpfr.so /usr/lib/arm-linux-gnueabihf/libmpfr.so.4
 
   - name: make firmware
-    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && make"
     args:
       executable: /bin/bash
 
-  # - name: make firmware patch
-  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
-  #   args:
-  #     executable: /bin/bash
+- name: Get uptime information
+  shell: "shell uname -r | sed 's/\([0-9]\+\.[0-9]\+\)\..*/\1/'"
+  register: result
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: result
+    verbosity: 2
+
+  - name: make firmware patch
+    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+    args:
+      executable: /bin/bash
 
   - name: backup original firmware
     command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
