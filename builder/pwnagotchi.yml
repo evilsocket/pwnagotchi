@@ -379,6 +379,23 @@
     args:
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/
+    failed_when: false
+    changed_when: false
+    register: failed_output
+
+  - name: debug firmware patch
+    debug:
+      msg: "{{ failed_output.stderr }}"
+
+  - name: capture firmware patch logfile
+    command: chdir=/usr/local/src/nexmon/patches/driver/brcmfmac_5.10.y-nexmon/ cat log/driver.log
+    register: log
+    when: failed_output.rc == 0
+
+  - name: print firmeware patch logfile
+    debug:
+      msg: "{{log.stdout}}"
+    when: failed_output.rc == 0
 
   # - name: make firmware patch
   #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
