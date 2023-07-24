@@ -390,12 +390,10 @@
   - name: capture firmware patch logfile
     command: chdir=/usr/local/src/nexmon/patches/driver/brcmfmac_5.10.y-nexmon/ cat log/driver.log
     register: log
-    when: failed_output.rc == 0
 
   - name: print firmeware patch logfile
     debug:
       msg: "{{log.stdout}}"
-    when: failed_output.rc == 0
 
   # - name: make firmware patch
   #   command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
