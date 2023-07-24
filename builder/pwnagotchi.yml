@@ -169,10 +169,6 @@
       regexp: "^CONF_SWAPSIZE=.*$"
       line: "CONF_SWAPSIZE=512"
 
-  - name: Print all available facts
-    debug:
-      var: ansible_facts
-
   - name: clone papirus repository
     git:
       repo: https://github.com/repaper/gratis.git
@@ -370,19 +366,16 @@
     args:
       executable: /bin/bash
 
-  - name: Get uptime information
-    shell: "shell uname -r"
-    register: result
+  - name: source setup_env.sh
+    command: chdir=/usr/local/src/nexmon/ source ./setup_env.sh 
 
-  - name: Print return information from the previous task
-    debug:
-      var: result
-      verbosity: 2
+  - name: make patch
+    command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make
 
-  - name: make firmware patch
-    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
-    args:
-      executable: /bin/bash
+  # - name: make firmware patch
+  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
+  #   args:
+  #     executable: /bin/bash
 
   - name: backup original firmware
     command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make backup-firmware
@@ -391,9 +384,15 @@
     command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ make install-firmware
 
   - name: make nexutil
-    shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/utilities/nexutil/ && make && make install"
-    args:
-      executable: /bin/bash
+    command: chdir=/usr/local/src/nexmon/utilities/nexutil/ make
+
+  - name: make install nexutil
+    command: chdir=/usr/local/src/nexmon/utilities/nexutil/ make install
+
+  # - name: make nexutil
+  #   shell: "cd /usr/local/src/nexmon/ && source ./setup_env.sh && cd /usr/local/src/nexmon/utilities/nexutil/ && make && make install"
+  #   args:
+  #     executable: /bin/bash
 
   - name: copy modified driver
     shell: "cd /usr/local/src/nexmon/patches/driver/brcmfmac_5.10.y-nexmon/ && cp brcmfmac.ko /lib/modules/5.10.103-v7+/kernel/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko && depmod -a"
