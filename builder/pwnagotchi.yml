@@ -367,7 +367,7 @@
       executable: /bin/bash
 
   - name: Get uptime information
-    shell: "shell uname -r | sed 's/\([0-9]\+\.[0-9]\+\)\..*/\1/'"
+    shell: "shell uname -r | sed --regexp-extended 's/([0-9]\+\.[0-9]\+)\..*/\1/'"
     register: result
 
   - name: Print return information from the previous task
