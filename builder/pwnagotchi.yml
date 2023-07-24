@@ -367,6 +367,13 @@
       executable: /bin/bash
       chdir: /usr/local/src/nexmon/ 
 
+  - name: choose the right kernel version
+    replace:
+      dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
+      backup: no
+      regexp: "KERNEL_VERSION = $(shell uname -r | sed 's/\([0-9]\+\.[0-9]\+\)\..*/\1/')"
+      replace: "KERNEL_VERSION = 5.10"
+
   - name: make firmware patch
     shell: "source /.setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
     args:
