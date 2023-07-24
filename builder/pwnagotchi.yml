@@ -169,6 +169,10 @@
       regexp: "^CONF_SWAPSIZE=.*$"
       line: "CONF_SWAPSIZE=512"
 
+  - name: Print all available facts
+    debug:
+      var: ansible_facts
+
   - name: clone papirus repository
     git:
       repo: https://github.com/repaper/gratis.git
@@ -367,7 +371,7 @@
       executable: /bin/bash
 
   - name: Get uptime information
-    shell: "shell uname -r | sed --regexp-extended 's/([0-9]\+\.[0-9]\+)\..*/\1/'"
+    shell: "shell uname -r"
     register: result
 
   - name: Print return information from the previous task
