@@ -374,6 +374,19 @@
       regexp: "KERNEL_VERSION = .*$"
       replace: "KERNEL_VERSION = 5.10"
 
+  - name: choose the right kernel release (variable)
+    lineinfile:
+      dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
+      regexp: "DRIVER_FOLDER_NAME = .*$"
+      insertafter: "KERNEL_RELEASE = 5.10.103-v7+"
+
+  - name: choose the right kernel release (replace string)
+    replace:
+      dest: /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/Makefile
+      backup: no
+      regexp: "shell uname -r"
+      replace: "KERNEL_RELEASE"
+
   - name: make firmware patch
     shell: "source ./setup_env.sh && cd /usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon/ && make"
     args:
@@ -388,7 +401,7 @@
       msg: "{{ failed_output.stderr }}"
 
   - name: capture firmware patch logfile
-    command: chdir=/usr/local/src/nexmon/patches/driver/brcmfmac_5.10.y-nexmon/ cat log/driver.log
+    command: chdir=/usr/local/src/nexmon/patches/bcm43436b0/9_88_4_65/nexmon cat log/driver.log
     register: log
 
   - name: print firmeware patch logfile
