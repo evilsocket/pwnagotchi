@@ -1,0 +1,253 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <121556603+spd-wd@users.noreply.github.com>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-29 21:50+0100\n"
+"PO-Revision-Date: 2023-02-11 16:25+0200\n"
+"Last-Translator: Speed Weed <121556603+spd-wd@users.noreply.github.com>\n"
+"Language-Team: pwnagotchi <121556603+spd-wd@users.noreply.github.com>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ZzzzZZzzzzZzzz"
+msgstr "...zzZZzz..."
+
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "Huomenta! Pwnagotchi käynnistyy..."
+
+msgid "New day, new hunt, new pwns!"
+msgstr "Uus päivä, uudet kujeet!"
+
+msgid "Hack the Planet!"
+msgstr "Hack the Planet!"
+
+msgid "AI ready."
+msgstr "Tekoäly ladattu."
+
+msgid "The neural network is ready."
+msgstr "Neuroverkosto ladattu."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "Luodaan avaimia, älä katkaise virtaa..."
+
+#, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr "Hei, kanava {channel} on vapaana! Reitittimesi kiittää."
+
+msgid "Reading last session logs ..."
+msgstr "Luetaan viime istunnon lokeja..."
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "{lines_so_far} riviä luettu..."
+
+msgid "I'm bored ..."
+msgstr "Tylsää..."
+
+msgid "Let's go for a walk!"
+msgstr "Mennään kävelylle!"
+
+msgid "This is the best day of my life!"
+msgstr "Paras päivä ikinä!"
+
+msgid "Shitty day :/"
+msgstr "Paska päivä :/"
+
+msgid "I'm extremely bored ..."
+msgstr "Todella tylsää..."
+
+msgid "I'm very sad ..."
+msgstr "Harmittaa aika paljon..."
+
+msgid "I'm sad"
+msgstr "Nyt harmittaa"
+
+msgid "Leave me alone ..."
+msgstr "Jätä mut rauhaan..."
+
+msgid "I'm mad at you!"
+msgstr "Eipä kiinnosta puhua sulle!"
+
+msgid "I'm living the life!"
+msgstr "Tämä se vasta on elämää!"
+
+msgid "I pwn therefore I am."
+msgstr "Ownaan, siis olen."
+
+msgid "So many networks!!!"
+msgstr "Niin monta verkkoa!!"
+
+msgid "I'm having so much fun!"
+msgstr "Nyt menee lujaa!"
+
+msgid "My crime is that of curiosity ..."
+msgstr "Uteliaisuus on ainut rikkeeni..."
+
+#, python-brace-format
+msgid "Hello {name}! Nice to meet you."
+msgstr "Terve, {name}! Mukava tavata."
+
+#, python-brace-format
+msgid "Yo {name}! Sup?"
+msgstr "Moro {name}! Kuis hurisee?"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Moi {name}! Miten menee?"
+
+#, python-brace-format
+msgid "Unit {name} is nearby!"
+msgstr "Kaverini {name} on lähettyvillä!"
+
+#, python-brace-format
+msgid "Uhm ... goodbye {name}"
+msgstr "Jaa... moikka, {name}."
+
+#, python-brace-format
+msgid "{name} is gone ..."
+msgstr "{name} meni pois..."
+
+#, python-brace-format
+msgid "Whoops ... {name} is gone."
+msgstr "Hups... {name} katosi."
+
+#, python-brace-format
+msgid "{name} missed!"
+msgstr "{name} missattu!"
+
+msgid "Missed!"
+msgstr "Huti meni!"
+
+msgid "Good friends are a blessing!"
+msgstr "Hyvät kaverit on tärkeitä!"
+
+msgid "I love my friends!"
+msgstr "Rakastan kavereitani!"
+
+msgid "Nobody wants to play with me ..."
+msgstr "Kukaan ei halua leikkiä mun kanssa..."
+
+msgid "I feel so alone ..."
+msgstr "Onpa yksinäinen olo..."
+
+msgid "Where's everybody?!"
+msgstr "Missä kaikki on?!"
+
+#, python-brace-format
+msgid "Napping for {secs}s ..."
+msgstr "{secs} sekunnin päikkärit..."
+
+msgid "Zzzzz"
+msgstr "zzzZz"
+
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr "zZzzZzz ({secs} sekuntia)"
+
+msgid "Good night."
+msgstr "Hyvää yötä."
+
+msgid "Zzz"
+msgstr "zzZ"
+
+#, python-brace-format
+msgid "Waiting for {secs}s ..."
+msgstr "Odotellaan {secs} sekuntia..."
+
+#, python-brace-format
+msgid "Looking around ({secs}s)"
+msgstr "Tarkastellaan maastoa ({secs} sekuntia)"
+
+#, python-brace-format
+msgid "Hey {what} let's be friends!"
+msgstr "Hei {what}, oltaisko kavereita?"
+
+#, python-brace-format
+msgid "Associating to {what}"
+msgstr "Tutustutaan toisiimme {what} kanssa"
+
+#, python-brace-format
+msgid "Yo {what}!"
+msgstr "Moi, {what}!"
+
+#, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "Päätin että {mac} ei muuten tarvi nettiä enää!"
+
+#, python-brace-format
+msgid "Deauthenticating {mac}"
+msgstr "Deautentisoidaan {mac}"
+
+#, python-brace-format
+msgid "Kickbanning {mac}!"
+msgstr "Kickbännit tulille {mac}!"
+
+#, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Siistiä! Saatiin {num} uutta handshakeä!"
+
+#, python-brace-format
+msgid "You have {count} new message{plural}!"
+msgstr "Sulla on {count} uutta viestiä!"
+
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Hups, jokin meni vikaan... Käynnistetään uudelleen..."
+
+#, python-brace-format
+msgid "Kicked {num} stations\n"
+msgstr "Potkittiin {num} asemaa\n"
+
+#, python-brace-format
+msgid "Made {num} new friends\n"
+msgstr "Saatiin {num} uutta kaveria\n"
+
+#, python-brace-format
+msgid "Got {num} handshakes\n"
+msgstr "Saatiin {num} handshakeä\n"
+
+msgid "Met 1 peer"
+msgstr "Tavattiin 1 kaveri"
+
+#, python-brace-format
+msgid "Met {num} peers"
+msgstr "Tavattiin {num} uutta kaveria"
+
+#, python-brace-format
+msgid ""
+"I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+"Olen ollut päällä {duration} ja potkinut {deauthed} asemaa! Olen myös tavannut "
+"{associated} uutta kaveria ja saanut {handshakes} handshakeä! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr "tuntia"
+
+msgid "minutes"
+msgstr "minuuttia"
+
+msgid "seconds"
+msgstr "sekuntia"
+
+msgid "hour"
+msgstr "tunti"
+
+msgid "minute"
+msgstr "minuutti"
+
+msgid "second"
+msgstr "sekunti"
+
+#, python-brace-format
+msgid "Uploading data to {to} ..."
+msgstr "Lähetetään dataa kohteeseen {to}..."
