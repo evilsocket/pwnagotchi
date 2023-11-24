@@ -36,11 +36,11 @@ class Waveshare27inch_v2(DisplayImpl):
         from pwnagotchi.ui.hw.libs.waveshare.v27inch_v2.epd2in7_V2 import EPD
         self._display = EPD()
         self._display.init()
-        self._display.Clear(0xFF)
+        self._display.Clear()
 
     def render(self, canvas):
         buf = self._display.getbuffer(canvas)
         self._display.display(buf)
 
     def clear(self):
-        self._display.Clear(0xff)
+        self._display.Clear()
