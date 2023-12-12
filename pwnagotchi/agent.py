@@ -324,6 +324,12 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         found_handshake = False
         jmsg = json.loads(msg)
 
+        # give plugins access to all raw bettercap events
+        try:
+            plugins.on('bcap_%s' % re.sub(r"[^a-z0-9_]+", "_",  jmsg['tag'].lower()), self, jmsg)
+        except Exception as err:
+            logging.error("Processing event: %s" % err)
+
         if jmsg['tag'] == 'wifi.client.handshake':
             filename = jmsg['data']['file']
             sta_mac = jmsg['data']['station']
