@@ -5,6 +5,7 @@ import base64
 import hashlib
 import os
 import logging
+import shutil
 
 DefaultPath = "/etc/pwnagotchi/"
 
@@ -25,9 +26,14 @@ class KeyPair(object):
         while True:
             # first time, generate new keys
             if not os.path.exists(self.priv_path) or not os.path.exists(self.pub_path):
-                self._view.on_keys_generation()
-                logging.info("generating %s ..." % self.priv_path)
-                os.system("pwngrid -generate -keys '%s'" % self.path)
+                if os.path.exists(f'{self.priv_path}.original') and os.path.exists(f'{self.pub_path}.original') and os.path.exists(f'{self.fingerprint_path}.original'):
+                    logging.warning('laoding backup')
+                    shutil.copy(f'{self.priv_path}.original', self.priv_path)
+                    shutil.copy(f'{self.pub_path}.original', self.pub_path)
+                else:
+                    self._view.on_keys_generation()
+                    logging.info("generating %s ..." % self.priv_path)
+                    os.system("pwngrid -generate -keys '%s'" % self.path)
 
             # load keys: they might be corrupted if the unit has been turned off during the generation, in this case
             # the exception will remove the files and go back at the beginning of this loop.
@@ -52,6 +58,12 @@ class KeyPair(object):
 
                 # no exception, keys loaded correctly.
                 self._view.on_starting()
+                if not os.path.exists(f'{self.priv_path}.original'):
+                    shutil.copy(self.priv_path, f'{self.priv_path}.original')
+                if not os.path.exists(f'{self.pub_path}.original'):
+                    shutil.copy(self.pub_path, f'{self.pub_path}.original')
+                if not os.path.exists(f'{self.fingerprint_path}.original'):
+                    shutil.copy(self.fingerprint_path, f'{self.fingerprint_path}.original')
                 return
 
             except Exception as e:
