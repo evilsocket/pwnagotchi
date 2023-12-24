@@ -27,7 +27,7 @@ class KeyPair(object):
             # first time, generate new keys
             if not os.path.exists(self.priv_path) or not os.path.exists(self.pub_path):
                 if os.path.exists(f'{self.priv_path}.original') and os.path.exists(f'{self.pub_path}.original') and os.path.exists(f'{self.fingerprint_path}.original'):
-                    logging.warning('laoding backup')
+                    logging.warning('loading backup')
                     shutil.copy(f'{self.priv_path}.original', self.priv_path)
                     shutil.copy(f'{self.pub_path}.original', self.pub_path)
                 else:
