@@ -14,8 +14,9 @@
       "inline": [
         "sed -i 's/^\\([^#]\\)/#\\1/g' /etc/ld.so.preload",
         "dpkg-architecture",
-        "apt-get -y update",
-        "apt-get install -y ansible"
+        "apt-get -y update --allow-releaseInfo-change",
+        "apt-get install -y ansible",
+        "apt-key adv --keyserver hkps://pgp.mit.edu --recv-keys 11764EE8AC24832F"
       ]
     },
     {

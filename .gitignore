@@ -27,3 +27,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+
+pwnagotchi-raspbian-lite-*.sha256
+pwnagotchi-raspbian-lite-*.zip
