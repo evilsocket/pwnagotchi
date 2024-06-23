@@ -254,6 +254,9 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('ws_27inch', 'ws27inch', 'waveshare_27inch', 'waveshare27inch'):
         config['ui']['display']['type'] = 'waveshare27inch'
 
+    elif config['ui']['display']['type'] in ('ws_27inch_v2', 'ws27inch_v2', 'waveshare_27inch_v2', 'waveshare27inch_v2'):
+        config['ui']['display']['type'] = 'waveshare27inch_v2'
+
     elif config['ui']['display']['type'] in ('ws_29inch', 'ws29inch', 'waveshare_29inch', 'waveshare29inch'):
         config['ui']['display']['type'] = 'waveshare29inch'
 
@@ -277,7 +280,7 @@ def load_config(args):
 
     elif config['ui']['display']['type'] in ('ws_213bc', 'ws213bc', 'waveshare_213bc', 'waveshare213bc'):
         config['ui']['display']['type'] = 'waveshare213bc'
-    
+
     elif config['ui']['display']['type'] in ('ws_213bv4', 'ws213bv4', 'waveshare_213bv4', 'waveshare213inb_v4'):
         config['ui']['display']['type'] = 'waveshare213inb_v4'
 
