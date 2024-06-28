@@ -78,6 +78,9 @@ class Display(View):
 
     def is_spotpear24inch(self):
         return self._implementation.name == 'spotpear24inch'
+    
+    def is_displayhatmini(self):
+        return self._implementation.name == 'displayhatmini'
 
     def is_waveshare_any(self):
         return self.is_waveshare_v1() or self.is_waveshare_v2()

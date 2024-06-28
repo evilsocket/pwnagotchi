@@ -286,7 +286,10 @@ def load_config(args):
 
     elif config['ui']['display']['type'] in ('spotpear24inch'):
         config['ui']['display']['type'] = 'spotpear24inch'
-
+    
+    elif config['ui']['display']['type'] in ('displayhatmini'):
+        config['ui']['display']['type'] = 'displayhatmini'
+        
     else:
         print("unsupported display type %s" % config['ui']['display']['type'])
         sys.exit(1)
