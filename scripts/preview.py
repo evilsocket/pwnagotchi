@@ -101,6 +101,10 @@ def main():
     main:
         lang: {lang}
     ui:
+        font:
+            name: 'DejaVuSansMono'
+            size_offset: 0
+            size: 0
         fps: 0.3
         display:
             enabled: false
@@ -110,9 +114,8 @@ def main():
             type: {display}
             web:
                 enabled: true
-                address: "0.0.0.0"
+                address: '::'
                 port: 8080
-
         faces:
             look_r: '( ⚆_⚆)'
             look_l: '(☉_☉ )'
