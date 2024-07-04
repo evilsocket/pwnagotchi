@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 21:50+0100\n"
+"POT-Creation-Date: 2023-03-11 13:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,7 +202,14 @@ msgid "Oops, something went wrong ... Rebooting ..."
 msgstr ""
 
 #, python-brace-format
+msgid "Uploading data to {to} ..."
+msgstr ""
+
+#, python-brace-format
 msgid "Kicked {num} stations\n"
+msgstr ""
+
+msgid "Made >999 new friends\n"
 msgstr ""
 
 #, python-brace-format
@@ -243,8 +250,4 @@ msgid "minute"
 msgstr ""
 
 msgid "second"
-msgstr ""
-
-#, python-brace-format
-msgid "Uploading data to {to} ..."
 msgstr ""
