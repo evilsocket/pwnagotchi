@@ -38,6 +38,7 @@ def size_of(path):
 
 def is_mountpoint(path):
     """
+    
     Checks if path is mountpoint
     """
     return os.system(f"mountpoint -q {path}") == 0

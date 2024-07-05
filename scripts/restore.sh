@@ -40,6 +40,7 @@ if [ -z $BACKUP ]; then
 	CONTINUE=$(echo "${CONTINUE}" | tr "[:upper:]" "[:lower:]")
 	if [ "${CONTINUE}" != "y" ]; then
 		exit 1
+		
 	fi
 fi
 # username to use for ssh

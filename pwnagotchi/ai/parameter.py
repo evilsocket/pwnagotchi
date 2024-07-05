@@ -28,3 +28,4 @@ class Parameter(object):
         self.value = policy_v - self.scale_factor
         assert self.min_value <= self.value <= self.max_value
         return int(self.value)
+

@@ -27,6 +27,7 @@ def describe(extended=False):
                             1 +
                             # missed
                             1 +
+                            
                             # hops
                             1 +
                             # deauths

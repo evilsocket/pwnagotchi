@@ -1,5 +1,6 @@
 import os
 import time
+
 import logging
 
 # https://stackoverflow.com/questions/40426502/is-there-a-way-to-suppress-the-messages-tensorflow-prints/40426709

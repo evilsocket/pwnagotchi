@@ -8,7 +8,8 @@ import shutil
 import re
 
 
-def install_file(source_filename, dest_filename):
+def 
+install_file(source_filename, dest_filename):
     # do not overwrite network configuration if it exists already
     # https://github.com/evilsocket/pwnagotchi/issues/483
     if dest_filename.startswith('/etc/network/interfaces.d/') and os.path.exists(dest_filename):
@@ -18,7 +19,7 @@ def install_file(source_filename, dest_filename):
     print("installing %s to %s ..." % (source_filename, dest_filename))
     try:
         dest_folder = os.path.dirname(dest_filename)
-        if not os.path.isdir(dest_folder):
+        
             os.makedirs(dest_folder)
 
         shutil.copyfile(source_filename, dest_filename)
@@ -35,13 +36,17 @@ def install_system_files():
             dest_filename = source_filename.replace(data_path, '')
             install_file(source_filename, dest_filename)
 
+
     # reload systemd units
     os.system("systemctl daemon-reload")
 
 
-def installer():
+def 
+installer():
+
     install_system_files()
-    # for people updating https://github.com/evilsocket/pwnagotchi/pull/551/files
+    # for people updating https:
+    //github.com/evilsocket/pwnagotchi/pull/551/files
     os.system("systemctl enable fstrim.timer")
 
 def version(version_file):
@@ -62,6 +67,7 @@ with open('requirements.txt') as fp:
     required = [line.strip() for line in fp if line.strip() != ""]
 
 VERSION_FILE = 'pwnagotchi/_version.py'
+
 pwnagotchi_version = version(VERSION_FILE)
 
 setup(name='pwnagotchi',

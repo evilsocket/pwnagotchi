@@ -21,6 +21,7 @@ while getopts "ho:n:u:" arg; do
 			;;
 		*)
 			usage
+      
 			exit 1
 	esac
 done

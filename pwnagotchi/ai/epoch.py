@@ -13,6 +13,7 @@ class Epoch(object):
     def __init__(self, config):
         self.epoch = 0
         self.config = config
+        
         # how many consecutive epochs with no activity
         self.inactive_for = 0
         # how many consecutive epochs with activity

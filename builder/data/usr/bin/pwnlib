@@ -24,6 +24,7 @@ check_brcm() {
 reload_brcm() {
   if ! modprobe -r brcmfmac; then
     return 1
+    
   fi
   if ! modprobe brcmfmac; then
     return 1

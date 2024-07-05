@@ -29,3 +29,4 @@ insert_final_newline = ignore
 [*.{md,txt}]
 indent_size = 4
 trim_trailing_whitespace = false
+

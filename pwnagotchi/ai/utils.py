@@ -14,3 +14,4 @@ def as_batches(x, y, batch_size, shuffle=True):
     for offset in range(0, x_size - batch_size + 1, batch_size):
         excerpt = indices[offset:offset + batch_size] if shuffle else slice(offset, offset + batch_size)
         yield x[excerpt], y[excerpt]
+

@@ -1,4 +1,5 @@
-#!/bin/sh
+
+!/bin/sh
 
 USB_IFACE=$(ifconfig urndis0 | grep urndis0 | awk '{print $1}' | tr -d ':')
 USB_IP=${2:-10.0.0.1}

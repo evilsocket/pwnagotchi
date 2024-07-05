@@ -28,3 +28,4 @@ clean:
 	rm -rf /tmp/packer-builder-arm-image
 	rm -f pwnagotchi-raspbian-lite-*.zip pwnagotchi-raspbian-lite-*.img pwnagotchi-raspbian-lite-*.sha256
 	rm -rf builder/output-pwnagotchi  builder/packer_cache
+

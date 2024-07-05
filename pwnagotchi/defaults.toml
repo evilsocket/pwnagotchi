@@ -38,7 +38,8 @@ main.plugins.gps.device = "/dev/ttyUSB0"
 main.plugins.webgpsmap.enabled = false
 
 main.plugins.onlinehashcrack.enabled = false
-main.plugins.onlinehashcrack.email = ""
+main.plugins.onlinehashcrac
+k.email = ""
 main.plugins.onlinehashcrack.dashboard = ""
 main.plugins.onlinehashcrack.single_files = false
 main.plugins.onlinehashcrack.whitelist = []
@@ -48,6 +49,7 @@ main.plugins.wpa-sec.api_key = ""
 main.plugins.wpa-sec.api_url = "https://wpa-sec.stanev.org"
 main.plugins.wpa-sec.download_results = false
 main.plugins.wpa-sec.whitelist = []
+
 
 main.plugins.wigle.enabled = false
 main.plugins.wigle.api_key = ""

@@ -31,6 +31,7 @@ class CustomDisplay(Display):
         """
         Return the saved image
         """
+        
         return self.last_image
 
 

@@ -2,6 +2,7 @@
 - hosts:
     - 127.0.0.1
   become: yes
+  
   vars:
     pwnagotchi:
       hostname: "{{ lookup('env', 'PWN_HOSTNAME') | default('pwnagotchi', true) }}"

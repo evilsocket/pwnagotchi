@@ -17,3 +17,4 @@ if is_auto_mode; then
 else
   /usr/local/bin/pwnagotchi --manual
 fi
+

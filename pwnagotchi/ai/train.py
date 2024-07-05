@@ -44,6 +44,7 @@ class Stats(object):
             if training:
                 self.epochs_trained += 1
 
+
         self.save()
 
         if best_r:

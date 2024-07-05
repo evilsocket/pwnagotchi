@@ -25,3 +25,4 @@ class RewardFunction(object):
         l = -.1 * (_bored / tot_epochs)
 
         return h + a + c + b + i + m + s + l
+

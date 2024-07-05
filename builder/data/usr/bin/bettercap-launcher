@@ -22,7 +22,8 @@ fi
 start_monitor_interface
 
 if is_auto_mode_no_delete; then
-  /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -iface mon0
+  /usr/bin/bettercap -no-colors -caplet pwnagotchi-auto -ifac
+  e mon0
 else
   /usr/bin/bettercap -no-colors -caplet pwnagotchi-manual -iface mon0
 fi

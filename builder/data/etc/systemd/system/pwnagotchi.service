@@ -18,3 +18,4 @@ StandardError=null
 
 [Install]
 WantedBy=multi-user.target
+Install

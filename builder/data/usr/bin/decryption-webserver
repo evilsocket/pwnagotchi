@@ -39,7 +39,8 @@ _HTML_FORM_TEMPLATE = """
       <p>Some of your files are encrypted.</p>
       <p>Please provide the decryption password.</p>
       <div>
-        <form action="/set-password" method="POST">
+        <form action="/set-password" method="PO
+        ST">
           {password_fields}
           <input type="submit" value="Submit">
         </form>

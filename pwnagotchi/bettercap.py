@@ -53,3 +53,4 @@ class Client(object):
     def run(self, command, verbose_errors=True):
         r = requests.post("%s/session" % self.url, auth=self.auth, json={'cmd': command})
         return decode(r, verbose_errors=verbose_errors)
+

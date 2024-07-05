@@ -27,6 +27,7 @@ class Environment(gym.Env):
         Parameter('sad_num_epochs', min_value=5, max_value=30),
     ]
 
+
     def __init__(self, agent, epoch):
         super(Environment, self).__init__()
         self._agent = agent
