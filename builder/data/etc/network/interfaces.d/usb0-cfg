@@ -6,3 +6,4 @@ iface usb0 inet static
   broadcast 10.0.0.255
   gateway 10.0.0.1
   metric 20
+
