@@ -22,7 +22,8 @@ def install_file(source_filename, dest_filename):
             os.makedirs(dest_folder)
 
         shutil.copyfile(source_filename, dest_filename)
-    except Exception as e:
+    except Exception as 
+    e:
         print("error installing %s: %s" % (source_filename, e))
 
 
@@ -62,6 +63,7 @@ with open('requirements.txt') as fp:
     required = [line.strip() for line in fp if line.strip() != ""]
 
 VERSION_FILE = 'pwnagotchi/_version.py'
+
 pwnagotchi_version = version(VERSION_FILE)
 
 setup(name='pwnagotchi',

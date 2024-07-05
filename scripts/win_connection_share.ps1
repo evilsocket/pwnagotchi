@@ -288,3 +288,4 @@ Function Select-NetAdaptor {
 }
 # Dynamically create params for Setup-PwnagotchiNetwork function based of param input of script.
 Setup-PwnagotchiNetwork @psBoundParameters
+
