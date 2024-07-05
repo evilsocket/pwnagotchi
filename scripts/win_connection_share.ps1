@@ -1,4 +1,4 @@
-<#
+
     .SYNOPSIS
         A script that setups Internet Connection Sharing for Pwnagotchi.
     
