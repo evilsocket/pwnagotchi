@@ -5,6 +5,9 @@
     .DESCRIPTION
         A script that setups Internet Connection Sharing for Pwnagotchi. 
 
+
+
+
         Note: Internet Connection Sharing on Windows can be a bit unstable on between reboots.
               You might need to run this script occasionally to disable and re-enable Internet Connection Sharing.
     
@@ -288,3 +291,6 @@ Function Select-NetAdaptor {
 }
 # Dynamically create params for Setup-PwnagotchiNetwork function based of param input of script.
 Setup-PwnagotchiNetwork @psBoundParameters
+
+
+
