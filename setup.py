@@ -8,6 +8,7 @@ import shutil
 import re
 
 
+
 def install_file(source_filename, dest_filename):
     # do not overwrite network configuration if it exists already
     # https://github.com/evilsocket/pwnagotchi/issues/483

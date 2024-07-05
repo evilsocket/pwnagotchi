@@ -18,3 +18,4 @@ else
 	echo "can't find usb interface with ip ${USB_IFACE}"
 	exit 1
 fi
+
