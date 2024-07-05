@@ -27,3 +27,4 @@ pwnagotchi plugins upgrade -h --help
 }
 
 complete -F _show_complete pwnagotchi
+
