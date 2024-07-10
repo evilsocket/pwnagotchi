@@ -1,2 +1,5 @@
 /builder/** linguist-vendored
 /scripts/** linguist-vendored
+/pwnagotchi/ui/web/static/** linguist-vendored
+/pwnagotchi/ui/web/templates/** linguist-vendored
+/pwnagotchi/locale/** linguist-vendored
