@@ -1,4 +1,5 @@
 import os
+import re
 import logging
 import requests
 from datetime import datetime
@@ -27,26 +28,25 @@ class WpaSec(plugins.Plugin):
 
     def _upload_to_wpasec(self, path, timeout=30):
         """
-        Uploads the file to https://wpa-sec.stanev.org, or another endpoint.
+        Uploads the file to wpasec
         """
         with open(path, 'rb') as file_to_upload:
             cookie = {'key': self.options['api_key']}
             payload = {'file': file_to_upload}
 
-            try:
-                result = requests.post(self.options['api_url'],
-                                       cookies=cookie,
-                                       files=payload,
-                                       timeout=timeout)
-                if ' already submitted' in result.text:
-                    logging.debug("%s was already submitted.", path)
-            except requests.exceptions.RequestException as req_e:
-                raise req_e
+            logging.info("WPA_SEC: Uploading %s...", path)
 
+            result = requests.post(self.options['api_url'],
+                                cookies=cookie,
+                                files=payload,
+                                timeout=timeout)
+            result.raise_for_status()
+            
+            logging.info("WPA_SEC: Uploaded %s. Response was: %s.", path, result.text.partition('\n')[0])
 
     def _download_from_wpasec(self, output, timeout=30):
         """
-        Downloads the results from wpasec and safes them to output
+        Downloads the results from wpasec and saves them to output
 
         Output-Format: bssid, station_mac, ssid, password
         """
@@ -56,33 +56,56 @@ class WpaSec(plugins.Plugin):
         api_url = f"{api_url}?api&dl=1"
 
         cookie = {'key': self.options['api_key']}
-        try:
-            result = requests.get(api_url, cookies=cookie, timeout=timeout)
-            with open(output, 'wb') as output_file:
-                output_file.write(result.content)
-        except requests.exceptions.RequestException as req_e:
-            raise req_e
-        except OSError as os_e:
-            raise os_e
 
+        logging.info("WPA_SEC: Downloading cracked passwords...")
+
+        result = requests.get(api_url, cookies=cookie, timeout=timeout)
+        result.raise_for_status()
+
+        with open(output, 'wb') as output_file:
+            output_file.write(result.content)
+
+        logging.info("WPA_SEC: Downloaded cracked passwords.")
+
+    def _write_cracked_single_files(self, cracked_file_path, handshake_dir):
+        """
+        Splits download results from wpasec into individual .pcap..cracked files in handshake_dir
+
+        Each .pcap.cracked file will contain the cracked handshake password
+        """
+        logging.info("WPA_SEC: Writing cracked single files...")
+
+        with open(cracked_file_path, 'r') as cracked_file:
+            for line in cracked_file:
+                try:
+                    bssid,station_mac,ssid,password = line.split(":")
+                    if password:
+                        filename = re.sub(r'[^a-zA-Z0-9]', '', ssid) + '_' + bssid
+                        if os.path.exists( os.path.join(handshake_dir, filename+'.pcap') ) and not os.path.exists( os.path.join(handshake_dir, filename+'.pcap.cracked') ):
+                            with open(os.path.join(handshake_dir, filename+'.pcap.cracked'), 'w') as f:
+                                f.write(password)
+                except Exception:
+                    logging.exception(f"WPA_SEC: Exception writing cracked single file, parsing line {line}.")
+    
+        logging.info("WPA_SEC: Wrote cracked single files.")
 
     def on_loaded(self):
         """
         Gets called when the plugin gets loaded
         """
         if 'api_key' not in self.options or ('api_key' in self.options and not self.options['api_key']):
-            logging.error("WPA_SEC: API-KEY isn't set. Can't upload to wpa-sec.stanev.org")
+            logging.error("WPA_SEC: API-KEY isn't set. Can't upload.")
             return
 
         if 'api_url' not in self.options or ('api_url' in self.options and not self.options['api_url']):
-            logging.error("WPA_SEC: API-URL isn't set. Can't upload, no endpoint configured.")
+            logging.error("WPA_SEC: API-URL isn't set. Can't upload.")
             return
 
         if 'whitelist' not in self.options:
             self.options['whitelist'] = list()
 
         self.ready = True
-        logging.info("WPA_SEC: plugin loaded")
+        logging.info("WPA_SEC: plugin loaded.")
 
     def on_webhook(self, path, request):
         from flask import make_response, redirect
@@ -109,35 +132,34 @@ class WpaSec(plugins.Plugin):
             handshake_new = set(handshake_paths) - set(reported) - set(self.skip)
 
             if handshake_new:
-                logging.info("WPA_SEC: Internet connectivity detected. Uploading new handshakes to wpa-sec.stanev.org")
+                logging.info("WPA_SEC: Internet connectivity detected. Uploading new handshakes...")
                 for idx, handshake in enumerate(handshake_new):
-                    display.on_uploading(f"wpa-sec.stanev.org ({idx + 1}/{len(handshake_new)})")
+                    display.on_uploading(f"WPA-SEC ({idx + 1}/{len(handshake_new)})")
 
                     try:
                         self._upload_to_wpasec(handshake)
                         reported.append(handshake)
                         self.report.update(data={'reported': reported})
-                        logging.debug("WPA_SEC: Successfully uploaded %s", handshake)
-                    except requests.exceptions.RequestException as req_e:
+                    except requests.exceptions.RequestException:
                         self.skip.append(handshake)
-                        logging.debug("WPA_SEC: %s", req_e)
-                        continue
-                    except OSError as os_e:
-                        logging.debug("WPA_SEC: %s", os_e)
-                        continue
+                        logging.exception("WPA_SEC: RequestException uploading %s.", handshake)
+                    except Exception:
+                        logging.exception("WPA_SEC: Exception uploading %s.", handshake)
 
                 display.on_normal()
 
             if 'download_results' in self.options and self.options['download_results']:
-                cracked_file = os.path.join(handshake_dir, 'wpa-sec.cracked.potfile')
-                if os.path.exists(cracked_file):
-                    last_check = datetime.fromtimestamp(os.path.getmtime(cracked_file))
-                    if last_check is not None and ((datetime.now() - last_check).seconds / (60 * 60)) < 1:
+                cracked_file_path = os.path.join(handshake_dir, 'wpa-sec.cracked.potfile')
+
+                if os.path.exists(cracked_file_path):
+                    last_check = datetime.fromtimestamp(os.path.getmtime(cracked_file_path))
+                    download_interval = int(self.options.get('download_interval', 3600))
+                    if last_check is not None and ((datetime.now() - last_check).seconds / download_interval) < 1:
                         return
+
                 try:
-                    self._download_from_wpasec(os.path.join(handshake_dir, 'wpa-sec.cracked.potfile'))
-                    logging.info("WPA_SEC: Downloaded cracked passwords.")
-                except requests.exceptions.RequestException as req_e:
-                    logging.debug("WPA_SEC: %s", req_e)
-                except OSError as os_e:
-                    logging.debug("WPA_SEC: %s", os_e)
+                    self._download_from_wpasec(cracked_file_path)
+                    if 'single_files' in self.options and self.options['single_files']:
+                        self._write_cracked_single_files(cracked_file_path, handshake_dir)
+                except Exception:
+                    logging.exception("WPA_SEC: Exception downloading results.")

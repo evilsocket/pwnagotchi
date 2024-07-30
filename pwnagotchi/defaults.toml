@@ -47,6 +47,8 @@ main.plugins.wpa-sec.enabled = false
 main.plugins.wpa-sec.api_key = ""
 main.plugins.wpa-sec.api_url = "https://wpa-sec.stanev.org"
 main.plugins.wpa-sec.download_results = false
+main.plugins.wpa-sec.single_files = false
+main.plugins.wpa-sec.download_interval = 3600
 main.plugins.wpa-sec.whitelist = []
 
 main.plugins.wigle.enabled = false
