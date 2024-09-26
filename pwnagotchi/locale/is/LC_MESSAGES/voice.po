@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <sean.duggan@pm.me>, YEAR.
+# Icelandic Translation.
+# Copyright (C) 2019
+# This file is distributed under the same license as the pwnagotchi package..
+# Sean Duggan <sean.duggan@pm.me>, 2024.
 #
 #, fuzzy
 msgid ""
@@ -12,7 +12,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <sean.duggan@pm.me>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: Icelandic\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,7 +21,7 @@ msgid "ZzzzZZzzzzZzzz"
 msgstr "ZzzzZZzzzzZzzz"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "Hæ, Ég heiti Pwnagotchi! Byrjar.."
+msgstr "Hæ, Ég heiti Pwnagotchi! Ræsi.."
 
 msgid "New day, new hunt, new pwns!"
 msgstr "Nýr dagur, Ný veiði, Ný pwns!"
@@ -36,11 +36,11 @@ msgid "The neural network is ready."
 msgstr "Tauganetið er tilbúið."
 
 msgid "Generating keys, do not turn off ..."
-msgstr "Búðu til lykla, ekki slökkva á."
+msgstr "Bý til lykla, ekki slökkva á."
 
 #, python-brace-format
 msgid "Hey, channel {channel} is free! Your AP will say thanks."
-msgstr "Hæ, Rás {channel} er líka ókeypis! AP þitt mun segja takk."
+msgstr "Hæ, Rás {channel} er líka ókeypis! AP þinn mun þakka fyrir."
 
 msgid "Reading last session logs ..."
 msgstr "Les fyrri leiðarbók..."
@@ -117,11 +117,11 @@ msgstr "{name} er farinn ..."
 
 #, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "Whoops ... {name} er farinn."
+msgstr "Úps ... {name} er farinn."
 
 #, python-brace-format
 msgid "{name} missed!"
-msgstr "{name} sakna!'"
+msgstr "{name} saknað!'"
 
 msgid "Missed!"
 msgstr "Saknað!'"
@@ -143,7 +143,7 @@ msgstr "Hvar eru allir?!"
 
 #, python-brace-format
 msgid "Napping for {secs}s ..."
-msgstr "Að sofa fyrir {secs} ..."
+msgstr "Sef í {secs}s ..."
 
 msgid "Zzzzz"
 msgstr "Zzzzz"
@@ -164,15 +164,15 @@ msgstr "Bíð eftir {secs} ..."
 
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "Horft í kringum sig ({secs})"
+msgstr "Horfi í kringum mig ({secs}s)"
 
 #, python-brace-format
 msgid "Hey {what} let's be friends!"
-msgstr "Hæ {what} Horft í kringum sig!"
+msgstr "Hæ {what} við skulum vera vinir!"
 
 #, python-brace-format
 msgid "Associating to {what}"
-msgstr "Tengjast við {what}"
+msgstr "Tengist við {what}"
 
 #, python-brace-format
 msgid "Yo {what}!"
@@ -180,30 +180,30 @@ msgstr "Yo {what}!"
 
 #, python-brace-format
 msgid "Just decided that {mac} needs no WiFi!"
-msgstr "Ég ákvað að {mac} þyrfti að hafa WiFi!"
+msgstr "Ég ákvað að {mac} þurfi ekki WiFi!"
 
 #, python-brace-format
 msgid "Deauthenticating {mac}"
-msgstr "Afvottun {mac}"
+msgstr "Afvotta {mac}"
 
 #, python-brace-format
 msgid "Kickbanning {mac}!"
-msgstr "Sparkbann {mac}!"
+msgstr "Sparkbanna {mac}!"
 
 #, python-brace-format
 msgid "Cool, we got {num} new handshake{plural}!"
-msgstr "Flott! við fengum {num} ný handtök {plural}!"
+msgstr "Flott! við fengum {num} ný handatök {plural}!"
 
 #, python-brace-format
 msgid "You have {count} new message{plural}!"
-msgstr "þú hefur {count} ný skilaboð{plural}!"
+msgstr "þú hefur {count} ný skilaboð!"
 
 msgid "Oops, something went wrong ... Rebooting ..."
-msgstr "Oops, eitthvað brotnaði ... Endurræsa ..."
+msgstr "Oops, eitthvað brotnaði ... Endurræsi ..."
 
 #, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "Sparkaðir {num} stöðvar\n"
+msgstr "Sparkaði {num} stöðvar\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
@@ -211,14 +211,14 @@ msgstr "Eignaðist {num} nýja vini\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Fékk {num} ný handabandi\n"
+msgstr "Fékk {num} ný handabönd\n"
 
 msgid "Met 1 peer"
 msgstr "Hitti 1 jafningja"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "Hitti {num} jafnaldra"
+msgstr "Hitti {num} jafningja"
 
 #, python-brace-format
 msgid ""
@@ -226,8 +226,8 @@ msgid ""
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
-"Ég hef verið að pwning í {duration} og sparkað í {deauthed} viðskiptavini! Ég hef líka hitt  "
-"{associated} nýir vinir og borðuðu  {handshakes} handabandi! #pwnagotchi "
+"Ég hef verið að pwna í {duration} og sparkað {deauthed} viðskiptavinum! Ég hef líka hitt  "
+"{associated} nýja vini og borðað {handshakes} handabönd! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgid "hours"
 msgstr "klukkustundir"
@@ -249,4 +249,4 @@ msgstr "sekúndu"
 
 #, python-brace-format
 msgid "Uploading data to {to} ..."
-msgstr "Hleður upp gögnum til {to} ..."
+msgstr "Hleð upp gögnum til {to} ..."
