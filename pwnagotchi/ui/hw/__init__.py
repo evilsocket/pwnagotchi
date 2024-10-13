@@ -1,6 +1,7 @@
 from pwnagotchi.ui.hw.inky import Inky
 from pwnagotchi.ui.hw.papirus import Papirus
 from pwnagotchi.ui.hw.oledhat import OledHat
+from pwnagotchi.ui.hw.adafruitssd1306i2c import AdafruitSSD1306i2c
 from pwnagotchi.ui.hw.lcdhat import LcdHat
 from pwnagotchi.ui.hw.dfrobot1 import DFRobotV1
 from pwnagotchi.ui.hw.dfrobot2 import DFRobotV2
@@ -27,6 +28,9 @@ def display_for(config):
 
     if config['ui']['display']['type'] == 'oledhat':
         return OledHat(config)
+
+    if config['ui']['display']['type'] == 'adafruitssd1306i2c':
+        return AdafruitSSD1306i2c(config)
 
     if config['ui']['display']['type'] == 'lcdhat':
         return LcdHat(config)
