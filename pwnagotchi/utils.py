@@ -242,6 +242,9 @@ def load_config(args):
     elif config['ui']['display']['type'] in ('oledhat',):
         config['ui']['display']['type'] = 'oledhat'
 
+    elif config['ui']['display']['type'] in ('adafruitssd1306i2c',):
+        config['ui']['display']['type'] = 'adafruitssd1306i2c'
+
     elif config['ui']['display']['type'] in ('ws_1', 'ws1', 'waveshare_1', 'waveshare1'):
         config['ui']['display']['type'] = 'waveshare_1'
 
@@ -277,7 +280,7 @@ def load_config(args):
 
     elif config['ui']['display']['type'] in ('ws_213bc', 'ws213bc', 'waveshare_213bc', 'waveshare213bc'):
         config['ui']['display']['type'] = 'waveshare213bc'
-    
+
     elif config['ui']['display']['type'] in ('ws_213bv4', 'ws213bv4', 'waveshare_213bv4', 'waveshare213inb_v4'):
         config['ui']['display']['type'] = 'waveshare213inb_v4'
 
