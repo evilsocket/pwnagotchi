@@ -1,28 +1,82 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/xml; charset=utf-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>GPS MAP</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
-  <script type='text/javascript' src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-  <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js'></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css" integrity="sha512-ENrTWqddXrLJsQS2A86QmvA17PkJ0GVm1bqj5aTgpeMAfDKN2+SIOLpKG8R/6KkimnhTb+VW5qqUHB/r1zaRgg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css" integrity="sha512-fYyZwU1wU0QWB4Yutd/Pvhy5J1oWAwFXun1pt+Bps04WSe4Aq6tyHlT4+MHSJhD8JlLfgLuC4CbCnX5KHSjyCg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-locatecontrol/0.81.1/L.Control.Locate.min.css" integrity="sha512-IlIXbyZEmmeF+tke8OOZzxTAN+zU31Ye+CBvZR6wylo37OaqtdRMXYwPuwwV2cup5DE4gwEeWWv0SCBJsLW18g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.min.css" integrity="sha512-Dl8Sq3zeaW4/XeowsD/0Fyn07Cy+1yJlG4/Bs8Lt91P2gZGB3lemVScG8dsNi2pIwhDwuTR22RGumk72cd5OhA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js" integrity="sha512-TiMWaqipFi2Vqt4ugRzsF8oRoGFlFFuqIi30FFxEPNw58Ov9mOy6LgC05ysfkxwLE0xVeZtmr92wVg9siAFRWA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-locatecontrol/0.81.1/L.Control.Locate.min.js" integrity="sha512-s/EGgrVhzEldZLssatR0N5oT6POS4r2ZwYa+sCXYrx8YMlKn9TQCIGTJS4c4O7w/u+bw32sNEyo+EPa+KDrw3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.min.js" integrity="sha512-Tndo4y/YJooD/mGXS9D6F1YyBcSyrWnnSWQ5Z9IcKt6bljicjyka9qcP99qMFbQ5+omfOtwwIapv1DjBCZcTJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   <style type="text/css">
-    /* for map */
-    html, body {   height: 100%; width: 100%; margin:0; background-color:#000;}
-    .pwnAPPin path {
-      fill: #ce7575;
+    html, body {
+      height:100%;
+      width:100%;
+      margin:0;
+      padding:0;
     }
-    .pwnAPPinOpen path {
-      fill: #76ce75;
+
+    .flex-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
-    /* animated ap marker */
-    .pwnAPPin .ring_outer, .pwnAPPinOpen .ring_outer {
+
+    #filterbox {
+      display: flex;
+      border-bottom: 2px solid #303030;
+      background-color: #000;
+      padding: 10px;
+    }
+    #search {
+      background-color: #000;
+      color: #e0e0e0;
+      border: none;
+      outline: none;
+      flex: 1;
+      padding-right: 10px;
+      text-overflow: ellipsis;
+    }
+    #matchcount {
+      background-color: #000;
+      color: #e0e0e0;
+      font-weight: bold;
+    }
+
+    #mapdiv {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+    }
+ 
+    .ap-red path {
+      fill: #ce7575 !important;
+    }
+    .ap-green path {
+      fill: #76ce75 !important;
+    }
+    .ap-red circle {
+      fill: #931f1f !important;
+    }
+    .ap-green circle {
+      fill: #1f9321 !important;
+    }
+    .ap-red .ring_outer, .ap-green .ring_outer {
       animation: opacityPulse 2s cubic-bezier(1, 0.14, 1, 1);
       animation-iteration-count: infinite;
       opacity: .5;
     }
-    .pwnAPPin .ring_inner, .pwnAPPinOpen .ring_inner {
+    .ap-red .ring_inner, .ap-green .ring_inner {
       animation: opacityPulse 2s cubic-bezier(0.4, 0.74, 0.56, 0.82);
       animation-iteration-count: infinite;
       opacity: .8;
@@ -38,70 +92,48 @@
         opacity: 0.1;
       }
     }
-    @keyframes bounceInDown {
-      from, 60%, 75%, 90%, to {
-        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-      }
-      0% {
-        opacity: 0;
-        transform: translate3d(0, -3000px, 0);
-      }
-      60% {
-        opacity: 1;
-        transform: translate3d(0, 5px, 0);
-      }
-      75% {
-        transform: translate3d(0, -3px, 0);
-      }
-      90% {
-        transform: translate3d(0, 5px, 0);
-      }
-      to {
-        transform: none;
-      }
-    }
-    .bounceInDown {
-      animation-name: bounceInDown;
-      animation-duration: 2s;
-      animation-fill-mode: both;
-    }
-    /* animated radar */
-    .radar {
-    animation: pulsate 1s ease-out;
-    -webkit-animation: pulsate 1s ease-out;
-    -webkit-animation-iteration-count: infinite;
-    /* opacity: 0.0 */
-    }
-    #loading {
+
+    #loading-container {
       top: 50%;
       left: 50%;
       position: fixed;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: 0.5vw #ff0000 solid;
-      border-radius: 2vw;
-      padding: 5vw;
+      z-index: 9999999;
+      background-color: rgba(255, 255, 255);
+      border: 3px red solid;
+      border-radius: 20px;
       transform: translateX(-50%) translateY(-50%);
-      text-align:center;
-      display: none;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
     }
-    #loading .face { font-size:8vw; }
-    #loading .text { position:absolute;bottom:0;text-align:center; font-size: 2vw;color:#a0a0a0;}
-    #filterbox { position: fixed;top:0px;left:0px;z-index:999999;margin-left:55px;width:100%;height:20px;border-bottom:2px solid #303030;display: grid;grid-template-columns: 1fr 0.1fr;grid-template-rows: 1fr;grid-template-areas: ". .";}
-      #search { grid-area: 1 / 1 / 2 / 2;height:30px;padding:3px;background-color:#000;color:#e0e0e0;border:none;}
-      #matchcount { grid-area: 1 / 2 / 2 / 3;height:30px;margin-right:55px;padding-right:5px;background-color:#000;color:#a0a0a0;font-weight:bold;}
-      #mapdiv { width:100%; height: 100%; }
+    #loading-face {
+      font-size: 4rem;
+    }
+    #loading-text {
+      font-size: 1.7rem;
+    }
   </style>
 </head>
 <body>
-  <div id="mapdiv"></div>
-  <div id="filterbox">
-    <input type="text" id="search" placeholder="filter: #cracked #notcracked AA:BB:CC aabbcc AndroidAP ..."/>
-    <div id="matchcount">0&nbsp;APs</div>
+  <div class="flex-container">
+    <div id="filterbox">
+      <input type="search" id="search" placeholder="Filter: #cracked #notcracked AA:BB:CC aabbcc AndroidAP" />
+      <div id="matchcount">0 APs</div>
+    </div>
+    <div id="mapdiv"></div>
   </div>
-  <div id="loading"><div class="face"><nobr>(⌐■&nbsp;<span id="loading_ap_img"></span>&nbsp;■)</nobr></div><div class="text" id="loading_infotext">loading positions...</div></div>
+
+  <div id="loading-container">
+    <div id="loading-face">
+      <nobr>(⌐■&nbsp;&nbsp;&nbsp;■)</nobr>
+    </div>
+    <div id="loading-text">LOADING POSITIONS...</div>
+  </div>
+
   <script type="text/javascript">
     function loadJSON(url, callback) {
-      document.getElementById("loading").style.display = "flex";
       var xobj = new XMLHttpRequest();
       xobj.overrideMimeType("application/json");
       xobj.open('GET', url, true);
@@ -112,6 +144,7 @@
       };
       xobj.send(null);
     }
+
     function escapeHtml(unsafe) {
       return String(unsafe)
           .replace(/&/g, "&amp;")
@@ -120,6 +153,7 @@
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#039;");
     }
+
     function formatMacAddress(macAddress) {
       if (macAddress !== null) {
         macAddress = macAddress.toUpperCase();
@@ -132,156 +166,212 @@
       return macAddress;
     }
 
-    // select your map theme from https://leaflet-extras.github.io/leaflet-providers/preview/
-    // use 2 layers with alpha for a nice dark style
-    var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    });
-    var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      opacity:0.8,
-      maxZoom: 20
-    });
-    var mymap = L.map('mapdiv');
-
-    var svg     = '<svg class="pwnAPPin" width="80px" height="60px" viewBox="0 0 44 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc>pwnagotchi AP icon.</desc><defs><linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1"><stop stop-color="#FFFFFF" offset="0%"></stop><stop stop-color="#000000" offset="100%"></stop></linearGradient></defs><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="marker"><path class="ring_outer" d="M28.6,8 C34.7,9.4 39,12.4 39,16 C39,20.7 31.3,24.6 21.7,24.6 C12.1,24.6 4.3,20.7 4.3,16 C4.3,12.5 8.5,9.5 14.6,8.1 C15.3,8 14.2,6.6 13.3,6.8 C5.5,8.4 0,12.2 0,16.7 C0,22.7 9.7,27.4 21.7,27.4 C33.7,27.4 43.3,22.6 43.3,16.7 C43.3,12.1 37.6,8.3 29.6,6.7 C28.8,6.5 27.8,7.9 28.6,8.1 L28.6,8 Z" id="Shape" fill="#878787" fill-rule="nonzero"></path><path class="ring_inner" d="M28.1427313,11.0811939 C30.4951542,11.9119726 32.0242291,13.2174821 32.0242291,14.6416742 C32.0242291,17.2526931 27.6722467,19.2702986 22.261674,19.2702986 C16.8511013,19.2702986 12.4991189,17.2526931 12.4991189,14.7603569 C12.4991189,13.5735301 13.4400881,12.505386 15.0867841,11.6746073 C15.792511,11.3185592 14.7339207,9.30095371 13.9105727,9.77568442 C10.6171806,10.9625112 8.5,12.9801167 8.5,15.2350876 C8.5,19.0329333 14.4986784,22.0000002 21.9088106,22.0000002 C29.2013216,22.0000002 35.2,19.0329333 35.2,15.2350876 C35.2,12.861434 32.7299559,10.6064632 28.8484581,9.30095371 C28.0251101,9.18227103 27.4370044,10.8438285 28.0251101,11.0811939 L28.1427313,11.0811939 Z" id="Shape" fill="#5F5F5F" fill-rule="nonzero"></path><g id="ap" transform="translate(13.000000, 0.000000)"><rect id="apfront" fill="#000000" x="0" y="14" width="18" height="4"></rect><polygon id="apbody" fill="url(#linearGradient-1)" points="3.83034404 10 14.169656 10 18 14 0 14"></polygon><circle class="ring_outer" id="led1" fill="#931F1F" cx="3" cy="16" r="1"></circle><circle class="ring_inner" id="led2" fill="#931F1F" cx="7" cy="16" r="1"></circle><circle class="ring_outer" id="led3" fill="#931F1F" cx="11" cy="16" r="1"></circle><circle class="ring_inner" id="led4" fill="#931F1F" cx="15" cy="16" r="1"></circle><polygon id="antenna2" fill="#000000" points="8.8173082 0 9.1826918 0 9.5 11 8.5 11"></polygon><polygon id="antenna3" fill="#000000" transform="translate(15.000000, 5.500000) rotate(15.000000) translate(-15.000000, -5.500000) " points="14.8173082 0 15.1826918 0 15.5 11 14.5 11"></polygon><polygon id="antenna1" fill="#000000" transform="translate(3.000000, 5.500000) rotate(-15.000000) translate(-3.000000, -5.500000) " points="2.8173082 0 3.1826918 0 3.5 11 2.5 11"></polygon></g></g></g></svg>';
-    var svgOpen = '<svg class="pwnAPPinOpen" width="80px" height="60px" viewBox="0 0 44 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc>pwnagotchi AP icon.</desc><defs><linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1"><stop stop-color="#FFFFFF" offset="0%"></stop><stop stop-color="#000000" offset="100%"></stop></linearGradient></defs><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="marker"><path class="ring_outer" d="M28.6,8 C34.7,9.4 39,12.4 39,16 C39,20.7 31.3,24.6 21.7,24.6 C12.1,24.6 4.3,20.7 4.3,16 C4.3,12.5 8.5,9.5 14.6,8.1 C15.3,8 14.2,6.6 13.3,6.8 C5.5,8.4 0,12.2 0,16.7 C0,22.7 9.7,27.4 21.7,27.4 C33.7,27.4 43.3,22.6 43.3,16.7 C43.3,12.1 37.6,8.3 29.6,6.7 C28.8,6.5 27.8,7.9 28.6,8.1 L28.6,8 Z" id="Shape" fill="#878787" fill-rule="nonzero"></path><path class="ring_inner" d="M28.1427313,11.0811939 C30.4951542,11.9119726 32.0242291,13.2174821 32.0242291,14.6416742 C32.0242291,17.2526931 27.6722467,19.2702986 22.261674,19.2702986 C16.8511013,19.2702986 12.4991189,17.2526931 12.4991189,14.7603569 C12.4991189,13.5735301 13.4400881,12.505386 15.0867841,11.6746073 C15.792511,11.3185592 14.7339207,9.30095371 13.9105727,9.77568442 C10.6171806,10.9625112 8.5,12.9801167 8.5,15.2350876 C8.5,19.0329333 14.4986784,22.0000002 21.9088106,22.0000002 C29.2013216,22.0000002 35.2,19.0329333 35.2,15.2350876 C35.2,12.861434 32.7299559,10.6064632 28.8484581,9.30095371 C28.0251101,9.18227103 27.4370044,10.8438285 28.0251101,11.0811939 L28.1427313,11.0811939 Z" id="Shape" fill="#5F5F5F" fill-rule="nonzero"></path><g id="ap" transform="translate(13.000000, 0.000000)"><rect id="apfront" fill="#000000" x="0" y="14" width="18" height="4"></rect><polygon id="apbody" fill="url(#linearGradient-1)" points="3.83034404 10 14.169656 10 18 14 0 14"></polygon><circle class="ring_outer" id="led1" fill="#1f9321" cx="3" cy="16" r="1"></circle><circle class="ring_inner" id="led2" fill="#1f9321" cx="7" cy="16" r="1"></circle><circle class="ring_outer" id="led3" fill="#1f9321" cx="11" cy="16" r="1"></circle><circle class="ring_inner" id="led4" fill="#1f9321" cx="15" cy="16" r="1"></circle><polygon id="antenna2" fill="#000000" points="8.8173082 0 9.1826918 0 9.5 11 8.5 11"></polygon><polygon id="antenna3" fill="#000000" transform="translate(15.000000, 5.500000) rotate(15.000000) translate(-15.000000, -5.500000) " points="14.8173082 0 15.1826918 0 15.5 11 14.5 11"></polygon><polygon id="antenna1" fill="#000000" transform="translate(3.000000, 5.500000) rotate(-15.000000) translate(-3.000000, -5.500000) " points="2.8173082 0 3.1826918 0 3.5 11 2.5 11"></polygon></g></g></g></svg>';
-    document.getElementById('loading_ap_img').innerHTML = svg;
-    var myIcon = L.divIcon({
-      className: "leaflet-data-marker",
-      html: svg.replace('#','%23'),
-      iconAnchor  : [40, 30],
-      iconSize    : [80, 60],
-      popupAnchor : [0, -30],
-    });
-    var myIconOpen = L.divIcon({
-      className: "leaflet-data-marker",
-      html: svgOpen.replace('#','%23'),
-      iconAnchor  : [40, 30],
-      iconSize    : [80, 60],
-      popupAnchor : [0, -30],
-    });
-
-    var positionsLoaded = false;
-    var positions = [];
-    var accuracys = [];
-    var markers = [];
-    var marker_pos = [];
-    var markerClusters = L.markerClusterGroup();
-
     function drawPositions() {
-      count = 0;
-      //mymap.removeLayer(markerClusters);
-      mymap.eachLayer(function (layer) {
-        mymap.removeLayer(layer);
+      // Show loading container
+      document.getElementById("loading-container").style.display = "flex";
+
+      // Remove and recreate markerClusterGroup
+      if (markerClusterGroup) map.removeLayer(markerClusterGroup);
+      markerClusterGroup = L.markerClusterGroup({maxClusterRadius: 60});
+
+      // Get the current search filter
+      var filterList = document.getElementById("search").value.split(" ").map(item => item.toLowerCase());
+
+      // Prepare AP icons
+      var apSvg = '<svg width="80px" height="60px" viewBox="0 0 44 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc>Pwnagotchi AP icon</desc><defs><linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1"><stop stop-color="#FFFFFF" offset="0%"></stop><stop stop-color="#000000" offset="100%"></stop></linearGradient></defs><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="marker"><path class="ring_outer" d="M28.6,8 C34.7,9.4 39,12.4 39,16 C39,20.7 31.3,24.6 21.7,24.6 C12.1,24.6 4.3,20.7 4.3,16 C4.3,12.5 8.5,9.5 14.6,8.1 C15.3,8 14.2,6.6 13.3,6.8 C5.5,8.4 0,12.2 0,16.7 C0,22.7 9.7,27.4 21.7,27.4 C33.7,27.4 43.3,22.6 43.3,16.7 C43.3,12.1 37.6,8.3 29.6,6.7 C28.8,6.5 27.8,7.9 28.6,8.1 L28.6,8 Z" id="Shape" fill="#878787" fill-rule="nonzero"></path><path class="ring_inner" d="M28.1427313,11.0811939 C30.4951542,11.9119726 32.0242291,13.2174821 32.0242291,14.6416742 C32.0242291,17.2526931 27.6722467,19.2702986 22.261674,19.2702986 C16.8511013,19.2702986 12.4991189,17.2526931 12.4991189,14.7603569 C12.4991189,13.5735301 13.4400881,12.505386 15.0867841,11.6746073 C15.792511,11.3185592 14.7339207,9.30095371 13.9105727,9.77568442 C10.6171806,10.9625112 8.5,12.9801167 8.5,15.2350876 C8.5,19.0329333 14.4986784,22.0000002 21.9088106,22.0000002 C29.2013216,22.0000002 35.2,19.0329333 35.2,15.2350876 C35.2,12.861434 32.7299559,10.6064632 28.8484581,9.30095371 C28.0251101,9.18227103 27.4370044,10.8438285 28.0251101,11.0811939 L28.1427313,11.0811939 Z" id="Shape" fill="#5F5F5F" fill-rule="nonzero"></path><g id="ap" transform="translate(13.000000, 0.000000)"><rect id="apfront" fill="#000000" x="0" y="14" width="18" height="4"></rect><polygon id="apbody" fill="url(#linearGradient-1)" points="3.83034404 10 14.169656 10 18 14 0 14"></polygon><circle class="ring_outer" id="led1" cx="3" cy="16" r="1"></circle><circle class="ring_inner" id="led2" cx="7" cy="16" r="1"></circle><circle class="ring_outer" id="led3" cx="11" cy="16" r="1"></circle><circle class="ring_inner" id="led4" cx="15" cy="16" r="1"></circle><polygon id="antenna2" fill="#000000" points="8.8173082 0 9.1826918 0 9.5 11 8.5 11"></polygon><polygon id="antenna3" fill="#000000" transform="translate(15.000000, 5.500000) rotate(15.000000) translate(-15.000000, -5.500000) " points="14.8173082 0 15.1826918 0 15.5 11 14.5 11"></polygon><polygon id="antenna1" fill="#000000" transform="translate(3.000000, 5.500000) rotate(-15.000000) translate(-3.000000, -5.500000) " points="2.8173082 0 3.1826918 0 3.5 11 2.5 11"></polygon></g></g></g></svg>'.replace('#','%23');
+      var apRedIcon = L.divIcon({
+        className: "leaflet-data-marker ap-red",
+        html: apSvg,
+        iconAnchor  : [40, 30],
+        iconSize    : [80, 60],
+        popupAnchor : [0, -30],
       });
-      Esri_WorldImagery.addTo(mymap);
-      CartoDB_DarkMatter.addTo(mymap);
-      markerClusters = L.markerClusterGroup();
-      accuracys = [];
-      markers = [];
-      marker_pos = [];
-      filterText = document.getElementById("search").value;
-      //console.log(filterText);
-      Object.keys(positions).forEach(function(key) {
-        if(positions[key].lng){
-          filterPattern =
-            positions[key].ssid + ' ' +
-            formatMacAddress(positions[key].mac) + ' ' +
-            positions[key].mac
-          ;
-          if (positions[key].pass) {
-            filterPattern += positions[key].pass + ' #cracked';
-          } else {
-            filterPattern += ' #notcracked';
-          }
-          filterPattern = filterPattern.toLowerCase();
-          //console.log(filterPattern);
-          var matched = true;
-          if (filterText) {
-              filterText.split(" ").forEach(function (item) {
-                if (!filterPattern.includes(item.toLowerCase())) {
-                  matched = false;
-                }
-              });
-          }
-          if (matched) {
-            count++;
-            new_marker_pos = [positions[key].lat, positions[key].lng];
-            if (positions[key].acc) {
-              radius = Math.round(Math.min(positions[key].acc, 500));
-              markerColor = 'red';
-              markerColorCode = '#f03';
-              fillOpacity = 0.002;
-              if (positions[key].pass) {
-                markerColor = 'green';
-                markerColorCode = '#1aff00';
-                fillOpacity = 0.1;
-              }
-              accuracys.push(
-                L.circle(new_marker_pos, {
-                  color: markerColor,
-                  fillColor: markerColorCode,
-                  fillOpacity: fillOpacity,
-                  weight: 1,
-                  opacity: 0.1,
-                  radius: Math.min(positions[key].acc, 500),
-                }).setStyle({'className': 'radar'}).addTo(mymap)
-              );
-            }
-            passInfo = '';
-            if (positions[key].pass) {
-              passInfo = '<br/><b>Pass:</b> '+escapeHtml(positions[key].pass);
-              newMarker = L.marker(new_marker_pos, { icon: myIconOpen, title: positions[key].ssid }); //.addTo(mymap);
-            } else {
-              newMarker = L.marker(new_marker_pos, { icon: myIcon, title: positions[key].ssid }); //.addTo(mymap);
-            }
-            newMarker.bindPopup("<b>"+escapeHtml(positions[key].ssid)+"</b><br><nobr>MAC: "+escapeHtml(formatMacAddress(positions[key].mac))+"</nobr><br/>"+"<nobr>position type: "+escapeHtml(positions[key].type)+"</nobr><br/>"+"<nobr>position accuracy: "+escapeHtml(Math.round(positions[key].acc))+"</nobr>"+passInfo, { maxWidth: "auto" });
-            markers.push(newMarker);
-            marker_pos.push(new_marker_pos);
-            markerClusters.addLayer( newMarker );
-          }
+      var apGreenIcon = L.divIcon({
+        className: "leaflet-data-marker ap-green",
+        html: apSvg,
+        iconAnchor  : [40, 30],
+        iconSize    : [80, 60],
+        popupAnchor : [0, -30],
+      });
+
+      // Parse each AP position
+      for (const [key, position] of Object.entries(positions)) {
+        // Ignore the AP if it lacks coordinates
+        if (!position.lng || !position.lat) continue;
+
+        // Create AP filter pattern
+        var filterPattern = position.ssid + ' ' + formatMacAddress(position.mac) + ' ' + position.mac + ' ';
+        if (position.pass) {
+          filterPattern += position.pass + ' #cracked';
+        } else {
+          filterPattern += '#notcracked';
         }
-      });
-      document.getElementById("matchcount").innerHTML = count + "&nbsp;APs";
-      if (count > 0) {
-        mymap.addLayer( markerClusters );
-        var bounds = new L.LatLngBounds(marker_pos);
-        mymap.fitBounds(bounds);
-        document.getElementById("loading").style.display = "none";
-      } else {
-        document.getElementById("loading_infotext").innerHTML = "NO POSITION DATA FOUND :(";
+        filterPattern = filterPattern.toLowerCase();
+
+        // Skip the AP if its filter pattern doesn't match the search filter
+        if (!filterList.every(filterItem => filterPattern.includes(filterItem))) continue;
+
+        // Create the marker
+        var marker = L.marker(
+          [
+            position.lat,
+            position.lng
+          ],
+          {
+            icon: position.pass ? apGreenIcon : apRedIcon,
+            title: position.ssid
+          }
+        );
+
+        // Set the marker popup
+        passwordHtml = position.pass ? '<br><br><b>Password:</b> '+escapeHtml(position.pass) : '';
+        var popup = L.popup().setContent(
+          `<div>
+            <b>${escapeHtml(position.ssid)}</b><br>
+            <nobr>MAC: ${escapeHtml(formatMacAddress(position.mac))}</nobr><br><br>
+            <nobr>First seen: ${escapeHtml(new Date(position.ts_first*1000).toLocaleString())}</nobr><br>
+            <nobr>Last seen: ${escapeHtml(new Date(position.ts_last*1000).toLocaleString())}</nobr><br><br>
+            <nobr>Position type: ${escapeHtml(position.type)}</nobr><br>
+            <nobr>Position accuracy: ${escapeHtml(Math.round(position.acc))}m</nobr>
+            ${passwordHtml}
+          </div>`
+        );
+        popup.markerKey = key
+        marker.bindPopup(popup, { maxWidth: "auto" });
+
+        // Add the marker to markerClusterGroup
+        markerClusterGroup.addLayer(marker);
       }
+
+      // Get and show the number of APs that have been added to the cluster
+      var matchCount = markerClusterGroup.getLayers().length;
+      document.getElementById("matchcount").innerText = matchCount + " APs";
+
+      // Refresh the map and hide the loading message
+      map.addLayer( markerClusterGroup );
+      if (matchCount > 0) map.fitBounds( markerClusterGroup.getBounds() );
+      document.getElementById("loading-container").style.display = "none";
     }
 
-    // draw map on Enter in FilterInputField
-    const node = document.getElementById("search").addEventListener("keyup", function(event) {
-      if (event.key === "Enter") {
-        if (positionsLoaded) {
-          drawPositions();
-        }
-      }
-    });
+    function firstMapLoad() {
+      // Create the map
+      map = L.map('mapdiv', {attributionControl:false});
 
-    // load positions
-    loadJSON("/plugins/webgpsmap/all", function(response) {
-      positions = JSON.parse(response);
-      positionsLoaded = true;
+      // Set the map base theme (from https://leaflet-extras.github.io/leaflet-providers/preview/)
+      // Use 2 layers with alpha for a nice dark style
+      var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+          maxNativeZoom: 19,
+          maxZoom: 21,
+      });
+      var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        opacity:0.7,
+        maxNativeZoom: 19,
+        maxZoom: 21,
+      });
+      Esri_WorldImagery.addTo(map);
+      CartoDB_DarkMatter.addTo(map);
+
+      // Draw positions on the map
       drawPositions();
-    });
-    // get current position and set marker in interval if https request
-    if (location.protocol === 'https:') {
-      var myLocationMarker = {};
-      function onLocationFound(e) {
-        if (myLocationMarker != undefined) {
-          mymap.removeLayer(myLocationMarker);
-        };
-        myLocationMarker = L.marker(e.latlng).addTo(mymap);
-        setTimeout(function(){ mymap.locate(); }, 30000);
+
+      // Add the scale to the map
+      L.control.scale().addTo(map);
+
+      // Add current user location to the map (only if the current page is a considered a secure origin by the browser)
+      if ("isSecureContext" in window && window.isSecureContext) {
+        L.control.locate({
+          icon: "fa fa-solid fa-location-arrow",
+          locateOptions: { enableHighAccuracy: true }
+        }).addTo(map);
       }
-      mymap.on('locationfound', onLocationFound);
-      mymap.locate({setView: true});
+
+      // Add "download map for offline usage" button to the map (only if not already offline)
+      if (!offlinePositions) {
+        L.easyButton('fa-solid fa-download', function(btn, map){
+          window.open("/plugins/webgpsmap/offlinemap", '_blank');
+        }).addTo(map);
+      }
+
+      // Handle search (filter) events
+      if ("onsearch" in window) {
+        document.getElementById("search").addEventListener("search", function(e) {
+          drawPositions();
+        });
+      } else {
+        document.getElementById("search").addEventListener("keyup", function(e) {
+          if (e.key === "Enter") {
+            drawPositions();
+          }
+        });
+      }
+
+      // Handle map popup open events
+      map.on('popupopen', function(e) {
+        var key = e.popup.markerKey;
+
+        // Draw an accuracy circle around the AP
+        if (typeof key !== "undefined" && "acc" in positions[key] && positions[key].acc) {
+          var radius = Math.round(Math.min(positions[key].acc, 500));
+          var markerColor = 'red';
+          var markerColorCode = '#f03';
+          if (positions[key].pass) {
+            markerColor = 'green';
+            markerColorCode = '#1aff00';
+          }
+
+          var markerPos = [positions[key].lat, positions[key].lng];
+
+          accuracyCircleLayer = L.circle(markerPos, {
+            color: markerColor,
+            fillColor: markerColorCode,
+            fillOpacity: 0.1,
+            weight: 1,
+            opacity: 0.1,
+            radius: positions[key].acc,
+          }).addTo(map);
+        }
+      });
+
+      // Handle map popup close events
+      map.on('popupclose', function(e) {
+        // Remove the accuracy circle around the AP
+        if (typeof accuracyCircleLayer !== "undefined") {
+          map.removeLayer(accuracyCircleLayer);
+          delete accuracyCircleLayer;
+        }
+      });
+    }
+
+    // Declare global vars
+    var map;
+    var positions;
+    var markerClusterGroup;
+
+    // Offline: the following var will be replaced by /plugins/webgpsmap/offlinemap to create an offline map
+    var offlinePositions = null;
+
+    if (!offlinePositions) {
+      // Online mode
+
+      loadJSON("/plugins/webgpsmap/all", function(response) {
+        // Load AP positions
+        positions = JSON.parse(response);
+  
+        // Call map first load
+        firstMapLoad();
+      });
+    } else {
+      // Offline mode
+
+      // Load offline AP positions
+      positions = offlinePositions;
+
+      // Call map first load
+      firstMapLoad();
     }
   </script>
-</body></html>
+</body>
+</html>
