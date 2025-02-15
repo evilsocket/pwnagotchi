@@ -41,7 +41,7 @@ def set_name(new_name):
             fp.write(patched)
 
         os.system("hostname '%s'" % new_name)
-        pwnagotchi.reboot()
+        reboot()
 
 
 def name():
