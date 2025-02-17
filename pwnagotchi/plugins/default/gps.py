@@ -25,7 +25,7 @@ class GPS(plugins.Plugin):
         logging.info(f"gps plugin loaded for {self.options['device']}")
 
     def on_ready(self, agent):
-        if os.path.exists(self.options["device"]):
+        if os.path.exists(self.options["device"]) or ":" in self.options["device"]:
             logging.info(
                 f"enabling bettercap's gps module for {self.options['device']}"
             )
