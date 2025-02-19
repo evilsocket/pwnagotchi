@@ -34,7 +34,6 @@ UNIT_USERNAME=${UNIT_USERNAME:-pi}
 # what to backup
 FILES_TO_BACKUP="/root/brain.nn \
   /root/brain.json \
-  /root/.api-report.json \
   /root/.ssh \
   /root/.bashrc \
   /root/.profile \
