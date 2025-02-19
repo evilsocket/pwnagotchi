@@ -1,5 +1,5 @@
 pycryptodome==3.9.4
-requests==2.21.0
+requests==2.31.0
 PyYAML==5.3.1
 scapy==2.4.3
 gym==0.14.0
