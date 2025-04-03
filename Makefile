@@ -16,7 +16,7 @@ install:
 	sudo mv /tmp/packer /usr/bin/packer
 	git clone https://github.com/solo-io/packer-builder-arm-image /tmp/packer-builder-arm-image
 	cd /tmp/packer-builder-arm-image && go get -d ./... && go build
-	sudo cp /tmp/packer-builder-arm-image/packer-builder-arm-image /usr/bin
+	sudo cp /tmp/packer-builder-arm-image/packer-plugin-arm-image /usr/bin
 
 image:
 	cd builder && sudo /usr/bin/packer build -var "pwn_hostname=$(PWN_HOSTNAME)" -var "pwn_version=$(PWN_VERSION)" pwnagotchi.json
