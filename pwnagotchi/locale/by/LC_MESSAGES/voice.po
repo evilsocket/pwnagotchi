@@ -1,0 +1,242 @@
+# Pwnagotchi Belarusian translation.
+# Copyright (C) 2019
+# This file is distributed under the same license as the pwnagotchi package.
+# First author <https://github.com/andreifinski>, 2023
+msgid ""
+msgstr ""
+"Project-Id-Version: Pwnagotchi Belarusian translation v 0.0.1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: <https://github.com/andreifinski>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Language: by_BY\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: voice.po\n"
+
+msgid "ZzzzZZzzzzZzzz"
+msgstr "ХрррРРррррРррр"
+
+msgid "Hi, I'm Pwnagotchi! Starting ..."
+msgstr "Вітаю, я Pwnagotchi! Пачынаем!"
+
+msgid "New day, new hunt, new pwns!"
+msgstr "Новы дзень, новае паляванне, новыя ўзломы!"
+
+msgid "Hack the Planet!"
+msgstr "Узламай гэту Планету!"
+
+msgid "AI ready."
+msgstr "A.I. гатовы."
+
+msgid "The neural network is ready."
+msgstr "Нейронная сетка гатова."
+
+msgid "Generating keys, do not turn off ..."
+msgstr "Генерацыя ключоў, не выключайце..."
+
+#, python-brace-format
+msgid "Hey, channel {channel} is free! Your AP will say thanks."
+msgstr "Гэй, канал {channel} вольны! Ваш пункт доступу скажа дзякуй."
+
+msgid "Reading last session logs ..."
+msgstr "Чытаю логі апошняй сэсіі..."
+
+#, python-brace-format
+msgid "Read {lines_so_far} log lines so far ..."
+msgstr "Чытаю {lines_so_far} радкоў логаў..."
+
+msgid "I'm bored ..."
+msgstr "Мне сумна …"
+
+msgid "Let's go for a walk!"
+msgstr "Хадзем пагуляем!"
+
+msgid "This is the best day of my life!"
+msgstr "Лепшы дзень у маім жыцці!"
+
+msgid "Shitty day :/"
+msgstr "Дзень проста гаўно :/"
+
+msgid "I'm extremely bored ..."
+msgstr "Мне вельмі нудна …"
+
+msgid "I'm very sad ..."
+msgstr "Мне вельмі сумна …"
+
+msgid "I'm sad"
+msgstr "Мне сумна"
+
+msgid "Leave me alone ..."
+msgstr "Пакінь мяне ў спакоі..."
+
+msgid "I'm mad at you!"
+msgstr "Я злы на цябе!"
+
+msgid "I'm living the life!"
+msgstr "Жыву поўным жыццём!"
+
+msgid "I pwn therefore I am."
+msgstr "Я ўзломваю, таму я існую."
+
+msgid "So many networks!!!"
+msgstr "Так шмат сетак!!!"
+
+msgid "I'm having so much fun!"
+msgstr "Мне так весела!"
+
+msgid "My crime is that of curiosity ..."
+msgstr "Маё злачынства - гэта цікаўнасць…"
+
+#, python-brace-format
+msgid "Hello {name}! Nice to meet you. {name}"
+msgstr "Вітаю, {name}! Рад сустрэчы з табой!"
+
+#, python-brace-format
+msgid "Unit {name} is nearby! {name}"
+msgstr "Мэта {name} побач!"
+
+#, python-brace-format
+msgid "Hey {name} how are you doing?"
+msgstr "Гэй {name}! Як маешся?"
+
+#, python-brace-format
+msgid "Unit {name} is nearby!"
+msgstr "Мэта {name} побач!"
+
+#, python-brace-format
+msgid "Uhm ... goodbye {name}"
+msgstr "Хм … да пабачэння {name}"
+
+#, python-brace-format
+msgid "{name} is gone ..."
+msgstr "{name} сышоў"
+
+#, python-brace-format
+msgid "Whoops ... {name} is gone."
+msgstr "Ай-яй {name} сышоў."
+
+#, python-brace-format
+msgid "{name} missed!"
+msgstr "{name} страціў!"
+
+msgid "Missed!"
+msgstr "Прамахнуўся!"
+
+msgid "Good friends are a blessing!"
+msgstr "Добрыя сябры - гэта шчасце!"
+
+msgid "I love my friends!"
+msgstr "Я люблю сваіх сяброў!"
+
+msgid "Nobody wants to play with me ..."
+msgstr "Ніхто не жадае са мной гуляць ..."
+
+msgid "I feel so alone ..."
+msgstr "Я такі самотны…"
+
+msgid "Where's everybody?!"
+msgstr "Дзе ўсе?!"
+
+#, python-brace-format
+msgid "Napping for {secs}s ..."
+msgstr "Драмлю {secs}с …"
+
+msgid "Zzzzz"
+msgstr "Хрррр..."
+
+#, python-brace-format
+msgid "ZzzZzzz ({secs}s)"
+msgstr "ХррРрр.. ({secs}c)"
+
+msgid "Good night."
+msgstr "Дабранач."
+
+msgid "Zzz"
+msgstr "Хрр"
+
+#, python-brace-format
+msgid "Waiting for {secs}s ..."
+msgstr "Чакаем {secs}c …"
+
+#, python-brace-format
+msgid "Looking around ({secs}s)"
+msgstr "Аглядаюся вакол ({secs}с)"
+
+#, python-brace-format
+msgid "Hey {what} let's be friends!"
+msgstr "Гэй, {what} давай сябраваць!"
+
+#, python-brace-format
+msgid "Associating to {what}"
+msgstr "Звязваюся з {what}"
+
+#, python-brace-format
+msgid "Yo {what}!"
+msgstr "Ёў {what}!"
+
+#, python-brace-format
+msgid "Just decided that {mac} needs no WiFi!"
+msgstr "Проста вырашыў, што {mac} не патрэбен WiFi! Гы-гы :)"
+
+#, python-brace-format
+msgid "Deauthenticating {mac}"
+msgstr "Дэаўтэнтыфікацыя {mac}"
+
+#, python-brace-format
+msgid "Kickbanning {mac}!"
+msgstr "Пінаю {mac}!"
+
+#, python-brace-format
+msgid "Cool, we got {num} new handshake{plural}!"
+msgstr "Крута, мы атрымалі {num} новы поціск рукі!"
+
+msgid "Oops, something went wrong ... Rebooting ..."
+msgstr "Ой, нешта пайшло не так … Перазагружаюся …"
+
+#, python-brace-format
+msgid "Kicked {num} stations\n"
+msgstr "Пнуў {num} станцыю\n"
+
+#, python-brace-format
+msgid "Made {num} new friends\n"
+msgstr "Атрымаў {num} новых сяброў\n"
+
+#, python-brace-format
+msgid "Got {num} handshakes\n"
+msgstr "Атрымаў {num} поціскаў рукі\n"
+
+msgid "Met 1 peer"
+msgstr "Сустрэўся адзін знаёмы"
+
+#, python-brace-format
+msgid "Met {num} peers"
+msgstr "Сустрэліся {num} знаёмых"
+
+#, python-brace-format
+msgid ""
+"I've been pwning for {duration} and kicked {deauthed} clients! I've also met "
+"{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+msgstr ""
+"Я ўзломваў {duration} и штурхаў {deauthed} кліентаў! Таксама сустрэў "
+"{associated} новых сяброў и з'еў {handshakes} поціскаў рукі! #pwnagotchi "
+"#pwnlog #pwnlife #hacktheplanet #skynet"
+
+msgid "hours"
+msgstr "гадзін"
+
+msgid "hour"
+msgstr "гадзіна"
+
+msgid "minutes"
+msgstr "хвілін"
+
+msgid "minute"
+msgstr "хвіліну"
