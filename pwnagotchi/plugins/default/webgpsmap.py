@@ -98,7 +98,7 @@ class Webgpsmap(plugins.Plugin):
                         self.ALREADY_SENT = list()
                         json_data = json.dumps(self.load_gps_from_dir(self.config['bettercap']['handshakes']))
                         html_data = self.get_html()
-                        html_data = html_data.replace('var positions = [];', 'var positions = ' + json_data + ';positionsLoaded=true;drawPositions();')
+                        html_data = html_data.replace('var offlinePositions = null;', 'var offlinePositions = ' + json_data)
                         response_data = bytes(html_data, "utf-8")
                         response_status = 200
                         response_mimetype = "application/xhtml+xml"
