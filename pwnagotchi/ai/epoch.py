@@ -59,7 +59,10 @@ class Epoch(object):
         self._observation = {
             'aps_histogram': [0.0] * wifi.NumChannels,
             'sta_histogram': [0.0] * wifi.NumChannels,
-            'peers_histogram': [0.0] * wifi.NumChannels
+            'peers_histogram': [0.0] * wifi.NumChannels,
+            'rssi_min_histogram': [0] * wifi.NumChannels,      # Initialized to 0 (strongest possible practical RSSI for comparison)
+            'rssi_max_histogram': [-120] * wifi.NumChannels, # Initialized to a very weak signal
+            'rssi_avg_histogram': [0.0] * wifi.NumChannels
         }
         self._observation_ready = threading.Event()
         self._epoch_data = {}
@@ -98,13 +101,33 @@ class Epoch(object):
         sta_per_chan = [0.0] * wifi.NumChannels
         peers_per_chan = [0.0] * wifi.NumChannels
 
+        # RSSI related histograms and accumulators
+        rssi_min_histogram = [0] * wifi.NumChannels      # Initialized to 0 (strongest RSSI for comparison)
+        rssi_max_histogram = [-120] * wifi.NumChannels # Initialized to a very weak signal
+        rssi_sum_histogram = [0.0] * wifi.NumChannels    # Accumulator for average RSSI
+        aps_count_histogram = [0] * wifi.NumChannels     # APs count per channel for average RSSI
+
         for ap in aps:
             ch_idx = ap['channel'] - 1
+            rssi = ap['rssi']
             try:
                 aps_per_chan[ch_idx] += 1.0
                 sta_per_chan[ch_idx] += len(ap['clients'])
+
+                # Update min RSSI
+                if rssi < rssi_min_histogram[ch_idx] or rssi_min_histogram[ch_idx] == 0:
+                    rssi_min_histogram[ch_idx] = rssi
+
+                # Update max RSSI
+                if rssi > rssi_max_histogram[ch_idx] or rssi_max_histogram[ch_idx] == -120:
+                    rssi_max_histogram[ch_idx] = rssi
+
+                # Accumulate for average RSSI
+                rssi_sum_histogram[ch_idx] += rssi
+                aps_count_histogram[ch_idx] += 1
+
             except IndexError:
-                logging.error("got data on channel %d, we can store %d channels" % (ap['channel'], wifi.NumChannels))
+                logging.error("got data on channel %d (%d), we can store %d channels" % (ap['channel'], ch_idx, wifi.NumChannels))
 
         for peer in peers:
             try:
@@ -113,15 +136,27 @@ class Epoch(object):
                 logging.error(
                     "got peer data on channel %d, we can store %d channels" % (peer.last_channel, wifi.NumChannels))
 
-        # normalize
-        aps_per_chan = [e / num_aps for e in aps_per_chan]
-        sta_per_chan = [e / num_sta for e in sta_per_chan]
-        peers_per_chan = [e / num_peers for e in peers_per_chan]
+        # normalize basic histograms
+        norm_aps_per_chan = [e / num_aps for e in aps_per_chan]
+        norm_sta_per_chan = [e / num_sta for e in sta_per_chan]
+        norm_peers_per_chan = [e / num_peers for e in peers_per_chan]
+
+        # Calculate average RSSI
+        rssi_avg_histogram = [0.0] * wifi.NumChannels
+        for i in range(wifi.NumChannels):
+            if aps_count_histogram[i] > 0:
+                rssi_avg_histogram[i] = rssi_sum_histogram[i] / aps_count_histogram[i]
+            else:
+                # Optional: set to a very weak signal if no APs, instead of 0. For now, 0.0 is fine.
+                rssi_avg_histogram[i] = 0.0 # Or -120.0 if 0.0 is ambiguous for "no signal"
 
         self._observation = {
-            'aps_histogram': aps_per_chan,
-            'sta_histogram': sta_per_chan,
-            'peers_histogram': peers_per_chan
+            'aps_histogram': norm_aps_per_chan,
+            'sta_histogram': norm_sta_per_chan,
+            'peers_histogram': norm_peers_per_chan,
+            'rssi_min_histogram': rssi_min_histogram,
+            'rssi_max_histogram': rssi_max_histogram,
+            'rssi_avg_histogram': rssi_avg_histogram
         }
         self._observation_ready.set()
 

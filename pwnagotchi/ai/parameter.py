@@ -8,7 +8,19 @@ class Parameter(object):
         self.meta = meta
         self.value = value
         self.min_value = min_value
-        self.max_value = max_value + 1
+
+        # Determine the actual maximum value for the parameter
+        # For channel parameters, this is 5 (weights 0-5).
+        # For other parameters, it's the passed max_value (defaulting to 2).
+        current_actual_max_value = 5 if name.startswith('_channel_') else max_value
+
+        # self.max_value is used internally to define the size of the gym.spaces.Discrete space.
+        # If min_value is 0, Discrete(N) gives values [0, ..., N-1].
+        # So N should be actual_max_value + 1.
+        # e.g., for channels (0-5), N = 5 + 1 = 6. Discrete(6) -> [0,1,2,3,4,5].
+        # e.g., for default boolean (0-1), actual_max_value=1 (if max_value=1 passed), N = 1 + 1 = 2. Discrete(2) -> [0,1].
+        # The original code's `max_value=2` (default) means actual values 0,1,2. So N = 2+1 = 3. Discrete(3) -> [0,1,2].
+        self.max_value = current_actual_max_value + 1
 
         # gym.space.Discrete is within [0, 1, 2, ..., n-1]
         if self.min_value < 0:

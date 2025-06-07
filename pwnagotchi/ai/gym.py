@@ -68,21 +68,19 @@ class Environment(gym.Env):
 
         assert len(Environment.params) == num
 
-        channels = []
+        channel_weights = {}
 
         for i in range(num):
             param = Environment.params[i]
 
             if '_channel' not in param.name:
                 params[param.name] = param.to_param_value(policy[i])
-            else:
-                has_chan = param.to_param_value(policy[i])
-                # print("%s policy:%s bool:%s" % (param.name, policy[i], has_chan))
-                chan = param.meta
-                if has_chan:
-                    channels.append(chan)
+            else: # Parameter is a channel parameter
+                weight = param.to_param_value(policy[i]) # This will be 0-5
+                channel_number = param.meta # This is ch + 1 (channel number)
+                channel_weights[channel_number] = weight
 
-        params['channels'] = channels
+        params['channel_weights'] = channel_weights
 
         return params
 
