@@ -5,6 +5,7 @@ import re
 import logging
 import asyncio
 import _thread
+import random
 
 import pwnagotchi
 import pwnagotchi.utils as utils
@@ -47,6 +48,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self.last_session = LastSession(self._config)
         self.mode = 'auto'
         self.current_attack_mode = 0  # 0: Passive, 1: Broadcast Deauth, 2: Targeted Deauth
+        self.ai_channel_weights = {} # For AI-controlled channel priorities
 
         if not os.path.exists(config['bettercap']['handshakes']):
             os.makedirs(config['bettercap']['handshakes'])
@@ -150,17 +152,16 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             logging.info(f"[ai] AI changed attack_mode from {self.current_attack_mode} to {new_attack_mode}")
             self.current_attack_mode = new_attack_mode
 
+        new_channel_weights = policy.get('channel_weights')
+        if new_channel_weights is not None and new_channel_weights != self.ai_channel_weights:
+            logging.info(f"[ai] AI updated channel_weights from {self.ai_channel_weights} to {new_channel_weights}")
+            self.ai_channel_weights = new_channel_weights
+
         # Simplified handling for other parameters from AI policy
         # A full implementation would merge this with AsyncTrainer's on_ai_policy if Agent inherits it directly for this
         personality = self._config['personality']
         for param_name, value in policy.items():
-            if param_name == 'attack_mode':  # Already handled above
-                continue
-
-            # Example: if AI controls channel_weights (from a previous subtask)
-            if param_name == 'channel_weights':
-                logging.debug(f"[ai] Received channel_weights: {value}") # Placeholder for actual logic
-                # Here you would store/use these weights for channel hopping logic if implemented
+            if param_name == 'attack_mode' or param_name == 'channel_weights':  # Already handled above
                 continue
 
             if param_name in personality:
@@ -543,3 +544,65 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
 
             except Exception as e:
                 logging.error("Error while setting channel (%s)", e)
+
+    def _next_recon_channel(self):
+        # AI Weighted Channel Selection
+        if self.ai_channel_weights:
+            supported_chan_list = self.supported_channels()  # Get this once
+
+            weighted_channels = []
+            raw_weights = []
+            for ch_str, weight in self.ai_channel_weights.items():
+                try:
+                    int_channel = int(ch_str) # AI model might output channel as string key
+                    if float(weight) > 0 and int_channel in supported_chan_list:
+                        weighted_channels.append(int_channel)
+                        raw_weights.append(float(weight))
+                except ValueError:
+                    logging.warning(f"[ai] Could not parse channel '{ch_str}' or weight '{weight}' from ai_channel_weights.")
+                    continue
+
+            if weighted_channels:  # If there are any valid channels with positive weights
+                # Exploration Factor: 10% chance to pick a random supported channel
+                if random.random() < 0.10:
+                    selected_channel = random.choice(supported_chan_list)
+                    logging.info(f"[ai] Channel Hopping: Exploring randomly to channel {selected_channel} (from {len(supported_chan_list)} supported).")
+                    return selected_channel
+                else:
+                    total_weight = sum(raw_weights)
+                    if total_weight > 0:
+                        probabilities = [w / total_weight for w in raw_weights]
+                        selected_channel = random.choices(weighted_channels, weights=probabilities, k=1)[0]
+                        logging.info(f"[ai] Channel Hopping: Selected channel {selected_channel} using AI weights.")
+                        # More detailed log for debugging, perhaps less frequent or under a specific debug flag if too verbose
+                        logging.debug(f"[ai] Full AI weights: {self.ai_channel_weights}, Filtered (chan,prob): {list(zip(weighted_channels, probabilities))}")
+                        return selected_channel
+                    else:
+                        # This case should ideally not be reached if weighted_channels is not empty and weights are > 0
+                        logging.debug("[ai] Channel Hopping: All AI-weighted channels had zero effective weight after filtering. Falling back to default logic.")
+            else:
+                logging.debug("[ai] Channel Hopping: No valid (supported, positive weight) AI channel weights found. Falling back to default logic.")
+        else:
+            logging.debug("[ai] Channel Hopping: AI channel weights are empty. Using default logic.")
+
+        # Fallback to original Automata._next_recon_channel logic
+        # super(Agent, self)._next_recon_channel() # Would be ideal if inheritance setup allows easy super() call to specific parent method
+        # Replicating Automata's logic here:
+        channels = self._config['personality']['channels']
+        if not channels:
+            # hop randomly if no channels are specified
+            # Ensure supported_channels() is available and returns a list
+            supported = self.supported_channels()
+            if not supported:
+                logging.error("[ai] No supported channels found for random hopping! Defaulting to channel 1.")
+                return 1 # Should not happen in a normal setup
+            selected_channel = random.choice(supported)
+            logging.debug(f"[ai] Channel Hopping (Default): No personality channels, randomly selected {selected_channel}.")
+            return selected_channel
+
+        # Cycle through personality channels
+        # self._recon_idx is part of Automata state
+        self._recon_idx = (self._recon_idx + 1) % len(channels)
+        selected_channel = channels[self._recon_idx]
+        logging.debug(f"[ai] Channel Hopping (Default): Cycling personality channels, selected {selected_channel}.")
+        return selected_channel
