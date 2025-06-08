@@ -12,6 +12,9 @@ RSSI_RANGE = RSSI_MAX_EXPECTED - RSSI_MIN_EXPECTED
 if RSSI_RANGE == 0: # Avoid division by zero, though not with current constants
     RSSI_RANGE = 1.0
 
+NUM_FEATURED_APS = 3  # Number of Top N APs to include features for
+MAX_CLIENTS_EXPECTED = 50.0 # For normalizing client count of featured APs
+
 
 def describe(extended=False):
     if not extended:
@@ -33,6 +36,8 @@ def describe(extended=False):
                             histogram_size +
                             # RSSI avg per channel
                             histogram_size +
+                            # Features for Top N APs (NUM_FEATURED_APS * 2 features: RSSI, ClientCount for each)
+                            (NUM_FEATURED_APS * 2) +
                             # duration
                             1 +
                             # inactive
@@ -64,18 +69,48 @@ def featurize(state, step):
     norm_rssi_max = np.clip((rssi_max_hist - RSSI_MIN_EXPECTED) / RSSI_RANGE, 0.0, 1.0)
     norm_rssi_avg = np.clip((rssi_avg_hist - RSSI_MIN_EXPECTED) / RSSI_RANGE, 0.0, 1.0)
 
+    # Process Top N APs
+    detailed_aps_list = state.get('_detailed_aps_list', [])
+    # Sort by RSSI (strongest first). Using -1000 for missing RSSI to push them to the end.
+    sorted_aps = sorted(detailed_aps_list, key=lambda ap: ap.get('rssi', -1000), reverse=True)
+
+    featured_ap_features = []
+    featured_ap_bssids = []
+
+    for i in range(NUM_FEATURED_APS):
+        if i < len(sorted_aps):
+            ap = sorted_aps[i]
+            # Use RSSI_MIN_EXPECTED as default for RSSI if somehow missing after sort to ensure norm is 0
+            rssi = ap.get('rssi', RSSI_MIN_EXPECTED)
+            clients = float(ap.get('clients', 0)) # Ensure clients is float for division
+
+            norm_ap_rssi = np.clip((rssi - RSSI_MIN_EXPECTED) / RSSI_RANGE, 0.0, 1.0)
+            norm_ap_clients = np.clip(clients / MAX_CLIENTS_EXPECTED, 0.0, 1.0)
+
+            featured_ap_features.extend([norm_ap_rssi, norm_ap_clients])
+            featured_ap_bssids.append(ap.get('bssid'))
+        else:
+            # Pad with features representing a very weak/non-existent AP
+            # norm_rssi for RSSI_MIN_EXPECTED (or weaker) is 0.0
+            # norm_clients for 0 clients is 0.0
+            featured_ap_features.extend([0.0, 0.0])
+            featured_ap_bssids.append(None) # Or use an empty string: ""
+
+    # Update state with the BSSIDs of featured APs
+    # This makes it available in _epoch_data for the agent via the state dict reference
+    state['_featured_ap_bssids'] = featured_ap_bssids
+
     return np.concatenate((
-        # aps per channel
+        # Channel-based histograms (6 of them)
         state['aps_histogram'],
-        # clients per channel
         state['sta_histogram'],
-        # peers per channel
         state['peers_histogram'],
-        # RSSI features
-        norm_rssi_min,
-        norm_rssi_max,
-        norm_rssi_avg,
-        # duration
+        norm_rssi_min, # channel min rssi histogram
+        norm_rssi_max, # channel max rssi histogram
+        norm_rssi_avg, # channel avg rssi histogram
+        # Features for Top N APs
+        featured_ap_features,
+        # Scalar epoch statistics (8 of them)
         [np.clip(state['duration_secs'] / MAX_EPOCH_DURATION, 0.0, 1.0)],
         # inactive
         [state['inactive_for_epochs'] / tot_epochs],

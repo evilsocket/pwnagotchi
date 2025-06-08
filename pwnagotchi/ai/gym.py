@@ -4,6 +4,7 @@ from gym import spaces
 import numpy as np
 
 import pwnagotchi.ai.featurizer as featurizer
+from pwnagotchi.ai.featurizer import NUM_FEATURED_APS # For target_ap_index max_value
 import pwnagotchi.ai.reward as reward
 from pwnagotchi.ai.parameter import Parameter
 
@@ -25,7 +26,8 @@ class Environment(gym.Env):
         Parameter('excited_num_epochs', min_value=5, max_value=30),
         Parameter('bored_num_epochs', min_value=5, max_value=30),
         Parameter('sad_num_epochs', min_value=5, max_value=30),
-        Parameter('attack_mode', min_value=0, max_value=2)  # Represents modes 0, 1, 2
+        Parameter('attack_mode', min_value=0, max_value=2),  # Represents modes 0, 1, 2
+        Parameter('target_ap_index', min_value=0, max_value=NUM_FEATURED_APS - 1) # Index for Top N APs
     ]
 
     def __init__(self, agent, epoch):

