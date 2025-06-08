@@ -25,6 +25,7 @@ class Environment(gym.Env):
         Parameter('excited_num_epochs', min_value=5, max_value=30),
         Parameter('bored_num_epochs', min_value=5, max_value=30),
         Parameter('sad_num_epochs', min_value=5, max_value=30),
+        Parameter('attack_mode', min_value=0, max_value=2)  # Represents modes 0, 1, 2
     ]
 
     def __init__(self, agent, epoch):

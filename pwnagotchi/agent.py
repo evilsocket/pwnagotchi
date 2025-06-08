@@ -46,6 +46,7 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self._handshakes = {}
         self.last_session = LastSession(self._config)
         self.mode = 'auto'
+        self.current_attack_mode = 0  # 0: Passive, 1: Broadcast Deauth, 2: Targeted Deauth
 
         if not os.path.exists(config['bettercap']['handshakes']):
             os.makedirs(config['bettercap']['handshakes'])
@@ -140,7 +141,60 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
         self.next_epoch()
         self.set_ready()
 
+    def on_ai_policy(self, policy):
+        # This method is called when the AI decides on a new policy (set of parameters)
+        # It needs to handle the 'attack_mode' and other parameters AI might control.
+
+        new_attack_mode = policy.get('attack_mode', 0) # Default to passive (0)
+        if new_attack_mode != self.current_attack_mode:
+            logging.info(f"[ai] AI changed attack_mode from {self.current_attack_mode} to {new_attack_mode}")
+            self.current_attack_mode = new_attack_mode
+
+        # Simplified handling for other parameters from AI policy
+        # A full implementation would merge this with AsyncTrainer's on_ai_policy if Agent inherits it directly for this
+        personality = self._config['personality']
+        for param_name, value in policy.items():
+            if param_name == 'attack_mode':  # Already handled above
+                continue
+
+            # Example: if AI controls channel_weights (from a previous subtask)
+            if param_name == 'channel_weights':
+                logging.debug(f"[ai] Received channel_weights: {value}") # Placeholder for actual logic
+                # Here you would store/use these weights for channel hopping logic if implemented
+                continue
+
+            if param_name in personality:
+                if personality[param_name] != value:
+                    logging.info('[ai] Personality %s set by AI to %s (was %s)', param_name, value, personality[param_name])
+                    personality[param_name] = value
+            # Extend to other config sections if necessary, carefully
+            # For example, main config:
+            # elif param_name in self._config['main']:
+            #    if self._config['main'][param_name] != value:
+            #        logging.info('[ai] Main config %s set by AI to %s (was %s)', param_name, value, self._config['main'][param_name])
+            #        self._config['main'][param_name] = value
+            else:
+                # Only log if it's not a known config to avoid noise, or handle specifically if AI can set new params
+                if param_name not in personality and param_name not in self._config['main'] and param_name not in self._config['ui']['display']:
+                     logging.warning(f"[ai] AI tried to set unknown parameter: {param_name} to {value}")
+
+
+    def _handle_broadcast_deauth(self):
+        if self.current_attack_mode == 1: # Mode 1 is Broadcast Deauth
+            if self._config['personality']['deauth']: # Respect global deauth toggle
+                logging.info("[ai] Attack Mode 1: Triggering broadcast deauthentication.")
+                try:
+                    self.run('wifi.deauth *')
+                    self._epoch.track(deauth=True, inc=1) # Track as a deauth action
+                except Exception as e:
+                    logging.error(f"[ai] Error during broadcast deauth: {e}")
+            else:
+                logging.debug("[ai] Attack Mode 1: Broadcast deauth skipped (deauth personality globally disabled).")
+
     def recon(self):
+        # Call broadcast deauth handler based on AI mode
+        self._handle_broadcast_deauth()
+
         recon_time = self._config['personality']['recon_time']
         max_inactive = self._config['personality']['max_inactive_scale']
         recon_mul = self._config['personality']['recon_inactive_multiplier']
@@ -422,6 +476,19 @@ class Agent(Client, Automata, AsyncAdvertiser, AsyncTrainer):
             self._view.on_normal()
 
     def deauth(self, ap, sta, throttle=0):
+        # AI Attack Mode Check for Targeted Deauth (Mode 2)
+        if self.current_attack_mode == 0: # Passive
+            logging.info(f"[ai] Attack Mode 0 (Passive): Targeted deauth for {sta['mac']} on AP {ap['mac']} skipped.")
+            return
+        if self.current_attack_mode == 1: # Broadcast mode
+            logging.info(f"[ai] Attack Mode 1 (Broadcast): Targeted deauth for {sta['mac']} on AP {ap['mac']} skipped in favor of broadcast.")
+            return
+
+        # If mode is 2 (Targeted), it proceeds with the original logic.
+        # If mode is not explicitly 0 or 1, it also proceeds (default/fallback behavior).
+        if self.current_attack_mode == 2:
+            logging.info(f"[ai] Attack Mode 2 (Targeted): Proceeding with targeted deauth for {sta['mac']} on AP {ap['mac']}.")
+
         if self.is_stale():
             logging.debug("recon is stale, skipping deauth(%s)", sta['mac'])
             return
