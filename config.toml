@@ -1,0 +1,321 @@
+[main]
+name = "pwnmedaddy"
+lang = "en"
+iface = "wlan0mon"
+mon_start_cmd = "/usr/bin/monstart"
+mon_stop_cmd = "/usr/bin/monstop"
+mon_max_blind_epochs = 5
+no_restart = false
+whitelist = [
+    "aloha_snackbar",
+    "aloha_snackbar_champagne_room",
+    "16:5A:95:8D:33:E1",
+    "10:5a:95:8D:33:E0",
+]
+confd = "/etc/pwnagotchi/conf.d/"
+custom_plugin_repos = [
+    "https://github.com/jayofelony/pwnagotchi-torch-plugins/archive/master.zip",
+    "https://github.com/Sniffleupagus/pwnagotchi_plugins/archive/master.zip",
+    "https://github.com/NeonLightning/pwny/archive/master.zip",
+    "https://github.com/marbasec/UPSLite_Plugin_1_3/archive/master.zip",
+    "https://github.com/wpa-2/Pwnagotchi-Plugins/archive/master.zip",
+    "https://github.com/cyberartemio/wardriver-pwnagotchi-plugin/archive/main.zip"
+]
+custom_plugins = "/usr/local/share/pwnagotchi/custom-plugins/"
+
+# ── Core plugins ──────────────────────────────────────────────────────────────
+
+[main.plugins.auto-tune]
+enabled = true
+show_hidden = false
+reset_history = true
+extra_channels = 15
+show_interactions = false
+
+[main.plugins.auto_backup]
+enabled = true
+interval = "daily"
+max_tries = 0
+backup_location = "/home/pi/"
+files = [
+    "/root/settings.yaml",
+    "/root/client_secrets.json",
+    "/root/.api-report.json",
+    "/root/.ssh",
+    "/root/.bashrc",
+    "/root/.profile",
+    "/home/pi/handshakes",
+    "/root/peers",
+    "/etc/pwnagotchi/",
+    "/usr/local/share/pwnagotchi/custom-plugins",
+    "/etc/ssh/",
+    "/home/pi/.bashrc",
+    "/home/pi/.profile",
+    "/home/pi/.wpa_sec_uploads"
+]
+exclude = ["/etc/pwnagotchi/logs/*"]
+commands = ["tar cf {backup_file} {files}"]
+
+[main.plugins.auto-update]
+enabled = true
+install = true
+interval = 1
+token = "" # Create a personal access token (classic) with scope set to public_repo
+
+[main.plugins.fix_services]
+enabled = true
+
+[main.plugins.cache]
+enabled = true
+
+[main.plugins.grid]
+enabled = true
+report = true
+
+[main.plugins.switcher]
+enabled = true
+
+[main.plugins.webcfg]
+enabled = true
+
+[main.plugins.logtail]
+enabled = true
+max-lines = 10000
+
+[main.plugins.session-stats]
+enabled = true
+save_directory = "/var/tmp/pwnagotchi/sessions/"
+
+# ── Connectivity ──────────────────────────────────────────────────────────────
+
+[main.plugins.bt-tether]
+# Requires phone to be paired via bluetoothctl BEFORE this plugin will work.
+# Run: bluetoothctl -> scan on -> pair <MAC> -> trust <MAC> -> connect <MAC>
+enabled = true
+phone-name = "Muthafoxxa"
+phone = "android"
+mac = "B0:4A:6A:14:71:47"
+ip = "192.168.44.44"
+gateway = "192.168.44.1"
+dns = "8.8.8.8 1.1.1.1"
+
+# ── Power / Battery ───────────────────────────────────────────────────────────
+
+[main.plugins.pisugarx]
+# Disabled: PiSugar hardware not currently connected.
+# Re-enable once physically attached and I2C confirmed working.
+enabled = false
+rotation = false
+default_display = "percentage"
+lowpower_shutdown = true
+lowpower_shutdown_level = 10
+max_charge_voltage_protection = false
+
+[main.plugins.ups_lite]
+enabled = false
+shutdown = 2
+
+[main.plugins.ups_hat_c]
+enabled = false
+label_on = true
+shutdown = 5
+bat_x_coord = 140
+bat_y_coord = 0
+
+# ── Display extras ────────────────────────────────────────────────────────────
+
+[main.plugins.memtemp]
+# Disabled: version mismatch causes 'MemTemp has no attribute fields' errors.
+# Re-enable after running: pwnagotchi --update
+enabled = false
+scale = "celsius"
+orientation = "horizontal"
+
+# ── Wardriving / Logging ──────────────────────────────────────────────────────
+
+[main.plugins.gps]
+enabled = false
+speed = 19200
+device = "/dev/ttyUSB0"
+
+[main.plugins.gps_listener]
+enabled = false
+
+[main.plugins.webgpsmap]
+enabled = true
+
+[main.plugins.wigle]
+# Disabled: requires API key AND position config causes attribute error on current version.
+# To re-enable: set api_key, then remove the position line entirely.
+enabled = false
+api_key = ""
+cvs_dir = "/tmp"
+donate = false
+timeout = 30
+
+# ── Cracking / Upload ─────────────────────────────────────────────────────────
+
+[main.plugins.wpa-sec]
+# Disabled: no API key set. Get one at https://wpa-sec.stanev.org
+enabled = false
+api_key = ""
+api_url = "https://wpa-sec.stanev.org"
+download_results = false
+show_pwd = false
+single_files = false
+
+[main.plugins.pwncrack]
+enabled = true
+key = "" # Add your pwncrack key here
+
+[main.plugins.ohcapi]
+enabled = false
+api_key = "" # Add your OnlineHashCrack API key here
+receive_email = "yes"
+sleep = 3600
+
+# ── Misc disabled ─────────────────────────────────────────────────────────────
+
+[main.plugins.gdrivesync]
+enabled = false
+backupfiles = [""]
+backup_folder = "PwnagotchiBackups"
+interval = 1
+
+[main.plugins.gpio_buttons]
+enabled = false
+
+[main.plugins.pwndroid]
+enabled = false
+gateway = ""
+display = false
+display_altitude = false
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+
+[main.log]
+path = "/etc/pwnagotchi/log/pwnagotchi.log"
+path-debug = "/etc/pwnagotchi/log/pwnagotchi-debug.log"
+
+[main.log.rotation]
+enabled = true
+size = "10M"
+
+# ── Personality ───────────────────────────────────────────────────────────────
+
+[personality]
+advertise = true
+deauth = true
+associate = true
+channels = []
+min_rssi = -200
+ap_ttl = 120
+sta_ttl = 300
+recon_time = 30
+max_inactive_scale = 2
+recon_inactive_multiplier = 2
+hop_recon_time = 10
+min_recon_time = 5
+max_interactions = 3
+max_misses_for_recon = 5
+excited_num_epochs = 10
+bored_num_epochs = 15
+sad_num_epochs = 25
+bond_encounters_factor = 20000
+throttle_a = 0.4
+throttle_d = 0.9
+
+# ── UI ────────────────────────────────────────────────────────────────────────
+
+[ui]
+invert = true
+cursor = true
+fps = 1.5
+
+[ui.display]
+enabled = true
+type = "waveshare_3"
+rotation = 180
+color = "black"
+
+[ui.font]
+name = "DejaVuSansMono"
+size_offset = 0
+
+[ui.faces]
+look_r = ["( ⚆_⚆)"]
+look_l = ["(☉_☉ )"]
+look_r_happy = ["( ◕‿◕)", "( ≧◡≦)"]
+look_l_happy = ["(◕‿◕ )", "(≧◡≦ )"]
+sleep = ["(⇀‿‿↼)", "(≖‿‿≖)", "(－_－)"]
+awake = ["(◕‿‿◕)"]
+bored = ["(-__-)", "(—__—)"]
+intense = ["(°▃▃°)", "(°ロ°)"]
+cool = ["(⌐■_■)", "(단__단)"]
+happy = ["(•‿‿•)", "(^‿‿^)", "(^◡◡^)"]
+excited = ["(ᵔ◡◡ᵔ)", "(✜‿‿✜)"]
+grateful = ["(^‿‿^)"]
+motivated = ["(☼‿‿☼)"]
+demotivated = ["(≖__≖)"]
+smart = ["(✜‿‿✜)"]
+lonely = ["(ب__ب)"]
+sad = ["(╥☁╥ )"]
+angry = ["(-_-')", "(⇀__⇀)", "(`___´)"]
+friend = ["(♥‿‿♥)", "(♡‿‿♡)", "(♥‿♥ )", "(♥ω♥ )"]
+broken = ["(☓‿‿☓)"]
+debug = ["(#__#)"]
+upload = ["(1__0)", "(1__1)", "(0__1)"]
+png = false
+position_x = 0
+position_y = 34
+
+[ui.web]
+enabled = true
+address = "::"
+auth = false
+username = "changeme"
+password = "changeme"
+origin = ""
+port = 8080
+on_frame = ""
+
+# ── Bettercap ─────────────────────────────────────────────────────────────────
+
+[bettercap]
+handshakes = "/home/pi/handshakes"
+silence = [
+    "ble.device.new",
+    "ble.device.lost",
+    "ble.device.service.discovered",
+    "ble.device.characteristic.discovered",
+    "ble.device.disconnected",
+    "ble.device.connected",
+    "ble.connection.timeout",
+    "wifi.client.new",
+    "wifi.client.lost",
+    "wifi.client.probe",
+    "wifi.ap.new",
+    "wifi.ap.lost",
+    "mod.started"
+]
+
+# ── Filesystem / Memory ───────────────────────────────────────────────────────
+
+[fs.memory]
+enabled = true
+
+[fs.memory.mounts.log]
+enabled = true
+mount = "/etc/pwnagotchi/log/"
+size = "50M"
+sync = 60
+zram = true
+rsync = true
+
+[fs.memory.mounts.data]
+enabled = true
+mount = "/var/tmp/pwnagotchi"
+size = "10M"
+sync = 3600
+zram = true
+rsync = true
