@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 21:50+0100\n"
+"POT-Creation-Date: 2023-03-11 13:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: MatthewNunu https://github.com/MatthewNunu\n"
 "Language-Team: \n"
@@ -20,7 +20,7 @@ msgid "ZzzzZZzzzzZzzz"
 msgstr "ZzzzZZzzzzZzzz"
 
 msgid "Hi, I'm Pwnagotchi! Starting ..."
-msgstr "Hi, ek is Pwnagotchi! Aanvang ..."
+msgstr "Hi, ek is Pwnagotchi! Begin tans ..."
 
 msgid "New day, new hunt, new pwns!"
 msgstr "Nuwe dag, nuwe jag, nuwe pwns!"
@@ -58,7 +58,7 @@ msgid "This is the best day of my life!"
 msgstr "Dit is die beste dag van my lewe!"
 
 msgid "Shitty day :/"
-msgstr "Poes kak dag :/"
+msgstr "Slegte dag :/"
 
 msgid "I'm extremely bored ..."
 msgstr "Ek's baie verveeld ..."
@@ -76,7 +76,7 @@ msgid "I'm mad at you!"
 msgstr "Ek is kwaad vir jou!"
 
 msgid "I'm living the life!"
-msgstr "Ek leef die lewe!"
+msgstr "Ek leef my beste lewe!"
 
 msgid "I pwn therefore I am."
 msgstr "Ek pwn daarom is ek."
@@ -100,11 +100,11 @@ msgstr "Yo {name}! Sup?"
 
 #, python-brace-format
 msgid "Hey {name} how are you doing?"
-msgstr "Haai {name} hoe doen jy?"
+msgstr "Haai {name} hoe gaan dit?"
 
 #, python-brace-format
 msgid "Unit {name} is nearby!"
-msgstr "Eenheid {name}} is naby!"
+msgstr "{name}} is naby!"
 
 #, python-brace-format
 msgid "Uhm ... goodbye {name}"
@@ -116,7 +116,7 @@ msgstr "{name} is weg ..."
 
 #, python-brace-format
 msgid "Whoops ... {name} is gone."
-msgstr "Whoops ... {name} is weg."
+msgstr "Oeps ... {name} is weg."
 
 #, python-brace-format
 msgid "{name} missed!"
@@ -159,11 +159,11 @@ msgstr "Zzz"
 
 #, python-brace-format
 msgid "Waiting for {secs}s ..."
-msgstr "Wag tans vir {secs}s ..."
+msgstr "Wag vir {secs}s ..."
 
 #, python-brace-format
 msgid "Looking around ({secs}s)"
-msgstr "Rondkyk ({secs}s)"
+msgstr "Kyk rond ({secs}s)"
 
 #, python-brace-format
 msgid "Hey {what} let's be friends!"
@@ -171,7 +171,7 @@ msgstr "Haai {what} kom ons wees vriende!"
 
 #, python-brace-format
 msgid "Associating to {what}"
-msgstr "Assosieer na {what}"
+msgstr "Assosieer met {what}"
 
 #, python-brace-format
 msgid "Yo {what}!"
@@ -201,23 +201,31 @@ msgid "Oops, something went wrong ... Rebooting ..."
 msgstr "Oops, iets het verkeerd gegaan ... Herlaai ..."
 
 #, python-brace-format
+msgid "Uploading data to {to} ..."
+msgstr "Laai data op na {to} ..."
+
+#, python-brace-format
 msgid "Kicked {num} stations\n"
-msgstr "Geskop {num} stasies\n"
+msgstr "{num} stasies geskop\n"
+
+#,
+msgid "Made >999 new friends\n"
+msgstr "Meer as >999 nuwe vriende gemaak\n"
 
 #, python-brace-format
 msgid "Made {num} new friends\n"
-msgstr "Gemaak {num} nuwe vriende\n"
+msgstr "{num} nuwe vriende gemaak\n"
 
 #, python-brace-format
 msgid "Got {num} handshakes\n"
-msgstr "Het {num} handdrukke\n"
+msgstr "Het {num} handdrukke gekry\n"
 
 msgid "Met 1 peer"
 msgstr "Ontmoet 1 eweknie"
 
 #, python-brace-format
 msgid "Met {num} peers"
-msgstr "Ontmoet {num} eweknie"
+msgstr "Ontmoet {num} eweknieë"
 
 #, python-brace-format
 msgid ""
@@ -225,12 +233,12 @@ msgid ""
 "{associated} new friends and ate {handshakes} handshakes! #pwnagotchi "
 "#pwnlog #pwnlife #hacktheplanet #skynet"
 msgstr ""
-"Ek was pwning vir {duration} en het {deauthed} kliënte geskop! Ek het ook ontmoet "
-"{associated} nuwe vriende en het {handshakes} handdrukke geëet! #pwnagotchi "
-"#pwnlog #pwnlife #hacktheplanet #skynet"
+"Ek het vir {duration} gepwn en het {deauthed} kliënte geskop! Ek het ook "
+"{associated} nuwe vriende ontmoet en het {handshakes} handdrukke geëet! "
+"#pwnagotchi #pwnlog #pwnlife #hacktheplanet #skynet"
 
 msgid "hours"
-msgstr "uur"
+msgstr "ure"
 
 msgid "minutes"
 msgstr "minute"
