@@ -26,8 +26,21 @@ class UPS:
     def __init__(self):
         # only import when the module is loaded and enabled
         import smbus
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(4, GPIO.IN)
         # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
         self._bus = smbus.SMBus(1)
+        self.QuickStart()
+        self.PowerOnReset()
+
+    def QuickStart(self):
+        address = 0x36
+        self._bus.write_word_data(address, 0x06, 0x4000)
+
+    def PowerOnReset(self):
+        address = 0x36
+        self._bus.write_word_data(address, 0xfe, 0x0054)
 
     def voltage(self):
         try:
@@ -43,6 +56,7 @@ class UPS:
             address = 0x36
             read = self._bus.read_word_data(address, 4)
             swapped = struct.unpack("<H", struct.pack(">H", read))[0]
+            # may be 512 for some models, too:
             return swapped / 256
         except:
             return 0.0
@@ -79,6 +93,9 @@ class UPSLite(plugins.Plugin):
     def on_ui_update(self, ui):
         capacity = self.ups.capacity()
         charging = self.ups.charging()
+        # I don't know, why we have to do this regularly. But it only seems to give correct results with these two lines:
+        self.ups.QuickStart()
+        self.ups.PowerOnReset()
         ui.set('ups', "%2i%s" % (capacity, charging))
         if capacity <= self.options['shutdown']:
             logging.info('[ups_lite] Empty battery (<= %s%%): shuting down' % self.options['shutdown'])

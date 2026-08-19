@@ -33,6 +33,7 @@ class View(object):
         self._config = config
         self._canvas = None
         self._frozen = False
+        self._lasttime = time.time()
         self._lock = Lock()
         self._voice = Voice(lang=config['main']['lang'])
         self._implementation = impl
@@ -360,6 +361,15 @@ class View(object):
         self.set('status', self._voice.custom(text))
         self.update()
 
+    def check_display_update(self):
+        now = time.time()
+        timedif = now - self._lasttime
+        delay = 1.0 / self._config['ui']['fps']
+        if timedif < delay:
+            return False
+        self._lasttime = now
+        return True
+
     def update(self, force=False, new_data={}):
         for key, val in new_data.items():
             self.set(key, val)
@@ -381,7 +391,8 @@ class View(object):
 
                 web.update_frame(self._canvas)
 
-                for cb in self._render_cbs:
-                    cb(self._canvas)
+                if self.check_display_update():
+                    for cb in self._render_cbs:
+                        cb(self._canvas)
 
                 self._state.reset()
