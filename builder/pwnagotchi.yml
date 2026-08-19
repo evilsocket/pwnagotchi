@@ -53,6 +53,10 @@
           - triggerhappy
           - wpa_supplicant
           - nfs-common
+          - libraspberrypi0
+          - libraspberrypi-dev
+          - libraspberrypi-doc
+          - libraspberrypi-bin
         install:
           - rsync
           - vim

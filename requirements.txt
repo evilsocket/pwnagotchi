@@ -15,6 +15,9 @@ smbus2==0.3.0
 Pillow==5.4.1
 spidev==3.4
 gast==0.2.2
+itsdangerous==1.1.0
+markupsafe==1.1.1
+Werkzeug==0.14.1
 flask==1.0.2
 flask-cors==3.0.7
 flask-wtf==0.14.3
