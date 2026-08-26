@@ -11,6 +11,7 @@
 # To display external power supply status you need to bridge the necessary pins on the UPS-Lite board. See instructions in the UPS-Lite repo.
 import logging
 import struct
+import subprocess
 
 import RPi.GPIO as GPIO
 
@@ -28,11 +29,16 @@ class UPS:
         import smbus
         # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
         self._bus = smbus.SMBus(1)
+        # Version v1.1 and v1.2
+        self.address = 0x36
+        if subprocess.run(['i2cget', '-y', '1', '0x62']).returncode == 0:
+            # Version v1.3
+            self.address = 0X62
+            self._bus.write_word_data(self.address, 0X0A, 0x30)
 
     def voltage(self):
         try:
-            address = 0x36
-            read = self._bus.read_word_data(address, 2)
+            read = self._bus.read_word_data(self.address, 2)
             swapped = struct.unpack("<H", struct.pack(">H", read))[0]
             return swapped * 1.25 / 1000 / 16
         except:
@@ -40,8 +46,7 @@ class UPS:
 
     def capacity(self):
         try:
-            address = 0x36
-            read = self._bus.read_word_data(address, 4)
+            read = self._bus.read_word_data(self.address, 4)
             swapped = struct.unpack("<H", struct.pack(">H", read))[0]
             return swapped / 256
         except:
