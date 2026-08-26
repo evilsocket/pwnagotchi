@@ -53,6 +53,12 @@
           - triggerhappy
           - wpa_supplicant
           - nfs-common
+          # Remove libraspberrypi so we can reinstall them from the kali-pi repo instead.
+          # This prevents kalipi-bootloader conflicts with raspberrypi-bootloader.
+          - libraspberrypi0
+          - libraspberrypi-dev
+          - libraspberrypi-doc
+          - libraspberrypi-bin
         install:
           - rsync
           - vim
@@ -68,6 +74,7 @@
           - libopenmpi-dev
           - libatlas-base-dev
           - libjasper-dev
+          - libgtk-3-0
           - libqtgui4
           - libqt4-test
           - libopenjp2-7
@@ -130,7 +137,8 @@
 
   - name: Add re4son-kernel repo key
     apt_key:
-      url: https://re4son-kernel.com/keys/http/archive-key.asc
+      id: "11764EE8AC24832F"
+      keyserver: "keyserver.ubuntu.com"
       state: present
 
   - name: Add re4son-kernel repository
@@ -208,25 +216,22 @@
       regexp: "#EPD_SIZE=2.0"
       line: "EPD_SIZE=2.0"
 
-  - name: collect python pip package list
-    command: "pip3 list"
-    register: pip_output
+  # pip v20.3 uses a newer dependency resolver that better handles our unique situation.
+  # Specifically, it handles mismatches between direct requirements without extras and
+  # indirect requirements that do want extras (e.g. gym vs stable-baselines->gym[atari]).
+  - name: Upgrade pip
+    pip:
+      name: "pip"
+      version: ">=20.3"
 
-  - name: set python pip package facts
-    set_fact:
-      pip_packages: >
-        {{ pip_packages | default({}) | combine( { item.split()[0]: item.split()[1] } ) }}
-    with_items: "{{ pip_output.stdout_lines }}"
-
-  - name: acquire python3 pip target
-    command: "python3 -c 'import sys;print(sys.path.pop())'"
-    register: pip_target
-
-  - name: clone pwnagotchi repository
-    git:
-      repo: https://github.com/evilsocket/pwnagotchi.git
-      dest: /usr/local/src/pwnagotchi
-    register: pwnagotchigit
+  # We need the --ignore-installed option so that pip simply overwrites/upgrades existing
+  # packages instead of trying to uninstall them first.  While this sounds dangerous,
+  # this matches the legacy behavior of pip.  This is required to prevent pip from trying
+  # (and failing) to uninstall python packages that were originally installed via apt.
+  - name: Install pwnagotchi from source archive
+    pip:
+      name: /usr/local/src/pwnagotchi/pwnagotchi-{{ pwnagotchi.version }}.tar.gz
+      extra_args: --verbose --prefer-binary --ignore-installed
 
   - name: create /usr/local/share/pwnagotchi/ folder
     file:
@@ -237,38 +242,6 @@
     git:
       repo: https://github.com/evilsocket/pwnagotchi-plugins-contrib.git
       dest: /usr/local/share/pwnagotchi/availaible-plugins
-
-  - name: fetch pwnagotchi version
-    set_fact:
-      pwnagotchi_version: "{{ lookup('file', '/usr/local/src/pwnagotchi/pwnagotchi/_version.py') | regex_replace('.*__version__.*=.*''([0-9]+\\.[0-9]+\\.[0-9]+[A-Za-z0-9]*)''.*', '\\1') }}"
-
-  - name: pwnagotchi version found
-    debug:
-      msg: "{{ pwnagotchi_version }}"
-
-  - name: build pwnagotchi wheel
-    command: "python3 setup.py sdist bdist_wheel"
-    args:
-      chdir: /usr/local/src/pwnagotchi
-    when: (pwnagotchigit.changed) or (pip_packages['pwnagotchi'] is undefined) or (pip_packages['pwnagotchi'] != pwnagotchi_version)
-
-  - name: install opencv-python
-    pip:
-      name: "https://www.piwheels.org/simple/opencv-python/opencv_python-3.4.3.18-cp37-cp37m-linux_armv6l.whl"
-      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
-    when: (pip_packages['opencv-python'] is undefined) or (pip_packages['opencv-python'] != '3.4.3.18')
-
-  - name: install tensorflow
-    pip:
-      name: "https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp37-none-linux_armv6l.whl"
-      extra_args: "--no-deps --no-cache-dir --platform=linux_armv6l --only-binary=:all: --target={{ pip_target.stdout }}"
-    when: (pip_packages['tensorflow'] is undefined) or (pip_packages['tensorflow'] != '1.13.1')
-
-  - name: install pwnagotchi wheel and dependencies
-    pip:
-      name: "{{ lookup('fileglob', '/usr/local/src/pwnagotchi/dist/pwnagotchi*.whl') }}"
-      extra_args: "--no-cache-dir"
-    when: (pwnagotchigit.changed) or (pip_packages['pwnagotchi'] is undefined) or (pip_packages['pwnagotchi'] != pwnagotchi_version)
 
   - name: download and install pwngrid
     unarchive:
@@ -402,9 +375,14 @@
         You learn more about me at https://pwnagotchi.ai/
     when: hostname.changed
 
+  # Ansible's apt module has an "autoclean" option but it only removes packages
+  # that can no longer be downloaded.  Ansible v2.13 added the "clean" option
+  # which actually purges the apt cache, but that's newer than what we can
+  # install from the RasPiOS repos.  Instead, we'll manually clean the cache.
   - name: clean apt cache
-    apt:
-      autoclean: yes
+    command: "apt-get clean"
+    args:
+      warn: false
 
   - name: remove dependencies that are no longer required
     apt:

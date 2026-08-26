@@ -1,2 +1,4 @@
 allow-hotplug wlan0
-iface wlan0 inet static
+iface wlan0 inet manual
+    pre-up ifconfig $IFACE up
+    post-down ifconfig $IFACE down
