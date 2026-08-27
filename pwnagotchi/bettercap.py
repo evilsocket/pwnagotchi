@@ -31,8 +31,10 @@ class Client(object):
         self.websocket = "ws://%s:%s@%s:%d/api" % (username, password, hostname, port)
         self.auth = HTTPBasicAuth(username, password)
 
-    def session(self):
-        r = requests.get("%s/session" % self.url, auth=self.auth)
+    # session takes optional argument to pull a sub-dictionary
+    #  ex.: "session/wifi", "session/ble"
+    def session(self, sess="session"):
+        r = requests.get("%s/%s" % (self.url, sess), auth=self.auth)
         return decode(r)
 
     async def start_websocket(self, consumer):
